@@ -145,3 +145,5 @@ ggraph(graph, layout = 'kk') +
   scale_edge_width(range = c(0.4, 1.5)) +
   theme_void() +
   scale_edge_color_manual(values = c('no' = 'grey40','yes' = 'red'))
+
+#test
