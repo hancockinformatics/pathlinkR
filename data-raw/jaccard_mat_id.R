@@ -24,6 +24,12 @@ reactome_db <- read.table('https://reactome.org/download/current/ReactomePathway
 reactome_names <- read.csv('https://reactome.org/download/current/ReactomePathways.txt', sep = '\t', header = FALSE)
 names(reactome_names) <- c('hsa_id', 'name', 'species')
 
+#R-HSA-194840 is missing (possibly updated), it is RHO GTPase cycle
+reactome_names <- rbind(reactome_names,
+                        data.frame(hsa_id = 'R-HSA-194840',
+                                   name = 'RHO GTPase cycle',
+                                   species = 'Homo sapiens'))
+
 HSA_react <- reactome_db %>% filter(grepl('HSA', V1))
 names(HSA_react) <- c('Parent', 'Child')
 
@@ -117,33 +123,39 @@ jaccard_mat_id <- jaccard_list %>%
 
 usethis::use_data(jaccard_mat_id, overwrite = TRUE)
 
-inverse_jaccard <- 1-jaccard_mat_id
-
-filtered_jaccard <- inverse_jaccard
-
-filtered_jaccard[filtered_jaccard<0.2] <- 0
-
 rownames(filtered_jaccard) <- str_wrap(rownames(filtered_jaccard), width = 20)
 colnames(filtered_jaccard) <- str_wrap(colnames(filtered_jaccard), width = 20)
 
-network_df <- data.frame(path1 = 0, path2 = 0, jaccard = 0)
-for(i in 1:ncol(filtered_jaccard)){
-  column <- filtered_jaccard[c(i:ncol(filtered_jaccard)),i]
-  df <- data.frame(path1 = rownames(filtered_jaccard)[i:ncol(filtered_jaccard)], path2 = colnames(filtered_jaccard)[i], jaccard = unlist(column))
-  network_df <- rbind(network_df, df)
-}
+# create a dataframe of connections with jaccard index
+network_df <- jaccard_mat_id %>%
+  as.data.frame() %>%
+  rownames_to_column(var = 'pathway1') %>%
+  pivot_longer(contains('R-HSA'),
+               names_to = 'pathway2',
+               values_to = 'jaccard') %>%
+  mutate(jaccard = 1-jaccard)
 
-network_df <- network_df %>% filter(jaccard != 0, jaccard != 1)
+# annotate the pathway names
+network_df <- network_df %>% left_join(reactome_names %>% transmute(pathway1 = hsa_id, name1 = name))
+network_df <- network_df %>% left_join(reactome_names %>% transmute(pathway2 = hsa_id, name2 = name))
 
-graph <- as_tbl_graph(network_df)
+# path of interest
+pathway <- 'Nucleotide biosynthesis'
+filtered_net_df <- network_df %>% filter(jaccard > 0.01, jaccard != 1) %>%
+  select(name1, name2, jaccard) %>%
+  filter(name1 == pathway|name2 == pathway)
+
+graph <- as_tbl_graph(filtered_net_df)
 
 ggraph(graph, layout = 'kk') +
-  geom_edge_link(aes(edge_width = jaccard, alpha = jaccard*2)) +
+  geom_edge_link(aes(edge_width = jaccard)) +
   geom_node_point() +
   geom_node_text(aes(label = name), repel = TRUE, max.overlaps = Inf) +
   scale_x_continuous(expand = expansion(mult = 0.2)) +
   scale_edge_width(range = c(0.4, 1.5)) +
   theme_void() +
   scale_edge_color_manual(values = c('no' = 'grey40','yes' = 'red'))
+
+ggsave('test_network.png', height = 20, width = 20)
 
 #test
