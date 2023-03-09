@@ -26,5 +26,5 @@ pathways involved.
 None.
 }
 \seealso{
-\url{https://www.github.com/travis-m-blimkie/tRavis}
+\url{https://github.com/hancockinformatics/pathnet}
 }

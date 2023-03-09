@@ -19,7 +19,7 @@
 #'
 #' @references None.
 #'
-#' @seealso <https://www.github.com/travis-m-blimkie/tRavis>
+#' @seealso <https://github.com/hancockinformatics/pathnet>
 #'
 create_foundation <- function(mat, cutoff = 0.1) {
 
