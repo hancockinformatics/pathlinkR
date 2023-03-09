@@ -63,7 +63,7 @@ pathway_names <- reaH$pathwaydescriptions
 
 names(pathway_names) <- c("pathway_id", "pathway_name")
 
-sigora_database <- left_join(sigora_database, pathway_names)
+sigora_database <- as_tibble(left_join(sigora_database, pathway_names))
 
 
 # Save the object for the package -----------------------------------------
