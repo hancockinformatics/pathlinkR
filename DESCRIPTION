@@ -1,6 +1,6 @@
 Package: pathnet
 Title: Visualize pathways as networks
-Version: 0.0.006
+Version: 0.0.007
 Authors@R: c(
     person("Travis", "Blimkie", , "travis@hancocklab.com", role = c("cre")),
     person("Andy", "An", , "andy@hancocklab.com", role = c("aut"))
