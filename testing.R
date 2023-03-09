@@ -83,7 +83,7 @@ ggsave("test_network.png", height = 20, width = 20)
 
 # New version -------------------------------------------------------------
 
-pathway_foundation <- create_foundation(jaccard_mat_id, max_distance = 0.5) %>%
+pathway_foundation <- create_foundation(pathway_distances_jaccard, max_distance = 0.5) %>%
   mutate(similarity = 1 - distance)
 
 sigora_database_slim <- sigora_database %>%

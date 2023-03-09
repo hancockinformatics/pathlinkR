@@ -10,11 +10,11 @@
 #' }
 "sigora_database"
 
-#' Matrix of pairwise Jaccard indices for all Reactome pathways
+#' Matrix of pairwise Jaccard indices for all human Reactome pathways
 #'
 #' @format A matrix with 873 rows and columns
 #' \describe{
 #' \item{Rows}{Reactome pathway identifiers}
 #' \item{Columns}{Reactome pathway identifiers}
 #' }
-"jaccard_mat_id"
+"pathway_distances_jaccard"

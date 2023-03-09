@@ -43,7 +43,7 @@ path_steps_local <- function(pathway_id) {
   }
 }
 
-get_jac_mat <- function(list) {
+get_identity_matrix <- function(list) {
   list %>%
     map(~data.frame(id = .x)) %>%
     bind_rows(.id = "name") %>%
@@ -86,7 +86,7 @@ reactome_names <- rbind(
 HSA_react <- reactome_db %>% filter(grepl("HSA", Parent))
 
 
-# Create the gene list for `get_jac_mat()` usage --------------------------
+# Create the gene list for `get_identity_matrix()` usage --------------------------
 
 # This script depends on the data generated from "data-raw/sigora_database.R"
 load("data/sigora_database.rda")
@@ -133,8 +133,8 @@ for (id in level_four_pathways$ID) {
 # Matrix of distances between pathways ------------------------------------
 
 # 0 = all overlap, 1 = no overlap
-jaccard_mat_id <- jaccard_list %>%
-  get_jac_mat() %>%
+pathway_distances_jaccard <- jaccard_list %>%
+  get_identity_matrix() %>%
   t() %>%
   vegan::vegdist(
     method = "jaccard",
@@ -143,4 +143,4 @@ jaccard_mat_id <- jaccard_list %>%
   ) %>%
   as.matrix()
 
-usethis::use_data(jaccard_mat_id, overwrite = TRUE)
+usethis::use_data(pathway_distances_jaccard, overwrite = TRUE)
