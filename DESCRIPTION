@@ -1,6 +1,6 @@
 Package: pathnet
 Title: Visualize pathways as networks
-Version: 0.0.001
+Version: 0.0.002
 Authors@R: c(
     person("Travis", "Blimkie", , "travis@hancocklab.com", role = c("cre")),
     person("Andy", "An", , "andy@hancocklab.com", role = c("aut"))
@@ -16,7 +16,9 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 Imports:
-  tibble
+  dplyr,
+  tibble,
+  tidyr
 Depends: 
     R (>= 2.10)
 LazyData: true
