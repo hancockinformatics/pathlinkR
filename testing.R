@@ -4,6 +4,7 @@ library(ggraph)
 library(tidygraph)
 library(ggVennDiagram)
 library(tidyverse)
+devtools::load_all(".")
 
 
 # Example of overlaps -----------------------------------------------------
@@ -33,7 +34,10 @@ ggVennDiagram(
   geom_text(size = 10)
 
 
-# Create a data frame of connections with Jaccard index -------------------
+
+# Old version -------------------------------------------------------------
+
+# |- Create a data frame of connections with Jaccard index -------------------
 
 rownames(filtered_jaccard) <- str_wrap(rownames(filtered_jaccard), width = 20)
 colnames(filtered_jaccard) <- str_wrap(colnames(filtered_jaccard), width = 20)
@@ -49,7 +53,7 @@ network_df <- jaccard_mat_id %>%
   mutate(jaccard = 1-jaccard)
 
 
-# Annotate the pathway names ----------------------------------------------
+# |- Annotate the pathway names ----------------------------------------------
 
 network_df <- network_df %>%
   left_join(reactome_names %>% transmute(pathway1 = hsa_id, name1 = name))
@@ -74,3 +78,29 @@ ggraph(graph, layout = "kk") +
   scale_edge_color_manual(values = c("no" = "grey40","yes" = "red"))
 
 ggsave("test_network.png", height = 20, width = 20)
+
+
+
+# New version -------------------------------------------------------------
+
+pathway_foundation <- create_foundation(jaccard_mat_id, max_distance = 0.5) %>%
+  mutate(similarity = 1 - distance)
+
+sigora_database_slim <- sigora_database %>%
+  select(pathway_id, pathway_name) %>%
+  distinct()
+
+network_df_anno <- pathway_foundation %>%
+  left_join(., sigora_database_slim, by = c("pathway_1" = "pathway_id")) %>%
+  left_join(., sigora_database_slim, by = c("pathway_2" = "pathway_id"), suffix = c("_1", "_2")) %>%
+  select(contains("name"), similarity)
+
+pathway_network <- as_tbl_graph(network_df_anno)
+
+ggraph(pathway_network, layout = "kk") +
+  geom_edge_link(aes(edge_width = similarity), alpha = 0.3) +
+  geom_node_point(pch = 21, size = 4, colour = "black", fill = "grey") +
+  geom_node_text(aes(label = name), repel = TRUE, max.overlaps = 12) +
+  scale_x_continuous(expand = expansion(mult = 0.2)) +
+  scale_edge_width(range = c(0.3, 1)) +
+  theme_void()
