@@ -1,59 +1,43 @@
+# Load packages -----------------------------------------------------------
+
 library(tidyverse)
-library(ggVennDiagram)
-library(ggraph)
-library(tidygraph)
 
-# Example of overlaps
-# sister <- sigora_database %>% filter(pathway_name == 'Mitotic Prometaphase')
-# kinesins <- sigora_database %>% filter(pathway_name == 'Kinesins')
-# rho <- sigora_database %>% filter(pathway_name == 'RHO GTPase Effectors')
-# macro <- sigora_database %>% filter(pathway_name == 'Macroautophagy')
-# overlaps_pathways <- list(Mitotic = as.character(sister$Symbol), Kinesins = as.character(kinesins$Symbol), Rho = as.character(rho$Symbol))
-#
-#
-# ggVennDiagram(overlaps_pathways, color = 'black', lwd = 0.4,
-#               label_size = 6, label = "count", label_alpha = 0) +
-#   scale_fill_gradient(low = "#F4FAFE", high = "purple") +
-#   theme(legend.position = 'none') +
-#   scale_x_continuous(expand = expansion(mult = .2)) +
-#   geom_text(size = 10)
 
-# first get reactome relationships
-
-reactome_db <- read.table('https://reactome.org/download/current/ReactomePathwaysRelation.txt', sep = '\t') #https://reactome.org/download/current/ReactomePathwaysRelation.txt
-reactome_names <- read.csv('https://reactome.org/download/current/ReactomePathways.txt', sep = '\t', header = FALSE)
-names(reactome_names) <- c('hsa_id', 'name', 'species')
-
-#R-HSA-194840 is missing (possibly updated), it is RHO GTPase cycle
-reactome_names <- rbind(reactome_names,
-                        data.frame(hsa_id = 'R-HSA-194840',
-                                   name = 'RHO GTPase cycle',
-                                   species = 'Homo sapiens'))
-
-HSA_react <- reactome_db %>% filter(grepl('HSA', V1))
-names(HSA_react) <- c('Parent', 'Child')
+# Helper functions --------------------------------------------------------
 
 path_steps_local <- function(pathway_id) {
-  if (filter(HSA_react, Child == pathway_id)[1] %>% as.character != "character(0)") { # Looks for the top pathway
+
+  # Looks for the top pathway
+  if (filter(HSA_react, Child == pathway_id)[1] %>% as.character != "character(0)") {
+
     order <- c()
     level <- pathway_id
+
     while (level != "character(0)") {
       hsa_id <- filter(HSA_react, Child == level)[1] %>% as.character
       path_name <- filter(reactome_names, hsa_id == level)[2] %>% as.character
       order <- c(order, path_name)
       level <- hsa_id
     }
+
     order <- rev(order)
     order <- paste(order, collapse="; ")
-    return(list(path_name, order)) #returns the top pathway name as well as the hierarchy of pathways (arranged from highest to lowest)
+
+    # Returns the top pathway name as well as the hierarchy of pathways
+    # (arranged from highest to lowest)
+    return(list(path_name, order))
   }
 
-  if(pathway_id == 'R-HSA-194840'){
-    path_name <- 'Signal Transduction'
-    order <- c('Signal Transduction; Signaling by Rho GTPases, Miro GTPases and RHOBTB3; Signaling by Rho GTPases; RHO GTPase cycle')
+  if (pathway_id == "R-HSA-194840") {
+    path_name <- "Signal Transduction"
+    order <- paste0("Signal Transduction; Signaling by Rho GTPases, ",
+                    "Miro GTPases and RHOBTB3; Signaling by Rho GTPases; ",
+                    "RHO GTPase cycle")
+
     return(list(path_name, order))
 
-  } else {  # If already a top pathway, just return top pathway info
+  } else {
+    # If already a top pathway, just return top pathway info
     path_name <- filter(reactome_names, hsa_id == pathway_id)[2] %>% as.character
     return(list(path_name, path_name))
   }
@@ -74,7 +58,38 @@ get_jac_mat <- function(list) {
     column_to_rownames(var = "id")
 }
 
-# create the gene list for get-jac-mat usage
+
+# First get Reactome relationships ----------------------------------------
+
+reactome_db <- read_tsv(
+  "https://reactome.org/download/current/ReactomePathwaysRelation.txt",
+  col_names = c("Parent", "Child")
+)
+
+reactome_names <- read_tsv(
+  "https://reactome.org/download/current/ReactomePathways.txt",
+  col_names = c("hsa_id", "name", "species")
+)
+
+
+# Add missing pathway -----------------------------------------------------
+
+# R-HSA-194840 is missing (possibly updated), so we'll add it manually; it's
+# "RHO GTPase cycle"
+reactome_names <- rbind(
+  reactome_names,
+  tibble(hsa_id  = "R-HSA-194840",
+         name    = "RHO GTPase cycle",
+         species = "Homo sapiens")
+)
+
+HSA_react <- reactome_db %>% filter(grepl("HSA", Parent))
+
+
+# Create the gene list for `get_jac_mat()` usage --------------------------
+
+# This script depends on the data generated from "data-raw/sigora_database.R"
+load("data/sigora_database.rda")
 
 all_pathways <- sigora_database$pathway_id %>% unique()
 
@@ -85,9 +100,9 @@ all_pathways_df <- data.frame(
   hierarchy = NA
 )
 
-for(i in all_pathways){
+for (i in all_pathways) {
   results <- path_steps_local(i)
-  hierarchy <- str_split(results[[2]], '; ') %>% unlist()
+  hierarchy <- str_split(results[[2]], "; ") %>% unlist()
   df <- data.frame(
     ID = i,
     Top = results[[1]][1],
@@ -97,20 +112,27 @@ for(i in all_pathways){
   all_pathways_df <- rbind(all_pathways_df, df)
 }
 
-level_four_pathways <- all_pathways_df %>% filter(level <= 4, level != 1) #873 pathways
+level_four_pathways <- all_pathways_df %>% filter(level <= 4, level != 1)
+# 873 pathways total
 
-pathway_description <- sigora_database %>% filter(pathway_id %in% level_four_pathways$ID)
+pathway_description <- sigora_database %>%
+  filter(pathway_id %in% level_four_pathways$ID)
 
 jaccard_list <- list()
 
-for(id in level_four_pathways$ID){
-  genes <- pathway_description %>% filter(pathway_id == id) %>% .$Ensembl.Gene.ID %>% as.character()
+for (id in level_four_pathways$ID) {
+  genes <- pathway_description %>% filter(pathway_id == id) %>%
+    .$Ensembl.Gene.ID %>%
+    as.character()
   list_genes <- list(id = genes)
   names(list_genes) <- id
   jaccard_list <- append(jaccard_list, list_genes)
 }
 
-# matrix of distances between pathways, 0 = all overlap, 1 = no overlap
+
+# Matrix of distances between pathways ------------------------------------
+
+# 0 = all overlap, 1 = no overlap
 jaccard_mat_id <- jaccard_list %>%
   get_jac_mat() %>%
   t() %>%
@@ -122,40 +144,3 @@ jaccard_mat_id <- jaccard_list %>%
   as.matrix()
 
 usethis::use_data(jaccard_mat_id, overwrite = TRUE)
-
-rownames(filtered_jaccard) <- str_wrap(rownames(filtered_jaccard), width = 20)
-colnames(filtered_jaccard) <- str_wrap(colnames(filtered_jaccard), width = 20)
-
-# create a dataframe of connections with jaccard index
-network_df <- jaccard_mat_id %>%
-  as.data.frame() %>%
-  rownames_to_column(var = 'pathway1') %>%
-  pivot_longer(contains('R-HSA'),
-               names_to = 'pathway2',
-               values_to = 'jaccard') %>%
-  mutate(jaccard = 1-jaccard)
-
-# annotate the pathway names
-network_df <- network_df %>% left_join(reactome_names %>% transmute(pathway1 = hsa_id, name1 = name))
-network_df <- network_df %>% left_join(reactome_names %>% transmute(pathway2 = hsa_id, name2 = name))
-
-# path of interest
-pathway <- 'Nucleotide biosynthesis'
-filtered_net_df <- network_df %>% filter(jaccard > 0.01, jaccard != 1) %>%
-  select(name1, name2, jaccard) %>%
-  filter(name1 == pathway|name2 == pathway)
-
-graph <- as_tbl_graph(filtered_net_df)
-
-ggraph(graph, layout = 'kk') +
-  geom_edge_link(aes(edge_width = jaccard)) +
-  geom_node_point() +
-  geom_node_text(aes(label = name), repel = TRUE, max.overlaps = Inf) +
-  scale_x_continuous(expand = expansion(mult = 0.2)) +
-  scale_edge_width(range = c(0.4, 1.5)) +
-  theme_void() +
-  scale_edge_color_manual(values = c('no' = 'grey40','yes' = 'red'))
-
-ggsave('test_network.png', height = 20, width = 20)
-
-#test
