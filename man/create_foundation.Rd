@@ -4,14 +4,15 @@
 \alias{create_foundation}
 \title{create_foundation}
 \usage{
-create_foundation(mat, cutoff = 0.1)
+create_foundation(mat, max_distance = 0.1)
 }
 \arguments{
 \item{mat}{Matrix of distances between pathways (i.e. 0 means two pathways
 are identical).}
 
-\item{cutoff}{Distance cutoff used to determine if two pathways should share
-an edge.}
+\item{max_distance}{Distance cutoff (less than or equal) used to determine if
+two pathways should share an edge. Pairs with a distance of 0 are always
+removed.}
 }
 \value{
 A tibble
