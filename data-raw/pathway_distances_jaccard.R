@@ -21,7 +21,7 @@ path_steps_local <- function(pathway_id) {
     }
 
     order <- rev(order)
-    order <- paste(order, collapse="; ")
+    order <- paste(order, collapse = "; ")
 
     # Returns the top pathway name as well as the hierarchy of pathways
     # (arranged from highest to lowest)
