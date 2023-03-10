@@ -5,7 +5,7 @@
 \alias{pathway_distances_jaccard}
 \title{Matrix of pairwise Jaccard indices for all human Reactome pathways}
 \format{
-A matrix with 873 rows and columns
+A matrix with 1001 rows and columns
 \describe{
 \item{Rows}{Reactome pathway identifiers}
 \item{Columns}{Reactome pathway identifiers}
