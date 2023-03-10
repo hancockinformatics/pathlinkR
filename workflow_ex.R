@@ -1,9 +1,40 @@
 # Load packages -----------------------------------------------------------
 
 devtools::load_all(".")
-library(ggraph)
-library(tidygraph)
+# library(ggraph)
+# library(tidygraph)
 library(tidyverse)
+
+
+# Create pathway distances ------------------------------------------------
+
+gene_id_col <- colnames(sigora_database)[
+  unlist(map(sigora_database[1, ], ~str_detect(.x, "ENSG")))
+]
+
+pathway_id_col <- colnames(sigora_database)[
+  unlist(map(sigora_database[1, ], ~str_detect(.x, "R-[A-Z]{3}-[0-9]{1,10}")))
+]
+
+identify_table <- sigora_database %>%
+  select(all_of(c(gene_id_col, pathway_id_col))) %>%
+  distinct() %>%
+  mutate(present = 1) %>%
+  pivot_wider(
+    id_cols     = all_of(pathway_id_col),
+    names_from  = all_of(gene_id_col),
+    values_from = "present"
+  ) %>%
+  replace(is.na(.), 0) %>%
+  column_to_rownames(all_of(pathway_id_col))
+
+distance_matrix <- identify_table %>%
+  vegan::vegdist(
+    method = "jaccard",
+    binary = TRUE,
+    diag = TRUE
+  ) %>%
+  as.matrix()
 
 
 # Approaches --------------------------------------------------------------
