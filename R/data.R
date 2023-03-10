@@ -18,3 +18,17 @@
 #' \item{Columns}{Reactome pathway identifiers}
 #' }
 "pathway_distances_jaccard"
+
+#' Data frame of Sigora results to be used for testing, as an example
+#'
+#' @format A data frame (tibble) with 44 rows and 7 columns
+#' \describe{
+#' \item{direction}{Type of dysregulation, based on fold change values from input DE genes}
+#' \item{pathway_id}{Reactome pathway identifier}
+#' \item{description}{Pathway name}
+#' \item{pvalue}{Nominal p-value for enrichment}
+#' \item{bonferroni}{Adjusted p-value for enrichment}
+#' \item{level_1}{Top level Reactome term for the pathway}
+#' \item{level_2}{Second level Reactome term for the pathway}
+#' }
+"sigora_result_eg"
