@@ -104,3 +104,9 @@ ggraph(pathway_network, layout = "kk") +
   scale_x_continuous(expand = expansion(mult = 0.2)) +
   scale_edge_width(range = c(0.3, 1)) +
   theme_void()
+
+
+
+# Test new function -------------------------------------------------------
+
+test_jaccard <- get_distances(dist_method = "euclidean")
