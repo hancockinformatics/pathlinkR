@@ -4,7 +4,7 @@
 \alias{create_foundation}
 \title{create_foundation}
 \usage{
-create_foundation(mat, max_distance = 0.1)
+create_foundation(mat, max_distance = NA, prop_to_keep = NA)
 }
 \arguments{
 \item{mat}{Matrix of distances between pathways (i.e. 0 means two pathways
@@ -12,16 +12,19 @@ are identical).}
 
 \item{max_distance}{Distance cutoff (less than or equal) used to determine if
 two pathways should share an edge. Pairs with a distance of 0 are always
-removed.}
+removed. One of \code{max_distance} or \code{prop_to_keep} must be provided.}
+
+\item{prop_to_keep}{Top proportion of pathway pairs to keep as edges. One of
+\code{max_distance} or \code{prop_to_keep} must be provided.}
 }
 \value{
 A tibble
 }
 \description{
-From a n by n distance matrix, generate a three column tibble to
-use in constructing a pathway network. The cutoff can be adjusted to have
-more or fewer edges in the final network, depending on the number of
-pathways involved.
+From a n by n distance matrix, generate a tibble to use in
+constructing a pathway network. The cutoff can be adjusted to have more or
+fewer edges in the final network, depending on the number of pathways
+involved.
 }
 \references{
 None.
