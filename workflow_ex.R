@@ -1,40 +1,7 @@
 # Load packages -----------------------------------------------------------
 
 devtools::load_all(".")
-# library(ggraph)
-# library(tidygraph)
 library(tidyverse)
-
-
-# Create pathway distances ------------------------------------------------
-
-gene_id_col <- colnames(sigora_database)[
-  unlist(map(sigora_database[1, ], ~str_detect(.x, "ENSG")))
-]
-
-pathway_id_col <- colnames(sigora_database)[
-  unlist(map(sigora_database[1, ], ~str_detect(.x, "R-[A-Z]{3}-[0-9]{1,10}")))
-]
-
-identify_table <- sigora_database %>%
-  select(all_of(c(gene_id_col, pathway_id_col))) %>%
-  distinct() %>%
-  mutate(present = 1) %>%
-  pivot_wider(
-    id_cols     = all_of(pathway_id_col),
-    names_from  = all_of(gene_id_col),
-    values_from = "present"
-  ) %>%
-  replace(is.na(.), 0) %>%
-  column_to_rownames(all_of(pathway_id_col))
-
-distance_matrix <- identify_table %>%
-  vegan::vegdist(
-    method = "jaccard",
-    binary = TRUE,
-    diag = TRUE
-  ) %>%
-  as.matrix()
 
 
 # Approaches --------------------------------------------------------------
@@ -61,27 +28,22 @@ distance_matrix <- identify_table %>%
 # Option A ----------------------------------------------------------------
 
 # Using the pre-calculated Jaccard distances, filter with a distance of 0.5,
-# where any pair of pathways with distance < "max_distance" are considered connected.
-starting_pathways <- create_foundation(
-  mat = test_jaccard,
-  max_distance = 25
-) %>%
-  glimpse()
+# where any pair of pathways with distance < "max_distance" are considered
+# connected.
+dist_data <- get_pathway_distances(
+  pathway_data = sigora_database,
+  dist_method = "jaccard"
+)
 
-starting_pathways_anno <- starting_pathways %>%
-  left_join(
-    distinct(select(sigora_database, pathway_id, pathway_name)),
-    by = c("pathway_1" = "pathway_id")
-  ) %>%
-  left_join(
-    distinct(select(sigora_database, pathway_id, pathway_name)),
-    by = c("pathway_2" = "pathway_id"),
-    suffix = c("_1", "_2")
-  )
+starting_pathways <- create_foundation(
+  mat = dist_data,
+  prop_to_keep = 0.002
+)
+
 
 # |- Add sigora results ---------------------------------------------------
 
-# Make sure we only have one of each pathway ID, otherwise theres problems when
+# Make sure we only have one of each pathway ID, otherwise there's problems when
 # objects are turned into networks.
 sigora_result_eg_slim <-
   read_tsv(file.path(
@@ -95,14 +57,14 @@ sigora_result_eg_slim <-
 
 # |- Construct network ----------------------------------------------------
 
-starting_nodes <- starting_pathways_anno %>%
+starting_nodes <- starting_pathways %>%
   select(pathway_1, pathway_name_1) %>%
   distinct() %>%
   left_join(., sigora_result_eg_slim, by = c("pathway_1" = "pathway_id")) %>%
   arrange(bonferroni) %>%
   replace_na(list(bonferroni = 1))
 
-starting_edges <- starting_pathways_anno %>%
+starting_edges <- starting_pathways %>%
   select(pathway_1, pathway_2, similarity, distance)
 
 pathways_as_network <- tbl_graph(
