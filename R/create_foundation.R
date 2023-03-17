@@ -37,7 +37,7 @@ create_foundation <- function(mat, max_distance = NA, prop_to_keep = NA) {
     arrange(distance)
 
   if (!is.na(max_distance)) {
-    edge_table <- filter(mat_tibble, distance <= 0.5)
+    edge_table <- filter(mat_tibble, distance <= max_distance)
   } else if (!is.na(prop_to_keep)) {
     edge_table <- slice_head(mat_tibble, prop = prop_to_keep)
   }
