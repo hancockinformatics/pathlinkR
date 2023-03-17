@@ -1,4 +1,4 @@
-# Load packages -----------------------------------------------------------
+# Load packages & example data --------------------------------------------
 
 devtools::load_all(".")
 library(tidyverse)
@@ -27,6 +27,8 @@ library(tidyverse)
 
 # Option A ----------------------------------------------------------------
 
+# |- get_pathway_distances and create_foundation --------------------------
+
 # Using the pre-calculated Jaccard distances, filter with a distance of 0.5,
 # where any pair of pathways with distance < "max_distance" are considered
 # connected.
@@ -41,43 +43,10 @@ starting_pathways <- create_foundation(
 )
 
 
-# |- Add sigora results ---------------------------------------------------
+# |- create_pathnet -------------------------------------------------------
 
-# Make sure we only have one of each pathway ID, otherwise there's problems when
-# objects are turned into networks.
-sigora_result_eg_slim <-
-  read_tsv(file.path(
-    "/mnt/analysis2/HIPC_2/Ontogeny/Ontogeny_analysis/Pathways",
-    "sigora_paired_locationGAM_DOLDOL7.tsv"
-  )) %>%
-  select(pathway_id, direction, bonferroni) %>%
-  arrange(bonferroni) %>%
-  distinct(pathway_id, .keep_all = TRUE)
-
-
-# |- Construct network ----------------------------------------------------
-
-starting_nodes <- starting_pathways %>%
-  select(pathway_1, pathway_name_1) %>%
-  distinct() %>%
-  left_join(., sigora_result_eg_slim, by = c("pathway_1" = "pathway_id")) %>%
-  arrange(bonferroni) %>%
-  replace_na(list(bonferroni = 1))
-
-starting_edges <- starting_pathways %>%
-  select(pathway_1, pathway_2, similarity, distance)
-
-pathways_as_network <- tbl_graph(
-  nodes = starting_nodes,
-  edges = starting_edges,
-  directed = FALSE
-) %>%
-  mutate(
-    rn = row_number(),
-    node_label = if_else(is.na(direction), "", pathway_name_1),
-    node_label = map_chr(node_label, ~tRavis::tr_trunc_neatly(.x, l = 50)),
-    node_label = str_replace(node_label, "^$", NA_character_)
-  )
+pathways_as_network <-
+  create_pathnet(sigora_result = sigora_result_eg, foundation = starting_pathways)
 
 
 # |- Plot it! -------------------------------------------------------------
