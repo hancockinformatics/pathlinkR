@@ -1,6 +1,7 @@
 # Load packages & example data --------------------------------------------
 
 devtools::load_all(".")
+library(ggraph)
 library(tidyverse)
 
 
@@ -45,42 +46,32 @@ starting_pathways <- create_foundation(
 
 # |- create_pathnet -------------------------------------------------------
 
-pathways_as_network <-
-  create_pathnet(sigora_result = sigora_result_eg, foundation = starting_pathways)
+pathways_as_network <- create_pathnet(
+  sigora_result = sigora_result_eg,
+  foundation = starting_pathways,
+  trim = TRUE,
+  trim_order = 2
+)
 
 
 # |- Plot it! -------------------------------------------------------------
 
-ggraph(pathways_as_network, layout = "kk") +
-  geom_edge_link(aes(edge_width = similarity), alpha = 0.3) +
-  geom_node_point(aes(size = -log10(bonferroni), fill = direction), pch = 21, colour = "black") +
-  geom_node_label(aes(label = node_label), repel = TRUE, alpha = 0.75) +
-  scale_edge_width(range = c(0.25, 1.5)) +
-  scale_size_continuous(range = c(2, 6)) +
-  theme_void()
-
-
-# |- Remove empty subgraphs -----------------------------------------------
-
-x1 <- pathways_as_network %>%
-  filter(bonferroni < 1) %>%
-  pull(rn)
-
-valid_nodes <- map(x1, ~igraph::neighborhood(
-  graph = as.igraph(pathways_as_network),
-  order = 1,
-  nodes = .x
-)) %>%
-  unlist() %>%
-  unique()
-
-pathways_as_network_trimmed <- pathways_as_network %>%
-  filter(rn %in% c(x1, valid_nodes))
-
-ggraph(pathways_as_network_trimmed, layout = "kk") +
-  geom_edge_link(aes(edge_width = log10(1/distance)), alpha = 0.3) +
-  geom_node_point(aes(size = -log10(bonferroni), fill = direction), pch = 21, colour = "black") +
-  geom_node_label(aes(label = node_label), repel = TRUE, alpha = 0.75) +
-  scale_edge_width(range = c(0.25, 1.5)) +
-  scale_size_continuous(range = c(2, 6)) +
+ggraph(pathways_as_network, layout = "nicely") +
+  geom_edge_link(aes(edge_width = log10(similarity)), alpha = 0.3) +
+  geom_node_point(
+    aes(size = -log10(bonferroni), fill = direction),
+    pch = 21,
+    colour = "black"
+  ) +
+  geom_node_label(
+    aes(label = node_label),
+    size = 6,
+    repel = TRUE,
+    alpha = 0.5,
+    max.overlaps = 3,
+    min.segment.length = 0
+  ) +
+  scale_edge_width(range = c(0.5, 2)) +
+  scale_size_continuous(range = c(4, 8)) +
+  scale_fill_discrete(na.value = "grey") +
   theme_void()
