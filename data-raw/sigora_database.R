@@ -70,7 +70,8 @@ sigora_database_level4 <- left_join(sigora_database_level4, pathway_names)
 # Decreased from 61045 to 60775 gene-pathway relations
 sigora_database <- sigora_database_level4 %>%
   select(-EntrezGene.ID) %>%
-  distinct()
+  distinct() %>%
+  as_tibble()
 
 
 # Save the object for the package -----------------------------------------
