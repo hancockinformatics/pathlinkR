@@ -16,7 +16,7 @@ dist_data <- get_pathway_distances(
 
 starting_pathways <- create_foundation(
   mat = dist_data,
-  prop_to_keep = 0.002
+  max_distance = 0.75
 )
 
 
@@ -27,7 +27,12 @@ pathways_as_network <- create_pathnet(
   foundation = starting_pathways,
   trim = TRUE,
   trim_order = 2
-)
+) %>%
+  left_join(
+    tRavis::reactome_categories_human,
+    by = c("pathway_1" = "id", "pathway_name_1" = "description")
+  ) %>%
+  mutate(node_label = if_else(!is.na(direction), pathway_name_1, level_1.y))
 
 
 # |- plot -----------------------------------------------------------------
@@ -35,21 +40,21 @@ pathways_as_network <- create_pathnet(
 ggraph(pathways_as_network, layout = "nicely") +
   geom_edge_link(aes(edge_width = log10(similarity)), alpha = 0.3) +
   geom_node_point(
-    aes(size = -log10(bonferroni), fill = direction),
+    aes(size = -log10(bonferroni), fill = direction, colour = level_1.y),
     pch = 21,
-    colour = "black"
   ) +
   geom_node_label(
-    aes(label = node_label),
-    size = 6,
+    aes(label = description),
+    # size = 6,
     repel = TRUE,
     alpha = 0.5,
-    max.overlaps = 3,
+    # max.overlaps = 3,
     min.segment.length = 0
   ) +
   scale_edge_width(range = c(0.5, 2)) +
   scale_size_continuous(range = c(4, 8)) +
-  scale_fill_discrete(na.value = "grey") +
+  scale_colour_brewer(palette = "Set3") +
+  scale_fill_discrete(na.value = "white") +
   theme_void()
 
 
@@ -77,13 +82,13 @@ candidate_dist_data <- get_pathway_distances(
 
 candidate_starting_pathways <- create_foundation(
   mat = candidate_dist_data,
-  prop_to_keep = 0.9
+  max_distance = 0.75
 )
 
 candidates_as_network <- create_pathnet(
   sigora_result = sigora_example_2,
   foundation = candidate_starting_pathways,
-  trim = FALSE,
+  trim = FALSE
 )
 
 ggraph(candidates_as_network, layout = "nicely") +
