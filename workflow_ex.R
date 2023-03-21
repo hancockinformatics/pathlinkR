@@ -23,16 +23,16 @@ starting_pathways <- create_foundation(
 # |- create_pathnet -------------------------------------------------------
 
 pathways_as_network <- create_pathnet(
-  sigora_result = sigora_example_1,
+  sigora_result = sigora_example_3,
   foundation = starting_pathways,
   trim = TRUE,
   trim_order = 2
 ) %>%
   left_join(
-    tRavis::reactome_categories_human,
-    by = c("pathway_1" = "id", "pathway_name_1" = "description")
-  ) %>%
-  mutate(node_label = if_else(!is.na(direction), pathway_name_1, level_1.y))
+    top_pathways,
+    by = c("pathway_1" = "pathway_id")
+  ) #%>%
+  #mutate(node_label = if_else(!is.na(direction), pathway_name_1, grouped_pathway))
 
 
 # |- plot -----------------------------------------------------------------
@@ -40,7 +40,7 @@ pathways_as_network <- create_pathnet(
 ggraph(pathways_as_network, layout = "nicely") +
   geom_edge_link(aes(edge_width = log10(similarity)), alpha = 0.3) +
   geom_node_point(
-    aes(size = -log10(bonferroni), fill = direction, colour = level_1.y),
+    aes(size = -log10(bonferroni), fill = direction, colour = grouped_pathway),
     pch = 21,
   ) +
   geom_node_label(
