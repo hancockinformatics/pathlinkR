@@ -73,7 +73,7 @@ sigora_database <- sigora_database_level4 %>%
   distinct() %>%
   as_tibble()
 
-
 # Save the object for the package -----------------------------------------
 
 usethis::use_data(sigora_database, overwrite = TRUE)
+
