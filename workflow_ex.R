@@ -1,4 +1,4 @@
-# Load packages & example data --------------------------------------------
+# Load the package --------------------------------------------------------
 
 devtools::load_all(".")
 
@@ -7,24 +7,25 @@ devtools::load_all(".")
 
 # |- get_pathway_distances and create_foundation --------------------------
 
-# dist_data <- get_pathway_distances(
-#   pathway_data = sigora_database,
-#   dist_method = "jaccard"
-# )
+dist_data <- get_pathway_distances(
+  pathway_data = sigora_database,
+  dist_method = "jaccard"
+)
 
 starting_pathways <- create_foundation(
   mat = pathway_distances_jaccard,
-  max_distance = 0.67
+  prop_to_keep = 0.004
+  # max_distance = 0.67
 )
 
 
 # |- create_pathnet -------------------------------------------------------
 
 my_pathway_network <- create_pathnet(
-  sigora_result = sigora_example_3,
+  sigora_result = sigora_example_1,
   foundation = starting_pathways,
   trim = TRUE,
-  trim_order = 1
+  trim_order = 2
 )
 
 
