@@ -2,8 +2,8 @@
 #'
 #' @param sigora_result Data frame of results from Sigora. Must contain columns
 #' "pathway_id" and "bonferroni".
-#' @param foundation List of pathway pairs to use in constructing a network.
-#'   Output from `create_foundation`.
+#' @param foundation List of pathway pairs to use in constructing a network,
+#'   output from `create_foundation`.
 #' @param trim Remove subgraphs which don't contain any enriched pathways.
 #' @param trim_order Order to use when removing subgraphs.
 #'
@@ -25,7 +25,6 @@
 create_pathnet <- function(sigora_result, foundation, trim = TRUE, trim_order = 1) {
 
   tr_trunc_neatly <- function(x, l = 60) {
-
     if (str_length(x) <= l) {
       return(x)
     } else {
@@ -54,14 +53,7 @@ create_pathnet <- function(sigora_result, foundation, trim = TRUE, trim_order = 
     edges = starting_edges,
     directed = FALSE
   ) %>%
-    mutate(
-      rn = row_number(),
-      node_label = map_chr(
-        as.character(pathway_name_1),
-        ~str_wrap(.x, width = 20)
-      ),
-      node_label = str_replace(node_label, "^$", NA_character_)
-    )
+    mutate(rn = row_number())
 
   if (trim) {
     x1 <- pathways_as_network %>%
@@ -76,11 +68,20 @@ create_pathnet <- function(sigora_result, foundation, trim = TRUE, trim_order = 
       unlist() %>%
       unique()
 
-    pathways_as_network_trimmed <- pathways_as_network %>%
+    pathways_as_network <- pathways_as_network %>%
       filter(rn %in% c(x1, valid_nodes))
-
-    return(pathways_as_network_trimmed)
   }
 
-  return(pathways_as_network)
+  pathways_as_network %>%
+    left_join(
+      top_pathways,
+      by = c("pathway_1" = "pathway_id", "pathway_name_1" = "pathway_name")
+    ) %>%
+    # mutate(node_fill = if_else(!is.na(bonferroni), grouped_pathway, NA)) %>%
+    select(
+    pathway_1,
+    pathway_name_1,
+    everything(),
+    -any_of(c("rn", "level_1", "level_2"))
+  )
 }

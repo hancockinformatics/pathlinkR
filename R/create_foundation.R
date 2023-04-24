@@ -34,7 +34,8 @@ create_foundation <- function(mat, max_distance = NA, prop_to_keep = NA) {
     pivot_longer(-pathway_1, names_to = "pathway_2", values_to = "distance") %>%
     distinct() %>%
     filter(distance != 0) %>%
-    arrange(distance)
+    arrange(distance) %>%
+    mutate(across(where(is.factor), as.character))
 
   if (!is.na(max_distance)) {
     edge_table <- filter(mat_tibble, distance <= max_distance)
@@ -52,7 +53,11 @@ create_foundation <- function(mat, max_distance = NA, prop_to_keep = NA) {
       by = c("pathway_2" = "pathway_id"),
       suffix = c("_1", "_2")
     ) %>%
-    relocate(contains("name"), distance)
+    relocate(contains("name"), distance) %>%
+    mutate(
+      across(where(is.factor), as.character),
+      across(where(is.character), str_trim)
+    )
 
   return(anno_edge_table)
 }
