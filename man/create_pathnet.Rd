@@ -10,8 +10,8 @@ create_pathnet(sigora_result, foundation, trim = TRUE, trim_order = 1)
 \item{sigora_result}{Data frame of results from Sigora. Must contain columns
 "pathway_id" and "bonferroni".}
 
-\item{foundation}{List of pathway pairs to use in constructing a network.
-Output from \code{create_foundation}.}
+\item{foundation}{List of pathway pairs to use in constructing a network,
+output from \code{create_foundation}.}
 
 \item{trim}{Remove subgraphs which don't contain any enriched pathways.}
 
@@ -21,7 +21,8 @@ Output from \code{create_foundation}.}
 A tidygraph network object
 }
 \description{
-Description will go here
+Creates a tidygraph network object from the pathway information,
+ready to be visialized with \code{plot_pathnet}.
 }
 \references{
 None.
