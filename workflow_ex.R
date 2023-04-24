@@ -30,7 +30,7 @@ my_pathway_network <- create_pathnet(
 
 # |- plot -----------------------------------------------------------------
 
-plot_pathnet(my_pathway_network)
+plot_pathnet(my_pathway_network, node_label_overlaps = 8)
 
 
 # Example 2 ---------------------------------------------------------------
