@@ -16,7 +16,8 @@
 #' @importFrom tidygraph tbl_graph
 #' @importFrom purrr map map_chr
 #'
-#' @description Description will go here
+#' @description Creates a tidygraph network object from the pathway information,
+#' ready to be visialized with `plot_pathnet`.
 #'
 #' @references None.
 #'
