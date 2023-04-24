@@ -4,7 +4,15 @@
 \alias{plot_pathnet}
 \title{plot_pathnet}
 \usage{
-plot_pathnet(network, net_layout = "nicely", edge_alpha = 0.67)
+plot_pathnet(
+  network,
+  net_layout = "nicely",
+  node_size_range = c(4, 8),
+  edge_alpha = 0.67,
+  edge_width_range = c(0.33, 3),
+  node_label_alpha = 0.67,
+  node_label_overlaps = 6
+)
 }
 \arguments{
 \item{network}{Tidygraph network object, output from \code{create_pathnet}. See
@@ -13,7 +21,18 @@ Details for specific requirements.}
 \item{net_layout}{Desired layout for the network visualization. Defaults to
 "nicely", but supports any method found in \code{?layout_tbl_graph_igraph}}
 
-\item{edge_alpha}{Alpha value for edges}
+\item{node_size_range}{Size range for nodes, mapped to significance
+(Bonferroni p-value). Defaults to \code{c(4, 8)}.}
+
+\item{edge_alpha}{Alpha value for edges. Defaults to \code{0.67}.}
+
+\item{edge_width_range}{Range of edge widths, mapped to \code{log10(similarity)}.
+Defaults to \code{c(0.33, 3)}.}
+
+\item{node_label_alpha}{Transparency of node labels. Defaults to \code{0.67}.}
+
+\item{node_label_overlaps}{Max overlaps for node labels, from \code{ggrepel}.
+Defaults to \code{6}.}
 }
 \value{
 An object of class "gg"
