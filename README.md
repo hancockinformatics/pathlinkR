@@ -1,25 +1,35 @@
 # pathnet
-**pathnet** is an R package to create PPI-style networks from pathways, using
-overlap between their constituent genes to define interactions/edges. This will
+**pathnet** is an R package to create PPI-style networks from Reactome pathways, 
+using overlap between constituent genes to define interactions/edges. This will
 allow for visualization of similar pathways based on their underlying genes,
-instead of a category/hierarchy term. One can then overlay the results of
-pathway enrichment analyses onto this "foundational" network, mapping
+instead of simple grouping by category/hierarchy term. One can then overlay the
+results of pathway enrichment analyses onto this "foundational" network, mapping
 dysregulation and significance onto nodes (pathways) in the network.
 
+## Installation
+```r
+devtools::install_github("https://github.com/hancockinformatics/pathnet")
+```
 
 ## Workflow
-The proposed workflow currently looks like this:
 
-- Start with the provided `sigora_database` object, which contains all human 
-  Reactome pathways and their constituent genes
-- Use the included `sigora_database` as input to `unnamed_function` to create a
-  pairwise distance matrix, using any distance metric supported by
+- Use the included `sigora_database` table (containing all human
+  Reactome pathways and their genes) as input to `get_pathway_distances` to 
+  build a pairwise distance matrix, using any distance metric supported by 
   `vegan::vegdist()`
-  - Alternatively, we provide a pairwise Jaccard matrix that can be used as-is
-- With `create_foundation()`, create a data frame of pathway nodes/edges, where
+  - Alternatively, we provide a pre-made distance matrix (Jaccard) that can be 
+    used as-is
+- With `create_foundation()`, build a data frame of pathway nodes/edges, where
   pathways with a distance below a desired threshold are considered "connected"
-- Turn this node/edge data frame into a network object that can be plotted and 
-  explored using `ggraph` functions
-  - We will make our own wrappers here to simplify the plotting process
-- Add information from enriched pathways generated with `sigora`, such as 
-  p-values, to include when visualizing the pathway networks
+  - One can also simply select a top proportion of all pathways to consider as
+    connected, which can more easily handle a variety of distance measures
+- Turn this node/edge data frame into a network object with `create_pathnet`,
+  with support for trimming non-enriched pathways
+- Visualize this pathway network using the `plot_pathnet` function, which 
+  supports a large number of layout options and visual tweaks
+  - By default, nodes are coloured by a manually-curated top-level pathway type,
+    with filled nodes denoting enriched pathways and black nodes "interactor 
+    pathways"
+    
+## Contributors
+Andy An & Travis Blimkie
