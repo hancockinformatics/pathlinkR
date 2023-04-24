@@ -38,12 +38,13 @@ my_pathway_network <- create_pathnet(
   foundation = starting_pathways,
   trim = TRUE,
   trim_order = 1
-)
+) %>%
+  mutate(node_fill = if_else(!is.na(description), grouped_pathway, NA_character_))
 
 
 # |- plot -----------------------------------------------------------------
 
-ggraph(pathways_as_network, layout = "nicely") +
+ggraph(my_pathway_network, layout = "nicely") +
   geom_edge_link(aes(edge_width = log10(similarity)), alpha = 0.67) +
   geom_node_point(
     aes(size = -log10(bonferroni), fill = node_fill, colour = grouped_pathway),
@@ -51,7 +52,7 @@ ggraph(pathways_as_network, layout = "nicely") +
     stroke = 1.5
   ) +
   geom_node_label(
-    aes(label = pathway_name),
+    aes(label = pathway_name_1),
     repel = TRUE,
     alpha = 0.67,
     min.segment.length = 0,
@@ -70,9 +71,15 @@ ggraph(pathways_as_network, layout = "nicely") +
     colour = "Pathway type"
   ) +
   theme_void(base_size = 18) +
+  theme(legend.text.align = 0) +
   guides(
     colour = guide_legend(override.aes = list(size = 6)),
-    size = guide_legend(override.aes = list(pch = 21, colour = "black", fill = "grey"))
+    size = guide_legend(override.aes = list(
+      pch = 21,
+      colour = "black",
+      fill = "white",
+      stroke = 0.5
+    ))
   )
 
 
