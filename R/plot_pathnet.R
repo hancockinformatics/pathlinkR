@@ -4,7 +4,14 @@
 #'  Details for specific requirements.
 #' @param net_layout Desired layout for the network visualization. Defaults to
 #'   "nicely", but supports any method found in `?layout_tbl_graph_igraph`
-#' @param edge_alpha Alpha value for edges
+#' @param edge_alpha Alpha value for edges. Defaults to `0.67`.
+#' @param node_size_range Size range for nodes, mapped to significance
+#'   (Bonferroni p-value). Defaults to `c(4, 8)`.
+#' @param edge_width_range Range of edge widths, mapped to `log10(similarity)`.
+#'   Defaults to `c(0.33, 3)`.
+#' @param node_label_alpha Transparency of node labels. Defaults to `0.67`.
+#' @param node_label_overlaps Max overlaps for node labels, from `ggrepel`.
+#'   Defaults to `6`.
 #'
 #' @return An object of class "gg"
 #' @export
@@ -19,7 +26,15 @@
 #'
 #' @seealso <https://github.com/hancockinformatics/pathnet>
 #'
-plot_pathnet <- function(network, net_layout = "nicely", edge_alpha = 0.67) {
+plot_pathnet <- function(
+    network,
+    net_layout = "nicely",
+    node_size_range = c(4, 8),
+    edge_alpha = 0.67,
+    edge_width_range = c(0.33, 3),
+    node_label_alpha = 0.67,
+    node_label_overlaps = 6
+  ) {
 
   # Check column names for both nodes and edges
   stopifnot(all(
@@ -46,31 +61,37 @@ plot_pathnet <- function(network, net_layout = "nicely", edge_alpha = 0.67) {
     )
 
   ggraph(network, layout = net_layout) +
+    # Edges
     geom_edge_link(aes(edge_width = log10(similarity)), alpha = edge_alpha) +
+    scale_edge_width(range = edge_width_range, name = "Similarity") +
+
+    # Nodes
     geom_node_point(
       aes(size = -log10(bonferroni), fill = node_fill, colour = grouped_pathway),
       pch = 21,
       stroke = 1.5
     ) +
-    geom_node_label(
-      aes(label = pathway_name_1_wrap),
-      repel = TRUE,
-      alpha = 0.67,
-      min.segment.length = 0,
-      max.overlaps = 6
-    ) +
-    scale_edge_width(range = c(0.33, 3), name = "Similarity") +
     scale_size_continuous(
       labels = scales::label_math(expr = 10^-~.x),
-      range = c(4, 8)
+      range = node_size_range
     ) +
-    scale_colour_manual(values = top_pathway_colours) +
     scale_fill_manual(
       values = top_pathway_colours,
       na.value = "white",
       guide = NULL
     ) +
-    scale_shape_manual(values = c("up" = 21), na.value = 16) +
+    scale_colour_manual(values = top_pathway_colours) +
+
+    # Node labels
+    geom_node_label(
+      aes(label = pathway_name_1_wrap),
+      repel = TRUE,
+      alpha = node_label_alpha,
+      min.segment.length = 0,
+      max.overlaps = node_label_overlaps
+    ) +
+
+    # Misc
     labs(
       size = "Bonferroni\np-value",
       colour = "Pathway type"
