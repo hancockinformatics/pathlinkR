@@ -32,4 +32,15 @@ devtools::install_github("https://github.com/hancockinformatics/pathnet")
     pathways"
     
 ## Contributors
-Andy An & Travis Blimkie
+Andy An & Travis Blimkie at the CMDR REW Hancock Lab.
+
+## Versioning
+This package makes use of [SemVer](https://semver.org/).
+
+## License
+This project uses the GNU General Public License v3.0, available
+[here](https://github.com/hancockinformatics/SeptiSearch/blob/master/LICENSE).
+
+<br>
+
+[<img src="www/hancock-lab-logo.svg" height="40px">](http://cmdr.ubc.ca/bobh/)
