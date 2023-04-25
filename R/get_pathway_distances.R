@@ -55,7 +55,12 @@ get_pathway_distances <- function(pathway_data = sigora_database,
     column_to_rownames(all_of(pathway_id_col)) %>%
     as.matrix()
 
-  message("Running distance calculations (this may take a while)...")
+  if ( length(unique(pathway_data[[pathway_id_col]])) > 500 ) {
+    message("Running distance calculations (this may take a while)...")
+  } else {
+    message("Running distance calculations...")
+  }
+
   distance_matrix <- identify_table %>%
     vegan::vegdist(
       method = "jaccard",
