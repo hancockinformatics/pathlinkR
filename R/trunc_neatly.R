@@ -1,0 +1,28 @@
+#' trunc_neatly
+#'
+#' @param x Character to be truncated
+#' @param l Desired maximum length for the output character
+#'
+#' @return Character vector
+#'
+#' @import stringr
+#'
+#' @description Trims a character string to the desired length, without breaking
+#'   in the middle of a word (i.e. chops at the nearest space). Appends an
+#'   ellipsis at the end to indicate some text has been removed.
+#'
+#' @references None.
+#'
+#' @seealso <https://github.com/hancockinformatics/pathnet>
+#'
+trunc_neatly <- function(x, l = 60) {
+  if (str_length(x) <= l) {
+    return(x)
+  } else {
+    shortened <- x %>%
+      as.character() %>%
+      str_sub(., start = 1, end = l) %>%
+      str_replace(., pattern = "\\s([^\\s]*)$", replacement = "...")
+    return(shortened)
+  }
+}
