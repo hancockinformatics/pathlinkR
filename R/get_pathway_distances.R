@@ -61,7 +61,7 @@ get_pathway_distances <- function(pathway_data = sigora_database,
     message("Running distance calculations...")
   }
 
-  distance_matrix <- identify_table %>%
+  distance_matrix <- identity_table %>%
     vegan::vegdist(
       method = "jaccard",
       binary = TRUE,
