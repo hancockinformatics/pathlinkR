@@ -7,13 +7,13 @@ devtools::load_all(".")
 
 # |- get_pathway_distances and create_foundation --------------------------
 
-dist_data <- get_pathway_distances(
-  pathway_data = sigora_database,
-  dist_method = "jaccard"
-)
+# dist_data <- get_pathway_distances(
+#   pathway_data = sigora_database,
+#   dist_method = "jaccard"
+# )
 
 starting_pathways <- create_foundation(
-  mat = dist_data,
+  mat = pathway_distances_jaccard,
   # prop_to_keep = 0.004
   max_distance = 0.67
 )
@@ -31,7 +31,7 @@ my_pathway_network <- create_pathnet(
 
 # |- plot -----------------------------------------------------------------
 
-plot_pathnet(my_pathway_network, node_label_overlaps = 8)
+plot_pathnet(my_pathway_network, node_label_overlaps = 7)
 
 
 # Example 2 ---------------------------------------------------------------
