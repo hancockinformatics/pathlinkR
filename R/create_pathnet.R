@@ -25,18 +25,6 @@
 #'
 create_pathnet <- function(sigora_result, foundation, trim = TRUE, trim_order = 1) {
 
-  tr_trunc_neatly <- function(x, l = 60) {
-    if (str_length(x) <= l) {
-      return(x)
-    } else {
-      shortened <- x %>%
-        as.character() %>%
-        str_sub(., start = 1, end = l) %>%
-        str_replace(., pattern = "\\s([^\\s]*)$", replacement = "...")
-      return(shortened)
-    }
-  }
-
   stopifnot(all(c("pathway_id", "bonferroni") %in% colnames(sigora_result)))
 
   starting_nodes <- foundation %>%
