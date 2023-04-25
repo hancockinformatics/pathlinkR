@@ -42,7 +42,7 @@ get_pathway_distances <- function(pathway_data = sigora_database,
   ))
 
   message("Creating identity matrix...")
-  identify_table <- pathway_data %>%
+  identity_table <- pathway_data %>%
     select(all_of(c(gene_id_col, pathway_id_col))) %>%
     distinct() %>%
     mutate(present = 1) %>%
