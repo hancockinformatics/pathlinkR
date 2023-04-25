@@ -9,11 +9,19 @@
 #'   (Bonferroni p-value). Defaults to `c(4, 8)`.
 #' @param edge_width_range Range of edge widths, mapped to `log10(similarity)`.
 #'   Defaults to `c(0.33, 3)`.
+#' @param label_prop Proportion of "interactor" (i.e. non-enriched) pathways
+#'   that the function will attempt to label. E.g. setting this to 0.5 (the
+#'   default) means half of the non-enriched pathways will *potentially* be
+#'   labeled - it won't be exact because the node labeling is done with
+#'   `ggrepel`.
 #' @param node_label_alpha Transparency of node labels. Defaults to `0.67`.
 #' @param node_label_overlaps Max overlaps for node labels, from `ggrepel`.
 #'   Defaults to `6`.
+#' @param seg_colour Colour of line segments connecting labels to nodes.
+#'   Defaults to "black".
 #' @param theme_base_size Base font size for all plot elements. Defaults to
 #'   `16`.
+#' @param seed Random seed, which will influence node positions and labels
 #'
 #' @return An object of class "gg"
 #' @export
@@ -23,6 +31,12 @@
 #' @import dplyr
 #'
 #' @description Plots the network object
+#'
+#' @details A note regarding node labels: The function tries to prioritize
+#'   labeling enriched pathways (filled nodes), with the `label_prop` argument
+#'   determining roughly how many of the remaining interactor pathways might get
+#'   labels. You'll likely need to tweak this value, and try different seeds, to
+#'   get the desired effect.
 #'
 #' @references None.
 #'
@@ -34,10 +48,15 @@ plot_pathnet <- function(
     node_size_range = c(4, 8),
     edge_alpha = 0.67,
     edge_width_range = c(0.33, 3),
+    label_prop = 0.5,
     node_label_alpha = 0.67,
     node_label_overlaps = 6,
-    theme_base_size = 16
+    seg_colour = "black",
+    theme_base_size = 16,
+    seed = 123
   ) {
+
+  set.seed(seed)
 
   # Check column names for both nodes and edges
   stopifnot(all(
@@ -53,17 +72,41 @@ plot_pathnet <- function(
     "similarity" %in% colnames(as_tibble(tidygraph::activate(network, "edges")))
   ))
 
-  network <- network %>%
+  network_w_mods <- network %>%
     mutate(
       node_fill = if_else(!is.na(description), grouped_pathway, NA_character_),
       pathway_name_1_wrap = map_chr(
         as.character(pathway_name_1),
+        ~trunc_neatly(.x, l = 40)
+      ),
+      pathway_name_1_wrap = map_chr(
+        as.character(pathway_name_1_wrap),
         ~str_wrap(.x, width = 20)
       ),
       pathway_name_1_wrap = str_replace(pathway_name_1_wrap, "^$", NA_character_)
     )
 
-  ggraph(network, layout = net_layout) +
+  interactors_all <- network_w_mods %>%
+    filter(bonferroni == 1) %>%
+    pull(pathway_name_1_wrap)
+
+  interactors_to_label <- sample(
+    interactors_all,
+    size = (length(interactors_all) * label_prop),
+    replace = FALSE
+  )
+
+
+  network_to_plot <- network_w_mods %>%
+    mutate(
+      node_label = case_when(
+        bonferroni < 1 ~ pathway_name_1_wrap,
+        pathway_name_1_wrap %in% interactors_to_label ~ pathway_name_1_wrap,
+        TRUE ~ NA_character_
+      )
+    )
+
+  ggraph(network_to_plot, layout = net_layout) +
     # Edges
     geom_edge_link(aes(edge_width = log10(similarity)), alpha = edge_alpha) +
     scale_edge_width(range = edge_width_range, name = "Similarity") +
@@ -87,10 +130,11 @@ plot_pathnet <- function(
 
     # Node labels
     geom_node_label(
-      aes(label = pathway_name_1_wrap),
+      aes(label = node_label),
       repel = TRUE,
       alpha = node_label_alpha,
       min.segment.length = 0,
+      segment.colour = seg_colour,
       max.overlaps = node_label_overlaps
     ) +
 
