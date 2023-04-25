@@ -12,6 +12,8 @@
 #' @param node_label_alpha Transparency of node labels. Defaults to `0.67`.
 #' @param node_label_overlaps Max overlaps for node labels, from `ggrepel`.
 #'   Defaults to `6`.
+#' @param theme_base_size Base font size for all plot elements. Defaults to
+#'   `16`.
 #'
 #' @return An object of class "gg"
 #' @export
@@ -33,7 +35,8 @@ plot_pathnet <- function(
     edge_alpha = 0.67,
     edge_width_range = c(0.33, 3),
     node_label_alpha = 0.67,
-    node_label_overlaps = 6
+    node_label_overlaps = 6,
+    theme_base_size = 16
   ) {
 
   # Check column names for both nodes and edges
@@ -96,7 +99,7 @@ plot_pathnet <- function(
       size = "Bonferroni\np-value",
       colour = "Pathway type"
     ) +
-    theme_void(base_size = 18) +
+    theme_void(base_size = theme_base_size) +
     theme(
       legend.text.align = 0,
       plot.margin = unit(rep(5, 4), "mm")
