@@ -15,7 +15,7 @@ devtools::load_all(".")
 starting_pathways <- create_foundation(
   mat = pathway_distances_jaccard,
   # prop_to_keep = 0.004
-  max_distance = 0.75
+  max_distance = 0.7
 )
 
 
@@ -33,7 +33,7 @@ my_pathway_network <- create_pathnet(
 
 plot_pathnet(
   my_pathway_network,
-  label_prop = 0.5,
+  label_prop = 0.1,
   node_label_overlaps = 8,
   seg_colour = "red"
 )

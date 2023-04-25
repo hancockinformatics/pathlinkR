@@ -48,7 +48,7 @@ plot_pathnet <- function(
     node_size_range = c(4, 8),
     edge_alpha = 0.67,
     edge_width_range = c(0.33, 3),
-    label_prop = 0.5,
+    label_prop = 0.25,
     node_label_alpha = 0.67,
     node_label_overlaps = 6,
     seg_colour = "black",
