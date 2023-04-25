@@ -56,33 +56,43 @@ create_pathnet <- function(sigora_result, foundation, trim = TRUE, trim_order = 
   ) %>%
     mutate(rn = row_number())
 
-  if (trim) {
-    x1 <- pathways_as_network %>%
-      filter(bonferroni < 1) %>%
-      pull(rn)
+  pathways_as_network_2 <-
+    if (trim) {
+      x1 <- pathways_as_network %>%
+        filter(bonferroni < 1) %>%
+        pull(rn)
 
-    valid_nodes <- map(x1, ~neighborhood(
-      graph = as.igraph(pathways_as_network),
-      order = trim_order,
-      nodes = .x
-    )) %>%
-      unlist() %>%
-      unique()
+      valid_nodes <- map(x1, ~neighborhood(
+        graph = as.igraph(pathways_as_network),
+        order = trim_order,
+        nodes = .x
+      )) %>%
+        unlist() %>%
+        unique()
 
-    pathways_as_network <- pathways_as_network %>%
-      filter(rn %in% c(x1, valid_nodes))
-  }
+      pathways_as_network %>%
+        filter(rn %in% c(x1, valid_nodes)) %>%
+        select(-rn)
+    } else {
+      select(pathways_as_network, -rn)
+    }
 
-  pathways_as_network %>%
+  pathways_as_network_3 <- pathways_as_network_2 %>%
+    tidygraph::activate("edges") %>%
+    distinct() %>%
+    tidygraph::activate("nodes")
+
+  pathways_as_network_4 <- pathways_as_network_3 %>%
     left_join(
       top_pathways,
       by = c("pathway_1" = "pathway_id", "pathway_name_1" = "pathway_name")
     ) %>%
-    # mutate(node_fill = if_else(!is.na(bonferroni), grouped_pathway, NA)) %>%
     select(
-    pathway_1,
-    pathway_name_1,
-    everything(),
-    -any_of(c("rn", "level_1", "level_2"))
-  )
+      pathway_1,
+      pathway_name_1,
+      everything(),
+      -any_of(c("level_1", "level_2"))
+    )
+
+  return(pathways_as_network_4)
 }
