@@ -15,7 +15,7 @@ devtools::load_all(".")
 starting_pathways <- create_foundation(
   mat = pathway_distances_jaccard,
   # prop_to_keep = 0.004
-  max_distance = 0.7
+  max_distance = 0.5
 )
 
 
@@ -25,7 +25,7 @@ my_pathway_network <- create_pathnet(
   sigora_result = sigora_example_1,
   foundation = starting_pathways,
   trim = TRUE,
-  trim_order = 1
+  trim_order = 2
 )
 
 
