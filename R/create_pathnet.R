@@ -4,8 +4,10 @@
 #' "pathway_id" and "bonferroni".
 #' @param foundation List of pathway pairs to use in constructing a network,
 #'   output from `create_foundation`.
-#' @param trim Remove subgraphs which don't contain any enriched pathways.
-#' @param trim_order Order to use when removing subgraphs.
+#' @param trim Remove subgraphs which don't contain any enriched pathways
+#'   (default is `TRUE`).
+#' @param trim_order Order to use when removing subgraphs; Higher values will
+#'   keep more non-enriched pathway nodes. Defaults to `1`.
 #'
 #' @return A tidygraph network object
 #' @export
@@ -17,7 +19,11 @@
 #' @importFrom purrr map map_chr
 #'
 #' @description Creates a tidygraph network object from the pathway information,
-#' ready to be visialized with `plot_pathnet`.
+#'   ready to be visualized with `plot_pathnet`.
+#'
+#' @details With the "trim" option enabled, nodes (pathways) and subgraphs which
+#'   are not sufficiently connected to enriched pathways will be removed. How
+#'   aggressively this is done can be controlled via the `trim_order` argument.
 #'
 #' @references None.
 #'

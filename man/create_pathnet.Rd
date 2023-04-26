@@ -13,16 +13,23 @@ create_pathnet(sigora_result, foundation, trim = TRUE, trim_order = 1)
 \item{foundation}{List of pathway pairs to use in constructing a network,
 output from \code{create_foundation}.}
 
-\item{trim}{Remove subgraphs which don't contain any enriched pathways.}
+\item{trim}{Remove subgraphs which don't contain any enriched pathways
+(default is \code{TRUE}).}
 
-\item{trim_order}{Order to use when removing subgraphs.}
+\item{trim_order}{Order to use when removing subgraphs; Higher values will
+keep more non-enriched pathway nodes. Defaults to \code{1}.}
 }
 \value{
 A tidygraph network object
 }
 \description{
 Creates a tidygraph network object from the pathway information,
-ready to be visialized with \code{plot_pathnet}.
+ready to be visualized with \code{plot_pathnet}.
+}
+\details{
+With the "trim" option enabled, nodes (pathways) and subgraphs which
+are not sufficiently connected to enriched pathways will be removed. How
+aggressively this is done can be controlled via the \code{trim_order} argument.
 }
 \references{
 None.

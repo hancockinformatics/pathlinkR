@@ -30,7 +30,7 @@
 #' @import ggraph
 #' @import dplyr
 #'
-#' @description Plots the network object
+#' @description Plots the network object generated from `create_pathnet`
 #'
 #' @details A note regarding node labels: The function tries to prioritize
 #'   labeling enriched pathways (filled nodes), with the `label_prop` argument
