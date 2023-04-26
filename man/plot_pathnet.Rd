@@ -10,8 +10,12 @@ plot_pathnet(
   node_size_range = c(4, 8),
   edge_alpha = 0.67,
   edge_width_range = c(0.33, 3),
+  label_prop = 0.25,
   node_label_alpha = 0.67,
-  node_label_overlaps = 6
+  node_label_overlaps = 6,
+  seg_colour = "black",
+  theme_base_size = 16,
+  seed = 123
 )
 }
 \arguments{
@@ -29,16 +33,37 @@ Details for specific requirements.}
 \item{edge_width_range}{Range of edge widths, mapped to \code{log10(similarity)}.
 Defaults to \code{c(0.33, 3)}.}
 
+\item{label_prop}{Proportion of "interactor" (i.e. non-enriched) pathways
+that the function will attempt to label. E.g. setting this to 0.5 (the
+default) means half of the non-enriched pathways will \emph{potentially} be
+labeled - it won't be exact because the node labeling is done with
+\code{ggrepel}.}
+
 \item{node_label_alpha}{Transparency of node labels. Defaults to \code{0.67}.}
 
 \item{node_label_overlaps}{Max overlaps for node labels, from \code{ggrepel}.
 Defaults to \code{6}.}
+
+\item{seg_colour}{Colour of line segments connecting labels to nodes.
+Defaults to "black".}
+
+\item{theme_base_size}{Base font size for all plot elements. Defaults to
+\code{16}.}
+
+\item{seed}{Random seed, which will influence node positions and labels}
 }
 \value{
 An object of class "gg"
 }
 \description{
-Plots the network object
+Plots the network object generated from \code{create_pathnet}
+}
+\details{
+A note regarding node labels: The function tries to prioritize
+labeling enriched pathways (filled nodes), with the \code{label_prop} argument
+determining roughly how many of the remaining interactor pathways might get
+labels. You'll likely need to tweak this value, and try different seeds, to
+get the desired effect.
 }
 \references{
 None.
