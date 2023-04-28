@@ -17,7 +17,10 @@
 #'
 plot_pathnet_plotly <- function(network) {
 
-  network_igraph <- as.igraph(network)
+  network_igraph <- as.igraph(
+    network %>%
+      mutate(is_enriched = if_else(bonferroni < 1, "y", "n"))
+  )
   network_layout <- layout.auto(network_igraph)
 
   plotly_node_info <- bind_cols(
@@ -65,6 +68,8 @@ plot_pathnet_plotly <- function(network) {
       data = plotly_node_info,
       x = ~xn,
       y = ~yn,
+      symbol = ~is_enriched,
+      symbols = c("circle-open", "circle"),
       color = ~grouped_pathway,
       marker = list(
         size = 20,
