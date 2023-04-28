@@ -40,6 +40,11 @@ pathnet_ggraph(
 )
 
 
+# visNetwork --------------------------------------------------------------
+
+
+
+
 # Example 2 ---------------------------------------------------------------
 
 # Here we'll restrict the data using the pathways/genes from the Sigora results,
