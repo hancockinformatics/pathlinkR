@@ -36,8 +36,7 @@ create_pathnet <- function(sigora_result, foundation, trim = TRUE, trim_order = 
   starting_nodes <- foundation %>%
     select(pathway_1, pathway_name_1) %>%
     distinct() %>%
-    left_join(sigora_result, by = c("pathway_1" = "pathway_id")) %>%
-    replace_na(list(bonferroni = 1))
+    left_join(sigora_result, by = c("pathway_1" = "pathway_id"))
 
   starting_edges <- foundation %>%
     mutate(similarity = 1 / distance) %>%
@@ -53,7 +52,7 @@ create_pathnet <- function(sigora_result, foundation, trim = TRUE, trim_order = 
   pathways_as_network_2 <-
     if (trim) {
       x1 <- pathways_as_network %>%
-        filter(bonferroni < 1) %>%
+        filter(!is.na(bonferroni)) %>%
         pull(rn)
 
       valid_nodes <- map(x1, ~neighborhood(

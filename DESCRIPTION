@@ -21,7 +21,6 @@ Imports:
     ggraph,
     glue,
     igraph,
-    plotly,
     purrr,
     scales,
     stringr,

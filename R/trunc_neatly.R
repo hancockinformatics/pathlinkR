@@ -16,7 +16,9 @@
 #' @seealso <https://github.com/hancockinformatics/pathnet>
 #'
 trunc_neatly <- function(x, l = 60) {
-  if (str_length(x) <= l) {
+  if (is.na(x)) {
+    return(NA_character_)
+  } else if (str_length(x) <= l) {
     return(x)
   } else {
     shortened <- x %>%

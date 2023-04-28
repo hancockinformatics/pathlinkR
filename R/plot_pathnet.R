@@ -66,9 +66,8 @@ plot_pathnet <- function(
   stopifnot(all(
     c(
       "pathway_name_1",
-      "description",
-      "grouped_pathway",
-      "bonferroni"
+      "bonferroni",
+      "grouped_pathway"
     ) %in% colnames(as_tibble(network))
   ))
 
@@ -76,23 +75,9 @@ plot_pathnet <- function(
     "similarity" %in% colnames(as_tibble(tidygraph::activate(network, "edges")))
   ))
 
-  network_w_mods <- network %>%
-    mutate(
-      node_fill = if_else(!is.na(description), grouped_pathway, NA_character_),
-      pathway_name_1_wrap = map_chr(
-        as.character(pathway_name_1),
-        ~trunc_neatly(.x, l = 40)
-      ),
-      pathway_name_1_wrap = map_chr(
-        as.character(pathway_name_1_wrap),
-        ~str_wrap(.x, width = 20)
-      ),
-      pathway_name_1_wrap = str_replace(pathway_name_1_wrap, "^$", NA_character_)
-    )
-
-  interactors_all <- network_w_mods %>%
-    filter(bonferroni == 1) %>%
-    pull(pathway_name_1_wrap)
+  interactors_all <- network %>%
+    filter(is.na(bonferroni)) %>%
+    pull(pathway_name_1)
 
   interactors_to_label <- sample(
     interactors_all,
@@ -100,14 +85,18 @@ plot_pathnet <- function(
     replace = FALSE
   )
 
-
-  network_to_plot <- network_w_mods %>%
-    mutate(
+  network_to_plot <- network %>% mutate(
+      node_fill = if_else(!is.na(bonferroni), grouped_pathway, NA_character_),
       node_label = case_when(
-        bonferroni < 1 ~ pathway_name_1_wrap,
-        pathway_name_1_wrap %in% interactors_to_label ~ pathway_name_1_wrap,
+        !is.na(bonferroni) ~ pathway_name_1,
+        pathway_name_1 %in% interactors_to_label ~ pathway_name_1,
         TRUE ~ NA_character_
-      )
+      ),
+      node_label = map_chr(
+        node_label,
+        ~trunc_neatly(.x, l = 40) %>% str_wrap(width = 20)
+      ),
+      bonferroni = if_else(!is.na(bonferroni), bonferroni, 1)
     )
 
   ggraph(network_to_plot, layout = net_layout) +
