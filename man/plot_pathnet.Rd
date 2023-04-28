@@ -8,9 +8,11 @@ plot_pathnet(
   network,
   net_layout = "nicely",
   node_size_range = c(4, 8),
-  edge_alpha = 0.67,
+  edge_colour = "grey30",
+  edge_alpha = 1,
   edge_width_range = c(0.33, 3),
   label_prop = 0.25,
+  node_label_size = 5,
   node_label_alpha = 0.67,
   node_label_overlaps = 6,
   seg_colour = "black",
@@ -28,7 +30,9 @@ Details for specific requirements.}
 \item{node_size_range}{Size range for nodes, mapped to significance
 (Bonferroni p-value). Defaults to \code{c(4, 8)}.}
 
-\item{edge_alpha}{Alpha value for edges. Defaults to \code{0.67}.}
+\item{edge_colour}{Colour of network edges; defaults to "grey30".}
+
+\item{edge_alpha}{Alpha value for edges; defaults to \code{1}.}
 
 \item{edge_width_range}{Range of edge widths, mapped to \code{log10(similarity)}.
 Defaults to \code{c(0.33, 3)}.}
@@ -38,6 +42,8 @@ that the function will attempt to label. E.g. setting this to 0.5 (the
 default) means half of the non-enriched pathways will \emph{potentially} be
 labeled - it won't be exact because the node labeling is done with
 \code{ggrepel}.}
+
+\item{node_label_size}{Size of node labels; defaults to 5.}
 
 \item{node_label_alpha}{Transparency of node labels. Defaults to \code{0.67}.}
 

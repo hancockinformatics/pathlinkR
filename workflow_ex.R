@@ -1,7 +1,5 @@
 # Load the package --------------------------------------------------------
 
-library(plotly)
-library(igraph)
 devtools::load_all(".")
 
 
@@ -39,11 +37,6 @@ plot_pathnet(
   node_label_overlaps = 8,
   seg_colour = "red"
 )
-
-
-# plotly? -----------------------------------------------------------------
-
-plot_pathnet_plotly(my_pathway_network)
 
 
 # Example 2 ---------------------------------------------------------------
