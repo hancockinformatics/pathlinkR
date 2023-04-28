@@ -34,6 +34,7 @@ my_pathway_network <- create_pathnet(
 plot_pathnet(
   my_pathway_network,
   label_prop = 0.1,
+  node_label_size = 4,
   node_label_overlaps = 8,
   seg_colour = "red"
 )
