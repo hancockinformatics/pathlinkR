@@ -4,7 +4,8 @@
 #'  Details for specific requirements.
 #' @param net_layout Desired layout for the network visualization. Defaults to
 #'   "nicely", but supports any method found in `?layout_tbl_graph_igraph`
-#' @param edge_alpha Alpha value for edges. Defaults to `0.67`.
+#' @param edge_colour Colour of network edges; defaults to "grey30".
+#' @param edge_alpha Alpha value for edges; defaults to `1`.
 #' @param node_size_range Size range for nodes, mapped to significance
 #'   (Bonferroni p-value). Defaults to `c(4, 8)`.
 #' @param edge_width_range Range of edge widths, mapped to `log10(similarity)`.
@@ -14,6 +15,7 @@
 #'   default) means half of the non-enriched pathways will *potentially* be
 #'   labeled - it won't be exact because the node labeling is done with
 #'   `ggrepel`.
+#' @param node_label_size Size of node labels; defaults to 5.
 #' @param node_label_alpha Transparency of node labels. Defaults to `0.67`.
 #' @param node_label_overlaps Max overlaps for node labels, from `ggrepel`.
 #'   Defaults to `6`.
@@ -46,9 +48,11 @@ plot_pathnet <- function(
     network,
     net_layout = "nicely",
     node_size_range = c(4, 8),
-    edge_alpha = 0.67,
+    edge_colour = "grey30",
+    edge_alpha = 1,
     edge_width_range = c(0.33, 3),
     label_prop = 0.25,
+    node_label_size = 5,
     node_label_alpha = 0.67,
     node_label_overlaps = 6,
     seg_colour = "black",
@@ -108,7 +112,11 @@ plot_pathnet <- function(
 
   ggraph(network_to_plot, layout = net_layout) +
     # Edges
-    geom_edge_link(aes(edge_width = log10(similarity)), alpha = edge_alpha) +
+    geom_edge_link(
+      aes(edge_width = log10(similarity)),
+      colour = edge_colour,
+      alpha = edge_alpha
+    ) +
     scale_edge_width(range = edge_width_range, name = "Similarity") +
 
     # Nodes
@@ -132,6 +140,7 @@ plot_pathnet <- function(
     geom_node_label(
       aes(label = node_label),
       repel = TRUE,
+      size = node_label_size,
       alpha = node_label_alpha,
       min.segment.length = 0,
       segment.colour = seg_colour,
