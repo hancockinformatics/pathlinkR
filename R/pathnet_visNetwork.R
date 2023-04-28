@@ -10,7 +10,7 @@
 #' @importFrom igraph as.igraph
 #'
 #'
-#' @references None.
+#' @references <https://datastorm-open.github.io/visNetwork/>
 #'
 #' @seealso <https://github.com/hancockinformatics/pathnet>
 #'
