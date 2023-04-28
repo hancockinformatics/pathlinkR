@@ -1,4 +1,4 @@
-#' plot_pathnet
+#' pathnet_ggraph
 #'
 #' @param network Tidygraph network object, output from `create_pathnet`. See
 #'  Details for specific requirements.
@@ -44,7 +44,7 @@
 #'
 #' @seealso <https://github.com/hancockinformatics/pathnet>
 #'
-plot_pathnet <- function(
+pathnet_ggraph <- function(
     network,
     net_layout = "nicely",
     node_size_range = c(4, 8),

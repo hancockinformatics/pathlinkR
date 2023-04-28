@@ -3,7 +3,7 @@
 export(create_foundation)
 export(create_pathnet)
 export(get_pathway_distances)
-export(plot_pathnet)
+export(pathnet_ggraph)
 import(dplyr)
 import(ggplot2)
 import(ggraph)
