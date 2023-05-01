@@ -29,7 +29,7 @@ pathnet_visNetwork <- function(network) {
   my_igraph <- network %>%
     mutate(
       title = pathway_name_1,
-      shape = if_else(is.na(bonferroni), "dot", "diamond")
+      shape = if_else(is.na(bonferroni), "dot", "triangle")
     ) %>%
     rename("group" = grouped_pathway) %>%
     as.igraph()
@@ -37,8 +37,8 @@ pathnet_visNetwork <- function(network) {
   visIgraph(my_igraph) %>%
     visEdges(width = 6, color = "#848484") %>%
     visNodes(size = 35) %>%
-    visOptions(highlightNearest = TRUE) %>%
+    visOptions(highlightNearest = TRUE, selectedBy = "group") %>%
     visLegend(position = "right", main = "Grouped pathway") %>%
     visGroups_all() %>%
-    visExport(float = "left")
+    visExport(float = "right")
 }
