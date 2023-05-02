@@ -8,8 +8,10 @@ pathnet_visNetwork(
   network,
   net_layout = "layout_nicely",
   edge_colour = "#848484",
-  edge_width = 6,
-  node_size = 35,
+  edge_size_range = c(5, 20),
+  node_size_range = c(20, 50),
+  node_border_width = 2.5,
+  highlighting = TRUE,
   set_seed = 123
 )
 }
@@ -22,12 +24,21 @@ pathnet_visNetwork(
 
 \item{edge_colour}{Colour of network edges; defaults to "#848484".}
 
-\item{edge_width}{Edge width, defaults to 6.}
+\item{edge_size_range}{Edge width is mapped to the similarity measure (one
+over distance). This length-two numeric vector controls the minimum and
+maximum width of edges. Defaults to \code{c(5, 20)}.}
 
-\item{node_size}{Size of the nodes, defaults to 35.}
+\item{node_size_range}{Node size is mapped to the negative log of the
+Bonferroni-adjusted p value, and this length-two numeric vector controls
+the minimum and maximum. Defaults to \code{c(20, 50)}.}
+
+\item{node_border_width}{Size of the node border, defaults to 2.5}
+
+\item{highlighting}{When clicking on a node, should directly neighbouring
+nodes be highlighted (other nodes are dimmed)? Defaults to TRUE.}
 
 \item{set_seed}{Random seed to use for reproducible node placement, defaults
-to 123}
+to 123.}
 }
 \value{
 Interactive visNetwork plot
