@@ -4,10 +4,30 @@
 \alias{pathnet_visNetwork}
 \title{pathnet_visNetwork}
 \usage{
-pathnet_visNetwork(network)
+pathnet_visNetwork(
+  network,
+  net_layout = "layout_nicely",
+  edge_colour = "#848484",
+  edge_width = 6,
+  node_size = 35,
+  set_seed = 123
+)
 }
 \arguments{
 \item{network}{Tidygraph network object as output by \code{create_pathnet}}
+
+\item{net_layout}{Desired layout for the network visualization. Defaults to
+"layout_nicely", should support most igraph layouts. See
+\code{?visIgraphLayout()} for more details.}
+
+\item{edge_colour}{Colour of network edges; defaults to "#848484".}
+
+\item{edge_width}{Edge width, defaults to 6.}
+
+\item{node_size}{Size of the nodes, defaults to 35.}
+
+\item{set_seed}{Random seed to use for reproducible node placement, defaults
+to 123}
 }
 \value{
 Interactive visNetwork plot
@@ -16,7 +36,7 @@ Interactive visNetwork plot
 pathnet_visNetwork
 }
 \references{
-None.
+\url{https://datastorm-open.github.io/visNetwork/}
 }
 \seealso{
 \url{https://github.com/hancockinformatics/pathnet}

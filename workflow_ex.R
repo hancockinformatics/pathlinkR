@@ -31,6 +31,7 @@ my_pathway_network <- create_pathnet(
 
 # |- plot -----------------------------------------------------------------
 
+# Static plot with ggraph
 pathnet_ggraph(
   my_pathway_network,
   label_prop = 0.1,
@@ -42,6 +43,7 @@ pathnet_ggraph(
 
 # visNetwork --------------------------------------------------------------
 
+# Interactive plot with visNetwork
 pathnet_visNetwork(my_pathway_network)
 
 
