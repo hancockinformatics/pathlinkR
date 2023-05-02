@@ -15,7 +15,7 @@ devtools::load_all(".")
 starting_pathways <- create_foundation(
   mat = pathway_distances_jaccard,
   # prop_to_keep = 0.004
-  max_distance = 0.5
+  max_distance = 0.6
 )
 
 
@@ -25,7 +25,7 @@ my_pathway_network <- create_pathnet(
   sigora_result = sigora_example_1,
   foundation = starting_pathways,
   trim = TRUE,
-  trim_order = 2
+  trim_order = 1
 )
 
 
@@ -82,7 +82,9 @@ candidates_as_network <- create_pathnet(
   trim = FALSE
 )
 
-plot_pathnet(candidates_as_network) +
+pathnet_visNetwork(candidates_as_network)
+
+pathnet_ggraph(candidates_as_network) +
   facet_nodes(~direction, scales = "free", nrow = 2) +
   theme_bw(base_size = 18) +
   theme(
