@@ -25,7 +25,7 @@ devtools::install_github("https://github.com/hancockinformatics/pathnet")
     connected, which can more easily handle a variety of distance measures
 - Turn this node/edge data frame into a network object with `create_pathnet`,
   with support for trimming non-enriched pathways
-- Visualize this pathway network using the `pathnet_ggrap` function, which 
+- Visualize this pathway network using the `pathnet_ggraph` function, which
   supports a large number of layout options and visual tweaks
   - By default, nodes are coloured by a manually-curated top-level pathway type,
     with filled nodes denoting enriched pathways and black nodes "interactor 
