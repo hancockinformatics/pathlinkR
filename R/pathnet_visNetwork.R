@@ -42,32 +42,42 @@ pathnet_visNetwork <- function(
     set_seed = 123
 ) {
 
-  my_igraph <- network %>%
+  visnet_nodes <- my_pathway_network %>%
+    as_tibble() %>%
     mutate(
-      title = pathway_name_1,
+      id = row_number(),
+      label = map_chr(if_else(!is.na(bonferroni), pathway_name_1, ""), trunc_neatly, 30),
       value = if_else(is.na(bonferroni), 1, -log10(bonferroni)),
       background = map_chr(grouped_pathway, ~top_pathway_colours[[.x]]),
       background = if_else(!is.na(bonferroni), background, "#ffffff"),
       border = map_chr(grouped_pathway, ~top_pathway_colours[[.x]]),
       color = map2(background, border, ~list("background" = .x, "border" = .y))
     ) %>%
-    select(-c(background, border)) %>%
+    select(
+      id,
+      "title" = pathway_name_1,
+      everything(),
+      -c(background, border, direction, description, pvalue)
+    )
+
+  visnet_edges <- my_pathway_network %>%
     activate("edges") %>%
+    as_tibble() %>%
     rename("value" = similarity) %>%
-    activate("nodes") %>%
-    as.igraph()
+    distinct()
 
   legend_df <- top_pathway_colours %>%
     enframe("label", "icon.color") %>%
     mutate(shape = "dot", size = 15)
 
-  visIgraph(my_igraph) %>%
+  visNetwork(nodes = visnet_nodes, edges = visnet_edges) %>%
     visIgraphLayout(layout = net_layout, randomSeed = set_seed) %>%
     visEdges(
       color = edge_colour,
       scaling = list("min" = edge_size_range[1], "max" = edge_size_range[2])
     ) %>%
     visNodes(
+      font = "40px arial black",
       borderWidth = node_border_width,
       scaling = list("min" = node_size_range[1], "max" = node_size_range[2])
     ) %>%
