@@ -15,7 +15,7 @@ devtools::load_all(".")
 starting_pathways <- create_foundation(
   mat = pathway_distances_jaccard,
   # prop_to_keep = 0.004
-  max_distance = 0.6
+  max_distance = 0.8
 )
 
 
