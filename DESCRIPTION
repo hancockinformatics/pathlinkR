@@ -1,6 +1,6 @@
 Package: pathnet
 Title: Visualize pathways as networks
-Version: 0.0.53
+Version: 0.0.54
 Authors@R: c(
     person("Travis", "Blimkie", , "travis@hancocklab.com", role = c("cre")),
     person("Andy", "An", , "andy@hancocklab.com", role = c("aut"))
@@ -17,12 +17,16 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 Imports:
     dplyr,
+    ForceAtlas2,
     ggplot2,
     ggraph,
     glue,
     igraph,
+    janitor,
+    magrittr,
     purrr,
     scales,
+    SteinerNet,
     stringr,
     tibble,
     tidygraph,
