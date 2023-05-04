@@ -11,6 +11,9 @@ pathnet_visNetwork(
   edge_size_range = c(5, 20),
   node_size_range = c(20, 50),
   node_border_width = 2.5,
+  label_nodes = TRUE,
+  node_label_size = 60,
+  node_label_colour = "black",
   highlighting = TRUE,
   set_seed = 123
 )
@@ -33,6 +36,13 @@ Bonferroni-adjusted p value, and this length-two numeric vector controls
 the minimum and maximum. Defaults to \code{c(20, 50)}.}
 
 \item{node_border_width}{Size of the node border, defaults to 2.5}
+
+\item{label_nodes}{Boolean determining if nodes should be labeled. Note it
+will only ever label enriched nodes/pathways.}
+
+\item{node_label_size}{Size of the node labels in pixels; defaults to 60.}
+
+\item{node_label_colour}{Colour of the node labels; defaults to "black".}
 
 \item{highlighting}{When clicking on a node, should directly neighbouring
 nodes be highlighted (other nodes are dimmed)? Defaults to TRUE.}
