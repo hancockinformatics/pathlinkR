@@ -25,7 +25,7 @@ eruption <- function(deseq_results, # dataframe of DESeq2 results with ensembl g
                      label = 'auto', # auto: label the top 5 (or n) up/down annotated DE genes,
                                      # select: label top 5 (or n) up/down genes provided in select_genes
                                      # manual: label a manual selection of genes provided in manual_genes
-                     manual_genes = c(), # if label = 'manual', these are the genes to specifically label, should be ensg ids
+                     manual_genes = c(), # if label = 'manual', these are the genes to specifically label, can be hgnc symbols or ensembl gene ids
                      remove_unannotated = TRUE, # remove genes without annotation (i.e. no hgnc symbol), this is default
                      n = 5, # number of top up and downregulated genes to label, applies to label = 'auto' or 'select'
                      label_size = 3.5, # size of font for labels
@@ -106,18 +106,18 @@ eruption <- function(deseq_results, # dataframe of DESeq2 results with ensembl g
 
   ## Manual labelling (manual): label the genes you provided in manual_genes
   if(label == 'manual'){
-    res <- res %>% mutate(label = case_when(gene_name %in% manual_genes ~ gene_name))
+    res <- res %>% mutate(label = case_when(ensg_id %in% manual_genes | gene_name %in% manual_genes ~ gene_name))
   }
 
   # Create the plot
   p <- ggplot(res, aes(x = log2FoldChange, y = neglogp)) +
 
     # plot non-significant genes
-    geom_point(data = res %>% filter(significant == 'NS'), alpha = alpha, show.legend = FALSE, size = point_size, colour = nonsig_colour) +
+    geom_point(data = res %>% filter(significant == 'NS', in_list == 'N'), alpha = alpha, show.legend = FALSE, size = point_size, colour = nonsig_colour) +
 
-    # plot significant genes, with those in select_genes overlaying those not in select_genes for emphasis
+    # plot significant genes and genes of interest (select_genes), with those in select_genes overlaying those not in select_genes for emphasis
     geom_point(data = res %>% filter(significant == 'SIG', in_list == 'N'), aes(x = log2FoldChange, y = neglogp), size = point_size, alpha = alpha, colour = base_colour) +
-    geom_point(data = res %>% filter(significant == 'SIG', in_list == 'Y'), aes(x = log2FoldChange, y = neglogp), size = point_size, alpha = alpha, colour = select_colour) +
+    geom_point(data = res %>% filter(in_list == 'Y'), aes(x = log2FoldChange, y = neglogp), size = point_size, alpha = alpha, colour = select_colour) +
 
     # add cutoff lines
     geom_hline(yintercept = -log10(p_cutoff), linetype="dashed", colour = 'gray20') +
