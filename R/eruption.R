@@ -5,7 +5,7 @@
 library(tidyverse)
 library(ggrepel)
 
-eruption <- function(deseq_results, # dataframe of DESeq2 results with ensembl gene ids
+eruption <- function(deseq_results, # dataframe of DESeq2 results with ensembl gene ids as rownames
                      p_cutoff = 0.05, # adjusted pvalue cutoff, default <0.05
                      fc_cutoff = 1.5, # absolute fold change, default abs >1.5
                      base_colour = 'steelblue4', # colour of points for DE genes
