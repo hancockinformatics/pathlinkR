@@ -116,7 +116,7 @@ enrich_pathway <- function(deseq_result_list, # list of dataframes of DESeq2 res
         } else { # just use all DE genes for enrichment
           de_gns <- rownames(deseq_results)
           print(paste0('DEGs used: ', length(de_gns))) # Print how many DE genes used
-          total_results <- run_sigora(up_gns, direction = 'All')
+          total_results <- run_sigora(de_gns, direction = 'All')
         }
 
         total_results_annotated <- left_join(total_results, top_pathways %>% select(pathway_id, top_pathways), by = 'pathway_id')
@@ -134,13 +134,16 @@ enrich_pathway <- function(deseq_result_list, # list of dataframes of DESeq2 res
     }
   }
 
+  final_enriched_results$comparison <- factor(final_enriched_results$comparison,
+                                              levels = c(names(deseq_result_list)))
+
   # Return the results, which is a tibble of all the pathway results
   return(tibble(final_enriched_results))
 
 }
 
 # test_list <- list('Time 1' = deseq_example_1, 'Time 2' = deseq_example_2)
-# result <- enrich_pathway(test_list)
+enriched_results <- enrich_pathway(deseq_example_list[c(5,6)])
 
 # if(analysis == 'reactomePA'){
 #   mapping <- final_map_condense %>% column_to_rownames(var = 'ensg_id')
