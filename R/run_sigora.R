@@ -3,7 +3,7 @@
 #' @param enrich_genes Vector of genes to enrich
 #' @param direction If up or down-regulated genes were used
 #'
-#' @return
+#' @return Data frame of results from Sigora
 #'
 #' @import dplyr
 #' @import sigora

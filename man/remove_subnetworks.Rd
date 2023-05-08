@@ -19,5 +19,5 @@ Find and return the largest subnetwork
 None.
 }
 \seealso{
-\url{https://www.github.com/travis-m-blimkie/networker}
+\url{https://github.com/hancockinformatics/pathnet/}
 }

@@ -12,7 +12,7 @@
 #'   Defaults to 1.
 #' @param x_angle Angle of x axis labels, set to "angled" (45 degrees),
 #'   "horizontal" (0 degrees), or "vertical" (90 degrees).
-#' @param max_pval
+#' @param max_pval P values below "10 ^ -max_pval" will be set to that value
 #' @param intercepts Add vertical lines to separate different groupings, is a
 #'   vector of intercepts (e.g. c(1.5, 2.5)). Defaults to "NA".
 #' @param include_gene_ratio Boolean; should be plotted? If so, then it is
@@ -28,7 +28,7 @@
 #' @export
 #'
 #' @import dplyr
-#' @import ggplot
+#' @import ggplot2
 #' @import stringr
 #' @importFrom ggforce facet_col
 #' @importFrom ggpubr rremove
