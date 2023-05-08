@@ -35,7 +35,7 @@
 #' @references See <https://cran.r-project.org/web/packages/SteinerNet/index.html>
 #'   for details on the Steiner network trimming.
 #'
-#' @seealso <https://www.github.com/travis-m-blimkie/networker>
+#' @seealso <https://github.com/hancockinformatics/pathnet/>
 #'
 build_network <- function(df, col, order, hub_measure = "betweenness", ppi_data = innatedb_exp, seed = 1) {
 

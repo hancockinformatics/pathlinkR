@@ -8,7 +8,7 @@
 #'
 #' @references None.
 #'
-#' @seealso <https://www.github.com/travis-m-blimkie/networker>
+#' @seealso <https://github.com/hancockinformatics/pathnet/>
 #'
 remove_subnetworks <- function(input) {
   igraph::V(input)$comp <- components(input)$membership
