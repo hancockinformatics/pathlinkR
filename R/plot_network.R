@@ -105,7 +105,7 @@
 #' @references See <https://github.com/analyxcompany/ForceAtlas2> for details on
 #'   this method.
 #'
-#' @seealso <https://github.com/travis-m-blimkie/networker>
+#' @seealso <https://github.com/hancockinformatics/pathnet/>
 #'
 plot_network <- function(
   network,

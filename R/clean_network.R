@@ -10,7 +10,7 @@
 #' @import dplyr
 #' @import tidygraph
 #'
-#' @seealso <https://github.com/travis-m-blimkie/networker>
+#' @seealso <https://github.com/hancockinformatics/pathnet/>
 #'
 clean_network <- function(network) {
   network %>%
