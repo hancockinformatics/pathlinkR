@@ -10,7 +10,7 @@
 #' @param analysis Default is SIGORA ('sigora'), others: ReactomePA
 #'   ('reactomepa'), mSigDB Hallmark gene sets ('hallmark')
 #'
-#' @return
+#' @return A data frame of pathway enrichment results
 #' @export
 #'
 #' @import dplyr

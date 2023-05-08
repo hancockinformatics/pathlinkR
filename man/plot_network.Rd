@@ -168,5 +168,5 @@ See \url{https://github.com/analyxcompany/ForceAtlas2} for details on
 this method.
 }
 \seealso{
-\url{https://github.com/travis-m-blimkie/networker}
+\url{https://github.com/hancockinformatics/pathnet/}
 }

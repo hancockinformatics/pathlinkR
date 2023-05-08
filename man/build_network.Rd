@@ -57,5 +57,5 @@ See \url{https://cran.r-project.org/web/packages/SteinerNet/index.html}
 for details on the Steiner network trimming.
 }
 \seealso{
-\url{https://www.github.com/travis-m-blimkie/networker}
+\url{https://github.com/hancockinformatics/pathnet/}
 }
