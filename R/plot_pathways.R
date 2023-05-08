@@ -31,7 +31,7 @@
 #' @import ggplot2
 #' @import stringr
 #' @importFrom ggforce facet_col
-#' @importFrom ggpubr rremove
+#' @importFrom ggpubr rremove ggarrange
 #'
 #' @seealso <https://github.com/hancockinformatics/pathnet>
 #'
