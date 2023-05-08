@@ -17,5 +17,5 @@ functions such as \code{plot_network}
 Clean graphml input
 }
 \seealso{
-\url{https://github.com/travis-m-blimkie/networker}
+\url{https://github.com/hancockinformatics/pathnet/}
 }

@@ -32,7 +32,7 @@
 #' @param label_size size of font for labels
 #' @param pad padding of labels (adjust this if labels overlap)
 #'
-#' @return
+#' @return Volcano plot as a ggplot object
 #' @export
 #'
 #' @import dplyr

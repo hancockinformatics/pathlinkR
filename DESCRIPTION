@@ -1,6 +1,6 @@
 Package: pathnet
 Title: Visualize pathways as networks
-Version: 0.0.64-1
+Version: 0.0.65
 Authors@R: c(
     person("Travis", "Blimkie", , "travis@hancocklab.com", role = c("cre")),
     person("Andy", "An", , "andy@hancocklab.com", role = c("aut"))
@@ -22,6 +22,7 @@ Imports:
     ggplot2,
     ggpubr,
     ggraph,
+    ggrepel,
     glue,
     igraph,
     janitor,
@@ -39,3 +40,4 @@ Imports:
 Depends: 
     R (>= 2.10)
 LazyData: true
+LazyDataCompression: xz
