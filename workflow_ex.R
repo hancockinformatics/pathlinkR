@@ -94,3 +94,10 @@ pathnet_ggraph(candidates_as_network) +
     panel.grid = element_blank(),
     legend.text.align = 0
   )
+
+
+# plot_pathways -----------------------------------------------------------
+
+# enriched_results <-
+#   enrich_pathway(deseq_result_list = deseq_example_list[c(5, 6)], split = FALSE)
+# plot_pathways(enriched_results, columns = 2)
