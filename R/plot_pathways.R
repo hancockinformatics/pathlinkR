@@ -1,30 +1,57 @@
-# Function to plot pathways from output of enrich_pathway
-# to do
-# 1. change top pathway names to shorten some of them
-
-library(ggpubr)
-library(tidyverse)
-library(ggforce)
-
+#' plot_pathways
+#'
+#' @param enriched_results Tibble of results from the function `enrich_pathway`
+#' @param columns Number of columns to split the pathways across, especially if
+#'   there are many pathways. Can specify up to 3 columns, with a default of 1.
+#' @param specific_top_pathways Only plot pathways from a specific vector of
+#'   "top_pathways". Defaults to "any" which includes all pathway results.
+#' @param specific_pathways Only plot specific pathways. Defaults to "any".
+#' @param name_width How many characters to show for pathway name before
+#'   truncating? Defaults to 35.
+#' @param name_rows How much to rows to wrap across for the pathway name?
+#'   Defaults to 1.
+#' @param x_angle Angle of x axis labels, set to "angled" (45 degrees),
+#'   "horizontal" (0 degrees), or "vertical" (90 degrees).
+#' @param max_pval
+#' @param intercepts Add vertical lines to separate different groupings, is a
+#'   vector of intercepts (e.g. c(1.5, 2.5)). Defaults to "NA".
+#' @param include_gene_ratio Boolean; should be plotted? If so, then it is
+#'   attributed to the size of the triangles.
+#' @param size Size of points if not scaling to gene ratio. Defaults to 5.
+#' @param legend_multiply Size of the legend, e.g. increase if there are a lot
+#'   of pathways which makes the legend small and unreadable by comparison.
+#'   Defaults to 1, i.e. no increase in legend size.
+#' @param show_num_genes Boolean, defaults to FALSE. Show the number of genes
+#'   for each comparison as brackets under the comparison's name.
+#'
+#' @return A ggplot object
+#' @export
+#'
+#' @import dplyr
+#' @import ggplot
+#' @import stringr
+#' @importFrom ggforce facet_col
+#' @importFrom ggpubr rremove
+#'
+#' @seealso <https://github.com/hancockinformatics/pathnet>
+#'
 plot_pathways <- function(
-    enriched_results, # Tibble of results from the function enrich_pathway
-    columns = 1, # Number of columns to split the pathways across, especially if there are many pathways, up to 3 columns
-
-    specific_top_pathways = "any", # Only plot pathways from a specific vector of top_pathways
-    specific_pathways = "any", # Only plot specific pathways
-
-    name_width = 35, # How many characters to show for pathway name before truncating
-    name_rows = 1, # How much to rows to wrap across for pathway name
-    x_angle = "angled", # Can be set to angled (45 degrees), "horizontal" (0 degrees), or "vertical" (90 degrees)
+    enriched_results,
+    columns = 1,
+    specific_top_pathways = "any",
+    specific_pathways = "any",
+    name_width = 35,
+    name_rows = 1,
+    x_angle = "angled",
     max_pval = 50,
-
-    intercepts = NA, # Add vertical lines to separate different groupings, is a vector of intercepts (e.g. c(1.5, 2.5))
-
-    include_gene_ratio = FALSE, # If gene ratio should be plotted, if so then it is attributed to the size of the triangles
-    size = 5, # Size of points
-    legend_multiply = 1, # Size of the legend, e.g. increase if there are a lot of pathways which makes the legend small and unreadable
-    show_num_genes = FALSE # Show the number of genes for each comparison as brackets under the comparison name
+    intercepts = NA,
+    include_gene_ratio = FALSE,
+    size = 5,
+    legend_multiply = 1,
+    show_num_genes = FALSE
 ) {
+
+  # TODO 1. Change top pathway names to shorten some of them
 
   # Convert to -log10 p value and arbitrarily set to a max -log10 p value of 50
   # (i.e. adj pval = 10^-50), which some enrichment results surpass, especially
@@ -101,7 +128,7 @@ plot_pathways <- function(
   # This chooses the top enriched pathway of duplicates and also adds the other
   # pathway into enriched_results_dupes.
   if (nrow(duplicates) > 0) {
-    print("Duplicated pathways:")
+    message("Duplicated pathways:")
     print(as.data.frame(duplicates[,1:2]))
 
     for (i in 1:nrow(duplicates)) {
@@ -122,7 +149,7 @@ plot_pathways <- function(
   # Now organize pathways into multiple columns. Maximum is 3 columns to graph,
   # if inputted larger, will be set to 3.
   if (columns > 3) {
-    print("Maximum is three columns to graph. Plotting three columns.")
+    message("Maximum is three columns to graph. Plotting three columns.")
     columns <- 3
   }
 
@@ -223,7 +250,7 @@ plot_pathways <- function(
       ) +
       # Keeps comparisons even if they don"t enrich for any pathways
       scale_x_discrete(drop = FALSE) +
-      ggforce::facet_col(
+      facet_col(
         facets = ~top_pathways,
         scales = "free_y",
         space = "free"
@@ -243,8 +270,8 @@ plot_pathways <- function(
           vjust = vjust
         )
       ) +
-      ggpubr::rremove("xlab") +
-      ggpubr::rremove("ylab") +
+      rremove("xlab") +
+      rremove("ylab") +
       scale_shape_manual(
         values = c("Down" = 25 , "Up" = 24, "All" = 21),
         name = "Regulation",
