@@ -77,7 +77,7 @@ create_pathnet <- function(sigora_result, foundation, trim = TRUE, trim_order = 
 
   pathways_as_network_4 <- pathways_as_network_3 %>%
     left_join(
-      top_pathways,
+      top_pathways_slim,
       by = c("pathway_1" = "pathway_id", "pathway_name_1" = "pathway_name")
     ) %>%
     select(
