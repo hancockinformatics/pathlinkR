@@ -10,12 +10,12 @@ plot_pathways <- function(
     enriched_results, # Tibble of results from the function enrich_pathway
     columns = 1, # Number of columns to split the pathways across, especially if there are many pathways, up to 3 columns
 
-    specific_top_pathways = 'any', # Only plot pathways from a specific vector of top_pathways
-    specific_pathways = 'any', # Only plot specific pathways
+    specific_top_pathways = "any", # Only plot pathways from a specific vector of top_pathways
+    specific_pathways = "any", # Only plot specific pathways
 
     name_width = 35, # How many characters to show for pathway name before truncating
     name_rows = 1, # How much to rows to wrap across for pathway name
-    x_angle = 'angled', # Can be set to angled (45 degrees), 'horizontal' (0 degrees), or 'vertical' (90 degrees)
+    x_angle = "angled", # Can be set to angled (45 degrees), "horizontal" (0 degrees), or "vertical" (90 degrees)
     max_pval = 50,
 
     intercepts = NA, # Add vertical lines to separate different groupings, is a vector of intercepts (e.g. c(1.5, 2.5))
@@ -37,10 +37,10 @@ plot_pathways <- function(
 
     # Some top pathway names are very long, shorten them
     top_pathways = case_when(
-      top_pathways == 'Gene expression (Transcription)' ~ 'Gene expression',
-      top_pathways == 'Extracellular matrix organization' ~ 'ECM organization',
-      top_pathways == 'Organelle biogenesis and maintenance' ~ 'Organelle biogenesis',
-      top_pathways == 'Transport of small molecules' ~ 'Transport small molecules',
+      top_pathways == "Gene expression (Transcription)" ~ "Gene expression",
+      top_pathways == "Extracellular matrix organization" ~ "ECM organization",
+      top_pathways == "Organelle biogenesis and maintenance" ~ "Organelle biogenesis",
+      top_pathways == "Transport of small molecules" ~ "Transport small molecules",
       TRUE ~ top_pathways
     )
   )
@@ -48,13 +48,13 @@ plot_pathways <- function(
   # Order the directionality of results
   enriched_results$direction <- factor(
     enriched_results$direction,
-    levels = c('Up', 'Down', 'All')
+    levels = c("Up", "Down", "All")
   )
 
   # Add in the number of genes for each comparison if indicated
   if (show_num_genes) {
     enriched_results <- enriched_results %>% mutate(
-      comparison = paste0(comparison, '\n(', total_genes, ')')
+      comparison = paste0(comparison, "\n(", total_genes, ")")
     )
     enriched_results$comparison <- factor(
       enriched_results$comparison,
@@ -63,10 +63,10 @@ plot_pathways <- function(
   }
 
   # If did not specify to only plot specific pathways, otherwise filter them
-  if (specific_top_pathways[1] == 'any') {
+  if (specific_top_pathways[1] == "any") {
     specific_top_pathways <- unique(enriched_results$top_pathways)
   }
-  if (specific_pathways[1] == 'any') {
+  if (specific_pathways[1] == "any") {
     specific_pathways <- unique(enriched_results$pathway_description)
   }
 
@@ -101,7 +101,7 @@ plot_pathways <- function(
   # This chooses the top enriched pathway of duplicates and also adds the other
   # pathway into enriched_results_dupes.
   if (nrow(duplicates) > 0) {
-    print('Duplicated pathways:')
+    print("Duplicated pathways:")
     print(as.data.frame(duplicates[,1:2]))
 
     for (i in 1:nrow(duplicates)) {
@@ -122,7 +122,7 @@ plot_pathways <- function(
   # Now organize pathways into multiple columns. Maximum is 3 columns to graph,
   # if inputted larger, will be set to 3.
   if (columns > 3) {
-    print('Maximum is three columns to graph. Plotting three columns.')
+    print("Maximum is three columns to graph. Plotting three columns.")
     columns <- 3
   }
 
@@ -163,7 +163,7 @@ plot_pathways <- function(
           TRUE ~ pathways
         ),
         top_pathways = case_when(
-          top_pathways == column_smallest ~ paste0(top_pathways, ',' ,add$top_pathways),
+          top_pathways == column_smallest ~ paste0(top_pathways, "," ,add$top_pathways),
           TRUE ~ top_pathways
         )
       )
@@ -173,23 +173,23 @@ plot_pathways <- function(
   # Now create a list of top pathways for each column
   column_list <- column_splitting$top_pathways %>%
     as.list() %>%
-    str_split(',')
+    str_split(",")
 
   # Plot pathways
   plotlist <- list()
   name_trunc = name_width * name_rows - 5 # set where the pathway name should be truncated
 
-  # Can be set to angled (45 degrees), 'horizontal' (0 degrees), or 'vertical'
+  # Can be set to angled (45 degrees), "horizontal" (0 degrees), or "vertical"
   # (90 degrees)
-  if(x_angle == 'angled') {
+  if(x_angle == "angled") {
     angle <- 45
     hjust <- 1
     vjust <- 1
-  } else if (x_angle == 'flat') {
+  } else if (x_angle == "flat") {
     angle <- 0
     hjust <- 0.5
     vjust <- 1
-  } else if (x_angle == 'vertical') {
+  } else if (x_angle == "vertical") {
     angle <- 90
     hjust <- 0.5
     vjust <- 0.5
@@ -213,15 +213,15 @@ plot_pathways <- function(
         aes(x = comparison, y = pathway_description),
         shape = 8,
         size = 2,
-        colour = 'white',
+        colour = "white",
         show.legend = FALSE
       ) +
       # Wrap and truncate pathway names if necessary
       scale_y_discrete(
         labels = function(x) str_wrap(str_trunc(x, name_trunc), width = name_width),
-        position = 'right'
+        position = "right"
       ) +
-      # Keeps comparisons even if they don't enrich for any pathways
+      # Keeps comparisons even if they don"t enrich for any pathways
       scale_x_discrete(drop = FALSE) +
       ggforce::facet_col(
         facets = ~top_pathways,
@@ -230,7 +230,7 @@ plot_pathways <- function(
       ) +
       theme_bw() +
       theme(
-        strip.text.x = element_text(size = 12, face = 'bold', colour = "black"),
+        strip.text.x = element_text(size = 12, face = "bold", colour = "black"),
         legend.text = element_text(size = 12 * legend_multiply),
         legend.title = element_text(size = 13 * legend_multiply),
         axis.text.y = element_text(face = "bold", colour = "black", size = 12),
@@ -243,11 +243,11 @@ plot_pathways <- function(
           vjust = vjust
         )
       ) +
-      ggpubr::rremove('xlab') +
-      ggpubr::rremove('ylab') +
+      ggpubr::rremove("xlab") +
+      ggpubr::rremove("ylab") +
       scale_shape_manual(
-        values = c('Down' = 25 , 'Up' = 24, 'All' = 21),
-        name = 'Regulation',
+        values = c("Down" = 25 , "Up" = 24, "All" = 21),
+        name = "Regulation",
         na.value = NA
       ) +
       scale_fill_continuous(
@@ -279,8 +279,8 @@ plot_pathways <- function(
       plotlist = plotlist,
       ncol = columns,
       common.legend = TRUE,
-      legend = 'right',
-      align = 'v'
+      legend = "right",
+      align = "v"
     )
     return(plot)
   } else {
