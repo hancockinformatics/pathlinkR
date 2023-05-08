@@ -60,15 +60,6 @@ plot_pathways <- function(
     logmax = case_when(
       -log10(p_value_adjusted) > max_pval ~ max_pval,
       -log10(p_value_adjusted) <= max_pval ~ -log10(p_value_adjusted)
-    ),
-
-    # Some top pathway names are very long, shorten them
-    top_pathways = case_when(
-      top_pathways == "Gene expression (Transcription)" ~ "Gene expression",
-      top_pathways == "Extracellular matrix organization" ~ "ECM organization",
-      top_pathways == "Organelle biogenesis and maintenance" ~ "Organelle biogenesis",
-      top_pathways == "Transport of small molecules" ~ "Transport small molecules",
-      TRUE ~ top_pathways
     )
   )
 
