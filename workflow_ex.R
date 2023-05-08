@@ -96,6 +96,12 @@ pathnet_ggraph(candidates_as_network) +
   )
 
 
+# enrich_pathway ----------------------------------------------------------
+
+# test_list <- list('Time 1' = deseq_example_1, 'Time 2' = deseq_example_2)
+enriched_results <- enrich_pathway(deseq_example_list[c(5,6)])
+
+
 # plot_pathways -----------------------------------------------------------
 
 # enriched_results <-
