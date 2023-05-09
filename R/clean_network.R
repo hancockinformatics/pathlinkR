@@ -1,6 +1,6 @@
-#' Clean graphml input
+#' Clean GraphML or JSON input
 #'
-#' @param network `tidygraph` object from graphml file
+#' @param network `tidygraph` object from a GraphML or JSON file
 #'
 #' @return `tidygraph` object which can be forwarded to other `networker`
 #' functions such as `plot_network`

@@ -78,8 +78,8 @@ to "grey70".}
 \item{fc_up_col}{Colour to use for up regulated nodes when \code{fill_type} is set
 to "fold_change". Defaults to "firebrick3".}
 
-\item{fc_down_col}{Colour to use for down regulated nodes when \code{fill_type} is set
-to "fold_change". Defaults to "#188119".}
+\item{fc_down_col}{Colour to use for down regulated nodes when \code{fill_type} is
+set to "fold_change". Defaults to "#188119".}
 
 \item{label}{Boolean, whether labels should be added to nodes. Defaults to
 FALSE.}
