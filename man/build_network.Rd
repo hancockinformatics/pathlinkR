@@ -53,8 +53,9 @@ of the Kleinburg hub centrality score - details on this method can be found
 at \code{?igraph::hub_score}.
 }
 \references{
-See \url{https://cran.r-project.org/web/packages/SteinerNet/index.html}
-for details on the Steiner network trimming.
+See
+\url{https://cran.r-project.org/web/packages/SteinerNet/index.html} for details
+on the Steiner network trimming.
 }
 \seealso{
 \url{https://github.com/hancockinformatics/pathnet/}

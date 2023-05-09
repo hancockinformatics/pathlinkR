@@ -6,8 +6,6 @@
 #'
 #' @importFrom igraph components induced_subgraph
 #'
-#' @references None.
-#'
 #' @seealso <https://github.com/hancockinformatics/pathnet/>
 #'
 remove_subnetworks <- function(input) {
