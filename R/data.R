@@ -1,16 +1,3 @@
-#' Human gene ID mappings from biomaRt
-#'
-#' A tibble containing gene ID mapping information for Ensembl, Entrez, and
-#' HGNC gene identifiers.
-#'
-#' @format A data frame (tibble) with 75130 rows and 3 columns:
-#' \describe{
-#'   \item{ensembl_gene_id}{Ensembl gene IDs}
-#'   \item{hgnc_symbol}{HGNC symbols}
-#'   \item{entrez_gene_id}{Entrez (NCBI) gene IDs}
-#' }
-"biomart_id_mapping_human"
-
 #' List of example results from DESeq2
 #'
 #' @format A six-element list of data frames, each with 6 columns, containing

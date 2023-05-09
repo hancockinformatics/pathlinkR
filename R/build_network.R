@@ -205,8 +205,8 @@ build_network <- function(df, col, order, hub_measure = "betweenness", ppi_data 
   }
 
   message("Mapping input Ensembl IDs to HGNC symbols...")
-  ensembl_to_hgnc <- biomart_id_mapping_human %>%
-    select("name" = ensembl_gene_id, "gene_name" = hgnc_symbol)
+  ensembl_to_hgnc <- mapping_file %>%
+    select("name" = ensg_id, gene_name)
 
   network_mapped <- left_join(
     network_out_2,
