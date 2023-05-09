@@ -1,4 +1,4 @@
-#' enrich_pathway
+#' Test lists of DE genes for enriched pathways
 #'
 #' @param deseq_result_list list of data frames of DESeq2 results. The list names
 #'   are used as the comparison for each dataframe (e.g. COVID vs Healthy). Data
@@ -29,12 +29,11 @@ enrich_pathway <- function(
 ) {
 
   # TODO
-  # 1. How to make function continue to run if Sigora fails?
-  # 2. Include other pathway enrichment methods: Hallmark
-  # 3. Include just using a vector of genes or data frame rather than a list of
+  # 1. Include other pathway enrichment methods: Hallmark
+  # 2. Include just using a vector of genes or data frame rather than a list of
   #    DESeq2 results
-  # 4. Should the candidate genes be in Ensembl IDs or HGNC symbols?
-  # 5. ReactomePA uses pathway levels >4, so some pathways do not have annotated
+  # 3. Should the candidate genes be in Ensembl IDs or HGNC symbols?
+  # 4. ReactomePA uses pathway levels >4, so some pathways do not have annotated
   #    top pathways. Need to change pathway mapping file...
 
   if (!is.list(deseq_result_list)) {
@@ -73,24 +72,27 @@ enrich_pathway <- function(
       if (analysis == "sigora") {
         message("Enrichment using SIGORA")
 
+        run_sigora_safely <- possibly(run_sigora)
+
         # Enrich with up- and down-regulated genes separately
         if (split) {
-          up_results <- run_sigora(up_gns, direction = "Up", gps_repo = gps_repo)
-          dn_results <- run_sigora(dn_gns, direction = "Down", gps_repo = gps_repo)
+          up_results <- run_sigora_safely(up_gns, direction = "Up", gps_repo = gps_repo)
+          dn_results <- run_sigora_safely(dn_gns, direction = "Down", gps_repo = gps_repo)
           total_results <- rbind(up_results, dn_results)
 
         # Or just use all DE genes for enrichment
         } else {
-          total_results <- run_sigora(all_gns, direction = "All")
+          total_results <- run_sigora_safely(all_gns, direction = "All")
         }
       }
+
 
       ### ReactomePA analysis
       # Reactome uses regular over-representation analysis
       # Useful for finding more pathways, if you have fewer DE genes or pathways
       # Less stringent than SIGORA enrichment
 
-      if(analysis == "reactomepa"){
+      if (analysis == "reactomepa") {
         # ReactomePA needs to map to entrez_ids, does not take ensembl ids
         # can use SIGORA's mapping for consistency, but maps fewer entrez symbols
         if (split) {
@@ -101,7 +103,7 @@ enrich_pathway <- function(
 
           up_results <- enrichPathway(up_gns_entrez, readable = TRUE) %>%
             as.data.frame() %>%
-            mutate(direction = 'Up')
+            mutate(direction = "Up")
 
           dn_gns_entrez <- idmap %>%
             filter(Ensembl.Gene.ID %in% dn_gns) %>%
@@ -110,17 +112,9 @@ enrich_pathway <- function(
 
           dn_results <- enrichPathway(dn_gns_entrez, readable = TRUE) %>%
             as.data.frame() %>%
-            mutate(direction = 'Down')
+            mutate(direction = "Down")
 
           total_results <- rbind(up_results, dn_results)
-
-          # or use our own mapping file
-          # entrez_ids <- mapping_file %>%
-          #   filter(
-          #     ensg_id %in% up_gns
-          #   ) %>%
-          #   .$entrez_id %>%
-          #   unique()
 
         } else {
           all_gns_entrez <- idmap %>%
@@ -130,14 +124,16 @@ enrich_pathway <- function(
 
           total_results <- enrichPathway(all_gns_entrez, readable = TRUE) %>%
             as.data.frame() %>%
-            mutate(direction = 'All')
+            mutate(direction = "All")
         }
 
         # clean up the column names
         total_results <- total_results %>%
-          separate(GeneRatio,
-                   into = c('num_candidate_genes', 'num_bg_genes'),
-                   sep = '/') %>%
+          separate(
+            GeneRatio,
+            into = c("num_candidate_genes", "num_bg_genes"),
+            sep = "/"
+          ) %>%
           transmute(
             pathway_id = ID,
             pathway_description = Description,
@@ -150,11 +146,12 @@ enrich_pathway <- function(
             num_bg_genes = as.numeric(num_bg_genes),
             gene_ratio = num_candidate_genes/num_bg_genes
           ) %>%
-          # output genes are separated by '/', replace with ';' for consistency
-          mutate_at(.vars = 'candidate_genes',
-                    .funs = gsub,
-                    pattern = '/',
-                    replacement = ';'
+          # Output genes are separated by '/', replace with ';' for consistency
+          mutate_at(
+            .vars = "candidate_genes",
+            .funs = gsub,
+            pattern = "/",
+            replacement = ";"
           )
       }
 
@@ -195,7 +192,7 @@ enrich_pathway <- function(
       #
       # }
 
-      # annotate the  enrichment results by adding top pathway, comparisons
+      # Annotate the  enrichment results by adding top pathway and comparisons
       total_results_annotated <- left_join(
         total_results,
         top_pathways %>% select(pathway_id, top_pathways),
@@ -209,7 +206,7 @@ enrich_pathway <- function(
       ))
 
       # This adds the next dataframe to the previous one
-      if(i == 1){
+      if (i == 1) {
         final_enriched_results <- total_results_annotated
       } else {
         final_enriched_results <-
@@ -218,7 +215,8 @@ enrich_pathway <- function(
     }
   }
 
-  # order the comparisons in the same order as entered (for graphing purposes later)
+  # Order the comparisons in the same order as entered (for graphing purposes
+  # later)
   final_enriched_results$comparison <- factor(
     final_enriched_results$comparison,
     levels = c(names(deseq_result_list))

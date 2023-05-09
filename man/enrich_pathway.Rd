@@ -2,7 +2,7 @@
 % Please edit documentation in R/enrich_pathway.R
 \name{enrich_pathway}
 \alias{enrich_pathway}
-\title{enrich_pathway}
+\title{Test lists of DE genes for enriched pathways}
 \usage{
 enrich_pathway(
   deseq_result_list,
@@ -36,5 +36,5 @@ which can be loaded via \code{data(reaH, package = "sigora")}.}
 A data frame of pathway enrichment results
 }
 \description{
-enrich_pathway
+Test lists of DE genes for enriched pathways
 }
