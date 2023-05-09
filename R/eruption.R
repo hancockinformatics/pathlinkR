@@ -1,4 +1,4 @@
-#' eruption
+#' Create a volcano plot from DESeq2 results
 #'
 #' @param deseq_results Data frame of DESeq2 results with Ensembl gene IDs as
 #'   rownames
@@ -65,6 +65,16 @@ eruption <- function(deseq_results,
                      label_size = 3.5,
                      pad = 1.4) {
 
+  # Input checks
+  # Data frame
+  stopifnot(is.data.frame(deseq_results))
+
+  # Ensembl IDs as rownames
+  stopifnot(str_detect(rownames(deseq_results)[1], "^ENSG"))
+
+  # Columns: padj, log2FoldChange
+  stopifnot(all(c("padj", "log2FoldChange") %in% colnames(deseq_results)))
+
   # Annotate Ensembl gene IDs with gene names from the mapping file. For Ensembl
   # gene IDs without gene names, just use the Ensembl gene ID.
   res <- deseq_results %>%
@@ -96,7 +106,7 @@ eruption <- function(deseq_results,
     res <- res %>% filter(neglogp > yaxis[1] & neglogp < yaxis[2])
   }
 
-  # Make sure select_genes, if used, are in the dataframe
+  # Make sure select_genes, if used, are in the data frame
   select_genes <- select_genes[select_genes %in% res$ensg_id]
 
   # Identify top up- and down-regulated genes, and output them for the user

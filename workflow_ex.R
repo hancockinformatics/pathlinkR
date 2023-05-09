@@ -101,6 +101,7 @@ pathnet_ggraph(candidates_as_network) +
 
 eruption(deseq_results = deseq_example_list[[1]])
 
+
 # enrich_pathway ----------------------------------------------------------
 
 data(reaH, package = "sigora")

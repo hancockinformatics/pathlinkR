@@ -2,7 +2,7 @@
 % Please edit documentation in R/eruption.R
 \name{eruption}
 \alias{eruption}
-\title{eruption}
+\title{Create a volcano plot from DESeq2 results}
 \usage{
 eruption(
   deseq_results,
@@ -86,7 +86,7 @@ symbol). Defaults to TRUE.}
 Volcano plot as a ggplot object
 }
 \description{
-eruption
+Create a volcano plot from DESeq2 results
 }
 \seealso{
 \url{https://github.com/hancockinformatics/pathnet/}
