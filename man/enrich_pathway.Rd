@@ -9,7 +9,8 @@ enrich_pathway(
   p_cutoff = 0.05,
   fc_cutoff = 1.5,
   split = TRUE,
-  analysis = "sigora"
+  analysis = "sigora",
+  gps_repo
 )
 }
 \arguments{
@@ -26,6 +27,10 @@ enrichment separately}
 
 \item{analysis}{Default is SIGORA ("sigora"), others: ReactomePA
 ("reactomepa"), mSigDB Hallmark gene sets ("hallmark")}
+
+\item{gps_repo}{Gene Pair Signature object for Sigora to use to test for
+enriched pathways. We recommend using the one which ships with Sigora,
+which can be loaded via \code{data(reaH, package = "sigora")}.}
 }
 \value{
 A data frame of pathway enrichment results

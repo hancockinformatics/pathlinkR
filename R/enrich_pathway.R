@@ -9,6 +9,9 @@
 #'   enrichment separately
 #' @param analysis Default is SIGORA ("sigora"), others: ReactomePA
 #'   ("reactomepa"), mSigDB Hallmark gene sets ("hallmark")
+#' @param gps_repo Gene Pair Signature object for Sigora to use to test for
+#'   enriched pathways. We recommend using the one which ships with Sigora,
+#'   which can be loaded via `data(reaH, package = "sigora")`.
 #'
 #' @return A data frame of pathway enrichment results
 #' @export
@@ -21,7 +24,8 @@ enrich_pathway <- function(
     p_cutoff = 0.05,
     fc_cutoff = 1.5,
     split = TRUE,
-    analysis = "sigora"
+    analysis = "sigora",
+    gps_repo
 ) {
 
   # TODO
@@ -71,8 +75,8 @@ enrich_pathway <- function(
 
         # Enrich with up- and down-regulated genes separately
         if (split) {
-          up_results <- run_sigora(up_gns, direction = "Up")
-          dn_results <- run_sigora(dn_gns, direction = "Down")
+          up_results <- run_sigora(up_gns, direction = "Up", gps_repo = gps_repo)
+          dn_results <- run_sigora(dn_gns, direction = "Down", gps_repo = gps_repo)
           total_results <- rbind(up_results, dn_results)
 
         # Or just use all DE genes for enrichment

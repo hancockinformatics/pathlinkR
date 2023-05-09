@@ -2,6 +2,7 @@
 #'
 #' @param enrich_genes Vector of genes to enrich
 #' @param direction If up or down-regulated genes were used
+#' @param gps_repo GPS object to use for testing pathways
 #'
 #' @return Data frame of results from Sigora
 #'
@@ -10,13 +11,14 @@
 #'
 run_sigora <- function(
     enrich_genes,
-    direction = NA
+    direction = NA,
+    gps_repo
 ) {
 
   # Run SIGORA based on default settings (GPSrepo = reaH, levels = 4, adjusted pvalue cutoff < 0.001)
   invisible(capture.output(
     sigora_data <- sigora(
-      GPSrepo = reaH,
+      GPSrepo = gps_repo,
       level = 4,
       markers = TRUE,
       queryList = enrich_genes

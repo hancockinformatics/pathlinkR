@@ -4,12 +4,14 @@
 \alias{run_sigora}
 \title{INTERNAL run_sigora}
 \usage{
-run_sigora(enrich_genes, direction = NA)
+run_sigora(enrich_genes, direction = NA, gps_repo)
 }
 \arguments{
 \item{enrich_genes}{Vector of genes to enrich}
 
 \item{direction}{If up or down-regulated genes were used}
+
+\item{gps_repo}{GPS object to use for testing pathways}
 }
 \value{
 Data frame of results from Sigora
