@@ -1,36 +1,39 @@
 #' eruption
 #'
-#' @param deseq_results dataframe of DESeq2 results with ensembl gene ids as
+#' @param deseq_results Data frame of DESeq2 results with Ensembl gene IDs as
 #'   rownames
-#' @param p_cutoff adjusted pvalue cutoff, default <0.05
-#' @param fc_cutoff absolute fold change, default abs >1.5
-#' @param base_colour colour of points for DE genes
-#' @param nonsig_colour colour of non-DE genes
-#' @param alpha transparency of points
-#' @param point_size size of points
-#' @param title title of plot, be informative (e.g. COVID vs Healthy)
-#' @param absolute make x-axis absolute fold change (TRUE) instead of log2fold
-#'   change (FALSE)
-#' @param xaxis manually specify limits of x-axis (in log2FoldChange), e.g.
-#'   xaxis = c(-3, 5)
-#' @param yaxis manually specify limits of y-axis (in -log10), e.g. yaxis = c(0,
-#'   5)
-#' @param select_genes vector of select genes to emphasize by colouring
-#'   differently (e.g. genes of interest), should be ensg ids
-#' @param select_colour colour for the select genes
-#' @param select_name what to call select genes (e.g. Unique, Shared, Immune
-#'   Related, etc.)
-#' @param label auto: label the top 5 (or n) up/down annotated DE genes, select:
-#'   label top 5 (or n) up/down genes provided in select_genes, manual: label a
-#'   manual selection of genes provided in manual_genes
-#' @param manual_genes if label = "manual", these are the genes to specifically
-#'   label, can be hgnc symbols or ensembl gene ids
-#' @param remove_unannotated remove genes without annotation (i.e. no hgnc
-#'   symbol), this is default
-#' @param n number of top up and downregulated genes to label, applies to label
-#'   = "auto" or "select"
-#' @param label_size size of font for labels
-#' @param pad padding of labels (adjust this if labels overlap)
+#' @param p_cutoff Adjusted p value cutoff, defaults to <0.05
+#' @param fc_cutoff Absolute fold change cutoff, defaults to an absolute value
+#'   of >1.5
+#' @param base_colour Colour of points for significant DE genes ("steelblue4")
+#' @param nonsig_colour Colour of non-DE genes ("lightgrey")
+#' @param alpha Transparency of the points (0.5)
+#' @param point_size Size of the points (1)
+#' @param title Title of the plot
+#' @param absolute Make x-axis absolute fold change instead of the default log2
+#'   fold change (FALSE)
+#' @param xaxis Length-two numeric vector to manually specify limits of the
+#'   x-axis in log2 fold change; defaults to NA which lets ggplot2 determine the
+#'   best values.
+#' @param yaxis Length-two numeric vector to manually specify limits of the y-axis
+#'   (in -log10); defaults to NA which lets ggplot2 determine the best values.
+#' @param select_genes Vector of genes to emphasize by colouring differently
+#'   (e.g. genes of interest); should be Ensembl IDs.
+#' @param select_colour Colour for the `select_genes`
+#' @param select_name Optional name to call the `select_genes` (e.g. Unique,
+#'   Shared, Immune Related, etc.)
+#' @param label When set to "auto" (default), label the top n up- and
+#'   down-regulated DE genes. When set to "select", label top n up- and
+#'   down-regulated genes provided in `select_genes`. When set to "manual" label
+#'   a custom selection of genes provided in `manual_genes`
+#' @param manual_genes If `label = "manual"`, these are the genes to
+#'   specifically label. Can be HGNC symbols or Ensembl gene IDs.
+#' @param remove_unannotated Boolean: Remove genes without annotations (no HGNC
+#'   symbol). Defaults to TRUE.
+#' @param n number of top up- and down-regulated genes to label, applies when
+#'   `label` is set to "auto" or "select".
+#' @param label_size Size of font for labels
+#' @param pad Padding of labels; adjust this if the labels overlap
 #'
 #' @return Volcano plot as a ggplot object
 #' @export
@@ -58,37 +61,34 @@ eruption <- function(deseq_results,
                      label = "auto",
                      manual_genes = c(),
                      remove_unannotated = TRUE,
-                     n = 5,
+                     n = 10,
                      label_size = 3.5,
-                     pad = 1.4
-
-){
+                     pad = 1.4) {
 
   # Annotate Ensembl gene IDs with gene names from the mapping file. For Ensembl
   # gene IDs without gene names, just use the Ensembl gene ID.
-
-  res <- left_join(
-    rownames_to_column(deseq_results, var = "ensg_id"),
-    mapping_file,
-    by = "ensg_id"
-  ) %>%
+  res <- deseq_results %>%
+    rownames_to_column("ensg_id") %>%
+    filter(!is.na(padj)) %>%
+    left_join(
+      mapping_file,
+      by = "ensg_id"
+    ) %>%
     mutate(
       gene_name = case_when(
         is.na(gene_name) ~ ensg_id,
         !is.na(gene_name) ~ gene_name
       ),
-      # Determine which genes are significant
       significant = case_when(
         padj < p_cutoff & abs(log2FoldChange) > log2(fc_cutoff) ~ "SIG",
         TRUE ~ "NS"
       ),
       in_list = case_when(ensg_id %in% select_genes ~ "Y", TRUE ~ "N"),
       neglogp = -log10(padj)
-    ) %>%
-    filter(!is.na(padj)) # remove any genes without a p value
+    )
 
-  # If specifying x and y axis, remove any genes that fall outside the specified
-  # ranges
+  # If specifying x and y axis limits, remove any genes that fall outside the
+  # specified ranges
   if(!is.na(xaxis[1])) {
     res <- res %>% filter(log2FoldChange > xaxis[1] & log2FoldChange < xaxis[2])
   }
@@ -96,10 +96,10 @@ eruption <- function(deseq_results,
     res <- res %>% filter(neglogp > yaxis[1] & neglogp < yaxis[2])
   }
 
-  # make sure select_genes, if used, are in the dataframe
+  # Make sure select_genes, if used, are in the dataframe
   select_genes <- select_genes[select_genes %in% res$ensg_id]
 
-  # Identify top up and down regulated genes, and output them for the user
+  # Identify top up- and down-regulated genes, and output them for the user
   up_df <- res %>%
     filter(padj < p_cutoff, log2FoldChange > log2(fc_cutoff))
 
@@ -117,52 +117,60 @@ eruption <- function(deseq_results,
   ))
 
   if (length(select_genes) > 0) {
-    message(paste0("An additional ", length(select_genes), " genes are highlighted."))
+    message(paste0(
+      "An additional ",
+      length(select_genes),
+      " genes will be highlighted."))
   }
 
-  # Select the genes to label. specify if you want to only label annotated genes
-  # (default), i.e., those that have a gene name this is for auto and select
-  # labeling, does not apply to manual labeling (e.g. if you want to manually
-  # label an unannotated gene)
+  # Select the genes to label. You can specify if you want to only label
+  # annotated genes (default), i.e. those that have a gene name. This is for
+  # "auto" and "select" labeling, i.e. it does not apply to manual labeling
+  # (e.g. if you want to manually label an unannotated gene).
   if (remove_unannotated) {
-    possible_labels <- res %>% filter(!grepl("ENSG", gene_name)) %>% .$gene_name
+    possible_labels <- res %>%
+      filter(!grepl("ENSG", gene_name)) %>%
+      pull(gene_name)
   } else {
     possible_labels <- res$gene_name
   }
 
-  ## Auto-labeling (default): label the top 5 (or n) up and down-regulated genes
-  ## The "top" genes are those with the highest fold change and smallest p-values
+  # Auto-labeling (default): label the top 5 (or n) up and down-regulated genes.
+  # The "top" genes are those with the highest fold change and smallest p-value.
   if (label == "auto") {
     upgenes <- up_df %>%
-      arrange(desc(log2FoldChange^2 * log10(padj)^2)) %>%
-      filter(gene_name %in% possible_labels) %>% # remove unannotated genes if necessary
+      arrange(desc(log2FoldChange ^ 2 * log10(padj) ^ 2)) %>%
+      filter(gene_name %in% possible_labels) %>%
       head(n) %>%
       select(gene_name) %>%
-      unlist() # Label the top n genes
+      unlist()
 
     downgenes <- down_df %>%
-      arrange(desc(log2FoldChange^2 * log10(padj)^2)) %>%
-      filter(gene_name %in% possible_labels) %>% # remove unannotated genes if necessary
+      arrange(desc(log2FoldChange ^ 2 * log10(padj) ^ 2)) %>%
+      filter(gene_name %in% possible_labels) %>%
       head(n) %>%
       select(gene_name) %>%
-      unlist() # Label the top n genes
+      unlist()
 
-    # record which genes to label
-    res <- res %>% mutate(label = case_when(gene_name %in% c(upgenes, downgenes) ~ gene_name))
+    # Record which genes to label
+    res <- res %>% mutate(
+      label = case_when(gene_name %in% c(upgenes, downgenes) ~ gene_name)
+    )
   }
 
-  ## Selective labelling (select): label the top n up/down genes that are in select_genes
+  # Selective labeling ("select"): label the top n up/down genes that are in
+  # `select_genes`
   if (label == "select") {
     upgenes <- up_df %>%
       filter(in_list == "Y", gene_name %in% possible_labels) %>%
-      arrange(desc(log2FoldChange^2 * log10(padj)^2)) %>%
+      arrange(desc(log2FoldChange ^ 2 * log10(padj) ^ 2)) %>%
       head(n) %>%
       select(gene_name) %>%
       unlist()
 
     downgenes <- down_df %>%
       filter(in_list == "Y", gene_name %in% possible_labels) %>%
-      arrange(desc(log2FoldChange^2 * log10(padj)^2)) %>%
+      arrange(desc(log2FoldChange ^ 2 * log10(padj) ^ 2)) %>%
       head(n) %>%
       select(gene_name) %>%
       unlist()
@@ -172,19 +180,18 @@ eruption <- function(deseq_results,
     )
   }
 
-  # Manual labeling (manual): label the genes you provided in manual_genes
-  if(label == "manual"){
-    res <- res %>% mutate(
-      label = case_when(
+  # Manual labeling ("manual"): label the genes you provided in `manual_genes`
+  if (label == "manual") {
+    res <- res %>%
+      mutate(label = case_when(
         ensg_id %in% manual_genes | gene_name %in% manual_genes ~ gene_name
-      )
-    )
+      ))
   }
 
   # Create the plot
   p <- ggplot(res, aes(x = log2FoldChange, y = neglogp)) +
 
-    # plot non-significant genes
+    # Plot the non-significant genes
     geom_point(
       data = res %>% filter(significant == "NS", in_list == "N"),
       alpha = alpha,
@@ -193,8 +200,9 @@ eruption <- function(deseq_results,
       colour = nonsig_colour
     ) +
 
-    # plot significant genes and genes of interest (select_genes), with those in
-    # select_genes overlaying those not in select_genes for emphasis
+    # Plot the significant genes and genes of interest ("select_genes"), with
+    # those in `select_genes` overlaying those not in `select_genes` for
+    # emphasis.
     geom_point(
       data = res %>% filter(significant == "SIG", in_list == "N"),
       mapping = aes(x = log2FoldChange, y = neglogp),
@@ -211,7 +219,7 @@ eruption <- function(deseq_results,
       colour = select_colour
     ) +
 
-    # add cutoff lines
+    # Add cutoff lines
     geom_hline(
       yintercept = -log10(p_cutoff),
       linetype = "dashed",
@@ -223,8 +231,8 @@ eruption <- function(deseq_results,
       colour = "gray20"
     ) +
 
-    # some more graph adjustments
-    ## set to a clean theme, make labels easy to read
+    # Some more graph adjustments: set to a clean theme, make labels easy to
+    # read
     theme_bw() +
     theme(
       axis.text = element_text(colour = "black", size = 11),
@@ -234,14 +242,16 @@ eruption <- function(deseq_results,
       plot.background = element_blank()
     ) +
 
-    ylab(expression(bold(-log["10"]~P[adj]))) + # rename y label
-    xlab(expression(bold(log["2"]~Fold~Change))) + # rename x label
+    labs(
+      x = expression(bold(log["2"]~Fold~Change)),
+      y = expression(bold(-log["10"]~P[adj]))
+    ) +
 
-    ## set axes
+    # Set axes
     {if(!is.na(yaxis[1])) ylim(yaxis)} +
     {if(!is.na(xaxis[1])) xlim(xaxis)} +
 
-    ## add in labels
+    # Add in labels
     geom_text_repel(
       data = res %>% filter(!is.na(label)),
       mapping = aes(label = label),
@@ -255,17 +265,17 @@ eruption <- function(deseq_results,
       box.padding = pad
     ) +
 
-    # add in informative subtitles for number of up and down-regulated genes, as
-    # well as number of genes in select_genes add a title if provided
+    # Add in informative subtitles for number of up and down-regulated genes, as
+    # well as number of genes in "select_genes," add a title if provided
     {if(!is.na(title)) labs(title = title)} +
 
-    # if there are no select genes
+    # If there are no "select_genes"
     {
       if (length(select_genes) == 0)
         labs(subtitle = paste0("Down: ", num_genes[2], ", Up: ", num_genes[1]))
     } +
 
-    # if select genes given
+    # If "select_genes" was given
     {
       if (length(select_genes) != 0)
         labs(subtitle = paste0(
@@ -275,12 +285,11 @@ eruption <- function(deseq_results,
         ))
     }
 
-
-
-  # For plotting with fold change, not log2 fold change
-  # manually add in scientific notation based on the xaxis range
+  # For plotting with fold change, not log2 fold change, manually add in
+  # scientific notation based on the xaxis range.
   if (absolute) {
-    # if xaxis is not specified
+
+    # If "xaxis" is not specified
     if (is.na(xaxis[1])) {
       xaxis <-
         c(min(res$log2FoldChange) - 0.1,
@@ -292,7 +301,7 @@ eruption <- function(deseq_results,
       theme(axis.text.x = element_text(vjust = 0, size = 11)) +
       {
         if (between(max(abs(xaxis)), 0, 6))
-          # up to log2FC = 6
+          # Up to log2FC = 6
           scale_x_continuous(
             breaks = c(-6, -4, -2, 0, 2, 4, 6),
             labels = c(-32, -16, -4, 1, 4, 16, 32),
@@ -301,7 +310,7 @@ eruption <- function(deseq_results,
       } +
       {
         if (between(max(abs(xaxis)), 6.001, log2(100)))
-          #up to log2FC = 6.64
+          # Up to log2FC = 6.64
           scale_x_continuous(
             breaks = c(-log2(100), -log2(10), 0, log2(10), log2(100)),
             labels = c(
@@ -316,7 +325,7 @@ eruption <- function(deseq_results,
       } +
       {
         if (between(max(abs(xaxis)), log2(100), log2(1000)))
-          #up to log2FC = 9.97
+          # Up to log2FC = 9.97
           scale_x_continuous(
             breaks = c(
               -log2(1000),
@@ -341,7 +350,7 @@ eruption <- function(deseq_results,
       } +
       {
         if (between(max(abs(xaxis)), log2(1000), log2(10000)))
-          #up to log2FC = 13.29
+          # Up to log2FC = 13.29
           scale_x_continuous(
             breaks = c(
               -log2(10000),
@@ -370,7 +379,7 @@ eruption <- function(deseq_results,
       } +
       {
         if (between(max(abs(xaxis)), log2(10000), log2(100000)))
-          #up to log2FC = 16.61
+          # Up to log2FC = 16.61
           scale_x_continuous(
             breaks = c(
               -log2(10 ^ 5),
@@ -395,8 +404,8 @@ eruption <- function(deseq_results,
       } +
       {
         if (max(abs(xaxis)) >= log2(100000))
-          message("Something is probably wrong with your DESeq model to have ",
-                  "huge fold changes >10^5.")
+          message("Something may be wrong with your DESeq model to have ",
+                  "fold changes >10^5...")
       }
   }
 
