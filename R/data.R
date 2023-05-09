@@ -47,6 +47,15 @@
 #' }
 "innatedb_exp"
 
+#' Table of duplicated Reactome pathways
+#'
+#' @format A tibble with 25 rows and 2 columns
+#' \describe{
+#' \item{pathway_id}{Reactome pathway ID}
+#' \item{top_pathway_name}{Name of the pathway}
+#' }
+"manual_dupe_annotation"
+
 #' Table of human gene ID mappings
 #'
 #' @format A data frame with 42,099 rows and 3 columns
@@ -77,63 +86,16 @@
 #' }
 "sigora_database"
 
-#' Data frame of Sigora results to be used for testing, as an example
+#' A list of three example outputs from
 #'
-#' @format A data frame (tibble) with 44 rows and 7 columns
-#' \describe{
-#' \item{direction}{Type of dysregulation, based on fold change values from input DE genes}
-#' \item{pathway_id}{Reactome pathway identifier}
-#' \item{description}{Pathway name}
-#' \item{pvalue}{Nominal p-value for enrichment}
-#' \item{bonferroni}{Adjusted p-value for enrichment}
-#' \item{level_1}{Top level Reactome term for the pathway}
-#' \item{level_2}{Second level Reactome term for the pathway}
-#' }
-"sigora_example_1"
-
-#' Another data frame of Sigora results to be used for testing, as an example
-#'
-#' @format A data frame (tibble) with 23 rows and 8 columns
-#' \describe{
-#' \item{pathway_id}{Reactome pathway identifier}
-#' \item{description}{Pathway name}
-#' \item{direction}{Type of dysregulation, based on fold change values from input DE genes}
-#' \item{pvalue}{Nominal p-value for enrichment}
-#' \item{bonferroni}{Adjusted p-value for enrichment}
-#' \item{level_1}{Top level Reactome term for the pathway}
-#' \item{level_2}{Second level Reactome term for the pathway}
-#' \item{genes}{Overlapping genes between the pathway and input list}
-#' }
-"sigora_example_2"
-
-#' Yet another data frame of Sigora results to be used for testing, as an example
-#'
-#' @format A data frame (tibble) with 23 rows and 8 columns
-#' \describe{
-#' \item{direction}{Type of dysregulation, based on fold change values from input DE genes}
-#' \item{pathway_id}{Reactome pathway identifier}
-#' \item{description}{Pathway name}
-#' \item{pvalue}{Nominal p-value for enrichment}
-#' \item{bonferroni}{Adjusted p-value for enrichment}
-#' \item{level_1}{Top level Reactome term for the pathway}
-#' }
-"sigora_example_3"
+#' @format A list of three data frames.
+"sigora_examples"
 
 #' Colours to use for the manually-assigned "top_pathways"
 #'
 #' @format A named vector of pathway types and their corresponding hex colour,
 #'   from the RColorBrewer "Set2" palette
 "top_pathway_colours"
-
-#' Manually-curated list of Reactome pathways with a simple category assignment
-#'
-#' @format A data frame (tibble) with 1298 rows and 3 columns
-#' \describe{
-#' \item{pathway_id}{Reactome pathway identifier}
-#' \item{pathway_name}{Pathway name}
-#' \item{grouped_pathway}{Manually-curated pathway type; seven possible values}
-#' }
-"top_pathways_slim"
 
 #' Manually-curated list of Reactome pathways with a simple category assignment
 #'
@@ -145,5 +107,6 @@
 #' \item{comments}{Comments about the pathway}
 #' \item{pathway_name}{Pathway name}
 #' \item{grouped_pathway}{Manually-curated pathway type; seven possible values}
+#' \item{top_pathways_original}{Original top pathway}
 #' }
 "top_pathways"
