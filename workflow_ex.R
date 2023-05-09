@@ -22,7 +22,7 @@ starting_pathways <- create_foundation(
 # |- create_pathnet -------------------------------------------------------
 
 my_pathway_network <- create_pathnet(
-  sigora_result = sigora_example_1,
+  sigora_result = sigora_examples[[1]],
   foundation = starting_pathways,
   trim = TRUE,
   trim_order = 1
@@ -53,7 +53,7 @@ pathnet_visNetwork(my_pathway_network)
 # instead of using all pathways and layering our results on top.
 # Start by splitting the sigora genes, and adding the needed annotations from
 # sigora_database
-candidate_data <- sigora_example_2 %>%
+candidate_data <- sigora_examples[[2]] %>%
   select(pathway_id, genes) %>%
   separate_rows(genes, sep = ";") %>%
   left_join(
@@ -77,7 +77,7 @@ candidate_starting_pathways <- create_foundation(
 )
 
 candidates_as_network <- create_pathnet(
-  sigora_result = sigora_example_2,
+  sigora_result = sigora_example[[2]],
   foundation = candidate_starting_pathways,
   trim = FALSE
 )
