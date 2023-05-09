@@ -15,9 +15,6 @@ Largest subnetwork from the input network list as an igraph object
 \description{
 Find and return the largest subnetwork
 }
-\references{
-None.
-}
 \seealso{
 \url{https://github.com/hancockinformatics/pathnet/}
 }

@@ -2,19 +2,19 @@
 % Please edit documentation in R/clean_network.R
 \name{clean_network}
 \alias{clean_network}
-\title{Clean graphml input}
+\title{Clean GraphML or JSON input}
 \usage{
 clean_network(network)
 }
 \arguments{
-\item{network}{\code{tidygraph} object from graphml file}
+\item{network}{\code{tidygraph} object from a GraphML or JSON file}
 }
 \value{
 \code{tidygraph} object which can be forwarded to other \code{networker}
 functions such as \code{plot_network}
 }
 \description{
-Clean graphml input
+Clean GraphML or JSON input
 }
 \seealso{
 \url{https://github.com/hancockinformatics/pathnet/}

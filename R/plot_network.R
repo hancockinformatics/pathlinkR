@@ -28,8 +28,8 @@
 #'   to "grey70".
 #' @param fc_up_col Colour to use for up regulated nodes when `fill_type` is set
 #'   to "fold_change". Defaults to "firebrick3".
-#' @param fc_down_col Colour to use for down regulated nodes when `fill_type` is set
-#'   to "fold_change". Defaults to "#188119".
+#' @param fc_down_col Colour to use for down regulated nodes when `fill_type` is
+#'   set to "fold_change". Defaults to "#188119".
 #' @param label Boolean, whether labels should be added to nodes. Defaults to
 #'   FALSE.
 #' @param label_column Tidy-select column of the network/data to be used in
@@ -162,18 +162,12 @@ plot_network <- function(
     network <- mutate(network, new_fill_col = {{fill_column}})
     network_fill_geom <- scale_fill_gradient2(
       low  = "#313695",
-      # mid  = "#ffffbf",
       mid  = "white",
       high = "#a50026",
       midpoint = 0,
       na.value = int_colour,
       guide    = ifelse(legend, "colourbar", "none")
     )
-    # network_fill_geom <- scale_fill_distiller(
-    #   palette  = "RdYlBu",
-    #   na.value = int_colour,
-    #   guide    = ifelse(legend, "colourbar", "none")
-    # )
     network_fill_guide <- NULL
 
   } else if (fill_type == "one_sided") {
@@ -280,8 +274,17 @@ plot_network <- function(
     }
 
     ggraph(network, layout = layout_object) +
-      geom_edge_link(show.legend = FALSE, edge_alpha = edge_alpha_, edge_colour = edge_colour_, edge_width = edge_width_) +
-      geom_node_point(aes(size = degree, fill = new_fill_col), pch = 21, colour = node_colour) +
+      geom_edge_link(
+        show.legend = FALSE,
+        edge_alpha = edge_alpha_,
+        edge_colour = edge_colour_,
+        edge_width = edge_width_
+      ) +
+      geom_node_point(
+        aes(size = degree, fill = new_fill_col),
+        pch = 21,
+        colour = node_colour
+      ) +
       network_fill_geom +
       geom_node_text(
         aes(label = node_label, colour = is_starter),
@@ -320,8 +323,17 @@ plot_network <- function(
       )
 
     ggraph(network, layout = layout_object) +
-      geom_edge_link(show.legend = FALSE, edge_alpha = edge_alpha_, edge_colour = edge_colour_, edge_width = edge_width_) +
-      geom_node_point(aes(size = degree, fill = new_fill_col), pch = 21, colour = node_colour) +
+      geom_edge_link(
+        show.legend = FALSE,
+        edge_alpha = edge_alpha_,
+        edge_colour = edge_colour_,
+        edge_width = edge_width_
+      ) +
+      geom_node_point(
+        aes(size = degree, fill = new_fill_col),
+        pch = 21,
+        colour = node_colour
+      ) +
       network_fill_geom +
       geom_node_text(
         aes(label = node_label, colour = is_hub),
@@ -342,8 +354,17 @@ plot_network <- function(
 
   } else {
     ggraph(network, layout = layout_object) +
-      geom_edge_link(show.legend = FALSE, edge_alpha = edge_alpha_, edge_colour = edge_colour_, edge_width = edge_width_) +
-      geom_node_point(aes(size = degree, fill = new_fill_col), pch = 21, colour = node_colour) +
+      geom_edge_link(
+        show.legend = FALSE,
+        edge_alpha = edge_alpha_,
+        edge_colour = edge_colour_,
+        edge_width = edge_width_
+      ) +
+      geom_node_point(
+        aes(size = degree, fill = new_fill_col),
+        pch = 21,
+        colour = node_colour
+      ) +
       network_fill_geom +
       scale_size_continuous(range = node_size, guide = "none") +
       labs(fill = NULL) +

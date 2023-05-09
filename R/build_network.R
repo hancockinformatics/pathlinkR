@@ -32,12 +32,18 @@
 #' of the Kleinburg hub centrality score - details on this method can be found
 #' at `?igraph::hub_score`.
 #'
-#' @references See <https://cran.r-project.org/web/packages/SteinerNet/index.html>
-#'   for details on the Steiner network trimming.
+#' @references See
+#'   <https://cran.r-project.org/web/packages/SteinerNet/index.html> for details
+#'   on the Steiner network trimming.
 #'
 #' @seealso <https://github.com/hancockinformatics/pathnet/>
 #'
-build_network <- function(df, col, order, hub_measure = "betweenness", ppi_data = innatedb_exp, seed = 1) {
+build_network <- function(df,
+                          col,
+                          order,
+                          hub_measure = "betweenness",
+                          ppi_data = innatedb_exp,
+                          seed = 1) {
 
   # Check for and remove any duplicate IDs, which will cause problems later.
   # Make sure to warn the user about this.
@@ -104,9 +110,10 @@ build_network <- function(df, col, order, hub_measure = "betweenness", ppi_data 
   } else if (hub_measure == "hubscore") {
     hub_fn <- centrality_hub
   } else {
-    stop(
-      "Argument 'hub_measure' must be one of 'betweenness', 'degree', or 'hubscore'"
-    )
+    stop(paste0(
+      "Argument 'hub_measure' must be one of 'betweenness', 'degree', or ",
+      "'hubscore'"
+    ))
   }
 
   message("Creating network...")
