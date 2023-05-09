@@ -13,6 +13,7 @@ A data frame (tibble) with 1298 rows and 6 columns
 \item{comments}{Comments about the pathway}
 \item{pathway_name}{Pathway name}
 \item{grouped_pathway}{Manually-curated pathway type; seven possible values}
+\item{top_pathways_original}{Original top pathway}
 }
 }
 \usage{
