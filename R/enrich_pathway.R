@@ -7,8 +7,8 @@
 #' @param fc_cutoff Absolute fold change, defaults to |FC| > 1.5.
 #' @param split Boolean (TRUE); Split into up and down-regulated DEGs and do
 #'   enrichment separately
-#' @param analysis Default is SIGORA ('sigora'), others: ReactomePA
-#'   ('reactomepa'), mSigDB Hallmark gene sets ('hallmark')
+#' @param analysis Default is SIGORA ("sigora"), others: ReactomePA
+#'   ("reactomepa"), mSigDB Hallmark gene sets ("hallmark")
 #'
 #' @return A data frame of pathway enrichment results
 #' @export
@@ -25,11 +25,13 @@ enrich_pathway <- function(
 ) {
 
   # TODO
-  # 1. How to make function continue to run if sigora fails?
-  # 2. Include other pathway enrichment methods: hallmark, reactomePA
-  # 3. Include just using a vector of genes rather than a list of DESeq2 results
-  # 4. Should the candidate genes be in ensg_id or hgnc?
-  # 5. reactomePA uses pathway levels >4, so some pathways do not have annotated top pathways. Need to change pathway mapping file
+  # 1. How to make function continue to run if Sigora fails?
+  # 2. Include other pathway enrichment methods: Hallmark
+  # 3. Include just using a vector of genes or data frame rather than a list of
+  #    DESeq2 results
+  # 4. Should the candidate genes be in Ensembl IDs or HGNC symbols?
+  # 5. ReactomePA uses pathway levels >4, so some pathways do not have annotated
+  #    top pathways. Need to change pathway mapping file...
 
   if (!is.list(deseq_result_list)) {
     message("Provide a list of dataframes of DESeq2 results with the name of ",
