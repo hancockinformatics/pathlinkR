@@ -22,62 +22,65 @@ eruption(
   label = "auto",
   manual_genes = c(),
   remove_unannotated = TRUE,
-  n = 5,
+  n = 10,
   label_size = 3.5,
   pad = 1.4
 )
 }
 \arguments{
-\item{deseq_results}{dataframe of DESeq2 results with ensembl gene ids as
+\item{deseq_results}{Data frame of DESeq2 results with Ensembl gene IDs as
 rownames}
 
-\item{p_cutoff}{adjusted pvalue cutoff, default <0.05}
+\item{p_cutoff}{Adjusted p value cutoff, defaults to <0.05}
 
-\item{fc_cutoff}{absolute fold change, default abs >1.5}
+\item{fc_cutoff}{Absolute fold change cutoff, defaults to an absolute value
+of >1.5}
 
-\item{base_colour}{colour of points for DE genes}
+\item{base_colour}{Colour of points for significant DE genes ("steelblue4")}
 
-\item{nonsig_colour}{colour of non-DE genes}
+\item{nonsig_colour}{Colour of non-DE genes ("lightgrey")}
 
-\item{alpha}{transparency of points}
+\item{alpha}{Transparency of the points (0.5)}
 
-\item{point_size}{size of points}
+\item{point_size}{Size of the points (1)}
 
-\item{title}{title of plot, be informative (e.g. COVID vs Healthy)}
+\item{title}{Title of the plot}
 
-\item{absolute}{make x-axis absolute fold change (TRUE) instead of log2fold
-change (FALSE)}
+\item{absolute}{Make x-axis absolute fold change instead of the default log2
+fold change (FALSE)}
 
-\item{xaxis}{manually specify limits of x-axis (in log2FoldChange), e.g.
-xaxis = c(-3, 5)}
+\item{xaxis}{Length-two numeric vector to manually specify limits of the
+x-axis in log2 fold change; defaults to NA which lets ggplot2 determine the
+best values.}
 
-\item{yaxis}{manually specify limits of y-axis (in -log10), e.g. yaxis = c(0,
-5)}
+\item{yaxis}{Length-two numeric vector to manually specify limits of the y-axis
+(in -log10); defaults to NA which lets ggplot2 determine the best values.}
 
-\item{select_genes}{vector of select genes to emphasize by colouring
-differently (e.g. genes of interest), should be ensg ids}
+\item{select_genes}{Vector of genes to emphasize by colouring differently
+(e.g. genes of interest); should be Ensembl IDs.}
 
-\item{select_colour}{colour for the select genes}
+\item{select_colour}{Colour for the \code{select_genes}}
 
-\item{select_name}{what to call select genes (e.g. Unique, Shared, Immune
-Related, etc.)}
+\item{select_name}{Optional name to call the \code{select_genes} (e.g. Unique,
+Shared, Immune Related, etc.)}
 
-\item{label}{auto: label the top 5 (or n) up/down annotated DE genes, select:
-label top 5 (or n) up/down genes provided in select_genes, manual: label a
-manual selection of genes provided in manual_genes}
+\item{label}{When set to "auto" (default), label the top n up- and
+down-regulated DE genes. When set to "select", label top n up- and
+down-regulated genes provided in \code{select_genes}. When set to "manual" label
+a custom selection of genes provided in \code{manual_genes}}
 
-\item{manual_genes}{if label = "manual", these are the genes to specifically
-label, can be hgnc symbols or ensembl gene ids}
+\item{manual_genes}{If \code{label = "manual"}, these are the genes to
+specifically label. Can be HGNC symbols or Ensembl gene IDs.}
 
-\item{remove_unannotated}{remove genes without annotation (i.e. no hgnc
-symbol), this is default}
+\item{remove_unannotated}{Boolean: Remove genes without annotations (no HGNC
+symbol). Defaults to TRUE.}
 
-\item{n}{number of top up and downregulated genes to label, applies to label
-= "auto" or "select"}
+\item{n}{number of top up- and down-regulated genes to label, applies when
+\code{label} is set to "auto" or "select".}
 
-\item{label_size}{size of font for labels}
+\item{label_size}{Size of font for labels}
 
-\item{pad}{padding of labels (adjust this if labels overlap)}
+\item{pad}{Padding of labels; adjust this if the labels overlap}
 }
 \value{
 Volcano plot as a ggplot object
