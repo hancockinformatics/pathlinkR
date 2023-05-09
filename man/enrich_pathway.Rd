@@ -24,8 +24,8 @@ frames should have Ensembl gene IDs as rownames.}
 \item{split}{Boolean (TRUE); Split into up and down-regulated DEGs and do
 enrichment separately}
 
-\item{analysis}{Default is SIGORA ('sigora'), others: ReactomePA
-('reactomepa'), mSigDB Hallmark gene sets ('hallmark')}
+\item{analysis}{Default is SIGORA ("sigora"), others: ReactomePA
+("reactomepa"), mSigDB Hallmark gene sets ("hallmark")}
 }
 \value{
 A data frame of pathway enrichment results
