@@ -49,7 +49,7 @@ pathnet_visNetwork <- function(
     set_seed = 123
 ) {
 
-  visnet_nodes <- my_pathway_network %>%
+  visnet_nodes <- network %>%
     as_tibble() %>%
     mutate(
       id = row_number(),
@@ -73,7 +73,7 @@ pathnet_visNetwork <- function(
     )
   }
 
-  visnet_edges <- my_pathway_network %>%
+  visnet_edges <- network %>%
     activate("edges") %>%
     as_tibble() %>%
     rename("value" = similarity) %>%
