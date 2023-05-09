@@ -71,7 +71,7 @@ reactome_hierarchy_df <- reactome_hierarchy_df %>%
 
 reactome_dupe <- reactome_hierarchy_df %>% filter(top_pathway_name == 'character(0)')
 reactome_dupe
-reactome_dupe_annot <- read_csv('data/manual_dupe_annotation.csv')
+load("data/manual_dupe_annotation.rda")
 reactome_dupe_annot <- reactome_dupe_annot %>%
   left_join(reactome_names) %>%
   left_join(reactome_names %>% transmute(top_pathway = pathway_id,
