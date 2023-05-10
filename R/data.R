@@ -34,12 +34,16 @@
 #' }
 "innatedb_exp"
 
-#' Table of duplicated Reactome pathways
+#' Table of Reactome pathways that had multiple top pathways originally, and
+#' manually curated to only have one top pathway in find_top_pathways.R
 #'
 #' @format A tibble with 25 rows and 2 columns
 #' \describe{
 #' \item{pathway_id}{Reactome pathway ID}
-#' \item{top_pathway_name}{Name of the pathway}
+#' \item{pathway_name}{Name of the pathway}
+#' \item{top_pathway_name}{Name of the top pathway}
+#' \item{species}{species}
+#' \item{top_pathway}{ID of the top pathway}
 #' }
 "manual_dupe_annotation"
 
@@ -52,6 +56,15 @@
 #' \item{entrez_id}{NCBI Entrez IDs}
 #' }
 "mapping_file"
+
+#' Table of Hallmark gene sets and their genes
+#'
+#' @format A data frame with 8,209 rows and 2 columns
+#' \describe{
+#' \item{pathway_id}{Name of the Hallmark Gene Set}
+#' \item{ensg_id}{Ensembl IDs}
+#' }
+"msigdbr_t2g"
 
 #' Matrix of pairwise Jaccard indices for all human Reactome pathways
 #'
@@ -83,6 +96,19 @@
 #' @format A named vector of pathway types and their corresponding hex colour,
 #'   from the RColorBrewer "Set2" palette
 "top_pathway_colours"
+
+#' Manually-curated list of Reactome and Hallmark pathways and their
+#' top pathways and grouped pathways
+#'
+#' @format A data frame (tibble) with 2671 rows and 5 columns
+#' \describe{
+#' \item{pathway_id}{Reactome or Hallmark pathway identifier}
+#' \item{top_pathways}{Top hierarchy pathway term, shortened in some cases}
+#' \item{pathway_name}{Pathway name}
+#' \item{grouped_pathway}{Top grouped pathway, 8 for Reactome}
+#' \item{top_pathways_original}{Original top pathway name}
+#' }
+"top_pathways_more"
 
 #' Manually-curated list of Reactome pathways with a simple category assignment
 #'
