@@ -13,10 +13,10 @@
 #' @export
 #'
 #' @import dplyr
-#' @import purrr
 #' @import stringr
 #' @import tibble
 #' @import tidyr
+#' @importFrom purrr map
 #'
 #' @description Given a data frame of pathways and their member genes, calculate
 #'   the pairwise distances using a constructed identity matrix.
@@ -43,7 +43,7 @@ get_pathway_distances <- function(pathway_data = sigora_database,
 
   message("Creating identity matrix...")
   identity_table <- pathway_data %>%
-    select(all_of(c(gene_id_col, pathway_id_col))) %>%
+    dplyr::select(all_of(c(gene_id_col, pathway_id_col))) %>%
     distinct() %>%
     mutate(present = 1) %>%
     pivot_wider(
