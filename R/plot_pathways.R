@@ -119,8 +119,9 @@ plot_pathways <- function(
   # This chooses the top enriched pathway of duplicates and also adds the other
   # pathway into enriched_results_dupes.
   if (nrow(duplicates) > 0) {
-    message("Duplicated pathways:")
-    print(as.data.frame(duplicates[,1:2]))
+    message("\nWARNING: The following pathways were enriched in both directions for the ",
+            "given comparisons:")
+    print(as_tibble(duplicates[, c(2, 1)]))
 
     for (i in 1:nrow(duplicates)) {
       row <- duplicates[i, ]
@@ -147,7 +148,7 @@ plot_pathways <- function(
   ## How many pathways per top pathway? Add 1 to account for the extra space the
   ## facet takes up.
   num_pathways <- enriched_results_clean %>%
-    select(top_pathways, pathway_description) %>%
+    dplyr::select(top_pathways, pathway_description) %>%
     unique() %>%
     group_by(top_pathways) %>%
     summarise(pathways = n() + 1)
