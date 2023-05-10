@@ -16,15 +16,18 @@
 #' @seealso <https://github.com/hancockinformatics/pathnet>
 #'
 trunc_neatly <- function(x, l = 60) {
-  if (is.na(x)) {
-    return(NA_character_)
-  } else if (str_length(x) <= l) {
-    return(x)
-  } else {
-    shortened <- x %>%
-      as.character() %>%
-      str_sub(., start = 1, end = l) %>%
-      str_replace(., pattern = "\\s([^\\s]*)$", replacement = "...")
-    return(shortened)
-  }
+  map_chr(
+    x,
+    ~if (is.na(.x)) {
+      return(NA_character_)
+    } else if (str_length(.x) <= l) {
+      return(.x)
+    } else {
+      shortened <- .x %>%
+        as.character() %>%
+        str_sub(., start = 1, end = l) %>%
+        str_replace(., pattern = "\\s([^\\s]*)$", replacement = "...")
+      return(shortened)
+    }
+  )
 }
