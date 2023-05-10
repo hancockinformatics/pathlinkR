@@ -12,11 +12,15 @@
 #' @param gps_repo Gene Pair Signature object for Sigora to use to test for
 #'   enriched pathways. We recommend using the one which ships with Sigora,
 #'   which can be loaded via `data(reaH, package = "sigora")`.
+#' @param gene_universe Set of background genes to use when testing with
+#'   ReactomePA or Hallmark gene sets. For ReactomePA this must be a character
+#'   vector of Entrez genes. For Hallmark, it must be Ensembl IDs.
 #'
 #' @return A data frame of pathway enrichment results
 #' @export
 #'
-#' @import ReactomePA
+#' @importFrom ReactomePA enrichPathway
+#' @importFrom purrr possibly
 #' @import clusterProfiler
 #' @import dplyr
 #'
@@ -26,7 +30,8 @@ enrich_pathway <- function(
     fc_cutoff = 1.5,
     split = TRUE,
     analysis = "sigora",
-    gps_repo
+    gps_repo,
+    gene_universe = NULL
 ) {
 
   # TODO
@@ -68,16 +73,23 @@ enrich_pathway <- function(
       # eliminates duplicate, closely related pathways (e.g. TLR7/8/9 pathways).
       # Useful for if you have a lot of DEGs that might enrich for a lot of
       # pathways, making it difficult analyze.
-
       if (analysis == "sigora") {
         message("Enrichment using SIGORA")
 
-        run_sigora_safely <- possibly(run_sigora)
+        run_sigora_safely <- purrr::possibly(run_sigora)
 
         # Enrich with up- and down-regulated genes separately
         if (split) {
-          up_results <- run_sigora_safely(up_gns, direction = "Up", gps_repo = gps_repo)
-          dn_results <- run_sigora_safely(dn_gns, direction = "Down", gps_repo = gps_repo)
+          up_results <- run_sigora_safely(
+            up_gns,
+            direction = "Up",
+            gps_repo = gps_repo
+          )
+          dn_results <- run_sigora_safely(
+            dn_gns,
+            direction = "Down",
+            gps_repo = gps_repo
+          )
           total_results <- rbind(up_results, dn_results)
 
         # Or just use all DE genes for enrichment
@@ -88,91 +100,107 @@ enrich_pathway <- function(
 
 
       ### ReactomePA analysis
-      # Reactome uses regular over-representation analysis
-      # Useful for finding more pathways, if you have fewer DE genes or pathways
-      # Less stringent than SIGORA enrichment
+      # Reactome uses regular over-representation analysis. Useful for finding
+      # more pathways, if you have fewer DE genes or pathways Less stringent
+      # than SIGORA enrichment
+      suppressPackageStartupMessages({
+        if (analysis == "reactomepa") {
+          # ReactomePA needs to map to Entrez IDs, as it doesn't take Ensembl IDs.
+          # We can use SIGORA's mapping data for consistency, though it maps fewer
+          # Entrez symbols than our own mapping file.
+          if (split) {
+            up_gns_entrez <- idmap %>%
+              filter(Ensembl.Gene.ID %in% up_gns) %>%
+              .$EntrezGene.ID %>%
+              unique()
 
-      if (analysis == "reactomepa") {
-        # ReactomePA needs to map to entrez_ids, does not take ensembl ids
-        # can use SIGORA's mapping for consistency, but maps fewer entrez symbols
-        if (split) {
-          up_gns_entrez <- idmap %>%
-            filter(Ensembl.Gene.ID %in% up_gns) %>%
-            .$EntrezGene.ID %>%
-            unique()
+            up_results <- up_gns_entrez %>%
+              enrichPathway(
+                readable = TRUE,
+                universe = gene_universe
+              ) %>%
+              as.data.frame() %>%
+              mutate(direction = "Up")
 
-          up_results <- enrichPathway(up_gns_entrez, readable = TRUE) %>%
-            as.data.frame() %>%
-            mutate(direction = "Up")
+            dn_gns_entrez <- idmap %>%
+              filter(Ensembl.Gene.ID %in% dn_gns) %>%
+              .$EntrezGene.ID %>%
+              unique()
 
-          dn_gns_entrez <- idmap %>%
-            filter(Ensembl.Gene.ID %in% dn_gns) %>%
-            .$EntrezGene.ID %>%
-            unique()
+            dn_results <- dn_gns_entrez %>%
+              enrichPathway(
+                readable = TRUE,
+                universe = gene_universe
+              ) %>%
+              as.data.frame() %>%
+              mutate(direction = "Down")
 
-          dn_results <- enrichPathway(dn_gns_entrez, readable = TRUE) %>%
-            as.data.frame() %>%
-            mutate(direction = "Down")
+            total_results <- rbind(up_results, dn_results)
 
-          total_results <- rbind(up_results, dn_results)
+          } else {
+            all_gns_entrez <- idmap %>%
+              filter(Ensembl.Gene.ID %in% all_gns) %>%
+              .$EntrezGene.ID %>%
+              unique()
 
-        } else {
-          all_gns_entrez <- idmap %>%
-            filter(Ensembl.Gene.ID %in% all_gns) %>%
-            .$EntrezGene.ID %>%
-            unique()
+            total_results <- all_gns_entrez %>%
+              enrichPathway(
+                readable = TRUE,
+                universe = gene_universe
+              ) %>%
+              as.data.frame() %>%
+              mutate(direction = "All")
+          }
 
-          total_results <- enrichPathway(all_gns_entrez, readable = TRUE) %>%
-            as.data.frame() %>%
-            mutate(direction = "All")
+          # Clean up the column names
+          total_results <- total_results %>%
+            separate(
+              GeneRatio,
+              into = c("num_candidate_genes", "num_bg_genes"),
+              sep = "/"
+            ) %>%
+            transmute(
+              pathway_id = ID,
+              pathway_description = Description,
+              direction,
+              p_value = pvalue,
+              p_value_adjusted = p.adjust,
+              # q_value = qvalue,
+              candidate_genes = geneID,
+              num_candidate_genes = as.numeric(num_candidate_genes),
+              num_bg_genes = as.numeric(num_bg_genes),
+              gene_ratio = num_candidate_genes/num_bg_genes
+            ) %>%
+            # Output genes are separated by '/', replace with ';' for consistency
+            mutate_at(
+              .vars = "candidate_genes",
+              .funs = gsub,
+              pattern = "/",
+              replacement = ";"
+            )
         }
-
-        # clean up the column names
-        total_results <- total_results %>%
-          separate(
-            GeneRatio,
-            into = c("num_candidate_genes", "num_bg_genes"),
-            sep = "/"
-          ) %>%
-          transmute(
-            pathway_id = ID,
-            pathway_description = Description,
-            direction,
-            p_value = pvalue,
-            p_value_adjusted = p.adjust,
-            q_value = qvalue,
-            candidate_genes = geneID,
-            num_candidate_genes = as.numeric(num_candidate_genes),
-            num_bg_genes = as.numeric(num_bg_genes),
-            gene_ratio = num_candidate_genes/num_bg_genes
-          ) %>%
-          # Output genes are separated by '/', replace with ';' for consistency
-          mutate_at(
-            .vars = "candidate_genes",
-            .funs = gsub,
-            pattern = "/",
-            replacement = ";"
-          )
-      }
+      })
 
       ### Hallmark enrichment from mSigDB
-      # The Hallmark gene sets summarize and represent 50 specific well-defined biological
-      # states or processes and display coherent expression. They are a useful tool
-      # for looking at broad mechanisms, and can "validate" enrichment findings from
-      # SIGORA or ReactomePA if similar mechanisms appear.
-
+      # The Hallmark gene sets summarize and represent 50 specific well-defined
+      # biological states or processes and display coherent expression. They are
+      # a useful tool for looking at broad mechanisms, and can "validate"
+      # enrichment findings from SIGORA or ReactomePA if similar mechanisms
+      # appear.
       if (analysis == "hallmark") {
         if (split) {
           up_results <- enricher(
             up_gns,
-            TERM2GENE = msigdbr_t2g
+            TERM2GENE = msigdbr_t2g,
+            universe = gene_universe
           ) %>%
             as.data.frame() %>%
             mutate(direction = "Up")
 
           dn_results <- enricher(
             dn_gns,
-            TERM2GENE = msigdbr_t2g
+            TERM2GENE = msigdbr_t2g,
+            universe = gene_universe
           ) %>% as.data.frame() %>%
             mutate(direction = "Down")
 
@@ -181,7 +209,8 @@ enrich_pathway <- function(
         } else {
           total_results <- enricher(
             all_gns,
-            TERM2GENE = msigdbr_t2g
+            TERM2GENE = msigdbr_t2g,
+            universe = gene_universe
           ) %>% as.data.frame() %>%
             mutate(direction = "All")
         }
@@ -198,7 +227,7 @@ enrich_pathway <- function(
             direction,
             p_value = pvalue,
             p_value_adjusted = p.adjust,
-            q_value = qvalue,
+            # q_value = qvalue,
             candidate_genes = geneID,
             num_candidate_genes = as.numeric(num_candidate_genes),
             num_bg_genes = as.numeric(num_bg_genes),
@@ -217,7 +246,7 @@ enrich_pathway <- function(
       # Annotate the  enrichment results by adding top pathway and comparisons
       total_results_annotated <- left_join(
         total_results,
-        top_pathways_more %>% select(pathway_id, top_pathways),
+        top_pathways_more %>% dplyr::select(pathway_id, top_pathways),
         by = "pathway_id"
       )
 

@@ -10,7 +10,8 @@ enrich_pathway(
   fc_cutoff = 1.5,
   split = TRUE,
   analysis = "sigora",
-  gps_repo
+  gps_repo,
+  gene_universe = NULL
 )
 }
 \arguments{
@@ -31,6 +32,10 @@ enrichment separately}
 \item{gps_repo}{Gene Pair Signature object for Sigora to use to test for
 enriched pathways. We recommend using the one which ships with Sigora,
 which can be loaded via \code{data(reaH, package = "sigora")}.}
+
+\item{gene_universe}{Set of background genes to use when testing with
+ReactomePA or Hallmark gene sets. For ReactomePA this must be a character
+vector of Entrez genes. For Hallmark, it must be Ensembl IDs.}
 }
 \value{
 A data frame of pathway enrichment results
