@@ -52,11 +52,11 @@ create_foundation <- function(mat, max_distance = NA, prop_to_keep = NA) {
 
   anno_edge_table <- edge_table %>%
     left_join(
-      distinct(select(sigora_database, pathway_id, pathway_name)),
+      distinct(dplyr::select(sigora_database, pathway_id, pathway_name)),
       by = c("pathway_1" = "pathway_id")
     ) %>%
     left_join(
-      distinct(select(sigora_database, pathway_id, pathway_name)),
+      distinct(dplyr::select(sigora_database, pathway_id, pathway_name)),
       by = c("pathway_2" = "pathway_id"),
       suffix = c("_1", "_2")
     ) %>%

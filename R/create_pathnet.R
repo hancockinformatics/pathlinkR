@@ -34,13 +34,13 @@ create_pathnet <- function(sigora_result, foundation, trim = TRUE, trim_order = 
   stopifnot(all(c("pathway_id", "bonferroni") %in% colnames(sigora_result)))
 
   starting_nodes <- foundation %>%
-    select(pathway_1, pathway_name_1) %>%
+    dplyr::select(pathway_1, pathway_name_1) %>%
     distinct() %>%
     left_join(sigora_result, by = c("pathway_1" = "pathway_id"))
 
   starting_edges <- foundation %>%
     mutate(similarity = 1 / distance) %>%
-    select(pathway_1, pathway_2, similarity, distance)
+    dplyr::select(pathway_1, pathway_2, similarity, distance)
 
   pathways_as_network <- tbl_graph(
     nodes = starting_nodes,
@@ -65,9 +65,9 @@ create_pathnet <- function(sigora_result, foundation, trim = TRUE, trim_order = 
 
       pathways_as_network %>%
         filter(rn %in% c(x1, valid_nodes)) %>%
-        select(-rn)
+        dplyr::select(-rn)
     } else {
-      select(pathways_as_network, -rn)
+      dplyr::select(pathways_as_network, -rn)
     }
 
   pathways_as_network_3 <- pathways_as_network_2 %>%
@@ -78,10 +78,10 @@ create_pathnet <- function(sigora_result, foundation, trim = TRUE, trim_order = 
   pathways_as_network_4 <- pathways_as_network_3 %>%
     left_join(
       x  = .,
-      y  = select(top_pathways, pathway_id, pathway_name, grouped_pathway),
+      y  = dplyr::select(top_pathways, pathway_id, pathway_name, grouped_pathway),
       by = c("pathway_1" = "pathway_id", "pathway_name_1" = "pathway_name")
     ) %>%
-    select(
+    dplyr::select(
       pathway_1,
       pathway_name_1,
       everything(),
