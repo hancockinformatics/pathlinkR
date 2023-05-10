@@ -119,8 +119,11 @@ plot_pathways <- function(
   # This chooses the top enriched pathway of duplicates and also adds the other
   # pathway into enriched_results_dupes.
   if (nrow(duplicates) > 0) {
-    message("\nWARNING: The following pathways were enriched in both directions for the ",
-            "given comparisons:")
+    message(
+      "\nWARNING: The following pathways were enriched in both directions for ",
+      "the given comparisons. These are indicated with an asterisk over the ",
+      "triangle, which is only shown for the lower p value result."
+    )
     print(as_tibble(duplicates[, c(2, 1)]))
 
     for (i in 1:nrow(duplicates)) {
@@ -237,7 +240,7 @@ plot_pathways <- function(
       ) +
       # Wrap and truncate pathway names if necessary
       scale_y_discrete(
-        labels = function(x) str_wrap(str_trunc(x, name_trunc), width = name_width),
+        labels = function(x) str_wrap(trunc_neatly(x, name_trunc), width = name_width),
         position = "right"
       ) +
       # Keeps comparisons even if they don"t enrich for any pathways
