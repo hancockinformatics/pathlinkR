@@ -3,18 +3,23 @@
 \docType{data}
 \name{manual_dupe_annotation}
 \alias{manual_dupe_annotation}
-\title{Table of duplicated Reactome pathways}
+\title{Table of Reactome pathways that had multiple top pathways originally, and
+manually curated to only have one top pathway in find_top_pathways.R}
 \format{
 A tibble with 25 rows and 2 columns
 \describe{
 \item{pathway_id}{Reactome pathway ID}
-\item{top_pathway_name}{Name of the pathway}
+\item{pathway_name}{Name of the pathway}
+\item{top_pathway_name}{Name of the top pathway}
+\item{species}{species}
+\item{top_pathway}{ID of the top pathway}
 }
 }
 \usage{
 manual_dupe_annotation
 }
 \description{
-Table of duplicated Reactome pathways
+Table of Reactome pathways that had multiple top pathways originally, and
+manually curated to only have one top pathway in find_top_pathways.R
 }
 \keyword{datasets}
