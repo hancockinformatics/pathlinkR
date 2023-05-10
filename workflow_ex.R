@@ -105,13 +105,26 @@ eruption(deseq_results = deseq_example_list[[1]])
 # enrich_pathway ----------------------------------------------------------
 
 # Enrich with SIGORA
-enriched_results_sigora <- enrich_pathway(deseq_example_list[c(5, 6)], gps_repo = reaH)
+enriched_results_sigora <- enrich_pathway(
+  deseq_example_list[c(5, 6)],
+  gps_repo = reaH,
+  filter = TRUE
+)
 
 # Enrich with ReactomePA
-enriched_results_rpa <- enrich_pathway(deseq_example_list[c(5, 6)], analysis = "reactomepa")
+enriched_results_rpa <- enrich_pathway(
+  deseq_example_list[c(5, 6)],
+  analysis = "reactomepa",
+  filter = TRUE
+)
 
 # enrich with Hallmark gene sets
-enriched_results_hm <- enrich_pathway(deseq_example_list[c(5, 6)], analysis = "hallmark")
+enriched_results_hm <- enrich_pathway(
+  deseq_example_list[c(5, 6)],
+  analysis = "hallmark",
+  filter = TRUE
+)
+
 
 # plot_pathways -----------------------------------------------------------
 
