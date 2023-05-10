@@ -16,8 +16,9 @@
 #' @return A data frame of pathway enrichment results
 #' @export
 #'
-#' @import dplyr
 #' @import ReactomePA
+#' @import clusterProfiler
+#' @import dplyr
 #'
 enrich_pathway <- function(
     deseq_result_list,
@@ -29,12 +30,11 @@ enrich_pathway <- function(
 ) {
 
   # TODO
-  # 1. Include other pathway enrichment methods: Hallmark
+  # 1. Define what the "universe" is for ReactomePA and Hallmark
   # 2. Include just using a vector of genes or data frame rather than a list of
   #    DESeq2 results
   # 3. Should the candidate genes be in Ensembl IDs or HGNC symbols?
-  # 4. ReactomePA uses pathway levels >4, so some pathways do not have annotated
-  #    top pathways. Need to change pathway mapping file...
+  # 4. Need to change top pathway mapping file once agreed upon
 
   if (!is.list(deseq_result_list)) {
     message("Provide a list of dataframes of DESeq2 results with the name of ",
@@ -155,47 +155,69 @@ enrich_pathway <- function(
           )
       }
 
-      ### Hallmark
-      # if (analysis == "hallmark") {
-      #   database <- hallmark
-      #   msigdbr_t2g = database %>% dplyr::distinct(gs_name, ensembl_gene) %>% as.data.frame()
-      #
-      #   up <- dplyr::filter(dataframe, FoldChange > 0)
-      #   down <- dplyr::filter(dataframe, FoldChange < 0)
-      #
-      #   # Print how many DE genes
-      #   print(paste0("up: ", length(row.names(up)), ", down: ", length(row.names(down))))
-      #
-      #   up <- enricher(
-      #     gene = rownames(dataframe %>% filter(log2FoldChange > 0)),
-      #     TERM2GENE = msigdbr_t2g,
-      #     universe = universe
-      #   ) %>% as.data.frame()
-      #
-      #   if (length(rownames(up)) != 0) {
-      #     up$direction <- "Up"
-      #   }
-      #
-      #
-      #   down <- enricher(
-      #     gene = rownames(dataframe %>% filter(log2FoldChange < 0)),
-      #     TERM2GENE = msigdbr_t2g, universe = universe
-      #   ) %>% as.data.frame()
-      #
-      #   if (length(rownames(down)) != 0) {
-      #     down$direction <- "Down"
-      #   }
-      #
-      #   total <- rbind(up, down)
-      #   total$id <- filename
-      #   total$`-log10 p-adj`= -log10(total$p.adjust +1E-300)
-      #
-      # }
+      ### Hallmark enrichment from mSigDB
+      # The Hallmark gene sets summarize and represent 50 specific well-defined biological
+      # states or processes and display coherent expression. They are a useful tool
+      # for looking at broad mechanisms, and can "validate" enrichment findings from
+      # SIGORA or ReactomePA if similar mechanisms appear.
+
+      if (analysis == "hallmark") {
+        if (split) {
+          up_results <- enricher(
+            up_gns,
+            TERM2GENE = msigdbr_t2g
+          ) %>%
+            as.data.frame() %>%
+            mutate(direction = "Up")
+
+          dn_results <- enricher(
+            dn_gns,
+            TERM2GENE = msigdbr_t2g
+          ) %>% as.data.frame() %>%
+            mutate(direction = "Down")
+
+          total_results <- rbind(up_results, dn_results)
+
+        } else {
+          total_results <- enricher(
+            all_gns,
+            TERM2GENE = msigdbr_t2g
+          ) %>% as.data.frame() %>%
+            mutate(direction = "All")
+        }
+
+        total_results <- total_results %>%
+          separate(
+            GeneRatio,
+            into = c("num_candidate_genes", "num_bg_genes"),
+            sep = "/"
+          ) %>%
+          transmute(
+            pathway_id = ID,
+            pathway_description = Description,
+            direction,
+            p_value = pvalue,
+            p_value_adjusted = p.adjust,
+            q_value = qvalue,
+            candidate_genes = geneID,
+            num_candidate_genes = as.numeric(num_candidate_genes),
+            num_bg_genes = as.numeric(num_bg_genes),
+            gene_ratio = num_candidate_genes/num_bg_genes
+          ) %>%
+          # Output genes are separated by '/', replace with ';' for consistency
+          mutate_at(
+            .vars = "candidate_genes",
+            .funs = gsub,
+            pattern = "/",
+            replacement = ";"
+          )
+
+      }
 
       # Annotate the  enrichment results by adding top pathway and comparisons
       total_results_annotated <- left_join(
         total_results,
-        top_pathways %>% select(pathway_id, top_pathways),
+        top_pathways_more %>% select(pathway_id, top_pathways),
         by = "pathway_id"
       )
 
