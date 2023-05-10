@@ -104,14 +104,30 @@ eruption(deseq_results = deseq_example_list[[1]])
 
 # enrich_pathway ----------------------------------------------------------
 
+# Enrich with SIGORA
 data(reaH, package = "sigora")
+enriched_results_sigora <- enrich_pathway(deseq_example_list[c(5, 6)], gps_repo = reaH)
 
-# test_list <- list('Time 1' = deseq_example_1, 'Time 2' = deseq_example_2)
-enriched_results <- enrich_pathway(deseq_example_list[c(5, 6)], gps_repo = reaH)
+# Enrich with ReactomePA
+enriched_results_rpa <- enrich_pathway(deseq_example_list[c(5, 6)], analysis = 'reactomepa')
 
+# enrich with Hallmark gene sets
+enriched_results_hm <- enrich_pathway(deseq_example_list[c(5, 6)], analysis = 'hallmark')
 
 # plot_pathways -----------------------------------------------------------
 
-# enriched_results <-
-#   enrich_pathway(deseq_result_list = deseq_example_list[c(5, 6)], split = FALSE)
-# plot_pathways(enriched_results, columns = 2)
+# plot the different outputs
+plot_pathways(enriched_results_sigora, columns = 2)
+plot_pathways(enriched_results_rpa, columns = 2)
+plot_pathways(enriched_results_hm)
+
+# if you only want "immune system" pathways
+plot_pathways(enriched_results_sigora,
+              specific_top_pathways = 'Immune System')
+
+# if you want to include gene ratio
+plot_pathways(enriched_results_sigora,
+              specific_top_pathways = 'Immune System',
+              include_gene_ratio = TRUE)
+
+
