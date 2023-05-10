@@ -21,7 +21,7 @@
 #'
 #' @importFrom ReactomePA enrichPathway
 #' @importFrom purrr possibly
-#' @import clusterProfiler
+#' @importFrom clusterProfiler enricher
 #' @import dplyr
 #'
 enrich_pathway <- function(
