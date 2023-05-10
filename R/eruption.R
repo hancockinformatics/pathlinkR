@@ -152,14 +152,14 @@ eruption <- function(deseq_results,
       arrange(desc(log2FoldChange ^ 2 * log10(padj) ^ 2)) %>%
       filter(gene_name %in% possible_labels) %>%
       head(n) %>%
-      select(gene_name) %>%
+      dplyr::select(gene_name) %>%
       unlist()
 
     downgenes <- down_df %>%
       arrange(desc(log2FoldChange ^ 2 * log10(padj) ^ 2)) %>%
       filter(gene_name %in% possible_labels) %>%
       head(n) %>%
-      select(gene_name) %>%
+      dplyr::select(gene_name) %>%
       unlist()
 
     # Record which genes to label
@@ -175,14 +175,14 @@ eruption <- function(deseq_results,
       filter(in_list == "Y", gene_name %in% possible_labels) %>%
       arrange(desc(log2FoldChange ^ 2 * log10(padj) ^ 2)) %>%
       head(n) %>%
-      select(gene_name) %>%
+      dplyr::select(gene_name) %>%
       unlist()
 
     downgenes <- down_df %>%
       filter(in_list == "Y", gene_name %in% possible_labels) %>%
       arrange(desc(log2FoldChange ^ 2 * log10(padj) ^ 2)) %>%
       head(n) %>%
-      select(gene_name) %>%
+      dplyr::select(gene_name) %>%
       unlist()
 
     res <- res %>% mutate(

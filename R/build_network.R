@@ -87,7 +87,7 @@ build_network <- function(df,
   }
 
   ppi_data_ensembl <- ppi_data %>%
-    select(starts_with("ensembl"))
+    dplyr::select(starts_with("ensembl"))
 
   message("Finding interactions...")
   if (order == "zero") {
@@ -126,7 +126,7 @@ build_network <- function(df,
       betweenness = centrality_betweenness(),
       seed        = (name %in% gene_vector)
     ) %>%
-    select(-comp)
+    dplyr::select(-comp)
 
   network_init_2 <-
     if (hub_measure == "betweenness") {
@@ -213,7 +213,7 @@ build_network <- function(df,
 
   message("Mapping input Ensembl IDs to HGNC symbols...")
   ensembl_to_hgnc <- mapping_file %>%
-    select("name" = ensg_id, gene_name)
+    dplyr::select("name" = ensg_id, gene_name)
 
   network_mapped <- left_join(
     network_out_2,

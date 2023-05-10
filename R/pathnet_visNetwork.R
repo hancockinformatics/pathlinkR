@@ -59,7 +59,7 @@ pathnet_visNetwork <- function(
       border = map_chr(grouped_pathway, ~top_pathway_colours[[.x]]),
       color = map2(background, border, ~list("background" = .x, "border" = .y))
     ) %>%
-    select(
+    dplyr::select(
       id,
       "title" = pathway_name_1,
       everything(),
