@@ -39,6 +39,13 @@
 #'   need to change if invert = TRUE.
 #' @param cluster_columns Boolean (FALSE) Whether to cluster the columns
 #'   (conditions). Will override order of col_split if set to TRUE.
+#' @param col_angle angle of column text. Set default to 90
+#' @param col_center whether to center column text. Default is TRUE, should set
+#'   to FALSE if angled column name (e.g. col_angle = 45)
+#' @param row_angle angle of row text. Set default to 0
+#' @param row_center whether to center column text. Default is FALSE, should set
+#'   to TRUE if vertical column name (e.g. row_angle = 90)
+#'
 #'
 #' @return
 #' @import ComplexHeatmap
@@ -64,7 +71,11 @@ plot_fold_change <- function(
     log2_foldchange = FALSE,
     col_split = NA,
     cluster_rows = TRUE,
-    cluster_columns = FALSE) {
+    cluster_columns = FALSE,
+    col_angle = 90,
+    col_center = TRUE,
+    row_angle = 0,
+    row_center = FALSE) {
 
   # First identify the pathway to plot
   ## If pathway name is provided
@@ -262,7 +273,12 @@ plot_fold_change <- function(
     column_split = col_split,
     #col = circlize::colorRamp2(c(-limit, 0, limit), c("blue", "gray90", "red")),
     cluster_columns = cluster_columns,
-    cluster_rows = cluster_rows
+    cluster_rows = cluster_rows,
+    column_names_rot = col_angle,
+    column_names_centered = col_center,
+    row_names_rot = row_angle,
+    row_names_centered = row_center
+
   ), column_title = plot_title)
 
 }
