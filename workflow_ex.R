@@ -146,7 +146,14 @@ plot_pathways(enriched_results_sigora,
 
 # plot the fold change for the example DESeq2 results for the pathway
 # 'Generation of second messenger molecules'
-plot_fold_change(deseq_example_list, path_name = 'Generation of second messenger molecules')
+plot_fold_change(deseq_example_list,
+                 path_name = 'Generation of second messenger molecules')
+
+# Or I want to plot the Immunoregulatory interactions pathway, but the name is
+# so long. Set a manual pathway name and use the pathway id
+plot_fold_change(deseq_example_list,
+                 path_id = 'R-HSA-198933',
+                 manual_title = 'Immunoregulatory interactions')
 
 # Separate out the different conditions so that the names don't take up so much space
 deseq_example_list_renamed <- deseq_example_list
