@@ -79,13 +79,13 @@ create_pathnet <- function(sigora_result, foundation, trim = TRUE, trim_order = 
     left_join(
       x  = .,
       y  = dplyr::select(top_pathways_more, pathway_id, pathway_name, grouped_pathway),
-      by = c("pathway_1" = "pathway_id", "pathway_name_1" = "pathway_name")
+      by = c("pathway_1" = "pathway_id")
     ) %>%
     dplyr::select(
       pathway_1,
       pathway_name_1,
       everything(),
-      -any_of(c("level_1", "level_2"))
+      -any_of(c("pathway_name", "level_1", "level_2"))
     )
 
   return(pathways_as_network_4)
