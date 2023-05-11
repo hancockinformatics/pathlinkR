@@ -3,6 +3,11 @@
 #' @param input_list list of data frames of DESeq2 results. The list names
 #'   are used as the comparison for each dataframe (e.g. COVID vs Healthy). Data
 #'   frames should have Ensembl gene IDs as rownames.
+#' @param filter If providing list of data frames containing the unfiltered
+#'   output from `DESeq2::results()`, set this to TRUE to filter for DE genes
+#'   using the thresholds set by the `p_cutoff` and `fc_cutoff` arguments. When
+#'   FALSE (the default) its assumed your passing the filtered results into
+#'   `input_list`.
 #' @param p_cutoff Adjusted p value cutoff, defaults to < 0.05.
 #' @param fc_cutoff Absolute fold change, defaults to |FC| > 1.5.
 #' @param split Boolean (TRUE); Split into up and down-regulated DEGs and do

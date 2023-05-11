@@ -20,6 +20,12 @@ enrich_pathway(
 are used as the comparison for each dataframe (e.g. COVID vs Healthy). Data
 frames should have Ensembl gene IDs as rownames.}
 
+\item{filter}{If providing list of data frames containing the unfiltered
+output from \code{DESeq2::results()}, set this to TRUE to filter for DE genes
+using the thresholds set by the \code{p_cutoff} and \code{fc_cutoff} arguments. When
+FALSE (the default) its assumed your passing the filtered results into
+\code{input_list}.}
+
 \item{p_cutoff}{Adjusted p value cutoff, defaults to < 0.05.}
 
 \item{fc_cutoff}{Absolute fold change, defaults to |FC| > 1.5.}
