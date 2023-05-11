@@ -97,8 +97,8 @@
 #'   from the RColorBrewer "Set2" palette
 "top_pathway_colours"
 
-#' Manually-curated list of Reactome and Hallmark pathways and their
-#' top pathways and grouped pathways
+#' Manually-curated list of Reactome and Hallmark pathways and their top
+#' pathways and grouped pathways
 #'
 #' @format A data frame (tibble) with 2671 rows and 5 columns
 #' \describe{
