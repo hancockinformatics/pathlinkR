@@ -142,4 +142,29 @@ plot_pathways(enriched_results_sigora,
               specific_top_pathways = 'Immune System',
               include_gene_ratio = TRUE)
 
+# plot_fold_change --------------------------------------------------------
 
+# plot the fold change for the example DESeq2 results for the pathway
+# 'Generation of second messenger molecules'
+plot_fold_change(deseq_example_list, path_name = 'Generation of second messenger molecules')
+
+# Separate out the different conditions so that the names don't take up so much space
+deseq_example_list_renamed <- deseq_example_list
+names(deseq_example_list_renamed) <- c('PosT1', 'PosT2', 'NegT1', 'NegT2', 'Pos', 'Neg')
+plot_fold_change(deseq_example_list_renamed,
+                 path_name = 'Generation of second messenger molecules',
+                 col_split = c('Pos', 'Pos', 'Neg', 'Neg', 'Time', 'Time'),
+                 col_angle = 0)
+
+# I just want to plot genes I like, and I also want to see them in log2FC,
+# I also want to swap the column and rows
+plot_fold_change(deseq_example_list_renamed,
+                 manual_title = 'Genes I like',
+                 genes_to_plot = c('CD4', 'CD8A','CD8B', 'CD28', 'ZAP70'),
+                 gene_format = 'hgnc',
+                 col_split = c('Pos', 'Pos', 'Neg', 'Neg', 'Time', 'Time'),
+                 log2_foldchange = TRUE,
+                 col_angle = 45,
+                 cluster_rows = FALSE,
+                 cluster_columns = TRUE,
+                 invert = TRUE)
