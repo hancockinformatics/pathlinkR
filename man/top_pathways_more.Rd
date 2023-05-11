@@ -3,8 +3,8 @@
 \docType{data}
 \name{top_pathways_more}
 \alias{top_pathways_more}
-\title{Manually-curated list of Reactome and Hallmark pathways and their
-top pathways and grouped pathways}
+\title{Manually-curated list of Reactome and Hallmark pathways and their top
+pathways and grouped pathways}
 \format{
 A data frame (tibble) with 2671 rows and 5 columns
 \describe{
@@ -19,7 +19,7 @@ A data frame (tibble) with 2671 rows and 5 columns
 top_pathways_more
 }
 \description{
-Manually-curated list of Reactome and Hallmark pathways and their
-top pathways and grouped pathways
+Manually-curated list of Reactome and Hallmark pathways and their top
+pathways and grouped pathways
 }
 \keyword{datasets}
