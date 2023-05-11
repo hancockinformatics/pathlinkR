@@ -119,11 +119,11 @@ pathnet_ggraph <- function(
       range = node_size_range
     ) +
     scale_fill_manual(
-      values = top_pathway_colours,
+      values = grouped_pathway_colours,
       na.value = "white",
       guide = NULL
     ) +
-    scale_colour_manual(values = top_pathway_colours) +
+    scale_colour_manual(values = grouped_pathway_colours) +
 
     # Node labels
     geom_node_label(

@@ -12,6 +12,10 @@
 #' }
 "deseq_example_list"
 
+#' Colour assignments for grouped pathways
+#' @format A length 8 named vector of hex colour values
+"grouped_pathway_colours"
+
 #' Experimentally verified human PPI data downloaded from InnateDB
 #'
 #' A data frame containing human PPI data from InnateDB, from the entry
@@ -90,12 +94,6 @@
 #'
 #' @format A list of three data frames.
 "sigora_examples"
-
-#' Colours to use for the manually-assigned "top_pathways"
-#'
-#' @format A named vector of pathway types and their corresponding hex colour,
-#'   from the RColorBrewer "Set2" palette
-"top_pathway_colours"
 
 #' Manually-curated list of Reactome and Hallmark pathways and their top
 #' pathways and grouped pathways

@@ -54,9 +54,9 @@ pathnet_visNetwork <- function(
     mutate(
       id = row_number(),
       value = if_else(is.na(bonferroni), 1, -log10(bonferroni)),
-      background = map_chr(grouped_pathway, ~top_pathway_colours[[.x]]),
+      background = map_chr(grouped_pathway, ~grouped_pathway_colours[[.x]]),
       background = if_else(!is.na(bonferroni), background, "#ffffff"),
-      border = map_chr(grouped_pathway, ~top_pathway_colours[[.x]]),
+      border = map_chr(grouped_pathway, ~grouped_pathway_colours[[.x]]),
       color = map2(background, border, ~list("background" = .x, "border" = .y))
     ) %>%
     dplyr::select(
@@ -79,7 +79,7 @@ pathnet_visNetwork <- function(
     rename("value" = similarity) %>%
     distinct()
 
-  legend_df <- top_pathway_colours %>%
+  legend_df <- grouped_pathway_colours %>%
     enframe("label", "icon.color") %>%
     mutate(shape = "dot", size = 15)
 
