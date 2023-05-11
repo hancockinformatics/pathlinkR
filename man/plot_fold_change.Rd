@@ -97,6 +97,9 @@ to FALSE if angled column name (e.g. col_angle = 45)}
 \item{row_center}{whether to center column text. Default is FALSE, should set
 to TRUE if vertical column name (e.g. row_angle = 90)}
 }
+\value{
+A heatmap of fold changes for genes of interest
+}
 \description{
 Plot fold change plots
 }
