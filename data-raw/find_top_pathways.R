@@ -280,8 +280,8 @@ hallmark_db <- hallmark_annotated %>%
   )
 
 # save this for gene set enrichment for hallmark
-msigdbr_t2g = hallmark_db %>% dplyr::distinct(pathway_id, ensg_id) %>% as.data.frame()
-usethis::use_data(msigdbr_t2g, overwrite = TRUE)
+msigdbr_t2g = hallmark_db %>% dplyr::distinct(pathway_id, ensg_id) %>% as_tibble()
+usethis::use_data(msigdbr_t2g, overwrite = TRUE, compress = "bzip2")
 
 # save this as another top_pathways file ------------------------------------
 # Difference between previous one is:
@@ -296,7 +296,8 @@ top_pathways_more <- rbind(
     grouped_pathway,
     top_pathways_original = top_pathway_name_original),
   hallmark_db %>% select(!ensg_id) %>% unique()
-)
+) %>%
+  as_tibble()
 
-usethis::use_data(top_pathways_more, overwrite = TRUE)
+usethis::use_data(top_pathways_more, overwrite = TRUE, compress = "bzip2")
 
