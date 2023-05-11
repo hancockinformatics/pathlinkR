@@ -67,7 +67,7 @@ utils::globalVariables(c(
   "similarity",
   "tail",
   "title",
-  "top_pathway_colours",
+  "grouped_pathway_colours",
   "top_pathways",
   "top_pathways_more",
   "total_genes",
