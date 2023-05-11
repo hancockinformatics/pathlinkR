@@ -1,9 +1,13 @@
 deseq_example_list
+grouped_pathway_colours
+idmap
 innatedb_exp
 manual_dupe_annotation
 mapping_file
+msigdbr_t2g
 pathway_distances_jaccard
+reaH
 sigora_database
 sigora_examples
-top_pathway_colours
+top_pathways_more
 top_pathways

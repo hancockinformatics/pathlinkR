@@ -76,5 +76,7 @@ utils::globalVariables(c(
   "value",
   "entrez_id",
   "gpar",
-  "grid.text"
+  "grid.text",
+  "idmap",
+  "reaH"
 ))

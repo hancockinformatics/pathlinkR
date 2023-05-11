@@ -16,6 +16,19 @@
 #' @format A length 8 named vector of hex colour values
 "grouped_pathway_colours"
 
+#' Human gene ID mapping from Sigora
+#'
+#' A data frame of ID mappings for different human ID types. From the Sigora
+#' package.
+#'
+#' @format A data frame with 47037 rows and 3 columns
+#' \describe{
+#'   \item{Ensembl.Gene.ID}{Ensembl gene ID}
+#'   \item{EntrezGene.ID}{Entrez/NCBI gene ID}
+#'   \item{Symbol}{HGNC symbol}
+#' }
+"idmap"
+
 #' Experimentally verified human PPI data downloaded from InnateDB
 #'
 #' A data frame containing human PPI data from InnateDB, from the entry
@@ -78,6 +91,22 @@
 #' \item{Columns}{Reactome pathway identifiers}
 #' }
 "pathway_distances_jaccard"
+
+#' The default Sigora Gene Pair Signature (GPS) object
+#'
+#' @format A list of length nine with the following top-level elements
+#' \describe{
+#'   \item{origRepo}{The original pathway data}
+#'   \item{L1}{Level 1 pathways}
+#'   \item{L2}{Level 2 pathways}
+#'   \item{L3}{Level 3 pathways}
+#'   \item{L4}{Level 4 pathways}
+#'   \item{L5}{Level 5 pathways}
+#'   \item{repoName}{Name of the repository used to build the GPS object}
+#'   \item{pathwaydescriptions}{Pathway names}
+#'   \item{call}{Function call to create the GPS object}
+#' }
+"reaH"
 
 #' Table of all Sigora pathways and their constituent genes
 #'
