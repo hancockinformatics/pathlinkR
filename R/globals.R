@@ -73,5 +73,8 @@ utils::globalVariables(c(
   "total_genes",
   "types",
   "unique_id",
-  "value"
+  "value",
+  "entrez_id",
+  "gpar",
+  "grid.text"
 ))
