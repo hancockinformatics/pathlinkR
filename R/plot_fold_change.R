@@ -33,7 +33,7 @@
 #'   which group the dataframe belongs to in input_list. E.g. ('Positive',
 #'   'Positive', "Negative", "Negative", "Time", "Time"). The order of these
 #'   groups is set in the order they appear; if you want to change the order,
-#'   change the order of dataframes in input_list and write col_split in the
+#'   change the order of data frames in input_list and write col_split in the
 #'   order you want. Order will be ignored if cluster_columns is set to TRUE
 #' @param cluster_rows Boolean (TRUE) Whether to cluster the rows (genes). May
 #'   need to change if invert = TRUE.
@@ -48,9 +48,10 @@
 #'
 #'
 #' @return A heatmap of fold changes for genes of interest
+#' @export
+#'
 #' @import ComplexHeatmap
 #' @import dplyr
-#'
 #'
 plot_fold_change <- function(
     input_list,
