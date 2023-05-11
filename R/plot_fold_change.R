@@ -47,11 +47,10 @@
 #'   to TRUE if vertical column name (e.g. row_angle = 90)
 #'
 #'
-#' @return
+#' @return A heatmap of fold changes for genes of interest
 #' @import ComplexHeatmap
 #' @import dplyr
 #'
-#' @examples
 #'
 plot_fold_change <- function(
     input_list,

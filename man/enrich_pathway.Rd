@@ -5,17 +5,18 @@
 \title{Test lists of DE genes for enriched pathways}
 \usage{
 enrich_pathway(
-  deseq_result_list,
+  input_list,
+  filter = FALSE,
   p_cutoff = 0.05,
   fc_cutoff = 1.5,
   split = TRUE,
   analysis = "sigora",
-  gps_repo,
+  gps_repo = reaH,
   gene_universe = NULL
 )
 }
 \arguments{
-\item{deseq_result_list}{list of data frames of DESeq2 results. The list names
+\item{input_list}{list of data frames of DESeq2 results. The list names
 are used as the comparison for each dataframe (e.g. COVID vs Healthy). Data
 frames should have Ensembl gene IDs as rownames.}
 
@@ -31,7 +32,7 @@ enrichment separately}
 
 \item{gps_repo}{Gene Pair Signature object for Sigora to use to test for
 enriched pathways. We recommend using the one which ships with Sigora,
-which can be loaded via \code{data(reaH, package = "sigora")}.}
+which is already loaded as "reaH".}
 
 \item{gene_universe}{Set of background genes to use when testing with
 ReactomePA or Hallmark gene sets. For ReactomePA this must be a character
