@@ -241,13 +241,13 @@ plot_fold_change <- function(
     cell_fun = function(j, i, x, y, w, h, fill) {
       if (abs(mat_fc[i,j]) > log2(1.5)) {
         if (mat_p[i, j] < 0.001) {
-          grid.text('***', x, y, vjust = vjust, rot = rot)
+          grid::grid.text('***', x, y, vjust = vjust, rot = rot)
         }
         else if (mat_p[i, j] < 0.01) {
-          grid.text('**', x, y, vjust = vjust, rot = rot)
+          grid::grid.text('**', x, y, vjust = vjust, rot = rot)
         }
         else if (mat_p[i, j] < 0.05) {
-          grid.text('*', x, y, vjust = vjust, rot = rot)
+          grid::grid.text('*', x, y, vjust = vjust, rot = rot)
         }
           # as.character(expression('\u2736') # this doesn't work?
       }
@@ -255,20 +255,20 @@ plot_fold_change <- function(
       # If plotting significance values for genes that don't pass fc_cutoff
       if (abs(mat_fc[i,j]) < log2(1.5) & !hide_low_fc) {
         if (mat_p[i, j] < 0.001) {
-          grid.text("***", x, y, vjust = vjust, rot = rot, gp = gpar(col = 'grey50'))
+          grid::grid.text("***", x, y, vjust = vjust, rot = rot, gp = grid::gpar(col = 'grey50'))
         }
         else if (mat_p[i, j] < 0.01) {
-          grid.text("**", x, y, vjust = vjust, rot = rot, gp = gpar(col = 'grey50'))
+          grid::grid.text("**", x, y, vjust = vjust, rot = rot, gp = grid::gpar(col = 'grey50'))
         }
         else if (mat_p[i, j] < 0.05) {
-          grid.text("*", x, y, vjust = vjust, rot = rot, gp = gpar(col = 'grey50'))
+          grid::grid.text("*", x, y, vjust = vjust, rot = rot, gp = grid::gpar(col = 'grey50'))
         }
       }
       },
     column_title = column_title,
     row_title = row_title,
     heatmap_legend_param = parameters,
-    column_title_gp = gpar(fontsize = title_size),
+    column_title_gp = grid::gpar(fontsize = title_size),
     row_split = row_split,
     column_split = col_split,
     #col = circlize::colorRamp2(c(-limit, 0, limit), c("blue", "gray90", "red")),
