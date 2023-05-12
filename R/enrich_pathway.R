@@ -24,7 +24,6 @@
 #' @return A data frame of pathway enrichment results
 #' @export
 #'
-#' @importFrom ReactomePA enrichPathway
 #' @importFrom purrr possibly
 #' @importFrom clusterProfiler enricher
 #' @import dplyr
