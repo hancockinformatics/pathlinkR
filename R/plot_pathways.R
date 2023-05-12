@@ -288,7 +288,8 @@ plot_pathways <- function(
         na.value = NA
       ) +
       guides(
-        shape = guide_legend(override.aes = list(size = 5 * legend_multiply))
+        shape = guide_legend(override.aes = list(size = 5 * legend_multiply)),
+        size  = guide_legend(override.aes = list(shape = 24, fill = "black"))
       ) +
       # Can also add lines to separate different groups
       {if (!is.na(intercepts[1])) geom_vline(xintercept = intercepts)}
