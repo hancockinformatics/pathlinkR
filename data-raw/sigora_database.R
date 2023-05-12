@@ -2,6 +2,7 @@
 
 library(sigora)
 library(tidyverse)
+library(reactome.db)
 
 data("reaH", "idmap")
 
@@ -77,4 +78,33 @@ sigora_database <- sigora_database_level4 %>%
 # Save the object for the package -----------------------------------------
 
 usethis::use_data(sigora_database, overwrite = TRUE)
+
+# Create a local reactome database file for local ReactomePA running ------
+
+human_genes = keys(org.Hs.eg.db, keytype="ENTREZID")
+
+# Get mapping of pathway IDs to Entrez IDs
+reactome_db <- as.list(reactomePATHID2EXTID) %>%
+  enframe() %>%
+  unnest(cols = c(value)) %>%
+  filter(grepl('HSA', name))
+
+# Get mapping of pathway IDs to pathway names
+reactome_names <- as.list(reactomePATHID2NAME) %>%
+  enframe() %>%
+  unnest(cols = c(value)) %>%
+  filter(grepl('HSA', name)) %>%
+  mutate(pathway_name = str_remove(value, 'Homo sapiens: ')) %>%
+  select(!value)
+
+reactome_db <- left_join(reactome_db, reactome_names)
+colnames(reactome_db) <- c('pathway_id', 'entrez_id', 'pathway_name')
+
+# Filter out genes that aren't human
+# Some are genes from other organisms (e.g. microbes for Immune System)
+reactome_database <- reactome_db %>%
+  filter(entrez_id %in% human_genes)
+
+# Save
+usethis::use_data(reactome_database, overwrite = TRUE)
 
