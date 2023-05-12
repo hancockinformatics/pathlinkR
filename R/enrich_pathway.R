@@ -17,9 +17,9 @@
 #' @param gps_repo Gene Pair Signature object for Sigora to use to test for
 #'   enriched pathways. We recommend using the one which ships with Sigora,
 #'   which is already loaded as "reaH".
-#' @param gene_universe Set of background genes to use when testing with
-#'   ReactomePA or Hallmark gene sets. For ReactomePA this must be a character
-#'   vector of Entrez genes. For Hallmark, it must be Ensembl IDs.
+#' @param gene_universe Optional. Set of background genes to use when testing
+#'   with ReactomePA or Hallmark gene sets. For ReactomePA this must be a
+#'   character vector of Entrez genes. For Hallmark, it must be Ensembl IDs.
 #'
 #' @return A data frame of pathway enrichment results
 #' @export
@@ -41,8 +41,7 @@ enrich_pathway <- function(
 
   # TODO
   # 1. Allow a list of vectors of genes rather than a list of data frames
-  # 2. Should the candidate genes be in Ensembl IDs or HGNC symbols?
-  # 3. Need to change top pathway mapping file once agreed upon
+  # 2. Need to change top pathway mapping file once agreed upon
 
 
   ### Check inputs
@@ -229,6 +228,7 @@ enrich_pathway <- function(
             "p_value" = pvalue,
             "p_value_adjusted" = p.adjust,
             genes,
+            num_candidate_genes,
             num_bg_genes,
             gene_ratio
           )
