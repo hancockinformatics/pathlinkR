@@ -240,35 +240,35 @@ plot_fold_change <- function(
 
   draw(Heatmap(
     mat_fc,
-    if (show_stars) {
       cell_fun = function(j, i, x, y, w, h, fill) {
-        if (abs(mat_fc[i,j]) > log2(1.5)) {
-          if (mat_p[i, j] < 0.001) {
-            grid::grid.text('***', x, y, vjust = vjust, rot = rot)
+        if (show_stars) {
+          if (abs(mat_fc[i,j]) > log2(1.5)) {
+            if (mat_p[i, j] < 0.001) {
+              grid::grid.text('***', x, y, vjust = vjust, rot = rot)
+            }
+            else if (mat_p[i, j] < 0.01) {
+              grid::grid.text('**', x, y, vjust = vjust, rot = rot)
+            }
+            else if (mat_p[i, j] < 0.05) {
+              grid::grid.text('*', x, y, vjust = vjust, rot = rot)
+            }
+            # as.character(expression('\u2736') # this doesn't work?
           }
-          else if (mat_p[i, j] < 0.01) {
-            grid::grid.text('**', x, y, vjust = vjust, rot = rot)
-          }
-          else if (mat_p[i, j] < 0.05) {
-            grid::grid.text('*', x, y, vjust = vjust, rot = rot)
-          }
-          # as.character(expression('\u2736') # this doesn't work?
-        }
 
-        # If plotting significance values for genes that don't pass fc_cutoff
-        if (abs(mat_fc[i,j]) < log2(1.5) & !hide_low_fc) {
-          if (mat_p[i, j] < 0.001) {
-            grid::grid.text("***", x, y, vjust = vjust, rot = rot, gp = grid::gpar(col = 'grey50'))
-          }
-          else if (mat_p[i, j] < 0.01) {
-            grid::grid.text("**", x, y, vjust = vjust, rot = rot, gp = grid::gpar(col = 'grey50'))
-          }
-          else if (mat_p[i, j] < 0.05) {
-            grid::grid.text("*", x, y, vjust = vjust, rot = rot, gp = grid::gpar(col = 'grey50'))
+          # If plotting significance values for genes that don't pass fc_cutoff
+          if (abs(mat_fc[i,j]) < log2(1.5) & !hide_low_fc) {
+            if (mat_p[i, j] < 0.001) {
+              grid::grid.text("***", x, y, vjust = vjust, rot = rot, gp = grid::gpar(col = 'grey50'))
+            }
+            else if (mat_p[i, j] < 0.01) {
+              grid::grid.text("**", x, y, vjust = vjust, rot = rot, gp = grid::gpar(col = 'grey50'))
+            }
+            else if (mat_p[i, j] < 0.05) {
+              grid::grid.text("*", x, y, vjust = vjust, rot = rot, gp = grid::gpar(col = 'grey50'))
+            }
           }
         }
-      }
-    },
+      },
     column_title = column_title,
     row_title = row_title,
     heatmap_legend_param = parameters,
