@@ -123,7 +123,9 @@ enrich_pathway <- function(
     ### ReactomePA analysis
     # Reactome uses regular over-representation analysis. Useful for finding
     # more pathways, if you have fewer DE genes or pathways Less stringent
-    # than SIGORA enrichment
+    # than SIGORA enrichment. ReactomePA however is slow so we can use
+    # just the Enricher function that is ReactomePA is built off of without
+    # loading extra things
     suppressPackageStartupMessages({
       if (analysis == "reactomepa") {
 
@@ -139,9 +141,18 @@ enrich_pathway <- function(
             unique()
 
           up_results <- up_gns_entrez %>%
-            enrichPathway(
-              readable = TRUE,
-              universe = gene_universe
+            # Use ReactomePA (slower, needs to load a lot of extra stuff)
+            #   enrichPathway(
+            #     readable = TRUE,
+            #     universe = gene_universe
+            #   ) %>%
+            # Use Enricher that runs faster with the same results
+            enricher(
+              TERM2GENE = reactome_database %>% select(pathway_id, entrez_id),
+              TERM2NAME = reactome_database %>% select(pathway_id, pathway_name),
+              universe = gene_universe,
+              minGSSize = 10,
+              maxGSSize = 500
             ) %>%
             as.data.frame() %>%
             mutate(direction = "Up")
@@ -152,9 +163,16 @@ enrich_pathway <- function(
             unique()
 
           dn_results <- dn_gns_entrez %>%
-            enrichPathway(
-              readable = TRUE,
-              universe = gene_universe
+            # enrichPathway(
+            #   readable = TRUE,
+            #   universe = gene_universe
+            # ) %>%
+            enricher(
+              TERM2GENE = reactome_database %>% select(pathway_id, entrez_id),
+              TERM2NAME = reactome_database %>% select(pathway_id, pathway_name),
+              universe = gene_universe,
+              minGSSize = 10,
+              maxGSSize = 500
             ) %>%
             as.data.frame() %>%
             mutate(direction = "Down")
@@ -168,13 +186,30 @@ enrich_pathway <- function(
             unique()
 
           total_results <- all_gns_entrez %>%
-            enrichPathway(
-              readable = TRUE,
-              universe = gene_universe
+            # enrichPathway(
+            #   readable = TRUE,
+            #   universe = gene_universe
+            enricher(
+              TERM2GENE = reactome_database %>% select(pathway_id, entrez_id),
+              TERM2NAME = reactome_database %>% select(pathway_id, pathway_name),
+              universe = gene_universe,
+              minGSSize = 10,
+              maxGSSize = 500
             ) %>%
             as.data.frame() %>%
             mutate(direction = "All")
         }
+
+        # map the entrez ids to hgnc symbols
+        hgnc_gene_list <- c()
+        for (r in 1:nrow(total_results)) {
+          genelist <- total_results[r, 'geneID']
+          genelist <- str_split(genelist, '/') %>% unlist()
+          hgnc_genes <- mapping_file %>% filter(entrez_id %in% genelist) %>% .$gene_name
+          hgnc_genes <- paste(hgnc_genes, collapse = ';')
+          hgnc_gene_list <- c(hgnc_gene_list, hgnc_genes)
+        }
+        total_results$genes <- hgnc_gene_list
 
         # Clean up the column names
         total_results <- total_results %>%
@@ -187,7 +222,6 @@ enrich_pathway <- function(
           mutate(
             across(c(num_candidate_genes, num_bg_genes), as.numeric),
             gene_ratio = num_candidate_genes / num_bg_genes,
-            geneID = str_replace_all(geneID, "/", ";")
           ) %>%
           select(
             "pathway_id" = ID,
@@ -195,8 +229,7 @@ enrich_pathway <- function(
             direction,
             "p_value" = pvalue,
             "p_value_adjusted" = p.adjust,
-            "candidate_genes" = geneID,
-            num_candidate_genes,
+            genes,
             num_bg_genes,
             gene_ratio
           )
@@ -242,6 +275,17 @@ enrich_pathway <- function(
           mutate(direction = "All")
       }
 
+      # annotate the genes as hgnc symbols and add them into the table
+      hgnc_gene_list <- c()
+      for (r in 1:nrow(total_results)) {
+        genelist <- total_results[r, 'geneID']
+        genelist <- str_split(genelist, '/') %>% unlist()
+        hgnc_genes <- mapping_file %>% filter(ensg_id %in% genelist) %>% .$gene_name
+        hgnc_genes <- paste(hgnc_genes, collapse = ';')
+        hgnc_gene_list <- c(hgnc_gene_list, hgnc_genes)
+      }
+      total_results$genes <- hgnc_gene_list
+
       total_results <- total_results %>%
         separate(
           GeneRatio,
@@ -250,8 +294,7 @@ enrich_pathway <- function(
         ) %>%
         mutate(
           across(c(num_candidate_genes, num_bg_genes), as.numeric),
-          gene_ratio = num_candidate_genes / num_bg_genes,
-          candidate_genes = str_replace_all(geneID, "/", ";")
+          gene_ratio = num_candidate_genes / num_bg_genes
         ) %>%
         select(
           "pathway_id" = ID,
@@ -259,7 +302,7 @@ enrich_pathway <- function(
           direction,
           "p_value" = pvalue,
           "p_value_adjusted" = p.adjust,
-          candidate_genes,
+          genes,
           num_candidate_genes,
           num_bg_genes,
           gene_ratio
