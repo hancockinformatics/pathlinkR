@@ -56,18 +56,32 @@ run_sigora <- function(
       # The unique Entrez IDs from the gene pairs
       unique_entrez <- unique(c(geneid$gene1, geneid$gene2))
 
-      # Convert them into Ensembl IDs using SIGORA's internal mapping file,
+      # Convert them into HGNC symbols using SIGORA's internal mapping file,
       # keeping the genes that were input. There may be some discrepancies
-      # between the number of unique Entrez IDs and Ensembl IDs due to duplicate
-      # mapping, so we'll use the number of Ensembl IDs as that was the input.
-      unique_ensg <- unique(
+      # between the number of unique Entrez IDs HGNC symbols due to duplicate
+      # mapping. Also, use the ones that also were in the original ENSG input.
+
+      unique_hgnc <- unique(
         idmap %>%
           filter(
             EntrezGene.ID %in% unique_entrez & Ensembl.Gene.ID %in% enrich_genes
           ) %>%
-          .$Ensembl.Gene.ID %>%
+          .$Symbol %>%
           as.character()
       )
+
+      # remove any that did not map to a gene symbol
+      unique_hgnc <- unique_hgnc[unique_hgnc != '']
+
+      # Old code that converted the entrez IDs to ENSG IDs, may implement
+      # unique_ensg <- unique(
+      #   idmap %>%
+      #     filter(
+      #       EntrezGene.ID %in% unique_entrez & Ensembl.Gene.ID %in% enrich_genes
+      #     ) %>%
+      #     .$Ensembl.Gene.ID %>%
+      #     as.character()
+      # )
 
       # Or, use our own mapping file for conversion
       # unique_ensg <- unique(
@@ -80,8 +94,8 @@ run_sigora <- function(
 
       pathway_info_df <- data.frame(
         pathwy.id = pathid,
-        candidate_genes = paste(unique_ensg, collapse = ';'),
-        num_candidate_genes = length(unique_ensg)
+        genes = paste(unique_hgnc, collapse = ';'),
+        num_candidate_genes = length(unique_hgnc)
       ) %>%
         mutate(gene_ratio = num_candidate_genes/n_genes)
 
@@ -101,7 +115,7 @@ run_sigora <- function(
       direction,
       p_value = pvalues,
       p_value_adjusted = Bonferroni,
-      candidate_genes,
+      genes,
       num_candidate_genes,
       num_bg_genes = n_genes,
       gene_ratio
