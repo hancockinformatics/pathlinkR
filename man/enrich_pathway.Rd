@@ -40,9 +40,9 @@ enrichment separately}
 enriched pathways. We recommend using the one which ships with Sigora,
 which is already loaded as "reaH".}
 
-\item{gene_universe}{Set of background genes to use when testing with
-ReactomePA or Hallmark gene sets. For ReactomePA this must be a character
-vector of Entrez genes. For Hallmark, it must be Ensembl IDs.}
+\item{gene_universe}{Optional. Set of background genes to use when testing
+with ReactomePA or Hallmark gene sets. For ReactomePA this must be a
+character vector of Entrez genes. For Hallmark, it must be Ensembl IDs.}
 }
 \value{
 A data frame of pathway enrichment results

@@ -15,6 +15,7 @@ plot_fold_change(
   p_cutoff = 0.05,
   fc_cutoff = 1.5,
   plot_significant_only = TRUE,
+  show_stars = TRUE,
   hide_low_fc = TRUE,
   vjust = 0.75,
   rot = 0,
@@ -54,6 +55,8 @@ vector of HGNC symbols ("hgnc")}
 
 \item{plot_significant_only}{Boolean (TRUE) Only plot genes that are
 differentially expressed (pass p_cutoff and fc_cutoff) in any comparison}
+
+\item{show_stars}{Boolean (TRUE) show significance stars on heatmap}
 
 \item{hide_low_fc}{Boolean (TRUE) If a gene is significant in one comparison
 but not in another, this will set the colour of the non-significant gene
