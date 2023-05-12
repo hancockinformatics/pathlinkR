@@ -15,6 +15,7 @@
 #' @param fc_cutoff Fold change cutoff. Default is |FC| > 1.5
 #' @param plot_significant_only Boolean (TRUE) Only plot genes that are
 #'   differentially expressed (pass p_cutoff and fc_cutoff) in any comparison
+#' @param show_stars Boolean (TRUE) show significance stars on heatmap
 #' @param hide_low_fc Boolean (TRUE) If a gene is significant in one comparison
 #'   but not in another, this will set the colour of the non-significant gene
 #'   as grey to visually emphasize the significant genes. If set to FALSE, it
@@ -64,6 +65,7 @@ plot_fold_change <- function(
     p_cutoff = 0.05,
     fc_cutoff = 1.5,
     plot_significant_only = TRUE,
+    show_stars = TRUE,
     hide_low_fc = TRUE,
     vjust = 0.75,
     rot = 0,
@@ -238,33 +240,35 @@ plot_fold_change <- function(
 
   draw(Heatmap(
     mat_fc,
-    cell_fun = function(j, i, x, y, w, h, fill) {
-      if (abs(mat_fc[i,j]) > log2(1.5)) {
-        if (mat_p[i, j] < 0.001) {
-          grid::grid.text('***', x, y, vjust = vjust, rot = rot)
-        }
-        else if (mat_p[i, j] < 0.01) {
-          grid::grid.text('**', x, y, vjust = vjust, rot = rot)
-        }
-        else if (mat_p[i, j] < 0.05) {
-          grid::grid.text('*', x, y, vjust = vjust, rot = rot)
-        }
+    if (show_stars) {
+      cell_fun = function(j, i, x, y, w, h, fill) {
+        if (abs(mat_fc[i,j]) > log2(1.5)) {
+          if (mat_p[i, j] < 0.001) {
+            grid::grid.text('***', x, y, vjust = vjust, rot = rot)
+          }
+          else if (mat_p[i, j] < 0.01) {
+            grid::grid.text('**', x, y, vjust = vjust, rot = rot)
+          }
+          else if (mat_p[i, j] < 0.05) {
+            grid::grid.text('*', x, y, vjust = vjust, rot = rot)
+          }
           # as.character(expression('\u2736') # this doesn't work?
-      }
+        }
 
-      # If plotting significance values for genes that don't pass fc_cutoff
-      if (abs(mat_fc[i,j]) < log2(1.5) & !hide_low_fc) {
-        if (mat_p[i, j] < 0.001) {
-          grid::grid.text("***", x, y, vjust = vjust, rot = rot, gp = grid::gpar(col = 'grey50'))
-        }
-        else if (mat_p[i, j] < 0.01) {
-          grid::grid.text("**", x, y, vjust = vjust, rot = rot, gp = grid::gpar(col = 'grey50'))
-        }
-        else if (mat_p[i, j] < 0.05) {
-          grid::grid.text("*", x, y, vjust = vjust, rot = rot, gp = grid::gpar(col = 'grey50'))
+        # If plotting significance values for genes that don't pass fc_cutoff
+        if (abs(mat_fc[i,j]) < log2(1.5) & !hide_low_fc) {
+          if (mat_p[i, j] < 0.001) {
+            grid::grid.text("***", x, y, vjust = vjust, rot = rot, gp = grid::gpar(col = 'grey50'))
+          }
+          else if (mat_p[i, j] < 0.01) {
+            grid::grid.text("**", x, y, vjust = vjust, rot = rot, gp = grid::gpar(col = 'grey50'))
+          }
+          else if (mat_p[i, j] < 0.05) {
+            grid::grid.text("*", x, y, vjust = vjust, rot = rot, gp = grid::gpar(col = 'grey50'))
+          }
         }
       }
-      },
+    },
     column_title = column_title,
     row_title = row_title,
     heatmap_legend_param = parameters,
