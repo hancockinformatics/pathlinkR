@@ -78,5 +78,7 @@ utils::globalVariables(c(
   "gpar",
   "grid.text",
   "idmap",
-  "reaH"
+  "reaH",
+  "genes",
+  'reactome_database'
 ))

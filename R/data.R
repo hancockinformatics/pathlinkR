@@ -92,6 +92,16 @@
 #' }
 "pathway_distances_jaccard"
 
+#' Table of all Reactome pathways and genes
+#'
+#' @format A data frame with 123519 rows and 3 columns
+#' \describe{
+#'   \item{pathway_id}{Reactome pathway ID}
+#'   \item{entrez_id}{Entrez gene ID}
+#'   \item{pathway_name}{Name of the Reactome pathway}
+#' }
+"reactome_database"
+
 #' The default Sigora Gene Pair Signature (GPS) object
 #'
 #' @format A list of length nine with the following top-level elements
