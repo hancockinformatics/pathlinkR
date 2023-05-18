@@ -38,12 +38,12 @@
 #'
 #' @seealso <https://github.com/hancockinformatics/pathnet/>
 #'
-build_network <- function(df,
-                          col,
-                          order,
-                          hub_measure = "betweenness",
-                          ppi_data = innatedb_exp,
-                          seed = 1) {
+ppi_build_network <- function(df,
+                                col,
+                                order,
+                                hub_measure = "betweenness",
+                                ppi_data = innatedb_exp,
+                                seed = 1) {
 
   # Check for and remove any duplicate IDs, which will cause problems later.
   # Make sure to warn the user about this.
@@ -119,7 +119,7 @@ build_network <- function(df,
   message("Creating network...")
   network_init_1 <- edge_table %>%
     as_tbl_graph(directed = FALSE) %>%
-    remove_subnetworks() %>%
+    ppi_remove_subnetworks() %>%
     as_tbl_graph() %>%
     mutate(
       degree      = centrality_degree(),
