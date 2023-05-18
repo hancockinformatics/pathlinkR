@@ -1,4 +1,7 @@
 # pathnet
+
+![GitHub R package version (branch)](https://img.shields.io/github/r-package/v/hancockinformatics/pathnet/master?label=pathnet%40master)
+
 **pathnet** is an R package to create PPI-style networks from Reactome pathways, 
 using overlap between constituent genes to define interactions/edges. This will
 allow for visualization of similar pathways based on their underlying genes,
