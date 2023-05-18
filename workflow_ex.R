@@ -28,7 +28,8 @@ plot_fold_change(
 # Separate out the different conditions so that the names don"t take up so much
 # space
 deseq_example_list_renamed <- deseq_example_list
-names(deseq_example_list_renamed) <- c("PosT1", "PosT2", "NegT1", "NegT2", "Pos", "Neg")
+names(deseq_example_list_renamed) <-
+  c("PosT1", "PosT2", "NegT1", "NegT2", "Pos", "Neg")
 
 plot_fold_change(
   deseq_example_list_renamed,
@@ -85,29 +86,31 @@ ppi_plot_network(
 
 # Enrich with SIGORA
 enriched_results_sigora <- enrich_pathway(
-  deseq_example_list[c(5, 6)],
+  deseq_example_list[5],
   gps_repo = reaH,
-  filter = TRUE
+  filter_input = TRUE,
+  filter_results = 0.001
 )
 
 enriched_results_sigora_2 <- enrich_pathway(
   list("one" = test_de_genes),
   gps_repo = reaH,
-  filter = FALSE
+  filter_input = FALSE
 )
 
 # Enrich with ReactomePA
 enriched_results_rpa <- enrich_pathway(
   deseq_example_list[c(5, 6)],
+  filter_input = TRUE,
   analysis = "reactomepa",
-  filter = TRUE
+  filter_results = 0.05
 )
 
 # enrich with Hallmark gene sets
 enriched_results_hm <- enrich_pathway(
   deseq_example_list[c(5, 6)],
   analysis = "hallmark",
-  filter = TRUE
+  filter_input = TRUE
 )
 
 

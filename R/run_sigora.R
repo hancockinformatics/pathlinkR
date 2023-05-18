@@ -33,7 +33,8 @@ run_sigora <- function(
     )
   ))
 
-  sigora_results <- sigora_data$summary_results %>% filter(Bonferroni < 0.001)
+  sigora_results <- sigora_data$summary_results
+
 
   # Not all DE genes are used in the Reactome pathway genes from SIGORA. SIGORA
   # does not have the functionality to calculate gene ratio, which might be
