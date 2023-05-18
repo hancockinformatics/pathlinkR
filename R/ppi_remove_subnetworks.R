@@ -15,7 +15,7 @@ ppi_remove_subnetworks <- function(input) {
     table() %>%
     tibble::enframe() %>%
     arrange(desc(value)) %>%
-    magrittr::extract2(1, 1) %>%
+    .[[1, 1]] %>%
     as.numeric()
 
   induced_subgraph(input, igraph::V(input)$comp == max_subnet_id)
