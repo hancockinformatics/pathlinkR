@@ -1,13 +1,13 @@
-#' Test lists of DE genes for enriched pathways
+#' Test lists of genes for enriched pathways
 #'
 #' @param input_list list of data frames of DESeq2 results. The list names
 #'   are used as the comparison for each dataframe (e.g. COVID vs Healthy). Data
 #'   frames should have Ensembl gene IDs as rownames.
-#' @param filter If providing list of data frames containing the unfiltered
-#'   output from `DESeq2::results()`, set this to TRUE to filter for DE genes
-#'   using the thresholds set by the `p_cutoff` and `fc_cutoff` arguments. When
-#'   FALSE (the default) its assumed your passing the filtered results into
-#'   `input_list`.
+#' @param filter_input If providing list of data frames containing the
+#'   unfiltered output from `DESeq2::results()`, set this to TRUE to filter for
+#'   DE genes using the thresholds set by the `p_cutoff` and `fc_cutoff`
+#'   arguments. When FALSE (the default) its assumed your passing the filtered
+#'   results into `input_list`.
 #' @param p_cutoff Adjusted p value cutoff, defaults to < 0.05.
 #' @param fc_cutoff Absolute fold change, defaults to |FC| > 1.5.
 #' @param split Boolean (TRUE); Split into up and down-regulated DEGs and do
@@ -28,9 +28,22 @@
 #' @importFrom clusterProfiler enricher
 #' @import dplyr
 #'
+#' @description This function provides a simple and consistent interface to
+#'   three different pathway enrichment tools: Sigora and ReactomePA (which both
+#'   test for Reactome pathways), and MSigDB Hallmark gene set enrichment. The
+#'   input must be a named list of data frames, which can be pre-filtered or
+#'   "raw", in which case the function can filter using user-defined cutoffs.
+#'   Column names are expected to comply with those output by
+#'   `DESeq2::results()` function, namely: padj and log2FoldChange. Rownames are
+#'   assumed to contain the input genes to be tested.
+#'
+#' @references None.
+#'
+#' @seealso <https://github.com/hancockinformatics/pathnet>
+#'
 enrich_pathway <- function(
     input_list,
-    filter = FALSE,
+    filter_input = FALSE,
     p_cutoff = 0.05,
     fc_cutoff = 1.5,
     split = TRUE,
@@ -41,10 +54,13 @@ enrich_pathway <- function(
 
   # TODO
   # 1. Allow a list of vectors of genes rather than a list of data frames
-  # 2. Need to change top pathway mapping file once agreed upon
+  # 2. Use the first column for genes, instead of relying on rownames
+  # 3. Need to change top pathway mapping file once agreed upon
 
 
   ### Check inputs
+  stopifnot(analysis %in% c("sigora", "reactomepa", "hallmark"))
+
   if (
     !is.list(input_list) |
     !all(unlist(lapply(input_list, is.data.frame))) |
@@ -53,7 +69,6 @@ enrich_pathway <- function(
     stop("Provide a named list of data frames of results, with the name of ",
          "each item in the list as the comparison name.")
   }
-  stopifnot(analysis %in% c("sigora", "reactomepa", "hallmark"))
 
 
   # Start looping through each data frame in "input_list"
@@ -63,7 +78,7 @@ enrich_pathway <- function(
     message(paste0("\nComparison being analyzed: ", comparison))
 
     # Use the DE genes, filtering if specified
-    if (filter) {
+    if (filter_input) {
       stopifnot(c("padj", "log2FoldChange") %in% colnames(input_list[[i]]))
       message("\tFiltering the results using before testing for pathways")
 
@@ -88,10 +103,10 @@ enrich_pathway <- function(
     }
 
     ### SIGORA analysis
-    # SIGORA uses gene pairs with the Reactome database, which often
-    # eliminates duplicate, closely related pathways (e.g. TLR7/8/9 pathways).
-    # Useful for if you have a lot of DEGs that might enrich for a lot of
-    # pathways, making it difficult analyze.
+    # SIGORA uses gene pairs with the Reactome database, which often eliminates
+    # duplicate, closely related pathways (e.g. TLR7/8/9 pathways). Useful for
+    # if you have a lot of DEGs that might enrich for a lot of pathways, making
+    # it difficult analyze.
     if (analysis == "sigora") {
       message("\tRunning enrichment using Sigora")
 

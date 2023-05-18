@@ -2,11 +2,11 @@
 % Please edit documentation in R/enrich_pathway.R
 \name{enrich_pathway}
 \alias{enrich_pathway}
-\title{Test lists of DE genes for enriched pathways}
+\title{Test lists of genes for enriched pathways}
 \usage{
 enrich_pathway(
   input_list,
-  filter = FALSE,
+  filter_input = FALSE,
   p_cutoff = 0.05,
   fc_cutoff = 1.5,
   split = TRUE,
@@ -20,11 +20,11 @@ enrich_pathway(
 are used as the comparison for each dataframe (e.g. COVID vs Healthy). Data
 frames should have Ensembl gene IDs as rownames.}
 
-\item{filter}{If providing list of data frames containing the unfiltered
-output from \code{DESeq2::results()}, set this to TRUE to filter for DE genes
-using the thresholds set by the \code{p_cutoff} and \code{fc_cutoff} arguments. When
-FALSE (the default) its assumed your passing the filtered results into
-\code{input_list}.}
+\item{filter_input}{If providing list of data frames containing the
+unfiltered output from \code{DESeq2::results()}, set this to TRUE to filter for
+DE genes using the thresholds set by the \code{p_cutoff} and \code{fc_cutoff}
+arguments. When FALSE (the default) its assumed your passing the filtered
+results into \code{input_list}.}
 
 \item{p_cutoff}{Adjusted p value cutoff, defaults to < 0.05.}
 
@@ -48,5 +48,18 @@ character vector of Entrez genes. For Hallmark, it must be Ensembl IDs.}
 A data frame of pathway enrichment results
 }
 \description{
-Test lists of DE genes for enriched pathways
+This function provides a simple and consistent interface to
+three different pathway enrichment tools: Sigora and ReactomePA (which both
+test for Reactome pathways), and MSigDB Hallmark gene set enrichment. The
+input must be a named list of data frames, which can be pre-filtered or
+"raw", in which case the function can filter using user-defined cutoffs.
+Column names are expected to comply with those output by
+\code{DESeq2::results()} function, namely: padj and log2FoldChange. Rownames are
+assumed to contain the input genes to be tested.
+}
+\references{
+None.
+}
+\seealso{
+\url{https://github.com/hancockinformatics/pathnet}
 }

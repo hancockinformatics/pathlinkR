@@ -42,7 +42,13 @@
 #' @import ggplot2
 #' @import ggrepel
 #'
-#' @seealso <https://github.com/hancockinformatics/pathnet/>
+#' @description Creates a volcano plot of genes output from `DESeq2::results()`,
+#'   with various options for tweaking the appearance. Ensembl gene IDs should
+#'   be the rownames of the input data frame.
+#'
+#' @references None.
+#'
+#' @seealso <https://github.com/hancockinformatics/pathnet>
 #'
 eruption <- function(deseq_results,
                      p_cutoff = 0.05,

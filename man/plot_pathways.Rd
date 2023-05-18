@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_pathways.R
 \name{plot_pathways}
 \alias{plot_pathways}
-\title{plot_pathways}
+\title{Plot Reactome pathway enrichment results}
 \usage{
 plot_pathways(
   enriched_results,
@@ -61,7 +61,13 @@ for each comparison as brackets under the comparison's name.}
 A ggplot object
 }
 \description{
-plot_pathways
+Creates a plot to visualize and compare Reactome pathway
+enrichment results from multiple DE comparisons. Can split input genes into
+up- and down-regulated based on fold change, and automatically assigned
+each pathway into an informative top-level category.
+}
+\references{
+None.
 }
 \seealso{
 \url{https://github.com/hancockinformatics/pathnet}

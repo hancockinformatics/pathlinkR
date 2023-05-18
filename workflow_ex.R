@@ -90,6 +90,12 @@ enriched_results_sigora <- enrich_pathway(
   filter = TRUE
 )
 
+enriched_results_sigora_2 <- enrich_pathway(
+  list("one" = test_de_genes),
+  gps_repo = reaH,
+  filter = FALSE
+)
+
 # Enrich with ReactomePA
 enriched_results_rpa <- enrich_pathway(
   deseq_example_list[c(5, 6)],

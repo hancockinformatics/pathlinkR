@@ -9,13 +9,21 @@
 #' @import dplyr
 #' @import sigora
 #'
+#' @description
+#' A short description...
+#'
+#' @references None.
+#'
+#' @seealso <https://github.com/hancockinformatics/pathnet>
+#'
 run_sigora <- function(
     enrich_genes,
     direction = NA,
     gps_repo
 ) {
 
-  # Run SIGORA based on default settings (GPSrepo = reaH, levels = 4, adjusted pvalue cutoff < 0.001)
+  # Run SIGORA based on default settings (GPSrepo = reaH, levels = 4, adjusted
+  # pvalue cutoff < 0.001)
   invisible(capture.output(
     sigora_data <- sigora(
       GPSrepo = gps_repo,
@@ -71,7 +79,7 @@ run_sigora <- function(
       )
 
       # remove any that did not map to a gene symbol
-      unique_hgnc <- unique_hgnc[unique_hgnc != '']
+      unique_hgnc <- unique_hgnc[unique_hgnc != ""]
 
       # Old code that converted the entrez IDs to ENSG IDs, may implement
       # unique_ensg <- unique(
@@ -108,7 +116,7 @@ run_sigora <- function(
   }
 
   final_output <-
-    left_join(sigora_results, final_results, by = 'pathwy.id') %>%
+    left_join(sigora_results, final_results, by = "pathwy.id") %>%
     transmute(
       pathway_id = pathwy.id,
       pathway_description = description,

@@ -1,4 +1,4 @@
-#' pathnet_ggraph
+#' Visualize enriched Reactome pathways as a network
 #'
 #' @param network Tidygraph network object, output from `create_pathnet`. See
 #'  Details for specific requirements.

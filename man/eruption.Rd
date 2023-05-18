@@ -86,8 +86,13 @@ symbol). Defaults to TRUE.}
 Volcano plot as a ggplot object
 }
 \description{
-Create a volcano plot from DESeq2 results
+Creates a volcano plot of genes output from \code{DESeq2::results()},
+with various options for tweaking the appearance. Ensembl gene IDs should
+be the rownames of the input data frame.
+}
+\references{
+None.
 }
 \seealso{
-\url{https://github.com/hancockinformatics/pathnet/}
+\url{https://github.com/hancockinformatics/pathnet}
 }

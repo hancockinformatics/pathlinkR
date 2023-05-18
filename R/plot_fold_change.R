@@ -1,4 +1,4 @@
-#' Plot fold change plots
+#' Create fold change plots to visualize DESeq2 results
 #'
 #' @param input_list List of data frames of DESeq2 results. The list names
 #'   are used as the comparison for each dataframe (e.g. COVID vs Healthy). Data
@@ -54,6 +54,14 @@
 #' @import ComplexHeatmap
 #' @import dplyr
 #'
+#' @description Creates a heatmap of fold changes values for results from the
+#'   `DESeq2::results()` function, with various parameters to tweak the
+#'   appearance.
+#'
+#' @references <https://bioconductor.org/packages/ComplexHeatmap/>
+#'
+#' @seealso <https://github.com/hancockinformatics/pathnet>
+#'
 plot_fold_change <- function(
     input_list,
     path_name = NA,
@@ -102,8 +110,8 @@ plot_fold_change <- function(
     plot_title <- manual_title
   }
 
-  # Get the genes to plot in the pathway or genelist of interest
-  # get all the genes in the pathway of interest, and make them ensg ids
+  # Get the genes to plot in the pathway or gene list of interest
+  # get all the genes in the pathway of interest, and make them Ensembl IDs
   if (is.na(genes_to_plot[1])){ # get from pathway database
     genes <- sigora_database %>%
       filter(pathway_id == path_id) %>%
