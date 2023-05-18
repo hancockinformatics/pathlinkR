@@ -39,11 +39,11 @@
 #' @seealso <https://github.com/hancockinformatics/pathnet/>
 #'
 ppi_build_network <- function(df,
-                                col,
-                                order,
-                                hub_measure = "betweenness",
-                                ppi_data = innatedb_exp,
-                                seed = 1) {
+                              col,
+                              order,
+                              hub_measure = "betweenness",
+                              ppi_data = innatedb_exp,
+                              seed = 1) {
 
   # Check for and remove any duplicate IDs, which will cause problems later.
   # Make sure to warn the user about this.
@@ -57,8 +57,7 @@ ppi_build_network <- function(df,
     num_dups <- nrow(df) - length(gene_vector)
 
     message(paste0(
-      "  INFO: Found ",
-      num_dups,
+      "  INFO: Found ", num_dups,
       " duplicate IDs in the input column, which have been removed:"
     ))
 
