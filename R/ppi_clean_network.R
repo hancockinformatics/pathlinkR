@@ -12,7 +12,7 @@
 #'
 #' @seealso <https://github.com/hancockinformatics/pathnet/>
 #'
-clean_network <- function(network) {
+ppi_clean_network <- function(network) {
   network %>%
     mutate(
       degree = centrality_degree(),
@@ -29,6 +29,6 @@ clean_network <- function(network) {
       "gene_name" = label,
       everything()
     ) %>%
-    remove_subnetworks() %>%
+    ppi_remove_subnetworks() %>%
     as_tbl_graph()
 }

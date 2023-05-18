@@ -8,7 +8,7 @@
 #'
 #' @seealso <https://github.com/hancockinformatics/pathnet/>
 #'
-remove_subnetworks <- function(input) {
+ppi_remove_subnetworks <- function(input) {
   igraph::V(input)$comp <- components(input)$membership
 
   max_subnet_id <- igraph::V(input)$comp %>%
