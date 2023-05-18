@@ -29,7 +29,6 @@ plot_network(
   label_face = "bold",
   label_padding = 0.25,
   min_seg_length = 0.25,
-  force_atlas_params = NULL,
   subnet = TRUE,
   seed = 1,
   ...
@@ -52,8 +51,8 @@ Options are: "fold_change", "two_sided", "one_sided", or "categorical".}
 passed as the "values" argument in \code{scale_fill_manual()}.}
 
 \item{layout}{Layout of nodes in the network. Supports all layouts from
-\code{ggraph}/\code{igraph}, as well as "force_atlas" (see Details), or a data frame
-of x and y coordinates for each node (order matters!).}
+\code{ggraph}/\code{igraph}, or a data frame of x and y coordinates for each node
+(order matters!).}
 
 \item{legend}{Should a legend be included? Defaults to FALSE.}
 
@@ -107,11 +106,6 @@ on calculated hub score) are highlighted with this colour, if \code{label = TRUE
 points. The default specified here is 0.25, half of the normal default
 value.}
 
-\item{force_atlas_params}{List of parameters to tweak node positions when
-using the Force Atlas layout. The following arguments must be supplied: k,
-gravity, ks, ksmax, and delta. See \code{?ForceAtlas2::layout.forceatlas2} for
-details and default values.}
-
 \item{subnet}{Logical determining if networks produced by
 \code{extract_subnetwork} should be treated as such, or just as a normal network
 from \code{build_network}.}
@@ -131,12 +125,11 @@ Plot an undirected PPI network using ggraph
 }
 \details{
 Any layout supported by ggraph can be specified here - see
-\code{?layout_tbl_graph_igraph} for a list of options. Additionally, there is
-support for the "force_atlas" method, implemented via the ForceAtlas2
-package. Finally, you can also supply a data frame containing coordinates
-for each node. The first and second columns will be used for x and y,
-respectively. Note that having columns named "x" and "y" in the input
-network will generate a warning message when supplying custom coordinates.
+\code{?layout_tbl_graph_igraph} for a list of options. Or you can supply a data
+frame containing coordinates for each node. The first and second columns
+will be used for x and y, respectively. Note that having columns named "x"
+and "y" in the input network will generate a warning message when supplying
+custom coordinates.
 
 Since this function returns a standard ggplot object, you can tweak the
 final appearance using the normal array of ggplot2 function, e.g. \code{labs()}
@@ -164,8 +157,7 @@ custom character vector of Ensembl gene IDs, to allow highlighting a custom
 selection of nodes.
 }
 \references{
-See \url{https://github.com/analyxcompany/ForceAtlas2} for details on
-this method.
+None.
 }
 \seealso{
 \url{https://github.com/hancockinformatics/pathnet/}
