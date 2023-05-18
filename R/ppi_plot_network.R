@@ -101,7 +101,7 @@
 #'
 #' @seealso <https://github.com/hancockinformatics/pathnet/>
 #'
-plot_network <- function(
+ppi_plot_network <- function(
   network,
   fill_column,
   fill_type,
