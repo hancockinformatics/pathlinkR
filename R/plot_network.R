@@ -12,8 +12,8 @@
 #'   "categorical." Defaults to "Set1" from RColorBrewer. Will otherwise be
 #'   passed as the "values" argument in `scale_fill_manual()`.
 #' @param layout Layout of nodes in the network. Supports all layouts from
-#'   `ggraph`/`igraph`, as well as "force_atlas" (see Details), or a data frame
-#'   of x and y coordinates for each node (order matters!).
+#'   `ggraph`/`igraph`, or a data frame of x and y coordinates for each node
+#'   (order matters!).
 #' @param legend Should a legend be included? Defaults to FALSE.
 #' @param fontfamily Font to use for labels and legend (if present). Defaults to
 #'   "Helvetica".
@@ -48,10 +48,6 @@
 #' @param min_seg_length Minimum length of lines to be drawn from labels to
 #'   points. The default specified here is 0.25, half of the normal default
 #'   value.
-#' @param force_atlas_params List of parameters to tweak node positions when
-#'   using the Force Atlas layout. The following arguments must be supplied: k,
-#'   gravity, ks, ksmax, and delta. See `?ForceAtlas2::layout.forceatlas2` for
-#'   details and default values.
 #' @param subnet Logical determining if networks produced by
 #'   `extract_subnetwork` should be treated as such, or just as a normal network
 #'   from `build_network`.
@@ -70,12 +66,11 @@
 #' @import dplyr
 #'
 #' @details Any layout supported by ggraph can be specified here - see
-#'   `?layout_tbl_graph_igraph` for a list of options. Additionally, there is
-#'   support for the "force_atlas" method, implemented via the ForceAtlas2
-#'   package. Finally, you can also supply a data frame containing coordinates
-#'   for each node. The first and second columns will be used for x and y,
-#'   respectively. Note that having columns named "x" and "y" in the input
-#'   network will generate a warning message when supplying custom coordinates.
+#'   `?layout_tbl_graph_igraph` for a list of options. Or you can supply a data
+#'   frame containing coordinates for each node. The first and second columns
+#'   will be used for x and y, respectively. Note that having columns named "x"
+#'   and "y" in the input network will generate a warning message when supplying
+#'   custom coordinates.
 #'
 #'   Since this function returns a standard ggplot object, you can tweak the
 #'   final appearance using the normal array of ggplot2 function, e.g. `labs()`
@@ -102,8 +97,7 @@
 #'   custom character vector of Ensembl gene IDs, to allow highlighting a custom
 #'   selection of nodes.
 #'
-#' @references See <https://github.com/analyxcompany/ForceAtlas2> for details on
-#'   this method.
+#' @references None.
 #'
 #' @seealso <https://github.com/hancockinformatics/pathnet/>
 #'
@@ -132,7 +126,6 @@ plot_network <- function(
   label_face     = "bold",
   label_padding  = 0.25,
   min_seg_length = 0.25,
-  force_atlas_params = NULL,
   subnet         = TRUE,
   seed           = 1,
   ...
@@ -194,32 +187,7 @@ plot_network <- function(
          "'one_sided', or 'categorical'")
   }
 
-  # If we're using the Force Atlas layout, we need to pre-calculate the node
-  # positions using the appropriate function from the ForceAtlas2 package
-  if (all(layout == "force_atlas")) {
-    message("Calculating Force Atlas node positions...")
-
-    if (is.null(force_atlas_params)) {
-      layout_object <- ForceAtlas2::layout.forceatlas2(
-        graph    = network,
-        directed = FALSE,
-        plotstep = 0
-      )
-    } else {
-      message("Using custom ForceAtlas parameters...")
-      layout_object <- ForceAtlas2::layout.forceatlas2(
-        graph      = network,
-        directed   = FALSE,
-        plotstep   = 0,
-        iterations = force_atlas_params$iterations,
-        gravity    = force_atlas_params$gravity,
-        k          = force_atlas_params$k,
-        ks         = force_atlas_params$ks,
-        ksmax      = force_atlas_params$ksmax,
-        delta      = force_atlas_params$delta
-      )
-    }
-  } else if (is.data.frame(layout)) {
+  if (is.data.frame(layout)) {
     message("Using user-supplied node coordinates...")
     # By converting the layout object to a matrix, we no longer need to worry
     # about column names. The first and second column will be "x" and "y",

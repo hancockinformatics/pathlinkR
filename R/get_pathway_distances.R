@@ -36,9 +36,9 @@ get_pathway_distances <- function(pathway_data = sigora_database,
     unlist(map(pathway_data[1, ], ~str_detect(.x, "R-[A-Z]{3}-[0-9]{1,10}")))
   ]
 
-  message(glue::glue(
-    "Using '{gene_id_col}' for gene IDs and '{pathway_id_col}' ",
-    "for pathway IDs..."
+  message(paste0(
+    "Using '", gene_id_col,"' for gene IDs and '",
+    pathway_id_col, "' for pathway IDs..."
   ))
 
   message("Creating identity matrix...")

@@ -14,7 +14,6 @@
 #'
 clean_network <- function(network) {
   network %>%
-    janitor::clean_names() %>%
     mutate(
       degree = centrality_degree(),
       betweenness = centrality_betweenness(),
