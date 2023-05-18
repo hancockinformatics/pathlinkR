@@ -1,4 +1,4 @@
-#' trunc_neatly
+#' INTERNAL trunc_neatly
 #'
 #' @param x Character to be truncated
 #' @param l Desired maximum length for the output character

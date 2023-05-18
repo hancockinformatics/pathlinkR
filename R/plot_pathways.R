@@ -1,4 +1,4 @@
-#' plot_pathways
+#' Plot Reactome pathway enrichment results
 #'
 #' @param enriched_results Tibble of results from the function `enrich_pathway`
 #' @param columns Number of columns to split the pathways across, especially if
@@ -32,6 +32,13 @@
 #' @import stringr
 #' @importFrom ggforce facet_col
 #' @importFrom ggpubr rremove ggarrange
+#'
+#' @description Creates a plot to visualize and compare Reactome pathway
+#'   enrichment results from multiple DE comparisons. Can split input genes into
+#'   up- and down-regulated based on fold change, and automatically assigned
+#'   each pathway into an informative top-level category.
+#'
+#' @references None.
 #'
 #' @seealso <https://github.com/hancockinformatics/pathnet>
 #'

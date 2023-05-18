@@ -2,7 +2,7 @@
 % Please edit documentation in R/pathnet_visNetwork.R
 \name{pathnet_visNetwork}
 \alias{pathnet_visNetwork}
-\title{pathnet_visNetwork}
+\title{Visualize enriched Reactome pathways as an interactive network}
 \usage{
 pathnet_visNetwork(
   network,
@@ -54,7 +54,10 @@ to 123.}
 Interactive visNetwork plot
 }
 \description{
-pathnet_visNetwork
+Creates a pathway network using the visNetwork library, which
+allows for various forms of interactivity such as including text when
+hovering over nodes, node selection and dragging (including multiple
+selections).
 }
 \references{
 \url{https://datastorm-open.github.io/visNetwork/}
