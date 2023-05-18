@@ -17,5 +17,11 @@ run_sigora(enrich_genes, direction = NA, gps_repo)
 Data frame of results from Sigora
 }
 \description{
-INTERNAL run_sigora
+A short description...
+}
+\references{
+None.
+}
+\seealso{
+\url{https://github.com/hancockinformatics/pathnet}
 }

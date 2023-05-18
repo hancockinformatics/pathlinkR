@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_fold_change.R
 \name{plot_fold_change}
 \alias{plot_fold_change}
-\title{Plot fold change plots}
+\title{Create fold change plots to visualize DESeq2 results}
 \usage{
 plot_fold_change(
   input_list,
@@ -104,5 +104,13 @@ to TRUE if vertical column name (e.g. row_angle = 90)}
 A heatmap of fold changes for genes of interest
 }
 \description{
-Plot fold change plots
+Creates a heatmap of fold changes values for results from the
+\code{DESeq2::results()} function, with various parameters to tweak the
+appearance.
+}
+\references{
+\url{https://bioconductor.org/packages/ComplexHeatmap/}
+}
+\seealso{
+\url{https://github.com/hancockinformatics/pathnet}
 }

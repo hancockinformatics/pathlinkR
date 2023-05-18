@@ -2,7 +2,7 @@
 % Please edit documentation in R/trunc_neatly.R
 \name{trunc_neatly}
 \alias{trunc_neatly}
-\title{trunc_neatly}
+\title{INTERNAL trunc_neatly}
 \usage{
 trunc_neatly(x, l = 60)
 }

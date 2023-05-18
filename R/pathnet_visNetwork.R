@@ -1,4 +1,4 @@
-#' pathnet_visNetwork
+#' Visualize enriched Reactome pathways as an interactive network
 #'
 #' @param network Tidygraph network object as output by `create_pathnet`
 #' @param net_layout Desired layout for the network visualization. Defaults to
@@ -30,6 +30,10 @@
 #' @importFrom purrr map_chr map2
 #' @importFrom tidygraph activate
 #'
+#' @description Creates a pathway network using the visNetwork library, which
+#'   allows for various forms of interactivity such as including text when
+#'   hovering over nodes, node selection and dragging (including multiple
+#'   selections).
 #'
 #' @references <https://datastorm-open.github.io/visNetwork/>
 #'

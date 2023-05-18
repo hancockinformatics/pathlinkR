@@ -2,7 +2,7 @@
 % Please edit documentation in R/pathnet_ggraph.R
 \name{pathnet_ggraph}
 \alias{pathnet_ggraph}
-\title{pathnet_ggraph}
+\title{Visualize enriched Reactome pathways as a network}
 \usage{
 pathnet_ggraph(
   network,
