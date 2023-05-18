@@ -11,6 +11,7 @@ enrich_pathway(
   fc_cutoff = 1.5,
   split = TRUE,
   analysis = "sigora",
+  filter_results = 0.001,
   gps_repo = reaH,
   gene_universe = NULL
 )
@@ -35,6 +36,10 @@ enrichment separately}
 
 \item{analysis}{Default is SIGORA ("sigora"), others: ReactomePA
 ("reactomepa"), mSigDB Hallmark gene sets ("hallmark")}
+
+\item{filter_results}{Should the output be filtered for significance? Use
+\code{NA} to return the unfiltered results. Recommended value for Sigora is
+0.001, or 0.05 for ReactomePA or Hallmark.}
 
 \item{gps_repo}{Gene Pair Signature object for Sigora to use to test for
 enriched pathways. We recommend using the one which ships with Sigora,
