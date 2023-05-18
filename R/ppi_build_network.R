@@ -178,7 +178,7 @@ ppi_build_network <- function(df,
       graph     = network_init_2,
       color     = FALSE
     ) %>%
-      magrittr::extract2(1) %>%
+      .[[1]] %>%
       as_tbl_graph(directed = FALSE) %>%
       mutate(
         degree = centrality_degree(),
