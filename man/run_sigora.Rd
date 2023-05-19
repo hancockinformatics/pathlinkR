@@ -17,7 +17,8 @@ run_sigora(enrich_genes, direction = NA, gps_repo)
 Data frame of results from Sigora
 }
 \description{
-A short description...
+Internal wrapper function to run Sigora and return the results
+with desired columns
 }
 \references{
 None.
