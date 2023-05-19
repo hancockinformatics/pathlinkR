@@ -115,8 +115,8 @@ enrich_pathway <- function(
       message(paste0("DEGs used: ", length(all_gns)))
     }
 
-    ### SIGORA analysis
-    # SIGORA uses gene pairs with the Reactome database, which often eliminates
+    ### Sigora analysis
+    # Sigora uses gene pairs with the Reactome database, which often eliminates
     # duplicate, closely related pathways (e.g. TLR7/8/9 pathways). Useful for
     # if you have a lot of DEGs that might enrich for a lot of pathways, making
     # it difficult analyze.

@@ -86,16 +86,18 @@ ppi_plot_network(
 
 # Enrich with SIGORA
 enriched_results_sigora <- enrich_pathway(
-  deseq_example_list[5],
+  deseq_example_list[c(5, 6)],
   gps_repo = reaH,
   filter_input = TRUE,
   filter_results = 0.001
 )
 
+# If we only have one data frame, that's already been filtered
 enriched_results_sigora_2 <- enrich_pathway(
   list("one" = test_de_genes),
   gps_repo = reaH,
-  filter_input = FALSE
+  filter_input = FALSE,
+  filter_results = 0.001
 )
 
 # Enrich with ReactomePA
