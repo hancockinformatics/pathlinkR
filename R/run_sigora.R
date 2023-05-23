@@ -3,6 +3,7 @@
 #' @param enrich_genes Vector of genes to enrich
 #' @param direction If up or down-regulated genes were used
 #' @param gps_repo GPS object to use for testing pathways
+#' @param pval_filter
 #'
 #' @return Data frame of results from Sigora
 #'
@@ -20,7 +21,8 @@
 run_sigora <- function(
     enrich_genes,
     direction = NA,
-    gps_repo
+    gps_repo,
+    pval_filter = NA
 ) {
 
   # Run SIGORA based on default settings (GPSrepo = reaH, level = 4)
@@ -35,7 +37,10 @@ run_sigora <- function(
   ))
 
   sigora_results <- sigora_data$summary_results
-
+  if (!is.na(pval_filter)) {
+    sigora_results <- sigora_results %>%
+      filter(Bonferroni < pval_filter)
+  }
 
   # Not all DE genes are used in the Reactome pathway genes from Sigora. Sigora
   # does not have the functionality to calculate gene ratio, which might be
@@ -66,7 +71,7 @@ run_sigora <- function(
         pathwy.id = .y,
         EntrezGene.ID = unique(c(pull(.x, gene1), pull(.x, gene2)))
       ) %>%
-        left_join(idmap, by = "EntrezGene.ID") %>%
+        left_join(idmap, by = "EntrezGene.ID", multiple = "all") %>%
         filter(Ensembl.Gene.ID %in% enrich_genes, Symbol != "^$") %>%
         select(pathwy.id, Symbol) %>%
         mutate(across(everything(), as.character)) %>%
