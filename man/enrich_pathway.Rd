@@ -6,7 +6,7 @@
 \usage{
 enrich_pathway(
   input_list,
-  filter_input = FALSE,
+  filter_input = TRUE,
   p_cutoff = 0.05,
   fc_cutoff = 1.5,
   split = TRUE,
@@ -24,8 +24,8 @@ frames should have Ensembl gene IDs as rownames.}
 \item{filter_input}{If providing list of data frames containing the
 unfiltered output from \code{DESeq2::results()}, set this to TRUE to filter for
 DE genes using the thresholds set by the \code{p_cutoff} and \code{fc_cutoff}
-arguments. When FALSE (the default) its assumed your passing the filtered
-results into \code{input_list}.}
+arguments. When FALSE it's assumed your passing the filtered
+results into \code{input_list} and no more filtering will be done.}
 
 \item{p_cutoff}{Adjusted p value cutoff, defaults to < 0.05.}
 
