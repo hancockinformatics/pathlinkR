@@ -6,8 +6,8 @@
 #' @param filter_input If providing list of data frames containing the
 #'   unfiltered output from `DESeq2::results()`, set this to TRUE to filter for
 #'   DE genes using the thresholds set by the `p_cutoff` and `fc_cutoff`
-#'   arguments. When FALSE (the default) its assumed your passing the filtered
-#'   results into `input_list`.
+#'   arguments. When FALSE it's assumed your passing the filtered
+#'   results into `input_list` and no more filtering will be done.
 #' @param p_cutoff Adjusted p value cutoff, defaults to < 0.05.
 #' @param fc_cutoff Absolute fold change, defaults to |FC| > 1.5.
 #' @param split Boolean (TRUE); Split into up and down-regulated DEGs and do
@@ -46,7 +46,7 @@
 #'
 enrich_pathway <- function(
     input_list,
-    filter_input = FALSE,
+    filter_input = TRUE,
     p_cutoff = 0.05,
     fc_cutoff = 1.5,
     split = TRUE,
@@ -130,18 +130,25 @@ enrich_pathway <- function(
         up_results <- run_sigora_safely(
           up_gns,
           direction = "Up",
-          gps_repo = gps_repo
+          gps_repo = gps_repo,
+          pval_filter = filter_results
         )
         dn_results <- run_sigora_safely(
           dn_gns,
           direction = "Down",
-          gps_repo = gps_repo
+          gps_repo = gps_repo,
+          pval_filter = filter_results
         )
         total_results <- rbind(up_results, dn_results)
 
         # Or just use all DE genes for enrichment
       } else {
-        total_results <- run_sigora_safely(all_gns, direction = "All")
+        total_results <- run_sigora_safely(
+          all_gns,
+          direction = "All",
+          gps_repo = geps_repo,
+          pval_filter = filter_results
+          )
       }
     }
 
