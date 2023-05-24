@@ -139,6 +139,12 @@ plot_pathways(enriched_results_sigora,
               specific_top_pathways = "Immune System",
               include_gene_ratio = TRUE)
 
+# if you want change up the format (change names, change label side)
+plot_pathways(enriched_results_sigora,
+              specific_top_pathways = "Immune System",
+              pathway_position = 'left',
+              new_group_names = c('Pos', 'Neg'))
+
 
 # Pathway networks v1 -----------------------------------------------------
 

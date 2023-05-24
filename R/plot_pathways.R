@@ -23,6 +23,10 @@
 #'   Defaults to 1, i.e. no increase in legend size.
 #' @param show_num_genes Boolean, defaults to FALSE. Show the number of genes
 #'   for each comparison as brackets under the comparison's name.
+#' @param pathway_position Whether to have the y-axis labels (pathway names) on
+#'   the left or right side. Default is "right".
+#' @param new_group_names If you want to change the names of the comparisons
+#'   to different names. Input a vector in the order as they appear.
 #'
 #' @return A ggplot object
 #' @export
@@ -55,10 +59,20 @@ plot_pathways <- function(
     include_gene_ratio = FALSE,
     size = 5,
     legend_multiply = 1,
-    show_num_genes = FALSE
+    show_num_genes = FALSE,
+    pathway_position = 'right',
+    new_group_names = NA
 ) {
 
-  # TODO 1. Change top pathway names to shorten some of them
+  # If new group names are to be used, add them in
+  if (!is.na(new_group_names[1])) {
+    map_names = data.frame(comparison = unique(enriched_results$comparison),
+                           new_names = new_group_names)
+    enriched_results <- left_join(enriched_results, map_names) %>%
+      select(!comparison) %>%
+      mutate(comparison = new_names) %>%
+      select(!new_names)
+  }
 
   # Convert to -log10 p value and arbitrarily set to a max -log10 p value of 50
   # (i.e. adj pval = 10^-50), which some enrichment results surpass, especially
@@ -70,11 +84,21 @@ plot_pathways <- function(
     )
   )
 
-  # Order the directionality of results
-  enriched_results$direction <- factor(
-    enriched_results$direction,
-    levels = c("Up", "Down", "All")
-  )
+  # Order the directionality of results, if up and down are used
+  if (!'All' %in% enriched_results$direction) {
+    enriched_results$direction <- factor(
+      enriched_results$direction,
+      levels = c("Up", "Down"))
+  } else {
+    enriched_results$direction <- factor(
+      enriched_results$direction,
+      levels = c("Up", "Down", "All"))
+  }
+
+  # Order the comparisons by the order they were inputted (not alphabetical)
+  enriched_results$comparison <- factor(
+    enriched_results$comparison,
+    levels = unique(enriched_results$comparison))
 
   # Add in the number of genes for each comparison if indicated
   if (show_num_genes) {
@@ -127,7 +151,7 @@ plot_pathways <- function(
   # pathway into enriched_results_dupes.
   if (nrow(duplicates) > 0) {
     message(
-      "\nWARNING: The following pathways were enriched in both directions for ",
+      "\nNote: The following pathways were enriched in both directions for ",
       "the given comparisons. These are indicated with an asterisk over the ",
       "triangle, which is only shown for the lower p value result."
     )
@@ -248,7 +272,7 @@ plot_pathways <- function(
       # Wrap and truncate pathway names if necessary
       scale_y_discrete(
         labels = function(x) str_wrap(trunc_neatly(x, name_trunc), width = name_width),
-        position = "right"
+        position = pathway_position
       ) +
       # Keeps comparisons even if they don"t enrich for any pathways
       scale_x_discrete(drop = FALSE) +
@@ -277,7 +301,8 @@ plot_pathways <- function(
       scale_shape_manual(
         values = c("Down" = 25 , "Up" = 24, "All" = 21),
         name = "Regulation",
-        na.value = NA
+        na.value = NA,
+        drop = FALSE # this keeps both up/down if only one direction enriched
       ) +
       scale_fill_continuous(
         name = expression(P[adjusted]),
