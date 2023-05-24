@@ -146,7 +146,7 @@ enrich_pathway <- function(
         total_results <- run_sigora_safely(
           all_gns,
           direction = "All",
-          gps_repo = geps_repo,
+          gps_repo = gps_repo,
           pval_filter = filter_results
           )
       }

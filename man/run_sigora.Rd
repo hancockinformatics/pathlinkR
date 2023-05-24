@@ -13,7 +13,7 @@ run_sigora(enrich_genes, direction = NA, gps_repo, pval_filter = NA)
 
 \item{gps_repo}{GPS object to use for testing pathways}
 
-\item{pval_filter}{}
+\item{pval_filter}{Desired threshold for filtering results}
 }
 \value{
 Data frame of results from Sigora
