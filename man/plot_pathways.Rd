@@ -17,7 +17,9 @@ plot_pathways(
   include_gene_ratio = FALSE,
   size = 5,
   legend_multiply = 1,
-  show_num_genes = FALSE
+  show_num_genes = FALSE,
+  pathway_position = "right",
+  new_group_names = NA
 )
 }
 \arguments{
@@ -56,6 +58,12 @@ Defaults to 1, i.e. no increase in legend size.}
 
 \item{show_num_genes}{Boolean, defaults to FALSE. Show the number of genes
 for each comparison as brackets under the comparison's name.}
+
+\item{pathway_position}{Whether to have the y-axis labels (pathway names) on
+the left or right side. Default is "right".}
+
+\item{new_group_names}{If you want to change the names of the comparisons
+to different names. Input a vector in the order as they appear.}
 }
 \value{
 A ggplot object

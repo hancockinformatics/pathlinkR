@@ -47,6 +47,7 @@ utils::globalVariables(c(
   "name",
   "neglogp",
   "new_fill_col",
+  "new_names",
   "node_fill",
   "node_label",
   "nodes",
