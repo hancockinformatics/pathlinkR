@@ -238,7 +238,7 @@ plot_pathways <- function(
     angle <- 45
     hjust <- 1
     vjust <- 1
-  } else if (x_angle == "flat") {
+  } else if (x_angle == "horizontal") {
     angle <- 0
     hjust <- 0.5
     vjust <- 1
