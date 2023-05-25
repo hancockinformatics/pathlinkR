@@ -1,7 +1,7 @@
 #' Create fold change plots to visualize DESeq2 results
 #'
-#' @param input_list List of data frames of DESeq2 results. The list names
-#'   are used as the comparison for each dataframe (e.g. COVID vs Healthy). Data
+#' @param input_list List of data frames of DESeq2 results. The list names are
+#'   used as the comparison for each dataframe (e.g. COVID vs Healthy). Data
 #'   frames should have Ensembl gene IDs as rownames.
 #' @param path_name Name of pathway to pull genes from, will be plot title
 #' @param path_id ID of pathway to pull genes from, if path_name is not given
@@ -227,8 +227,8 @@ plot_fold_change <- function(
         col_split <- rep(NA, length(input_list))
         column_title <- NULL
     } else {
-        # this orders the splitting into the order the dataframes are in the list
-        # instead of alphabetically
+        # this orders the splitting into the order the dataframes are in the
+        # list instead of alphabetically
         col_split <- factor(col_split, levels = unique(col_split))
         column_title <- "%s"
     }
@@ -263,16 +263,38 @@ plot_fold_change <- function(
                     # as.character(expression('\u2736') # this doesn't work?
                 }
 
-                # If plotting significance values for genes that don't pass fc_cutoff
+                # If plotting significance values for genes that don't pass
+                # fc_cutoff
                 if (abs(mat_fc[i,j]) < log2(1.5) & !hide_low_fc) {
                     if (mat_p[i, j] < 0.001) {
-                        grid::grid.text("***", x, y, vjust = vjust, rot = rot, gp = grid::gpar(col = "grey50"))
+                        grid::grid.text(
+                            "***",
+                            x,
+                            y,
+                            vjust = vjust,
+                            rot = rot,
+                            gp = grid::gpar(col = "grey50")
+                        )
                     }
                     else if (mat_p[i, j] < 0.01) {
-                        grid::grid.text("**", x, y, vjust = vjust, rot = rot, gp = grid::gpar(col = "grey50"))
+                        grid::grid.text(
+                            "**",
+                            x,
+                            y,
+                            vjust = vjust,
+                            rot = rot,
+                            gp = grid::gpar(col = "grey50")
+                        )
                     }
                     else if (mat_p[i, j] < 0.05) {
-                        grid::grid.text("*", x, y, vjust = vjust, rot = rot, gp = grid::gpar(col = "grey50"))
+                        grid::grid.text(
+                            "*",
+                            x,
+                            y,
+                            vjust = vjust,
+                            rot = rot,
+                            gp = grid::gpar(col = "grey50")
+                        )
                     }
                 }
             }
@@ -283,7 +305,6 @@ plot_fold_change <- function(
         column_title_gp = grid::gpar(fontsize = title_size),
         row_split = row_split,
         column_split = col_split,
-        #col = circlize::colorRamp2(c(-limit, 0, limit), c("blue", "gray90", "red")),
         cluster_columns = cluster_columns,
         cluster_rows = cluster_rows,
         column_names_rot = col_angle,
