@@ -134,8 +134,8 @@ ppi_build_network <- function(df,
         }
 
 
-    # Perform node filtering/trimming for minimum order networks, and recalculate
-    # the network statistics
+    # Perform node filtering/trimming for minimum order networks, and
+    # recalculate the network statistics
     if (order == "min_simple") {
 
         message("Performing 'simple' minimum network trimming...")
@@ -195,8 +195,8 @@ ppi_build_network <- function(df,
 
     if (nrow(as_tibble(network_out_2)) > 2000) {
         message(
-            "Warning:\nYour network contains more than 2000 nodes, and will likely ",
-            "be difficult to interpret when plotted."
+            "Warning:\nYour network contains more than 2000 nodes, and will ",
+            "likely be difficult to interpret when plotted."
         )
     }
 

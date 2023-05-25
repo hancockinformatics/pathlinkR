@@ -15,8 +15,9 @@
 #' @param xaxis Length-two numeric vector to manually specify limits of the
 #'   x-axis in log2 fold change; defaults to NA which lets ggplot2 determine the
 #'   best values.
-#' @param yaxis Length-two numeric vector to manually specify limits of the y-axis
-#'   (in -log10); defaults to NA which lets ggplot2 determine the best values.
+#' @param yaxis Length-two numeric vector to manually specify limits of the
+#'   y-axis (in -log10); defaults to NA which lets ggplot2 determine the best
+#'   values.
 #' @param select_genes Vector of genes to emphasize by colouring differently
 #'   (e.g. genes of interest); should be Ensembl IDs.
 #' @param select_colour Colour for the `select_genes`
@@ -81,8 +82,8 @@ eruption <- function(deseq_results,
     # Columns: padj, log2FoldChange
     stopifnot(all(c("padj", "log2FoldChange") %in% colnames(deseq_results)))
 
-    # Annotate Ensembl gene IDs with gene names from the mapping file. For Ensembl
-    # gene IDs without gene names, just use the Ensembl gene ID.
+    # Annotate Ensembl gene IDs with gene names from the mapping file. For
+    # Ensembl gene IDs without gene names, just use the Ensembl gene ID.
     res <- deseq_results %>%
         rownames_to_column("ensg_id") %>%
         filter(!is.na(padj)) %>%
@@ -106,7 +107,8 @@ eruption <- function(deseq_results,
     # If specifying x and y axis limits, remove any genes that fall outside the
     # specified ranges
     if(!is.na(xaxis[1])) {
-        res <- res %>% filter(log2FoldChange > xaxis[1] & log2FoldChange < xaxis[2])
+        res <- res %>%
+            filter(log2FoldChange > xaxis[1] & log2FoldChange < xaxis[2])
     }
     if(!is.na(yaxis[1])) {
         res <- res %>% filter(neglogp > yaxis[1] & neglogp < yaxis[2])
@@ -149,8 +151,9 @@ eruption <- function(deseq_results,
         possible_labels <- res$gene_name
     }
 
-    # Auto-labeling (default): label the top 5 (or n) up and down-regulated genes.
-    # The "top" genes are those with the highest fold change and smallest p-value.
+    # Auto-labeling (default): label the top 5 (or n) up and down-regulated
+    # genes. The "top" genes are those with the highest fold change and smallest
+    # p-value.
     if (label == "auto") {
         upgenes <- up_df %>%
             arrange(desc(log2FoldChange ^ 2 * log10(padj) ^ 2)) %>%
@@ -196,10 +199,9 @@ eruption <- function(deseq_results,
 
     # Manual labeling ("manual"): label the genes you provided in `manual_genes`
     if (label == "manual") {
-        res <- res %>%
-            mutate(label = case_when(
-                ensg_id %in% manual_genes | gene_name %in% manual_genes ~ gene_name
-            ))
+        res <- res %>% mutate(label = case_when(
+            ensg_id %in% manual_genes | gene_name %in% manual_genes ~ gene_name
+        ))
     }
 
     # Create the plot
@@ -214,9 +216,9 @@ eruption <- function(deseq_results,
             colour = nonsig_colour
         ) +
 
-        # Plot the significant genes and genes of interest ("select_genes"), with
-        # those in `select_genes` overlaying those not in `select_genes` for
-        # emphasis.
+        # Plot the significant genes and genes of interest ("select_genes"),
+        # with those in `select_genes` overlaying those not in `select_genes`
+        # for emphasis.
         geom_point(
             data = res %>% filter(significant == "SIG", in_list == "N"),
             mapping = aes(x = log2FoldChange, y = neglogp),
@@ -279,14 +281,17 @@ eruption <- function(deseq_results,
             box.padding = pad
         ) +
 
-        # Add in informative subtitles for number of up and down-regulated genes, as
-        # well as number of genes in "select_genes," add a title if provided
+        # Add in informative subtitles for number of up and down-regulated
+        # genes, as well as number of genes in "select_genes," add a title if
+        # provided
         {if(!is.na(title)) labs(title = title)} +
 
         # If there are no "select_genes"
         {
             if (length(select_genes) == 0)
-                labs(subtitle = paste0("Down: ", num_genes[2], ", Up: ", num_genes[1]))
+                labs(subtitle = paste0(
+                    "Down: ", num_genes[2], ", Up: ", num_genes[1]
+                ))
         } +
 
         # If "select_genes" was given

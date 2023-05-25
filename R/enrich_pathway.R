@@ -77,8 +77,8 @@ enrich_pathway <- function(
     # Start looping through each data frame in "input_list"
     for (i in seq_len(length(input_list))) {
 
-        # Make sure the rownames aren't just 1:nrow(), which can happen if the input
-        # data frame is a tibble
+        # Make sure the rownames aren't just 1:nrow(), which can happen if the
+        # input data frame is a tibble
         if (all(rownames(input_list[[i]]) == seq_len(nrow(input_list[[i]])))) {
             stop(paste0(
                 "The rownames of the data frame for the element with name '",
@@ -116,10 +116,10 @@ enrich_pathway <- function(
         }
 
         ### Sigora analysis
-        # Sigora uses gene pairs with the Reactome database, which often eliminates
-        # duplicate, closely related pathways (e.g. TLR7/8/9 pathways). Useful for
-        # if you have a lot of DEGs that might enrich for a lot of pathways, making
-        # it difficult analyze.
+        # Sigora uses gene pairs with the Reactome database, which often
+        # eliminates duplicate, closely related pathways (e.g. TLR7/8/9
+        # pathways). Useful for if you have a lot of DEGs that might enrich for
+        # a lot of pathways, making it difficult analyze.
         if (analysis == "sigora") {
             message("\tRunning enrichment using Sigora")
 
@@ -163,9 +163,9 @@ enrich_pathway <- function(
 
             message("\tRunning enrichment using ReactomePA")
 
-            # ReactomePA needs to map to Entrez IDs, as it doesn't take Ensembl IDs.
-            # We can use SIGORA's mapping data for consistency, though it maps fewer
-            # Entrez symbols than our own mapping file.
+            # ReactomePA needs to map to Entrez IDs, as it doesn't take Ensembl
+            # IDs. We can use SIGORA's mapping data for consistency, though it
+            # maps fewer Entrez symbols than our own mapping file.
             if (split) {
                 up_gns_entrez <- idmap %>%
                     filter(Ensembl.Gene.ID %in% up_gns) %>%
@@ -180,8 +180,8 @@ enrich_pathway <- function(
                     #   ) %>%
                     # Use Enricher that runs faster with the same results
                     enricher(
-                        TERM2GENE = reactome_database %>% select(pathway_id, entrez_id),
-                        TERM2NAME = reactome_database %>% select(pathway_id, pathway_name),
+                        TERM2GENE = select(reactome_database, pathway_id, entrez_id),
+                        TERM2NAME = select(reactome_database, pathway_id, pathway_name),
                         universe = gene_universe,
                         minGSSize = 10,
                         maxGSSize = 500,
@@ -201,8 +201,8 @@ enrich_pathway <- function(
                     #   universe = gene_universe
                     # ) %>%
                     enricher(
-                        TERM2GENE = reactome_database %>% select(pathway_id, entrez_id),
-                        TERM2NAME = reactome_database %>% select(pathway_id, pathway_name),
+                        TERM2GENE = select(reactome_database, pathway_id, entrez_id),
+                        TERM2NAME = select(reactome_database, pathway_id, pathway_name),
                         universe = gene_universe,
                         minGSSize = 10,
                         maxGSSize = 500,
@@ -224,8 +224,8 @@ enrich_pathway <- function(
                     #   readable = TRUE,
                     #   universe = gene_universe
                     enricher(
-                        TERM2GENE = reactome_database %>% select(pathway_id, entrez_id),
-                        TERM2NAME = reactome_database %>% select(pathway_id, pathway_name),
+                        TERM2GENE = select(reactome_database, pathway_id, entrez_id),
+                        TERM2NAME = select(reactome_database, pathway_id, pathway_name),
                         universe = gene_universe,
                         minGSSize = 10,
                         maxGSSize = 500,
@@ -240,7 +240,9 @@ enrich_pathway <- function(
             for (r in seq_len(nrow(total_results))) {
                 genelist <- total_results[r, "geneID"]
                 genelist <- str_split(genelist, "/") %>% unlist()
-                hgnc_genes <- mapping_file %>% filter(entrez_id %in% genelist) %>% .$gene_name
+                hgnc_genes <- mapping_file %>%
+                    filter(entrez_id %in% genelist) %>%
+                    .$gene_name
                 hgnc_genes <- paste(hgnc_genes, collapse = ";")
                 hgnc_gene_list <- c(hgnc_gene_list, hgnc_genes)
             }
@@ -253,7 +255,8 @@ enrich_pathway <- function(
                     into = c("num_candidate_genes", "num_bg_genes"),
                     sep = "/"
                 ) %>%
-                # Replace "/" with ";" for consistency in "candidate_genes" column
+                # Replace "/" with ";" for consistency in "candidate_genes"
+                # column
                 mutate(
                     across(c(num_candidate_genes, num_bg_genes), as.numeric),
                     gene_ratio = num_candidate_genes / num_bg_genes,
@@ -272,11 +275,11 @@ enrich_pathway <- function(
         }
 
         ### Hallmark enrichment from mSigDB
-        # The Hallmark gene sets summarize and represent 50 specific well-defined
-        # biological states or processes and display coherent expression. They are
-        # a useful tool for looking at broad mechanisms, and can "validate"
-        # enrichment findings from SIGORA or ReactomePA if similar mechanisms
-        # appear.
+        # The Hallmark gene sets summarize and represent 50 specific
+        # well-defined biological states or processes and display coherent
+        # expression. They are a useful tool for looking at broad mechanisms,
+        # and can "validate" enrichment findings from SIGORA or ReactomePA if
+        # similar mechanisms appear.
         if (analysis == "hallmark") {
 
             message("\tRunning enrichment using Hallmark")
@@ -318,7 +321,9 @@ enrich_pathway <- function(
             for (r in seq_len(nrow(total_results))) {
                 genelist <- total_results[r, "geneID"]
                 genelist <- str_split(genelist, "/") %>% unlist()
-                hgnc_genes <- mapping_file %>% filter(ensg_id %in% genelist) %>% .$gene_name
+                hgnc_genes <- mapping_file %>%
+                    filter(ensg_id %in% genelist) %>%
+                    .$gene_name
                 hgnc_genes <- paste(hgnc_genes, collapse = ";")
                 hgnc_gene_list <- c(hgnc_gene_list, hgnc_genes)
             }
@@ -356,7 +361,8 @@ enrich_pathway <- function(
             total_results_filtered <- total_results
         }
 
-        # Annotate the  enrichment results by adding top pathways and comparisons
+        # Annotate the  enrichment results by adding top pathways and
+        # comparisons
         total_results_annotated <- left_join(
             total_results_filtered,
             top_pathways_more %>% dplyr::select(pathway_id, top_pathways),
