@@ -69,7 +69,7 @@ plot_fold_change <- function(
     manual_title = NA,
     title_size = 14,
     genes_to_plot = NA,
-    gene_format = 'ensg',
+    gene_format = "ensg",
     p_cutoff = 0.05,
     fc_cutoff = 1.5,
     plot_significant_only = TRUE,
@@ -118,12 +118,12 @@ plot_fold_change <- function(
       .$Ensembl.Gene.ID
   } else { # get from manual gene input
     genes <- genes_to_plot
-    if (gene_format == 'hgnc') {
+    if (gene_format == "hgnc") {
       genes <- mapping_file %>%
         filter(gene_name %in% genes_to_plot) %>%
         .$ensg_id
     }
-    if (gene_format == 'ensg') {
+    if (gene_format == "ensg") {
       genes <- genes_to_plot
     }
   }
@@ -140,29 +140,29 @@ plot_fold_change <- function(
       filter(rownames(.) %in% genes, !is.na(log2FoldChange)) %>%
       select(log2FoldChange) %>%
       rownames_to_column()
-    names(fold_change) <- c('ensg_id', names(input_list)[n])
+    names(fold_change) <- c("ensg_id", names(input_list)[n])
 
     ## Get significance values for each gene of interest
     signif <- input_list[[n]] %>%
       filter(rownames(.) %in% genes, !is.na(padj)) %>%
       select(padj) %>%
       rownames_to_column()
-    names(signif) <- c('ensg_id', names(input_list)[n])
+    names(signif) <- c("ensg_id", names(input_list)[n])
 
     ## Add to the fold change and p value dataframes
     if (n == 1) {
       df_fc <- fold_change
       df_p <- signif
     } else {
-      df_fc <- full_join(df_fc, fold_change, by = 'ensg_id')
-      df_p <- full_join(df_p, signif, by = 'ensg_id')
+      df_fc <- full_join(df_fc, fold_change, by = "ensg_id")
+      df_p <- full_join(df_p, signif, by = "ensg_id")
     }
 
     ## If any are significantly DE, record them
     sig_genes <- c(
       sig_genes,
       input_list[[n]] %>%
-        rownames_to_column(var = 'ensg_id') %>%
+        rownames_to_column(var = "ensg_id") %>%
         filter(
           ensg_id %in% genes,
           padj < p_cutoff,
@@ -185,7 +185,7 @@ plot_fold_change <- function(
     left_join(mapping_file) %>%
     select(!ensg_id) %>%
     select(!entrez_id) %>%
-    column_to_rownames(var = 'gene_name') %>%
+    column_to_rownames(var = "gene_name") %>%
     as.matrix()
   mat_fc[is.na(mat_fc)] <- 0 # make any NAs into 0
   if (hide_low_fc) {
@@ -196,26 +196,26 @@ plot_fold_change <- function(
     left_join(mapping_file) %>%
     select(!ensg_id) %>%
     select(!entrez_id) %>%
-    column_to_rownames(var = 'gene_name') %>%
+    column_to_rownames(var = "gene_name") %>%
     as.matrix()
   mat_p[is.na(mat_p)] <- 1 # make any NAs into 1s
 
   # Set the limits for colours for the plotting heatmap
-  limit = max(abs(mat_fc), na.rm = TRUE) %>% ceiling()
+  limit <- max(abs(mat_fc), na.rm = TRUE) %>% ceiling()
   ## If plotting real fold changes instead of log2
   if(!log2_foldchange){
     if ((limit %% 2) == 0) {
-      range = c(-limit, -limit/2, 0, limit/2, limit)
+      range <- c(-limit, -limit/2, 0, limit/2, limit)
     } else {
       limit <- limit + 1
-      range = c(-limit, -limit/2, 0, limit/2, limit)
+      range <- c(-limit, -limit/2, 0, limit/2, limit)
     }
-    foldchange_title = 'Fold\nChange'
-    labels = c(-2^limit, -2^(limit/2), 1, 2^(limit/2), 2^limit)
+    foldchange_title <- "Fold\nChange"
+    labels <- c(-2^limit, -2^(limit/2), 1, 2^(limit/2), 2^limit)
   } else {
-    range = c(-limit, -limit/2, 0, limit/2, limit)
-    foldchange_title = 'log2 FC'
-    labels = range
+    range <- c(-limit, -limit/2, 0, limit/2, limit)
+    foldchange_title <- "log2 FC"
+    labels <- range
   }
   parameters <- list(
     at = range,
@@ -230,7 +230,7 @@ plot_fold_change <- function(
     # this orders the splitting into the order the dataframes are in the list
     # instead of alphabetically
     col_split <- factor(col_split, levels = unique(col_split))
-    column_title <- '%s'
+    column_title <- "%s"
   }
   row_split <- rep(NA, nrow(mat_fc))
   row_title <- NULL
@@ -243,7 +243,7 @@ plot_fold_change <- function(
     col_split <- row_split
     row_split <- var
     column_title <- NULL
-    row_title <- '%s'
+    row_title <- "%s"
   }
 
   draw(Heatmap(
@@ -252,13 +252,13 @@ plot_fold_change <- function(
         if (show_stars) {
           if (abs(mat_fc[i,j]) > log2(1.5)) {
             if (mat_p[i, j] < 0.001) {
-              grid::grid.text('***', x, y, vjust = vjust, rot = rot)
+              grid::grid.text("***", x, y, vjust = vjust, rot = rot)
             }
             else if (mat_p[i, j] < 0.01) {
-              grid::grid.text('**', x, y, vjust = vjust, rot = rot)
+              grid::grid.text("**", x, y, vjust = vjust, rot = rot)
             }
             else if (mat_p[i, j] < 0.05) {
-              grid::grid.text('*', x, y, vjust = vjust, rot = rot)
+              grid::grid.text("*", x, y, vjust = vjust, rot = rot)
             }
             # as.character(expression('\u2736') # this doesn't work?
           }
@@ -266,13 +266,13 @@ plot_fold_change <- function(
           # If plotting significance values for genes that don't pass fc_cutoff
           if (abs(mat_fc[i,j]) < log2(1.5) & !hide_low_fc) {
             if (mat_p[i, j] < 0.001) {
-              grid::grid.text("***", x, y, vjust = vjust, rot = rot, gp = grid::gpar(col = 'grey50'))
+              grid::grid.text("***", x, y, vjust = vjust, rot = rot, gp = grid::gpar(col = "grey50"))
             }
             else if (mat_p[i, j] < 0.01) {
-              grid::grid.text("**", x, y, vjust = vjust, rot = rot, gp = grid::gpar(col = 'grey50'))
+              grid::grid.text("**", x, y, vjust = vjust, rot = rot, gp = grid::gpar(col = "grey50"))
             }
             else if (mat_p[i, j] < 0.05) {
-              grid::grid.text("*", x, y, vjust = vjust, rot = rot, gp = grid::gpar(col = 'grey50'))
+              grid::grid.text("*", x, y, vjust = vjust, rot = rot, gp = grid::gpar(col = "grey50"))
             }
           }
         }

@@ -38,18 +38,18 @@ create_foundation <- function(mat, max_distance = NA, prop_to_keep = NA) {
     mutate(across(where(is.factor), as.character))
 
   if (!is.na(max_distance)) {
-    message(paste0(
+    message(
       "Defining interactions with a distance cutoff of ",
       max_distance,
       "..."
-    ))
+    )
     edge_table <- filter(mat_tibble, distance <= max_distance)
   } else if (!is.na(prop_to_keep)) {
-    message(paste0(
+    message(
       "Defining edges using the top ",
       signif(prop_to_keep * 100),
       "% of pathway interactions..."
-    ))
+    )
     edge_table <- slice_head(mat_tibble, prop = prop_to_keep)
   }
 

@@ -66,7 +66,7 @@ plot_pathways <- function(
 
   # If new group names are to be used, add them in
   if (!is.na(new_group_names[1])) {
-    map_names = data.frame(comparison = unique(enriched_results$comparison),
+    map_names <- data.frame(comparison = unique(enriched_results$comparison),
                            new_names = new_group_names)
     enriched_results <- left_join(enriched_results, map_names) %>%
       select(!comparison) %>%
@@ -155,9 +155,9 @@ plot_pathways <- function(
       "the given comparisons. These are indicated with an asterisk over the ",
       "triangle, which is only shown for the lower p value result."
     )
-    print(as_tibble(duplicates[, c(2, 1)]))
+    show(as_tibble(duplicates[, c(2, 1)]))
 
-    for (i in 1:nrow(duplicates)) {
+    for (i in seq_len(nrow(duplicates))) {
       row <- duplicates[i, ]
 
       choices <- enriched_results_graph %>%
@@ -230,7 +230,7 @@ plot_pathways <- function(
 
   # Plot pathways
   plotlist <- list()
-  name_trunc = name_width * name_rows - 5 # set where the pathway name should be truncated
+  name_trunc <- name_width * name_rows - 5 # set where the pathway name should be truncated
 
   # Can be set to angled (45 degrees), "horizontal" (0 degrees), or "vertical"
   # (90 degrees)
@@ -249,7 +249,7 @@ plot_pathways <- function(
   }
 
 
-  for (n in 1:length(column_list)) {
+  for (n in seq_len(length(column_list))) {
     plot <- ggplot(
       enriched_results_clean %>% filter(top_pathways %in% column_list[n][[1]]),
       aes(
