@@ -73,7 +73,11 @@ pathnet_visNetwork <- function(
     if (label_nodes) {
         visnet_nodes <- mutate(
             visnet_nodes,
-            label = map_chr(if_else(!is.na(bonferroni), title, ""), trunc_neatly, 30)
+            label = map_chr(
+                if_else(!is.na(bonferroni), title, ""),
+                trunc_neatly,
+                30
+            )
         )
     }
 

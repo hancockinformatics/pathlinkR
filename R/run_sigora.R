@@ -42,17 +42,19 @@ run_sigora <- function(
             filter(Bonferroni < pval_filter)
     }
 
-    # Not all DE genes are used in the Reactome pathway genes from Sigora. Sigora
-    # does not have the functionality to calculate gene ratio, which might be
-    # useful, but it is basically a reflection of p-value and pathway size. The
-    # gene ratio is somewhat confusing to calculate. Here, gene ratio = k/n where:
+    # Not all DE genes are used in the Reactome pathway genes from Sigora.
+    # Sigora does not have the functionality to calculate gene ratio, which
+    # might be useful, but it is basically a reflection of p-value and pathway
+    # size. The gene ratio is somewhat confusing to calculate. Here, gene ratio
+    # = k/n where:
     #   k = analyzed genes (the genes in enrich_genes) that are found in the
     #       pathway of interest
     #   n = analyzed genes that are found in the entire database (all genes used
     #       in Sigora in the Reactome database)
 
     # Start by calculating n
-    n_genes <- enrich_genes[enrich_genes %in% idmap$Ensembl.Gene.ID] %>% length()
+    n_genes <- enrich_genes[enrich_genes %in% idmap$Ensembl.Gene.ID] %>%
+        length()
 
     if (nrow(sigora_results) > 0) {
 

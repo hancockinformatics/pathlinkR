@@ -31,7 +31,11 @@ create_foundation <- function(mat, max_distance = NA, prop_to_keep = NA) {
     mat_tibble <- mat %>%
         as.data.frame() %>%
         rownames_to_column("pathway_1") %>%
-        pivot_longer(-pathway_1, names_to = "pathway_2", values_to = "distance") %>%
+        pivot_longer(
+            -pathway_1,
+            names_to = "pathway_2",
+            values_to = "distance"
+        ) %>%
         distinct() %>%
         filter(distance != 0) %>%
         arrange(distance) %>%
