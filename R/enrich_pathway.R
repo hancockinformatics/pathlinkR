@@ -148,7 +148,7 @@ enrich_pathway <- function(
           direction = "All",
           gps_repo = gps_repo,
           pval_filter = filter_results
-          )
+        )
       }
     }
 
