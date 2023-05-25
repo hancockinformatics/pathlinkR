@@ -26,49 +26,49 @@
 #'
 create_foundation <- function(mat, max_distance = NA, prop_to_keep = NA) {
 
-  stopifnot(all(rownames(mat) == colnames(mat)))
+    stopifnot(all(rownames(mat) == colnames(mat)))
 
-  mat_tibble <- mat %>%
-    as.data.frame() %>%
-    rownames_to_column("pathway_1") %>%
-    pivot_longer(-pathway_1, names_to = "pathway_2", values_to = "distance") %>%
-    distinct() %>%
-    filter(distance != 0) %>%
-    arrange(distance) %>%
-    mutate(across(where(is.factor), as.character))
+    mat_tibble <- mat %>%
+        as.data.frame() %>%
+        rownames_to_column("pathway_1") %>%
+        pivot_longer(-pathway_1, names_to = "pathway_2", values_to = "distance") %>%
+        distinct() %>%
+        filter(distance != 0) %>%
+        arrange(distance) %>%
+        mutate(across(where(is.factor), as.character))
 
-  if (!is.na(max_distance)) {
-    message(
-      "Defining interactions with a distance cutoff of ",
-      max_distance,
-      "..."
-    )
-    edge_table <- filter(mat_tibble, distance <= max_distance)
-  } else if (!is.na(prop_to_keep)) {
-    message(
-      "Defining edges using the top ",
-      signif(prop_to_keep * 100),
-      "% of pathway interactions..."
-    )
-    edge_table <- slice_head(mat_tibble, prop = prop_to_keep)
-  }
+    if (!is.na(max_distance)) {
+        message(
+            "Defining interactions with a distance cutoff of ",
+            max_distance,
+            "..."
+        )
+        edge_table <- filter(mat_tibble, distance <= max_distance)
+    } else if (!is.na(prop_to_keep)) {
+        message(
+            "Defining edges using the top ",
+            signif(prop_to_keep * 100),
+            "% of pathway interactions..."
+        )
+        edge_table <- slice_head(mat_tibble, prop = prop_to_keep)
+    }
 
-  anno_edge_table <- edge_table %>%
-    left_join(
-      distinct(dplyr::select(sigora_database, pathway_id, pathway_name)),
-      by = c("pathway_1" = "pathway_id")
-    ) %>%
-    left_join(
-      distinct(dplyr::select(sigora_database, pathway_id, pathway_name)),
-      by = c("pathway_2" = "pathway_id"),
-      suffix = c("_1", "_2")
-    ) %>%
-    relocate(contains("name"), distance) %>%
-    mutate(
-      across(where(is.factor), as.character),
-      across(where(is.character), str_trim)
-    )
+    anno_edge_table <- edge_table %>%
+        left_join(
+            distinct(dplyr::select(sigora_database, pathway_id, pathway_name)),
+            by = c("pathway_1" = "pathway_id")
+        ) %>%
+        left_join(
+            distinct(dplyr::select(sigora_database, pathway_id, pathway_name)),
+            by = c("pathway_2" = "pathway_id"),
+            suffix = c("_1", "_2")
+        ) %>%
+        relocate(contains("name"), distance) %>%
+        mutate(
+            across(where(is.factor), as.character),
+            across(where(is.character), str_trim)
+        )
 
-  message("Done! Foundation contains ", nrow(edge_table), " interactions.")
-  return(anno_edge_table)
+    message("Done! Foundation contains ", nrow(edge_table), " interactions.")
+    return(anno_edge_table)
 }

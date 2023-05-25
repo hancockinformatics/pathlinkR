@@ -28,47 +28,47 @@
 get_pathway_distances <- function(pathway_data = sigora_database,
                                   dist_method = "jaccard") {
 
-  gene_id_col <- colnames(pathway_data)[
-    unlist(map(pathway_data[1, ], ~str_detect(.x, "ENSG")))
-  ]
+    gene_id_col <- colnames(pathway_data)[
+        unlist(map(pathway_data[1, ], ~str_detect(.x, "ENSG")))
+    ]
 
-  pathway_id_col <- colnames(pathway_data)[
-    unlist(map(pathway_data[1, ], ~str_detect(.x, "R-[A-Z]{3}-[0-9]{1,10}")))
-  ]
+    pathway_id_col <- colnames(pathway_data)[
+        unlist(map(pathway_data[1, ], ~str_detect(.x, "R-[A-Z]{3}-[0-9]{1,10}")))
+    ]
 
-  message(
-    "Using '", gene_id_col,"' for gene IDs and '",
-    pathway_id_col, "' for pathway IDs..."
-  )
+    message(
+        "Using '", gene_id_col,"' for gene IDs and '",
+        pathway_id_col, "' for pathway IDs..."
+    )
 
-  message("Creating identity matrix...")
-  identity_table <- pathway_data %>%
-    dplyr::select(all_of(c(gene_id_col, pathway_id_col))) %>%
-    distinct() %>%
-    mutate(present = 1) %>%
-    pivot_wider(
-      id_cols     = all_of(pathway_id_col),
-      names_from  = all_of(gene_id_col),
-      values_from = "present"
-    ) %>%
-    replace(is.na(.), 0) %>%
-    column_to_rownames(all_of(pathway_id_col)) %>%
-    as.matrix()
+    message("Creating identity matrix...")
+    identity_table <- pathway_data %>%
+        dplyr::select(all_of(c(gene_id_col, pathway_id_col))) %>%
+        distinct() %>%
+        mutate(present = 1) %>%
+        pivot_wider(
+            id_cols     = all_of(pathway_id_col),
+            names_from  = all_of(gene_id_col),
+            values_from = "present"
+        ) %>%
+        replace(is.na(.), 0) %>%
+        column_to_rownames(all_of(pathway_id_col)) %>%
+        as.matrix()
 
-  if ( length(unique(pathway_data[[pathway_id_col]])) > 500 ) {
-    message("Running distance calculations (this may take a while)...")
-  } else {
-    message("Running distance calculations...")
-  }
+    if ( length(unique(pathway_data[[pathway_id_col]])) > 500 ) {
+        message("Running distance calculations (this may take a while)...")
+    } else {
+        message("Running distance calculations...")
+    }
 
-  distance_matrix <- identity_table %>%
-    vegan::vegdist(
-      method = "jaccard",
-      binary = TRUE,
-      diag = TRUE
-    ) %>%
-    as.matrix()
+    distance_matrix <- identity_table %>%
+        vegan::vegdist(
+            method = "jaccard",
+            binary = TRUE,
+            diag = TRUE
+        ) %>%
+        as.matrix()
 
-  message("Done!\n")
-  return(distance_matrix)
+    message("Done!\n")
+    return(distance_matrix)
 }

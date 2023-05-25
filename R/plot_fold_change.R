@@ -63,234 +63,234 @@
 #' @seealso <https://github.com/hancockinformatics/pathnet>
 #'
 plot_fold_change <- function(
-    input_list,
-    path_name = NA,
-    path_id = NA,
-    manual_title = NA,
-    title_size = 14,
-    genes_to_plot = NA,
-    gene_format = "ensg",
-    p_cutoff = 0.05,
-    fc_cutoff = 1.5,
-    plot_significant_only = TRUE,
-    show_stars = TRUE,
-    hide_low_fc = TRUE,
-    vjust = 0.75,
-    rot = 0,
-    invert = FALSE,
-    log2_foldchange = FALSE,
-    col_split = NA,
-    cluster_rows = TRUE,
-    cluster_columns = FALSE,
-    col_angle = 90,
-    col_center = TRUE,
-    row_angle = 0,
-    row_center = FALSE) {
+        input_list,
+        path_name = NA,
+        path_id = NA,
+        manual_title = NA,
+        title_size = 14,
+        genes_to_plot = NA,
+        gene_format = "ensg",
+        p_cutoff = 0.05,
+        fc_cutoff = 1.5,
+        plot_significant_only = TRUE,
+        show_stars = TRUE,
+        hide_low_fc = TRUE,
+        vjust = 0.75,
+        rot = 0,
+        invert = FALSE,
+        log2_foldchange = FALSE,
+        col_split = NA,
+        cluster_rows = TRUE,
+        cluster_columns = FALSE,
+        col_angle = 90,
+        col_center = TRUE,
+        row_angle = 0,
+        row_center = FALSE) {
 
-  # First identify the pathway to plot
-  ## If pathway name is provided
-  if (!is.na(path_name)) {
-    path_id <- sigora_database %>%
-      filter(pathway_name == path_name) %>%
-      select(pathway_id) %>%
-      unlist() %>% .[1] %>% as.character()
-    plot_title <- path_name
-  }
-
-  ## If pathway ID is provided
-  if (!is.na(path_id)) {
-    plot_title <- sigora_database %>%
-      filter(pathway_id == path_id) %>%
-      select(pathway_name) %>%
-      unlist() %>% .[1] %>% as.character()
-  }
-
-  ## If a title is provided manually, overwrite
-  if(!is.na(manual_title)){
-    plot_title <- manual_title
-  }
-
-  # Get the genes to plot in the pathway or gene list of interest
-  # get all the genes in the pathway of interest, and make them Ensembl IDs
-  if (is.na(genes_to_plot[1])){ # get from pathway database
-    genes <- sigora_database %>%
-      filter(pathway_id == path_id) %>%
-      .$Ensembl.Gene.ID
-  } else { # get from manual gene input
-    genes <- genes_to_plot
-    if (gene_format == "hgnc") {
-      genes <- mapping_file %>%
-        filter(gene_name %in% genes_to_plot) %>%
-        .$ensg_id
-    }
-    if (gene_format == "ensg") {
-      genes <- genes_to_plot
-    }
-  }
-
-  # Get fold changes and significance for each dataframe in input_list
-
-  ## Collection of significant genes in each dataframe
-  sig_genes <- c()
-
-  ## Loop across each dataframe in the input_list
-  for (n in seq_len(length(input_list))) {
-    ## Get fold changes for each gene of interest
-    fold_change <- input_list[[n]] %>%
-      filter(rownames(.) %in% genes, !is.na(log2FoldChange)) %>%
-      select(log2FoldChange) %>%
-      rownames_to_column()
-    names(fold_change) <- c("ensg_id", names(input_list)[n])
-
-    ## Get significance values for each gene of interest
-    signif <- input_list[[n]] %>%
-      filter(rownames(.) %in% genes, !is.na(padj)) %>%
-      select(padj) %>%
-      rownames_to_column()
-    names(signif) <- c("ensg_id", names(input_list)[n])
-
-    ## Add to the fold change and p value dataframes
-    if (n == 1) {
-      df_fc <- fold_change
-      df_p <- signif
-    } else {
-      df_fc <- full_join(df_fc, fold_change, by = "ensg_id")
-      df_p <- full_join(df_p, signif, by = "ensg_id")
+    # First identify the pathway to plot
+    ## If pathway name is provided
+    if (!is.na(path_name)) {
+        path_id <- sigora_database %>%
+            filter(pathway_name == path_name) %>%
+            select(pathway_id) %>%
+            unlist() %>% .[1] %>% as.character()
+        plot_title <- path_name
     }
 
-    ## If any are significantly DE, record them
-    sig_genes <- c(
-      sig_genes,
-      input_list[[n]] %>%
-        rownames_to_column(var = "ensg_id") %>%
-        filter(
-          ensg_id %in% genes,
-          padj < p_cutoff,
-          abs(log2FoldChange) > log2(fc_cutoff)
-        ) %>%
-      .$ensg_id)
-  }
-
-  # From all the dataframes, get the genes that were significant in any
-  sig_genes <- unique(sig_genes)
-
-  if (plot_significant_only) {
-    df_fc <- df_fc %>% filter(ensg_id %in% sig_genes)
-    df_p <- df_p %>% filter(ensg_id %in% sig_genes)
-  }
-
-  # Prepare the Heatmap matrices
-  ## Map the ensg_id to hgnc symbols
-  mat_fc <- df_fc %>%
-    left_join(mapping_file) %>%
-    select(!ensg_id) %>%
-    select(!entrez_id) %>%
-    column_to_rownames(var = "gene_name") %>%
-    as.matrix()
-  mat_fc[is.na(mat_fc)] <- 0 # make any NAs into 0
-  if (hide_low_fc) {
-    mat_fc[abs(mat_fc) < log2(fc_cutoff)] <- 0
-  }
-
-  mat_p <- df_p %>%
-    left_join(mapping_file) %>%
-    select(!ensg_id) %>%
-    select(!entrez_id) %>%
-    column_to_rownames(var = "gene_name") %>%
-    as.matrix()
-  mat_p[is.na(mat_p)] <- 1 # make any NAs into 1s
-
-  # Set the limits for colours for the plotting heatmap
-  limit <- max(abs(mat_fc), na.rm = TRUE) %>% ceiling()
-  ## If plotting real fold changes instead of log2
-  if(!log2_foldchange){
-    if ((limit %% 2) == 0) {
-      range <- c(-limit, -limit/2, 0, limit/2, limit)
-    } else {
-      limit <- limit + 1
-      range <- c(-limit, -limit/2, 0, limit/2, limit)
+    ## If pathway ID is provided
+    if (!is.na(path_id)) {
+        plot_title <- sigora_database %>%
+            filter(pathway_id == path_id) %>%
+            select(pathway_name) %>%
+            unlist() %>% .[1] %>% as.character()
     }
-    foldchange_title <- "Fold\nChange"
-    labels <- c(-2^limit, -2^(limit/2), 1, 2^(limit/2), 2^limit)
-  } else {
-    range <- c(-limit, -limit/2, 0, limit/2, limit)
-    foldchange_title <- "log2 FC"
-    labels <- range
-  }
-  parameters <- list(
-    at = range,
-    labels = labels,
-    title = foldchange_title)
 
-  # If columns aren't being split
-  if (is.na(col_split[1])) {
-    col_split <- rep(NA, length(input_list))
-    column_title <- NULL
-  } else {
-    # this orders the splitting into the order the dataframes are in the list
-    # instead of alphabetically
-    col_split <- factor(col_split, levels = unique(col_split))
-    column_title <- "%s"
-  }
-  row_split <- rep(NA, nrow(mat_fc))
-  row_title <- NULL
+    ## If a title is provided manually, overwrite
+    if(!is.na(manual_title)){
+        plot_title <- manual_title
+    }
 
-  # If plotting so that rownames are conditions and colnames are genes
-  if (invert) {
-    mat_fc <- t(mat_fc)
-    mat_p <- t(mat_p)
-    var <- col_split
-    col_split <- row_split
-    row_split <- var
-    column_title <- NULL
-    row_title <- "%s"
-  }
-
-  draw(Heatmap(
-    mat_fc,
-      cell_fun = function(j, i, x, y, w, h, fill) {
-        if (show_stars) {
-          if (abs(mat_fc[i,j]) > log2(1.5)) {
-            if (mat_p[i, j] < 0.001) {
-              grid::grid.text("***", x, y, vjust = vjust, rot = rot)
-            }
-            else if (mat_p[i, j] < 0.01) {
-              grid::grid.text("**", x, y, vjust = vjust, rot = rot)
-            }
-            else if (mat_p[i, j] < 0.05) {
-              grid::grid.text("*", x, y, vjust = vjust, rot = rot)
-            }
-            # as.character(expression('\u2736') # this doesn't work?
-          }
-
-          # If plotting significance values for genes that don't pass fc_cutoff
-          if (abs(mat_fc[i,j]) < log2(1.5) & !hide_low_fc) {
-            if (mat_p[i, j] < 0.001) {
-              grid::grid.text("***", x, y, vjust = vjust, rot = rot, gp = grid::gpar(col = "grey50"))
-            }
-            else if (mat_p[i, j] < 0.01) {
-              grid::grid.text("**", x, y, vjust = vjust, rot = rot, gp = grid::gpar(col = "grey50"))
-            }
-            else if (mat_p[i, j] < 0.05) {
-              grid::grid.text("*", x, y, vjust = vjust, rot = rot, gp = grid::gpar(col = "grey50"))
-            }
-          }
+    # Get the genes to plot in the pathway or gene list of interest
+    # get all the genes in the pathway of interest, and make them Ensembl IDs
+    if (is.na(genes_to_plot[1])){ # get from pathway database
+        genes <- sigora_database %>%
+            filter(pathway_id == path_id) %>%
+            .$Ensembl.Gene.ID
+    } else { # get from manual gene input
+        genes <- genes_to_plot
+        if (gene_format == "hgnc") {
+            genes <- mapping_file %>%
+                filter(gene_name %in% genes_to_plot) %>%
+                .$ensg_id
         }
-      },
-    column_title = column_title,
-    row_title = row_title,
-    heatmap_legend_param = parameters,
-    column_title_gp = grid::gpar(fontsize = title_size),
-    row_split = row_split,
-    column_split = col_split,
-    #col = circlize::colorRamp2(c(-limit, 0, limit), c("blue", "gray90", "red")),
-    cluster_columns = cluster_columns,
-    cluster_rows = cluster_rows,
-    column_names_rot = col_angle,
-    column_names_centered = col_center,
-    row_names_rot = row_angle,
-    row_names_centered = row_center
+        if (gene_format == "ensg") {
+            genes <- genes_to_plot
+        }
+    }
 
-  ), column_title = plot_title)
+    # Get fold changes and significance for each dataframe in input_list
+
+    ## Collection of significant genes in each dataframe
+    sig_genes <- c()
+
+    ## Loop across each dataframe in the input_list
+    for (n in seq_len(length(input_list))) {
+        ## Get fold changes for each gene of interest
+        fold_change <- input_list[[n]] %>%
+            filter(rownames(.) %in% genes, !is.na(log2FoldChange)) %>%
+            select(log2FoldChange) %>%
+            rownames_to_column()
+        names(fold_change) <- c("ensg_id", names(input_list)[n])
+
+        ## Get significance values for each gene of interest
+        signif <- input_list[[n]] %>%
+            filter(rownames(.) %in% genes, !is.na(padj)) %>%
+            select(padj) %>%
+            rownames_to_column()
+        names(signif) <- c("ensg_id", names(input_list)[n])
+
+        ## Add to the fold change and p value dataframes
+        if (n == 1) {
+            df_fc <- fold_change
+            df_p <- signif
+        } else {
+            df_fc <- full_join(df_fc, fold_change, by = "ensg_id")
+            df_p <- full_join(df_p, signif, by = "ensg_id")
+        }
+
+        ## If any are significantly DE, record them
+        sig_genes <- c(
+            sig_genes,
+            input_list[[n]] %>%
+                rownames_to_column(var = "ensg_id") %>%
+                filter(
+                    ensg_id %in% genes,
+                    padj < p_cutoff,
+                    abs(log2FoldChange) > log2(fc_cutoff)
+                ) %>%
+                .$ensg_id)
+    }
+
+    # From all the dataframes, get the genes that were significant in any
+    sig_genes <- unique(sig_genes)
+
+    if (plot_significant_only) {
+        df_fc <- df_fc %>% filter(ensg_id %in% sig_genes)
+        df_p <- df_p %>% filter(ensg_id %in% sig_genes)
+    }
+
+    # Prepare the Heatmap matrices
+    ## Map the ensg_id to hgnc symbols
+    mat_fc <- df_fc %>%
+        left_join(mapping_file) %>%
+        select(!ensg_id) %>%
+        select(!entrez_id) %>%
+        column_to_rownames(var = "gene_name") %>%
+        as.matrix()
+    mat_fc[is.na(mat_fc)] <- 0 # make any NAs into 0
+    if (hide_low_fc) {
+        mat_fc[abs(mat_fc) < log2(fc_cutoff)] <- 0
+    }
+
+    mat_p <- df_p %>%
+        left_join(mapping_file) %>%
+        select(!ensg_id) %>%
+        select(!entrez_id) %>%
+        column_to_rownames(var = "gene_name") %>%
+        as.matrix()
+    mat_p[is.na(mat_p)] <- 1 # make any NAs into 1s
+
+    # Set the limits for colours for the plotting heatmap
+    limit <- max(abs(mat_fc), na.rm = TRUE) %>% ceiling()
+    ## If plotting real fold changes instead of log2
+    if(!log2_foldchange){
+        if ((limit %% 2) == 0) {
+            range <- c(-limit, -limit/2, 0, limit/2, limit)
+        } else {
+            limit <- limit + 1
+            range <- c(-limit, -limit/2, 0, limit/2, limit)
+        }
+        foldchange_title <- "Fold\nChange"
+        labels <- c(-2^limit, -2^(limit/2), 1, 2^(limit/2), 2^limit)
+    } else {
+        range <- c(-limit, -limit/2, 0, limit/2, limit)
+        foldchange_title <- "log2 FC"
+        labels <- range
+    }
+    parameters <- list(
+        at = range,
+        labels = labels,
+        title = foldchange_title)
+
+    # If columns aren't being split
+    if (is.na(col_split[1])) {
+        col_split <- rep(NA, length(input_list))
+        column_title <- NULL
+    } else {
+        # this orders the splitting into the order the dataframes are in the list
+        # instead of alphabetically
+        col_split <- factor(col_split, levels = unique(col_split))
+        column_title <- "%s"
+    }
+    row_split <- rep(NA, nrow(mat_fc))
+    row_title <- NULL
+
+    # If plotting so that rownames are conditions and colnames are genes
+    if (invert) {
+        mat_fc <- t(mat_fc)
+        mat_p <- t(mat_p)
+        var <- col_split
+        col_split <- row_split
+        row_split <- var
+        column_title <- NULL
+        row_title <- "%s"
+    }
+
+    draw(Heatmap(
+        mat_fc,
+        cell_fun = function(j, i, x, y, w, h, fill) {
+            if (show_stars) {
+                if (abs(mat_fc[i,j]) > log2(1.5)) {
+                    if (mat_p[i, j] < 0.001) {
+                        grid::grid.text("***", x, y, vjust = vjust, rot = rot)
+                    }
+                    else if (mat_p[i, j] < 0.01) {
+                        grid::grid.text("**", x, y, vjust = vjust, rot = rot)
+                    }
+                    else if (mat_p[i, j] < 0.05) {
+                        grid::grid.text("*", x, y, vjust = vjust, rot = rot)
+                    }
+                    # as.character(expression('\u2736') # this doesn't work?
+                }
+
+                # If plotting significance values for genes that don't pass fc_cutoff
+                if (abs(mat_fc[i,j]) < log2(1.5) & !hide_low_fc) {
+                    if (mat_p[i, j] < 0.001) {
+                        grid::grid.text("***", x, y, vjust = vjust, rot = rot, gp = grid::gpar(col = "grey50"))
+                    }
+                    else if (mat_p[i, j] < 0.01) {
+                        grid::grid.text("**", x, y, vjust = vjust, rot = rot, gp = grid::gpar(col = "grey50"))
+                    }
+                    else if (mat_p[i, j] < 0.05) {
+                        grid::grid.text("*", x, y, vjust = vjust, rot = rot, gp = grid::gpar(col = "grey50"))
+                    }
+                }
+            }
+        },
+        column_title = column_title,
+        row_title = row_title,
+        heatmap_legend_param = parameters,
+        column_title_gp = grid::gpar(fontsize = title_size),
+        row_split = row_split,
+        column_split = col_split,
+        #col = circlize::colorRamp2(c(-limit, 0, limit), c("blue", "gray90", "red")),
+        cluster_columns = cluster_columns,
+        cluster_rows = cluster_rows,
+        column_names_rot = col_angle,
+        column_names_centered = col_center,
+        row_names_rot = row_angle,
+        row_names_centered = row_center
+
+    ), column_title = plot_title)
 
 }

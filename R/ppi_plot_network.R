@@ -99,237 +99,237 @@
 #' @seealso <https://github.com/hancockinformatics/pathnet/>
 #'
 ppi_plot_network <- function(
-  network,
-  fill_column,
-  fill_type,
-  cat_fill_colours = "Set1",
-  layout         = "kk",
-  legend         = FALSE,
-  fontfamily     = "Helvetica",
-  edge_colour_   = "grey40",
-  edge_alpha_    = 0.5,
-  edge_width_    = 0.5,
-  node_size      = c(3, 9),
-  node_colour    = "grey30",
-  int_colour     = "grey70",
-  fc_up_col      = "firebrick3",
-  fc_down_col    = "#188119",
-  label          = FALSE,
-  label_column,
-  label_filter   = 0,
-  label_size     = 5,
-  label_colour   = "black",
-  hub_colour     = "blue2",
-  label_face     = "bold",
-  label_padding  = 0.25,
-  min_seg_length = 0.25,
-  subnet         = TRUE,
-  ...
+        network,
+        fill_column,
+        fill_type,
+        cat_fill_colours = "Set1",
+        layout         = "kk",
+        legend         = FALSE,
+        fontfamily     = "Helvetica",
+        edge_colour_   = "grey40",
+        edge_alpha_    = 0.5,
+        edge_width_    = 0.5,
+        node_size      = c(3, 9),
+        node_colour    = "grey30",
+        int_colour     = "grey70",
+        fc_up_col      = "firebrick3",
+        fc_down_col    = "#188119",
+        label          = FALSE,
+        label_column,
+        label_filter   = 0,
+        label_size     = 5,
+        label_colour   = "black",
+        hub_colour     = "blue2",
+        label_face     = "bold",
+        label_padding  = 0.25,
+        min_seg_length = 0.25,
+        subnet         = TRUE,
+        ...
 ) {
 
-  # Set up fill scaling based on argument `fill_type`
-  if (fill_type == "fold_change") {
-    network <- network %>%
-      mutate(
-        new_fill_col = case_when(
-          {{fill_column}} < 0 ~ "Down",
-          {{fill_column}} > 0 ~ "Up",
-          TRUE ~ NA_character_
+    # Set up fill scaling based on argument `fill_type`
+    if (fill_type == "fold_change") {
+        network <- network %>%
+            mutate(
+                new_fill_col = case_when(
+                    {{fill_column}} < 0 ~ "Down",
+                    {{fill_column}} > 0 ~ "Up",
+                    TRUE ~ NA_character_
+                )
+            )
+        network_fill_geom <- scale_fill_manual(
+            values   = c("Up" = fc_up_col, "Down" = fc_down_col),
+            na.value = int_colour
         )
-      )
-    network_fill_geom <- scale_fill_manual(
-      values   = c("Up" = fc_up_col, "Down" = fc_down_col),
-      na.value = int_colour
-    )
-    network_fill_guide <- guides(
-      fill = guide_legend(title = "Direction", override.aes = list(size = 5))
-    )
+        network_fill_guide <- guides(
+            fill = guide_legend(title = "Direction", override.aes = list(size = 5))
+        )
 
-  } else if (fill_type == "two_sided") {
-    network <- mutate(network, new_fill_col = {{fill_column}})
-    network_fill_geom <- scale_fill_gradient2(
-      low  = "#313695",
-      mid  = "white",
-      high = "#a50026",
-      midpoint = 0,
-      na.value = int_colour,
-      guide    = ifelse(legend, "colourbar", "none")
-    )
-    network_fill_guide <- NULL
+    } else if (fill_type == "two_sided") {
+        network <- mutate(network, new_fill_col = {{fill_column}})
+        network_fill_geom <- scale_fill_gradient2(
+            low  = "#313695",
+            mid  = "white",
+            high = "#a50026",
+            midpoint = 0,
+            na.value = int_colour,
+            guide    = ifelse(legend, "colourbar", "none")
+        )
+        network_fill_guide <- NULL
 
-  } else if (fill_type == "one_sided") {
-    network <- mutate(network, new_fill_col = {{fill_column}})
-    network_fill_geom <- scale_fill_viridis_c(option = "plasma", begin = 0.2)
-    network_fill_guide <- NULL
+    } else if (fill_type == "one_sided") {
+        network <- mutate(network, new_fill_col = {{fill_column}})
+        network_fill_geom <- scale_fill_viridis_c(option = "plasma", begin = 0.2)
+        network_fill_guide <- NULL
 
-  } else if (fill_type == "categorical") {
-    network <- mutate(network, new_fill_col = {{fill_column}})
+    } else if (fill_type == "categorical") {
+        network <- mutate(network, new_fill_col = {{fill_column}})
 
-    if (all(cat_fill_colours == "Set1")) {
-      network_fill_geom <- scale_fill_brewer(
-        palette  = "Set1",
-        na.value = int_colour,
-        guide    = ifelse(legend, "legend", "none")
-      )
+        if (all(cat_fill_colours == "Set1")) {
+            network_fill_geom <- scale_fill_brewer(
+                palette  = "Set1",
+                na.value = int_colour,
+                guide    = ifelse(legend, "legend", "none")
+            )
+        } else {
+            network_fill_geom <- scale_fill_manual(values = cat_fill_colours)
+        }
+        network_fill_guide <-
+            guides(fill = guide_legend(override.aes = list(size = 5)))
     } else {
-      network_fill_geom <- scale_fill_manual(values = cat_fill_colours)
+        stop("Argument 'fill_type' must be one of 'fold_change', 'two_sided', ",
+             "'one_sided', or 'categorical'")
     }
-    network_fill_guide <-
-      guides(fill = guide_legend(override.aes = list(size = 5)))
-  } else {
-    stop("Argument 'fill_type' must be one of 'fold_change', 'two_sided', ",
-         "'one_sided', or 'categorical'")
-  }
 
-  if (is.data.frame(layout)) {
-    message("Using user-supplied node coordinates...")
-    # By converting the layout object to a matrix, we no longer need to worry
-    # about column names. The first and second column will be "x" and "y",
-    # respectively.
-    layout_object <- as.matrix(layout)
-  } else {
-    layout_object <- layout
-  }
+    if (is.data.frame(layout)) {
+        message("Using user-supplied node coordinates...")
+        # By converting the layout object to a matrix, we no longer need to worry
+        # about column names. The first and second column will be "x" and "y",
+        # respectively.
+        layout_object <- as.matrix(layout)
+    } else {
+        layout_object <- layout
+    }
 
-  # Set a plain white background
-  set_graph_style(foreground = "white")
+    # Set a plain white background
+    set_graph_style(foreground = "white")
 
-  # Get fill_column as a string, so we can clean it up if the legend is included
-  legend_name <- match.call()$fill_column
+    # Get fill_column as a string, so we can clean it up if the legend is included
+    legend_name <- match.call()$fill_column
 
-  # Theme tweaks for all plot types
-  theme_tweaks <- theme(
-    text         = element_text(family = fontfamily),
-    plot.margin  = unit(rep(0, 4), "cm"),
-    legend.title = element_text(size = 16),
-    legend.text  = element_text(size = 14),
-    ...
-  )
-
-
-  # If the network being plotted is a subnetwork (i.e. generated by
-  # `extract_subnetwork()`), then instead of highlighting hubs with blue labels,
-  # we instead highlight extracted nodes (genes from the extracted pathway)
-  if ( subnet & "starters" %in% names(attributes(network)) ) {
-
-    message(
-      "Detected this is a sub-network generated by `extract_subnetwork()`.\n",
-      "Highlighted node labels indicate genes from the extracted pathway.\n"
+    # Theme tweaks for all plot types
+    theme_tweaks <- theme(
+        text         = element_text(family = fontfamily),
+        plot.margin  = unit(rep(0, 4), "cm"),
+        legend.title = element_text(size = 16),
+        legend.text  = element_text(size = 14),
+        ...
     )
 
-    starter_nodes <- attr(network, "starters")
 
-    network <- network %>%
-      mutate(
-        node_label = case_when(
-          degree > label_filter ~ {{label_column}},
-          TRUE ~ NA_character_
-        ),
-        is_starter = case_when(
-          name %in% starter_nodes ~ "y",
-          TRUE ~ "n"
+    # If the network being plotted is a subnetwork (i.e. generated by
+    # `extract_subnetwork()`), then instead of highlighting hubs with blue labels,
+    # we instead highlight extracted nodes (genes from the extracted pathway)
+    if ( subnet & "starters" %in% names(attributes(network)) ) {
+
+        message(
+            "Detected this is a sub-network generated by `extract_subnetwork()`.\n",
+            "Highlighted node labels indicate genes from the extracted pathway.\n"
         )
-      )
 
-    if (hub_colour == "blue2") {
-      hub_colour <- "magenta4"
+        starter_nodes <- attr(network, "starters")
+
+        network <- network %>%
+            mutate(
+                node_label = case_when(
+                    degree > label_filter ~ {{label_column}},
+                    TRUE ~ NA_character_
+                ),
+                is_starter = case_when(
+                    name %in% starter_nodes ~ "y",
+                    TRUE ~ "n"
+                )
+            )
+
+        if (hub_colour == "blue2") {
+            hub_colour <- "magenta4"
+        }
+
+        ggraph(network, layout = layout_object) +
+            geom_edge_link(
+                show.legend = FALSE,
+                edge_alpha = edge_alpha_,
+                edge_colour = edge_colour_,
+                edge_width = edge_width_
+            ) +
+            geom_node_point(
+                aes(size = degree, fill = new_fill_col),
+                pch = 21,
+                colour = node_colour
+            ) +
+            network_fill_geom +
+            geom_node_text(
+                aes(label = node_label, colour = is_starter),
+                size          = label_size,
+                repel         = TRUE,
+                family        = fontfamily,
+                fontface      = label_face,
+                check_overlap = TRUE,
+                show.legend   = FALSE,
+                box.padding   = label_padding,
+                min.segment.length = min_seg_length
+            ) +
+            scale_size_continuous(range = node_size, guide = "none") +
+            scale_colour_manual(values = c("y" = hub_colour, "n" = label_colour)) +
+            labs(fill = NULL) +
+            theme_tweaks +
+            network_fill_guide
+
+    } else if (label) {
+        hub_nodes <- as_tibble(network) %>%
+            rename("hub_score" = starts_with("hub_score")) %>%
+            arrange(desc(hub_score)) %>%
+            slice_head(n = 3 + ceiling(nrow(as_tibble(network)) * 0.01)) %>%
+            pull(name)
+
+        network <- network %>%
+            mutate(
+                node_label = case_when(
+                    degree > label_filter ~ {{label_column}},
+                    TRUE ~ NA_character_
+                ),
+                is_hub = case_when(
+                    name %in% hub_nodes ~ "y",
+                    TRUE ~ "n"
+                )
+            )
+
+        ggraph(network, layout = layout_object) +
+            geom_edge_link(
+                show.legend = FALSE,
+                edge_alpha = edge_alpha_,
+                edge_colour = edge_colour_,
+                edge_width = edge_width_
+            ) +
+            geom_node_point(
+                aes(size = degree, fill = new_fill_col),
+                pch = 21,
+                colour = node_colour
+            ) +
+            network_fill_geom +
+            geom_node_text(
+                aes(label = node_label, colour = is_hub),
+                size          = label_size,
+                repel         = TRUE,
+                family        = fontfamily,
+                fontface      = label_face,
+                check_overlap = TRUE,
+                show.legend   = FALSE,
+                box.padding   = label_padding,
+                min.segment.length = min_seg_length
+            ) +
+            scale_size_continuous(range = node_size, guide = "none") +
+            scale_colour_manual(values = c("y" = hub_colour, "n" = label_colour)) +
+            labs(fill = NULL) +
+            theme_tweaks +
+            network_fill_guide
+
+    } else {
+        ggraph(network, layout = layout_object) +
+            geom_edge_link(
+                show.legend = FALSE,
+                edge_alpha = edge_alpha_,
+                edge_colour = edge_colour_,
+                edge_width = edge_width_
+            ) +
+            geom_node_point(
+                aes(size = degree, fill = new_fill_col),
+                pch = 21,
+                colour = node_colour
+            ) +
+            network_fill_geom +
+            scale_size_continuous(range = node_size, guide = "none") +
+            labs(fill = NULL) +
+            theme_tweaks
     }
-
-    ggraph(network, layout = layout_object) +
-      geom_edge_link(
-        show.legend = FALSE,
-        edge_alpha = edge_alpha_,
-        edge_colour = edge_colour_,
-        edge_width = edge_width_
-      ) +
-      geom_node_point(
-        aes(size = degree, fill = new_fill_col),
-        pch = 21,
-        colour = node_colour
-      ) +
-      network_fill_geom +
-      geom_node_text(
-        aes(label = node_label, colour = is_starter),
-        size          = label_size,
-        repel         = TRUE,
-        family        = fontfamily,
-        fontface      = label_face,
-        check_overlap = TRUE,
-        show.legend   = FALSE,
-        box.padding   = label_padding,
-        min.segment.length = min_seg_length
-      ) +
-      scale_size_continuous(range = node_size, guide = "none") +
-      scale_colour_manual(values = c("y" = hub_colour, "n" = label_colour)) +
-      labs(fill = NULL) +
-      theme_tweaks +
-      network_fill_guide
-
-  } else if (label) {
-    hub_nodes <- as_tibble(network) %>%
-      rename("hub_score" = starts_with("hub_score")) %>%
-      arrange(desc(hub_score)) %>%
-      slice_head(n = 3 + ceiling(nrow(as_tibble(network)) * 0.01)) %>%
-      pull(name)
-
-    network <- network %>%
-      mutate(
-        node_label = case_when(
-          degree > label_filter ~ {{label_column}},
-          TRUE ~ NA_character_
-        ),
-        is_hub = case_when(
-          name %in% hub_nodes ~ "y",
-          TRUE ~ "n"
-        )
-      )
-
-    ggraph(network, layout = layout_object) +
-      geom_edge_link(
-        show.legend = FALSE,
-        edge_alpha = edge_alpha_,
-        edge_colour = edge_colour_,
-        edge_width = edge_width_
-      ) +
-      geom_node_point(
-        aes(size = degree, fill = new_fill_col),
-        pch = 21,
-        colour = node_colour
-      ) +
-      network_fill_geom +
-      geom_node_text(
-        aes(label = node_label, colour = is_hub),
-        size          = label_size,
-        repel         = TRUE,
-        family        = fontfamily,
-        fontface      = label_face,
-        check_overlap = TRUE,
-        show.legend   = FALSE,
-        box.padding   = label_padding,
-        min.segment.length = min_seg_length
-      ) +
-      scale_size_continuous(range = node_size, guide = "none") +
-      scale_colour_manual(values = c("y" = hub_colour, "n" = label_colour)) +
-      labs(fill = NULL) +
-      theme_tweaks +
-      network_fill_guide
-
-  } else {
-    ggraph(network, layout = layout_object) +
-      geom_edge_link(
-        show.legend = FALSE,
-        edge_alpha = edge_alpha_,
-        edge_colour = edge_colour_,
-        edge_width = edge_width_
-      ) +
-      geom_node_point(
-        aes(size = degree, fill = new_fill_col),
-        pch = 21,
-        colour = node_colour
-      ) +
-      network_fill_geom +
-      scale_size_continuous(range = node_size, guide = "none") +
-      labs(fill = NULL) +
-      theme_tweaks
-  }
 }

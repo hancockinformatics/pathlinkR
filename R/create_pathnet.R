@@ -31,62 +31,62 @@
 #'
 create_pathnet <- function(sigora_result, foundation, trim = TRUE, trim_order = 1) {
 
-  stopifnot(all(c("pathway_id", "bonferroni") %in% colnames(sigora_result)))
+    stopifnot(all(c("pathway_id", "bonferroni") %in% colnames(sigora_result)))
 
-  starting_nodes <- foundation %>%
-    dplyr::select(pathway_1, pathway_name_1) %>%
-    distinct() %>%
-    left_join(sigora_result, by = c("pathway_1" = "pathway_id"))
+    starting_nodes <- foundation %>%
+        dplyr::select(pathway_1, pathway_name_1) %>%
+        distinct() %>%
+        left_join(sigora_result, by = c("pathway_1" = "pathway_id"))
 
-  starting_edges <- foundation %>%
-    mutate(similarity = 1 / distance) %>%
-    dplyr::select(pathway_1, pathway_2, similarity, distance)
+    starting_edges <- foundation %>%
+        mutate(similarity = 1 / distance) %>%
+        dplyr::select(pathway_1, pathway_2, similarity, distance)
 
-  pathways_as_network <- tbl_graph(
-    nodes = starting_nodes,
-    edges = starting_edges,
-    directed = FALSE
-  ) %>%
-    mutate(rn = row_number())
-
-  pathways_as_network_2 <-
-    if (trim) {
-      x1 <- pathways_as_network %>%
-        filter(!is.na(bonferroni)) %>%
-        pull(rn)
-
-      valid_nodes <- map(x1, ~neighborhood(
-        graph = as.igraph(pathways_as_network),
-        order = trim_order,
-        nodes = .x
-      )) %>%
-        unlist() %>%
-        unique()
-
-      pathways_as_network %>%
-        filter(rn %in% c(x1, valid_nodes)) %>%
-        dplyr::select(-rn)
-    } else {
-      dplyr::select(pathways_as_network, -rn)
-    }
-
-  pathways_as_network_3 <- pathways_as_network_2 %>%
-    tidygraph::activate("edges") %>%
-    distinct() %>%
-    tidygraph::activate("nodes")
-
-  pathways_as_network_4 <- pathways_as_network_3 %>%
-    left_join(
-      x  = .,
-      y  = dplyr::select(top_pathways_more, pathway_id, pathway_name, grouped_pathway),
-      by = c("pathway_1" = "pathway_id")
+    pathways_as_network <- tbl_graph(
+        nodes = starting_nodes,
+        edges = starting_edges,
+        directed = FALSE
     ) %>%
-    dplyr::select(
-      pathway_1,
-      pathway_name_1,
-      everything(),
-      -any_of(c("pathway_name", "level_1", "level_2"))
-    )
+        mutate(rn = row_number())
 
-  return(pathways_as_network_4)
+    pathways_as_network_2 <-
+        if (trim) {
+            x1 <- pathways_as_network %>%
+                filter(!is.na(bonferroni)) %>%
+                pull(rn)
+
+            valid_nodes <- map(x1, ~neighborhood(
+                graph = as.igraph(pathways_as_network),
+                order = trim_order,
+                nodes = .x
+            )) %>%
+                unlist() %>%
+                unique()
+
+            pathways_as_network %>%
+                filter(rn %in% c(x1, valid_nodes)) %>%
+                dplyr::select(-rn)
+        } else {
+            dplyr::select(pathways_as_network, -rn)
+        }
+
+    pathways_as_network_3 <- pathways_as_network_2 %>%
+        tidygraph::activate("edges") %>%
+        distinct() %>%
+        tidygraph::activate("nodes")
+
+    pathways_as_network_4 <- pathways_as_network_3 %>%
+        left_join(
+            x  = .,
+            y  = dplyr::select(top_pathways_more, pathway_id, pathway_name, grouped_pathway),
+            by = c("pathway_1" = "pathway_id")
+        ) %>%
+        dplyr::select(
+            pathway_1,
+            pathway_name_1,
+            everything(),
+            -any_of(c("pathway_name", "level_1", "level_2"))
+        )
+
+    return(pathways_as_network_4)
 }
