@@ -44,110 +44,110 @@
 #' @seealso <https://github.com/hancockinformatics/pathnet>
 #'
 pathnet_ggraph <- function(
-    network,
-    net_layout = "nicely",
-    node_size_range = c(4, 8),
-    edge_colour = "grey30",
-    edge_alpha = 1,
-    edge_width_range = c(0.33, 3),
-    label_prop = 0.25,
-    node_label_size = 5,
-    node_label_alpha = 0.67,
-    node_label_overlaps = 6,
-    seg_colour = "black",
-    theme_base_size = 16
-  ) {
+        network,
+        net_layout = "nicely",
+        node_size_range = c(4, 8),
+        edge_colour = "grey30",
+        edge_alpha = 1,
+        edge_width_range = c(0.33, 3),
+        label_prop = 0.25,
+        node_label_size = 5,
+        node_label_alpha = 0.67,
+        node_label_overlaps = 6,
+        seg_colour = "black",
+        theme_base_size = 16
+) {
 
-  # Check column names for both nodes and edges
-  stopifnot(all(
-    c(
-      "pathway_name_1",
-      "bonferroni",
-      "grouped_pathway"
-    ) %in% colnames(as_tibble(network))
-  ))
+    # Check column names for both nodes and edges
+    stopifnot(all(
+        c(
+            "pathway_name_1",
+            "bonferroni",
+            "grouped_pathway"
+        ) %in% colnames(as_tibble(network))
+    ))
 
-  stopifnot(all(
-    "similarity" %in% colnames(as_tibble(tidygraph::activate(network, "edges")))
-  ))
+    stopifnot(all(
+        "similarity" %in% colnames(as_tibble(tidygraph::activate(network, "edges")))
+    ))
 
-  interactors_all <- network %>%
-    filter(is.na(bonferroni)) %>%
-    pull(pathway_name_1)
+    interactors_all <- network %>%
+        filter(is.na(bonferroni)) %>%
+        pull(pathway_name_1)
 
-  interactors_to_label <- sample(
-    interactors_all,
-    size = (length(interactors_all) * label_prop),
-    replace = FALSE
-  )
-
-  network_to_plot <- network %>% mutate(
-      node_fill = if_else(!is.na(bonferroni), grouped_pathway, NA_character_),
-      node_label = case_when(
-        !is.na(bonferroni) ~ pathway_name_1,
-        pathway_name_1 %in% interactors_to_label ~ pathway_name_1,
-        TRUE ~ NA_character_
-      ),
-      node_label = map_chr(
-        node_label,
-        ~trunc_neatly(.x, l = 40) %>% str_wrap(width = 20)
-      ),
-      bonferroni = if_else(!is.na(bonferroni), bonferroni, 1)
+    interactors_to_label <- sample(
+        interactors_all,
+        size = (length(interactors_all) * label_prop),
+        replace = FALSE
     )
 
-  ggraph(network_to_plot, layout = net_layout) +
-    # Edges
-    geom_edge_link(
-      aes(edge_width = log10(similarity)),
-      colour = edge_colour,
-      alpha = edge_alpha
-    ) +
-    scale_edge_width(range = edge_width_range, name = "Similarity") +
-
-    # Nodes
-    geom_node_point(
-      aes(size = -log10(bonferroni), fill = node_fill, colour = grouped_pathway),
-      pch = 21,
-      stroke = 1.5
-    ) +
-    scale_size_continuous(
-      labels = scales::label_math(expr = 10^-~.x),
-      range = node_size_range
-    ) +
-    scale_fill_manual(
-      values = grouped_pathway_colours,
-      na.value = "white",
-      guide = NULL
-    ) +
-    scale_colour_manual(values = grouped_pathway_colours) +
-
-    # Node labels
-    geom_node_label(
-      aes(label = node_label),
-      repel = TRUE,
-      size = node_label_size,
-      alpha = node_label_alpha,
-      min.segment.length = 0,
-      segment.colour = seg_colour,
-      max.overlaps = node_label_overlaps
-    ) +
-
-    # Misc
-    labs(
-      size = "Bonferroni\np-value",
-      colour = "Pathway type"
-    ) +
-    theme_void(base_size = theme_base_size) +
-    theme(
-      legend.text.align = 0,
-      plot.margin = unit(rep(5, 4), "mm")
-    ) +
-    guides(
-      colour = guide_legend(override.aes = list(size = 5, pch = 19)),
-      size = guide_legend(override.aes = list(
-        colour = "black",
-        fill = "white",
-        stroke = 0.5
-      ))
+    network_to_plot <- network %>% mutate(
+        node_fill = if_else(!is.na(bonferroni), grouped_pathway, NA_character_),
+        node_label = case_when(
+            !is.na(bonferroni) ~ pathway_name_1,
+            pathway_name_1 %in% interactors_to_label ~ pathway_name_1,
+            TRUE ~ NA_character_
+        ),
+        node_label = map_chr(
+            node_label,
+            ~trunc_neatly(.x, l = 40) %>% str_wrap(width = 20)
+        ),
+        bonferroni = if_else(!is.na(bonferroni), bonferroni, 1)
     )
+
+    ggraph(network_to_plot, layout = net_layout) +
+        # Edges
+        geom_edge_link(
+            aes(edge_width = log10(similarity)),
+            colour = edge_colour,
+            alpha = edge_alpha
+        ) +
+        scale_edge_width(range = edge_width_range, name = "Similarity") +
+
+        # Nodes
+        geom_node_point(
+            aes(size = -log10(bonferroni), fill = node_fill, colour = grouped_pathway),
+            pch = 21,
+            stroke = 1.5
+        ) +
+        scale_size_continuous(
+            labels = scales::label_math(expr = 10^-~.x),
+            range = node_size_range
+        ) +
+        scale_fill_manual(
+            values = grouped_pathway_colours,
+            na.value = "white",
+            guide = NULL
+        ) +
+        scale_colour_manual(values = grouped_pathway_colours) +
+
+        # Node labels
+        geom_node_label(
+            aes(label = node_label),
+            repel = TRUE,
+            size = node_label_size,
+            alpha = node_label_alpha,
+            min.segment.length = 0,
+            segment.colour = seg_colour,
+            max.overlaps = node_label_overlaps
+        ) +
+
+        # Misc
+        labs(
+            size = "Bonferroni\np-value",
+            colour = "Pathway type"
+        ) +
+        theme_void(base_size = theme_base_size) +
+        theme(
+            legend.text.align = 0,
+            plot.margin = unit(rep(5, 4), "mm")
+        ) +
+        guides(
+            colour = guide_legend(override.aes = list(size = 5, pch = 19)),
+            size = guide_legend(override.aes = list(
+                colour = "black",
+                fill = "white",
+                stroke = 0.5
+            ))
+        )
 }
