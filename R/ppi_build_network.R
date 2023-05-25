@@ -13,8 +13,6 @@
 #' @param ppi_data Data frame of PPI data; must contain rows of interactions as
 #'   pairs of Ensembl gene IDs, with columns named "ensembl_gene_A" and
 #'   "ensembl_gene_B". Defaults to pre-packaged InnateDB PPI data.
-#' @param seed Number used in call to `set.seed()` to allow for reproducible
-#'   network generation
 #'
 #' @return `tidygraph` object for plotting or further analysis
 #' @export
@@ -42,8 +40,7 @@ ppi_build_network <- function(df,
                               col,
                               order,
                               hub_measure = "betweenness",
-                              ppi_data = innatedb_exp,
-                              seed = 1) {
+                              ppi_data = innatedb_exp) {
 
   # Check for and remove any duplicate IDs, which will cause problems later.
   # Make sure to warn the user about this.
@@ -164,7 +161,6 @@ ppi_build_network <- function(df,
   } else if (order == "min_steiner") {
 
     message("Performing 'Steiner' minimum network trimming...")
-    set.seed(seed)
 
     terminals <- network_init_2 %>%
       activate(nodes) %>%

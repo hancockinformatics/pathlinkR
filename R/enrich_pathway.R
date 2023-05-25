@@ -88,7 +88,7 @@ enrich_pathway <- function(
     }
 
     comparison <- names(input_list[i])
-    message(paste0("Comparison being analyzed: ", comparison))
+    message("Comparison being analyzed: ", comparison)
 
     # Use the DE genes, filtering if specified
     if (filter_input) {
@@ -105,14 +105,14 @@ enrich_pathway <- function(
     if (split) {
       up_gns <- filter(deseq_results, log2FoldChange > 0) %>% rownames()
       dn_gns <- filter(deseq_results, log2FoldChange < 0) %>% rownames()
-      message(paste0(
+      message(
         "\tDEGs used: ",
         length(up_gns), " Up, ",
         length(dn_gns), " Down"
-      ))
+      )
     } else {
       all_gns <- rownames(deseq_results)
-      message(paste0("DEGs used: ", length(all_gns)))
+      message("DEGs used: ", length(all_gns))
     }
 
     ### Sigora analysis
@@ -366,9 +366,9 @@ enrich_pathway <- function(
     total_results_annotated$comparison <- comparison
     total_results_annotated$total_genes <- nrow(deseq_results)
 
-    message(paste0(
+    message(
       "\tDone! Enriched pathways: ", nrow(total_results_annotated), "\n"
-    ))
+    )
 
     # This adds the next dataframe to the previous one
     if (i == 1) {

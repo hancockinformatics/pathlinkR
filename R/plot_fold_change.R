@@ -134,7 +134,7 @@ plot_fold_change <- function(
   sig_genes <- c()
 
   ## Loop across each dataframe in the input_list
-  for(n in 1:length(input_list)){
+  for (n in seq_len(length(input_list))) {
     ## Get fold changes for each gene of interest
     fold_change <- input_list[[n]] %>%
       filter(rownames(.) %in% genes, !is.na(log2FoldChange)) %>%

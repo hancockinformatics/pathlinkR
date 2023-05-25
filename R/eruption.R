@@ -125,18 +125,16 @@ eruption <- function(deseq_results,
   # number of up, down, and total DE genes
   num_genes <- c(nrow(up_df), nrow(down_df), nrow(up_df) + nrow(down_df))
 
-  message(paste0(
+  message(
     "Creating volcano plot with ",
     num_genes[3], " DEGs: ",
     num_genes[2], " down-regulated and ",
     num_genes[1], " up-regulated."
-  ))
+  )
 
   if (length(select_genes) > 0) {
-    message(paste0(
-      "An additional ",
-      length(select_genes),
-      " genes will be highlighted."))
+    message("An additional ", length(select_genes),
+            " genes will be highlighted.")
   }
 
   # Select the genes to label. You can specify if you want to only label
