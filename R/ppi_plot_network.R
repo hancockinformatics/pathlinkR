@@ -51,9 +51,6 @@
 #' @param subnet Logical determining if networks produced by
 #'   `extract_subnetwork` should be treated as such, or just as a normal network
 #'   from `build_network`.
-#' @param seed Number used in call to `set.seed()` to allow for reproducible
-#'   network generation. Can be changed to get slightly different layouts, and
-#'   ensure consistent result between runs.
 #' @param ... Further parameters can be passed on to `ggplot2::theme()`, e.g.
 #'   `legend.position`
 #'
@@ -127,11 +124,8 @@ ppi_plot_network <- function(
   label_padding  = 0.25,
   min_seg_length = 0.25,
   subnet         = TRUE,
-  seed           = 1,
   ...
 ) {
-
-  set.seed(seed)
 
   # Set up fill scaling based on argument `fill_type`
   if (fill_type == "fold_change") {
