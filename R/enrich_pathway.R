@@ -75,11 +75,11 @@ enrich_pathway <- function(
 
 
   # Start looping through each data frame in "input_list"
-  for (i in 1:length(input_list)) {
+  for (i in seq_len(length(input_list))) {
 
     # Make sure the rownames aren't just 1:nrow(), which can happen if the input
     # data frame is a tibble
-    if (all(rownames(input_list[[i]]) == 1:nrow(input_list[[i]]))) {
+    if (all(rownames(input_list[[i]]) == seq_len(nrow(input_list[[i]])))) {
       stop(paste0(
         "The rownames of the data frame for the element with name '",
         names(input_list[i]),
@@ -237,7 +237,7 @@ enrich_pathway <- function(
 
       # Map the entrez ids to hgnc symbols
       hgnc_gene_list <- c()
-      for (r in 1:nrow(total_results)) {
+      for (r in seq_len(nrow(total_results))) {
         genelist <- total_results[r, "geneID"]
         genelist <- str_split(genelist, "/") %>% unlist()
         hgnc_genes <- mapping_file %>% filter(entrez_id %in% genelist) %>% .$gene_name
@@ -315,7 +315,7 @@ enrich_pathway <- function(
 
       # annotate the genes as hgnc symbols and add them into the table
       hgnc_gene_list <- c()
-      for (r in 1:nrow(total_results)) {
+      for (r in seq_len(nrow(total_results))) {
         genelist <- total_results[r, "geneID"]
         genelist <- str_split(genelist, "/") %>% unlist()
         hgnc_genes <- mapping_file %>% filter(ensg_id %in% genelist) %>% .$gene_name
