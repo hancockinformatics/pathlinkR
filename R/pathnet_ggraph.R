@@ -23,7 +23,6 @@
 #'   Defaults to "black".
 #' @param theme_base_size Base font size for all plot elements. Defaults to
 #'   `16`.
-#' @param seed Random seed, which will influence node positions and labels
 #'
 #' @return An object of class "gg"
 #' @export
@@ -56,11 +55,8 @@ pathnet_ggraph <- function(
     node_label_alpha = 0.67,
     node_label_overlaps = 6,
     seg_colour = "black",
-    theme_base_size = 16,
-    seed = 123
+    theme_base_size = 16
   ) {
-
-  set.seed(seed)
 
   # Check column names for both nodes and edges
   stopifnot(all(
