@@ -56,10 +56,10 @@ ppi_build_network <- function(df,
 
     num_dups <- nrow(df) - length(gene_vector)
 
-    message(paste0(
+    message(
       "  INFO: Found ", num_dups,
       " duplicate IDs in the input column, which have been removed:"
-    ))
+    )
 
     if (num_dups <= 10) {
       message(stringr::str_wrap(
@@ -69,7 +69,7 @@ ppi_build_network <- function(df,
       ))
     } else {
       message(stringr::str_wrap(
-        paste0(paste(lost_ids[1:10], collapse = ", "), "..."),
+        paste0(paste(lost_ids[seq_len(10)], collapse = ", "), "..."),
         indent = 2,
         exdent = 2
       ))
@@ -109,10 +109,10 @@ ppi_build_network <- function(df,
   } else if (hub_measure == "hubscore") {
     hub_fn <- centrality_hub
   } else {
-    stop(paste0(
+    stop(
       "Argument 'hub_measure' must be one of 'betweenness', 'degree', or ",
       "'hubscore'"
-    ))
+    )
   }
 
   message("Creating network...")
@@ -201,12 +201,6 @@ ppi_build_network <- function(df,
     message(
       "Warning:\nYour network contains more than 2000 nodes, and will likely ",
       "be difficult to interpret when plotted."
-    )
-  } else if (nrow(as_tibble(network_out_2)) > 2000 & order != "zero") {
-    message(
-      "\nWarning:\nYour network contains more than 2000 nodes, and will ",
-      "likely be difficult to interpret when plotted. Consider switching to a ",
-      "zero order network to improve legibility.\n"
     )
   }
 
