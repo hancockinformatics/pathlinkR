@@ -16,8 +16,7 @@ pathnet_ggraph(
   node_label_alpha = 0.67,
   node_label_overlaps = 6,
   seg_colour = "black",
-  theme_base_size = 16,
-  seed = 123
+  theme_base_size = 16
 )
 }
 \arguments{
@@ -55,8 +54,6 @@ Defaults to "black".}
 
 \item{theme_base_size}{Base font size for all plot elements. Defaults to
 \code{16}.}
-
-\item{seed}{Random seed, which will influence node positions and labels}
 }
 \value{
 An object of class "gg"

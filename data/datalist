@@ -6,6 +6,7 @@ manual_dupe_annotation
 mapping_file
 msigdbr_t2g
 pathway_distances_jaccard
+reactome_database
 reaH
 sigora_database
 sigora_examples

@@ -25,8 +25,10 @@
 #'
 #' @seealso <https://github.com/hancockinformatics/pathnet>
 #'
-get_pathway_distances <- function(pathway_data = sigora_database,
-                                  dist_method = "jaccard") {
+get_pathway_distances <- function(
+        pathway_data = sigora_database,
+        dist_method = "jaccard"
+) {
 
     gene_id_col <- colnames(pathway_data)[
         unlist(map(pathway_data[1, ], ~str_detect(.x, "ENSG")))

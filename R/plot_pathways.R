@@ -161,14 +161,16 @@ plot_pathways <- function(
             "over the triangle, which is only shown for the lower p value ",
             "result."
         )
-        show(as_tibble(duplicates[, c(2, 1)]))
+        methods::show(as_tibble(duplicates[, c(2, 1)]))
 
         for (i in seq_len(nrow(duplicates))) {
             row <- duplicates[i, ]
 
             choices <- enriched_results_graph %>%
-                filter(pathway_description == row$pathway_description &
-                           comparison == row$comparison) %>%
+                filter(
+                    pathway_description == row$pathway_description,
+                    comparison == row$comparison
+                ) %>%
                 arrange(p_value_adjusted) # Choose the one that has lowest p value
 
             # Add the lower p value to the clean dataframe
@@ -280,8 +282,10 @@ plot_pathways <- function(
             ) +
             # Wrap and truncate pathway names if necessary
             scale_y_discrete(
-                labels = ~str_wrap(trunc_neatly(.x, name_trunc),
-                                   width = name_width),
+                labels = ~str_wrap(
+                    trunc_neatly(.x, name_trunc),
+                    width = name_width
+                ),
                 position = pathway_position
             ) +
             # Keeps comparisons even if they don"t enrich for any pathways

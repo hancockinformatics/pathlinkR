@@ -53,8 +53,9 @@ fold change (FALSE)}
 x-axis in log2 fold change; defaults to NA which lets ggplot2 determine the
 best values.}
 
-\item{yaxis}{Length-two numeric vector to manually specify limits of the y-axis
-(in -log10); defaults to NA which lets ggplot2 determine the best values.}
+\item{yaxis}{Length-two numeric vector to manually specify limits of the
+y-axis (in -log10); defaults to NA which lets ggplot2 determine the best
+values.}
 
 \item{select_genes}{Vector of genes to emphasize by colouring differently
 (e.g. genes of interest); should be Ensembl IDs.}

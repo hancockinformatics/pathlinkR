@@ -31,8 +31,8 @@ plot_fold_change(
 )
 }
 \arguments{
-\item{input_list}{List of data frames of DESeq2 results. The list names
-are used as the comparison for each dataframe (e.g. COVID vs Healthy). Data
+\item{input_list}{List of data frames of DESeq2 results. The list names are
+used as the comparison for each dataframe (e.g. COVID vs Healthy). Data
 frames should have Ensembl gene IDs as rownames.}
 
 \item{path_name}{Name of pathway to pull genes from, will be plot title}

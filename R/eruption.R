@@ -51,26 +51,28 @@
 #'
 #' @seealso <https://github.com/hancockinformatics/pathnet>
 #'
-eruption <- function(deseq_results,
-                     p_cutoff = 0.05,
-                     fc_cutoff = 1.5,
-                     base_colour = "steelblue4",
-                     nonsig_colour = "lightgrey",
-                     alpha = 0.5,
-                     point_size = 1,
-                     title = NA,
-                     absolute = FALSE,
-                     xaxis = NA,
-                     yaxis = NA,
-                     select_genes = c(),
-                     select_colour = "red",
-                     select_name = "Selected",
-                     label = "auto",
-                     manual_genes = c(),
-                     remove_unannotated = TRUE,
-                     n = 10,
-                     label_size = 3.5,
-                     pad = 1.4) {
+eruption <- function(
+        deseq_results,
+        p_cutoff = 0.05,
+        fc_cutoff = 1.5,
+        base_colour = "steelblue4",
+        nonsig_colour = "lightgrey",
+        alpha = 0.5,
+        point_size = 1,
+        title = NA,
+        absolute = FALSE,
+        xaxis = NA,
+        yaxis = NA,
+        select_genes = c(),
+        select_colour = "red",
+        select_name = "Selected",
+        label = "auto",
+        manual_genes = c(),
+        remove_unannotated = TRUE,
+        n = 10,
+        label_size = 3.5,
+        pad = 1.4
+) {
 
     # Input checks
     # Data frame
@@ -310,9 +312,10 @@ eruption <- function(deseq_results,
 
         # If "xaxis" is not specified
         if (is.na(xaxis[1])) {
-            xaxis <-
-                c(min(res$log2FoldChange) - 0.1,
-                  max(res$log2FoldChange) + 0.1)
+            xaxis <- c(
+                min(res$log2FoldChange) - 0.1,
+                max(res$log2FoldChange) + 0.1
+            )
         }
 
         p <- p +
