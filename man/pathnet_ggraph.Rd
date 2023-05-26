@@ -33,8 +33,8 @@ Details for specific requirements.}
 
 \item{edge_alpha}{Alpha value for edges; defaults to \code{1}.}
 
-\item{edge_width_range}{Range of edge widths, mapped to \code{log10(similarity)}.
-Defaults to \code{c(0.33, 3)}.}
+\item{edge_width_range}{Range of edge widths, mapped to
+\code{log10(similarity)}. Defaults to \code{c(0.33, 3)}.}
 
 \item{label_prop}{Proportion of "interactor" (i.e. non-enriched) pathways
 that the function will attempt to label. E.g. setting this to 0.5 (the

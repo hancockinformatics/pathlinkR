@@ -8,8 +8,8 @@
 #'   determining which nodes to highlight as hubs when plotting the network.
 #'   Options include "betweenness" (default), "degree", and "hubscore". These
 #'   represent network statistics calculated by their respective
-#'   `tidygraph::centrality_x`, functions, specifically `degree`, `betweenness`,
-#'   and `hub_score`.
+#'   `tidygraph::centrality_x`, functions, specifically `degree`,
+#'    `betweenness`, and `hub_score`.
 #' @param ppi_data Data frame of PPI data; must contain rows of interactions as
 #'   pairs of Ensembl gene IDs, with columns named "ensembl_gene_A" and
 #'   "ensembl_gene_B". Defaults to pre-packaged InnateDB PPI data.
@@ -91,11 +91,13 @@ ppi_build_network <- function(
 
     message("Finding interactions...")
     if (order == "zero") {
-        edge_table <- ppi_data_ensembl %>%
-            filter(ensembl_gene_A %in% gene_vector & ensembl_gene_B %in% gene_vector)
+        edge_table <- ppi_data_ensembl %>% filter(
+            ensembl_gene_A %in% gene_vector & ensembl_gene_B %in% gene_vector
+        )
     } else if (order %in% c("first", "min_simple", "min_steiner")) {
-        edge_table <- ppi_data_ensembl %>%
-            filter(ensembl_gene_A %in% gene_vector | ensembl_gene_B %in% gene_vector)
+        edge_table <- ppi_data_ensembl %>% filter(
+            ensembl_gene_A %in% gene_vector | ensembl_gene_B %in% gene_vector
+        )
     } else {
         stop(
             "Argument 'order' must be one of: ",
@@ -111,8 +113,8 @@ ppi_build_network <- function(
         hub_fn <- centrality_hub
     } else {
         stop(
-            "Argument 'hub_measure' must be one of 'betweenness', 'degree', or ",
-            "'hubscore'"
+            "Argument 'hub_measure' must be one of 'betweenness', 'degree', ",
+            "or 'hubscore'"
         )
     }
 

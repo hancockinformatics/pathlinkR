@@ -56,11 +56,6 @@ enrich_pathway <- function(
         gene_universe = NULL
 ) {
 
-    # TODO
-    # 1. Allow a list of vectors of genes rather than a list of data frames
-    # 2. Need to change top pathway mapping file once agreed upon
-
-
     ### Check inputs
     stopifnot(analysis %in% c("sigora", "reactomepa", "hallmark"))
 
@@ -94,7 +89,9 @@ enrich_pathway <- function(
 
         # Use the DE genes, filtering if specified
         if (filter_input) {
-            stopifnot(c("padj", "log2FoldChange") %in% colnames(input_list[[i]]))
+            stopifnot(
+                c("padj", "log2FoldChange") %in% colnames(input_list[[i]])
+            )
             message("\tFiltering the results using before testing for pathways")
 
             deseq_results <- input_list[[i]] %>%
@@ -175,15 +172,23 @@ enrich_pathway <- function(
                     unique()
 
                 up_results <- up_gns_entrez %>%
-                    # Use ReactomePA (slower, needs to load a lot of extra stuff)
+                    # Use ReactomePA (slower, needs to load a lot of extra
+                    # stuff)
                     #   enrichPathway(
                     #     readable = TRUE,
                     #     universe = gene_universe
                     #   ) %>%
                     # Use Enricher that runs faster with the same results
                     enricher(
-                        TERM2GENE = select(reactome_database, pathway_id, entrez_id),
-                        TERM2NAME = select(reactome_database, pathway_id, pathway_name),
+                        TERM2GENE = select(
+                            reactome_database,
+                            pathway_id, entrez_id
+                        ),
+                        TERM2NAME = select(
+                            reactome_database,
+                            pathway_id,
+                            pathway_name
+                        ),
                         universe = gene_universe,
                         minGSSize = 10,
                         maxGSSize = 500,
@@ -203,8 +208,15 @@ enrich_pathway <- function(
                     #   universe = gene_universe
                     # ) %>%
                     enricher(
-                        TERM2GENE = select(reactome_database, pathway_id, entrez_id),
-                        TERM2NAME = select(reactome_database, pathway_id, pathway_name),
+                        TERM2GENE = select(
+                            reactome_database,
+                            pathway_id, entrez_id
+                        ),
+                        TERM2NAME = select(
+                            reactome_database,
+                            pathway_id,
+                            pathway_name
+                        ),
                         universe = gene_universe,
                         minGSSize = 10,
                         maxGSSize = 500,
@@ -226,8 +238,15 @@ enrich_pathway <- function(
                     #   readable = TRUE,
                     #   universe = gene_universe
                     enricher(
-                        TERM2GENE = select(reactome_database, pathway_id, entrez_id),
-                        TERM2NAME = select(reactome_database, pathway_id, pathway_name),
+                        TERM2GENE = select(
+                            reactome_database,
+                            pathway_id, entrez_id
+                        ),
+                        TERM2NAME = select(
+                            reactome_database,
+                            pathway_id,
+                            pathway_name
+                        ),
                         universe = gene_universe,
                         minGSSize = 10,
                         maxGSSize = 500,

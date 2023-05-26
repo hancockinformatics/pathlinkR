@@ -35,7 +35,9 @@ get_pathway_distances <- function(
     ]
 
     pathway_id_col <- colnames(pathway_data)[
-        unlist(map(pathway_data[1, ], ~str_detect(.x, "R-[A-Z]{3}-[0-9]{1,10}")))
+        unlist(
+            map(pathway_data[1, ], ~str_detect(.x, "R-[A-Z]{3}-[0-9]{1,10}"))
+        )
     ]
 
     message(
