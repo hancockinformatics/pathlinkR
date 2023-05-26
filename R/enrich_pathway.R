@@ -69,8 +69,10 @@ enrich_pathway <- function(
         !all(unlist(lapply(input_list, is.data.frame))) |
         is.null(names(input_list))
     ) {
-        stop("Provide a named list of data frames of results, with the name of ",
-             "each item in the list as the comparison name.")
+        stop(
+            "Provide a named list of data frames of results, with the name of ",
+            "each item in the list as the comparison name."
+        )
     }
 
 
@@ -80,11 +82,11 @@ enrich_pathway <- function(
         # Make sure the rownames aren't just 1:nrow(), which can happen if the
         # input data frame is a tibble
         if (all(rownames(input_list[[i]]) == seq_len(nrow(input_list[[i]])))) {
-            stop(paste0(
+            stop(
                 "The rownames of the data frame for the element with name '",
                 names(input_list[i]),
                 "' don't look like gene IDs!"
-            ))
+            )
         }
 
         comparison <- names(input_list[i])

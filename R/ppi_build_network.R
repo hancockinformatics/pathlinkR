@@ -36,11 +36,13 @@
 #'
 #' @seealso <https://github.com/hancockinformatics/pathnet/>
 #'
-ppi_build_network <- function(df,
-                              col,
-                              order,
-                              hub_measure = "betweenness",
-                              ppi_data = innatedb_exp) {
+ppi_build_network <- function(
+        df,
+        col,
+        order,
+        hub_measure = "betweenness",
+        ppi_data = innatedb_exp
+) {
 
     # Check for and remove any duplicate IDs, which will cause problems later.
     # Make sure to warn the user about this.
@@ -78,8 +80,10 @@ ppi_build_network <- function(df,
     }
 
     if ( !all(c("ensembl_gene_A", "ensembl_gene_B") %in% colnames(ppi_data)) ) {
-        stop("Argument 'ppi_data' must be a data frame containing columns ",
-             "'ensembl_gene_A' and 'ensembl_gene_B' (case sensitive)")
+        stop(
+            "Argument 'ppi_data' must be a data frame containing columns ",
+            "'ensembl_gene_A' and 'ensembl_gene_B' (case sensitive)"
+        )
     }
 
     ppi_data_ensembl <- ppi_data %>%
@@ -195,8 +199,8 @@ ppi_build_network <- function(df,
 
     if (nrow(as_tibble(network_out_2)) > 2000) {
         message(
-            "Warning:\nYour network contains more than 2000 nodes, and will ",
-            "likely be difficult to interpret when plotted."
+            "Your network contains more than 2000 nodes, and will likely be ",
+            "difficult to interpret when plotted."
         )
     }
 
