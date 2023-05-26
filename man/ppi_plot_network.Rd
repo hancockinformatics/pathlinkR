@@ -30,7 +30,6 @@ ppi_plot_network(
   label_padding = 0.25,
   min_seg_length = 0.25,
   subnet = TRUE,
-  seed = 1,
   ...
 )
 }
@@ -109,10 +108,6 @@ value.}
 \item{subnet}{Logical determining if networks produced by
 \code{extract_subnetwork} should be treated as such, or just as a normal network
 from \code{build_network}.}
-
-\item{seed}{Number used in call to \code{set.seed()} to allow for reproducible
-network generation. Can be changed to get slightly different layouts, and
-ensure consistent result between runs.}
 
 \item{...}{Further parameters can be passed on to \code{ggplot2::theme()}, e.g.
 \code{legend.position}}

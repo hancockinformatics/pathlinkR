@@ -177,8 +177,10 @@ ppi_plot_network <- function(
         network_fill_guide <-
             guides(fill = guide_legend(override.aes = list(size = 5)))
     } else {
-        stop("Argument 'fill_type' must be one of 'fold_change', 'two_sided', ",
-             "'one_sided', or 'categorical'")
+        stop(
+            "Argument 'fill_type' must be one of 'fold_change', 'two_sided', ",
+            "'one_sided', or 'categorical'"
+        )
     }
 
     if (is.data.frame(layout)) {

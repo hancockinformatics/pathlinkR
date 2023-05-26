@@ -26,7 +26,6 @@ run_sigora <- function(
 ) {
 
     # Run SIGORA based on default settings (GPSrepo = reaH, level = 4)
-    message("\t=> Call 'sigora()' for ", direction, "...")
     invisible(capture.output(
         sigora_data <- sigora(
             GPSrepo = gps_repo,
@@ -61,8 +60,6 @@ run_sigora <- function(
         sigora_results$direction <- direction
 
         # Get the DE genes that were enriched for each pathway
-        message("\t=> Get gene ratio data...")
-
         sigora_detailed_list_1 <- sigora_data$detailed_results %>%
             as_tibble() %>%
             select(pathway, contains("gene")) %>%
@@ -90,7 +87,6 @@ run_sigora <- function(
         final_results <- sigora_detailed_list_2
     }
 
-    message("\t=> Cleaning output...")
     final_output <-
         left_join(sigora_results, final_results, by = "pathwy.id") %>%
         mutate(num_bg_genes = n_genes) %>%

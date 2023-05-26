@@ -9,8 +9,7 @@ ppi_build_network(
   col,
   order,
   hub_measure = "betweenness",
-  ppi_data = innatedb_exp,
-  seed = 1
+  ppi_data = innatedb_exp
 )
 }
 \arguments{
@@ -31,9 +30,6 @@ and \code{hub_score}.}
 \item{ppi_data}{Data frame of PPI data; must contain rows of interactions as
 pairs of Ensembl gene IDs, with columns named "ensembl_gene_A" and
 "ensembl_gene_B". Defaults to pre-packaged InnateDB PPI data.}
-
-\item{seed}{Number used in call to \code{set.seed()} to allow for reproducible
-network generation}
 }
 \value{
 \code{tidygraph} object for plotting or further analysis
