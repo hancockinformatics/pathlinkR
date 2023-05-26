@@ -45,13 +45,13 @@ on how to set this up.}
 \item{fill_type}{String denoting type of fill mapping to perform for nodes.
 Options are: "fold_change", "two_sided", "one_sided", or "categorical".}
 
-\item{cat_fill_colours}{Colour palette to be used when \code{fill_type} is set to
-"categorical." Defaults to "Set1" from RColorBrewer. Will otherwise be
+\item{cat_fill_colours}{Colour palette to be used when \code{fill_type} is set
+to "categorical." Defaults to "Set1" from RColorBrewer. Will otherwise be
 passed as the "values" argument in \code{scale_fill_manual()}.}
 
 \item{layout}{Layout of nodes in the network. Supports all layouts from
-\code{ggraph}/\code{igraph}, or a data frame of x and y coordinates for each node
-(order matters!).}
+\code{ggraph}/\code{igraph}, or a data frame of x and y coordinates for each
+node (order matters!).}
 
 \item{legend}{Should a legend be included? Defaults to FALSE.}
 
@@ -73,11 +73,11 @@ Defaults to "grey30".}
 \item{int_colour}{Fill colour for non-seed nodes, i.e. interactors. Defaults
 to "grey70".}
 
-\item{fc_up_col}{Colour to use for up regulated nodes when \code{fill_type} is set
-to "fold_change". Defaults to "firebrick3".}
+\item{fc_up_col}{Colour to use for up regulated nodes when \code{fill_type} is
+set to "fold_change". Defaults to "firebrick3".}
 
-\item{fc_down_col}{Colour to use for down regulated nodes when \code{fill_type} is
-set to "fold_change". Defaults to "#188119".}
+\item{fc_down_col}{Colour to use for down regulated nodes when \code{fill_type}
+is set to "fold_change". Defaults to "#188119".}
 
 \item{label}{Boolean, whether labels should be added to nodes. Defaults to
 FALSE.}
@@ -94,8 +94,9 @@ node labels, to prevent the network from being too crowded.}
 
 \item{label_colour}{Colour of node labels, defaults to "black"}
 
-\item{hub_colour}{Colour of node labels for hubs. The top 2\% of nodes (based
-on calculated hub score) are highlighted with this colour, if \code{label = TRUE}.}
+\item{hub_colour}{Colour of node labels for hubs. The top 2\% of nodes
+(based on calculated hub score) are highlighted with this colour, if
+\code{label = TRUE}.}
 
 \item{label_face}{Font face for node labels, defaults to "bold"}
 

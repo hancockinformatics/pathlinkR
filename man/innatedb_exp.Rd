@@ -23,9 +23,9 @@ innatedb_exp
 \description{
 A data frame containing human PPI data from InnateDB, from the entry
 "All Experimentally Validated Interactions (updated weekly)" at
-\url{https://innatedb.com/redirect.do?go=downloadImported}. A few important steps
-have been taken to filter the data, namely the removal of duplicate
-interactions, and removing interactions that have the same components but are
-swapped between A and B
+\url{https://innatedb.com/redirect.do?go=downloadImported}.
+A few important steps have been taken to filter the data, namely the removal
+of duplicate interactions, and removing interactions that have the same
+components but are swapped between A and B.
 }
 \keyword{datasets}

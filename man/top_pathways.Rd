@@ -3,7 +3,7 @@
 \docType{data}
 \name{top_pathways}
 \alias{top_pathways}
-\title{Manually-curated list of Reactome pathways with a simple category assignment}
+\title{Manually-curated Reactome pathways with a simple category assignment}
 \format{
 A data frame (tibble) with 1298 rows and 6 columns
 \describe{
@@ -20,6 +20,6 @@ A data frame (tibble) with 1298 rows and 6 columns
 top_pathways
 }
 \description{
-Manually-curated list of Reactome pathways with a simple category assignment
+Manually-curated Reactome pathways with a simple category assignment
 }
 \keyword{datasets}

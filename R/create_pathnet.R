@@ -29,7 +29,12 @@
 #'
 #' @seealso <https://github.com/hancockinformatics/pathnet>
 #'
-create_pathnet <- function(sigora_result, foundation, trim = TRUE, trim_order = 1) {
+create_pathnet <- function(
+        sigora_result,
+        foundation,
+        trim = TRUE,
+        trim_order = 1
+) {
 
     stopifnot(all(c("pathway_id", "bonferroni") %in% colnames(sigora_result)))
 
