@@ -1,6 +1,7 @@
 #' Plot Reactome pathway enrichment results
 #'
-#' @param enriched_results Tibble of results from the function `enrich_pathway`
+#' @param enriched_results Tibble of results from the function
+#'   `enrich_pathway`
 #' @param columns Number of columns to split the pathways across, especially if
 #'   there are many pathways. Can specify up to 3 columns, with a default of 1.
 #' @param specific_top_pathways Only plot pathways from a specific vector of
@@ -66,8 +67,10 @@ plot_pathways <- function(
 
     # If new group names are to be used, add them in
     if (!is.na(new_group_names[1])) {
-        map_names <- data.frame(comparison = unique(enriched_results$comparison),
-                                new_names = new_group_names)
+        map_names <- data.frame(
+            comparison = unique(enriched_results$comparison),
+            new_names = new_group_names
+        )
         enriched_results <- left_join(enriched_results, map_names) %>%
             select(!comparison) %>%
             mutate(comparison = new_names) %>%
@@ -125,8 +128,10 @@ plot_pathways <- function(
     )
 
     # enriched_results_graph$description <-
-    #     factor(enriched_results_graph$description, levels = rev(specific_pathways))
-    # enriched_results_graph <- enriched_results %>% filter(group %in% group_name)
+    #     factor(enriched_results_graph$description,
+    #            levels = rev(specific_pathways))
+    # enriched_results_graph <-
+    #     enriched_results %>% filter(group %in% group_name)
 
     # # Organize the groups (e.g. D1, D7, etc.)
     # enriched_results_graph$group <-
@@ -134,7 +139,8 @@ plot_pathways <- function(
     # # Organize the id/comparisons (the different column names, e.g. sepsis vs
     # healthy) in the appropriate order
     # enriched_results_graph$id <-
-    #     factor(enriched_results_graph$id, levels = unique(enriched_results_graph$id))
+    #     factor(enriched_results_graph$id,
+    #            levels = unique(enriched_results_graph$id))
 
     # In certain cases, a pathway may be enriched by both up- and down-regulated
     # genes. Find duplicated pathways, and only show the one that is more
@@ -152,8 +158,8 @@ plot_pathways <- function(
 
     enriched_results_dupes <- enriched_results_clean[0, ]
 
-    # This chooses the top enriched pathway of duplicates and also adds the other
-    # pathway into enriched_results_dupes.
+    # This chooses the top enriched pathway of duplicates and also adds the
+    # other pathway into enriched_results_dupes.
     if (nrow(duplicates) > 0) {
         message(
             "\nNote: The following pathways were enriched in both directions ",
@@ -171,13 +177,15 @@ plot_pathways <- function(
                     pathway_description == row$pathway_description,
                     comparison == row$comparison
                 ) %>%
-                arrange(p_value_adjusted) # Choose the one that has lowest p value
+                arrange(p_value_adjusted) # Choose the lowest p value
 
             # Add the lower p value to the clean dataframe
-            enriched_results_clean <- rbind(enriched_results_clean, choices[1, ])
+            enriched_results_clean <-
+                rbind(enriched_results_clean, choices[1, ])
 
             # keep the other enrichment to the dupes dataframe
-            enriched_results_dupes <- rbind(enriched_results_dupes, choices[2, ])
+            enriched_results_dupes <-
+                rbind(enriched_results_dupes, choices[2, ])
         }
     }
 
@@ -225,7 +233,9 @@ plot_pathways <- function(
                     TRUE ~ pathways
                 ),
                 top_pathways = case_when(
-                    top_pathways == column_smallest ~ paste0(top_pathways, "," ,add$top_pathways),
+                    top_pathways == column_smallest ~ paste0(
+                        top_pathways, "," ,add$top_pathways
+                    ),
                     TRUE ~ top_pathways
                 )
             )
@@ -297,10 +307,14 @@ plot_pathways <- function(
             ) +
             theme_bw() +
             theme(
-                strip.text.x = element_text(size = 12, face = "bold", colour = "black"),
+                strip.text.x = element_text(
+                    size = 12, face = "bold", colour = "black"
+                ),
                 legend.text = element_text(size = 12 * legend_multiply),
                 legend.title = element_text(size = 13 * legend_multiply),
-                axis.text.y = element_text(face = "bold", colour = "black", size = 12),
+                axis.text.y = element_text(
+                    face = "bold", colour = "black", size = 12
+                ),
                 axis.text.x = element_text(
                     face = "bold",
                     colour = "black",
@@ -334,8 +348,12 @@ plot_pathways <- function(
                 na.value = NA
             ) +
             guides(
-                shape = guide_legend(override.aes = list(size = 5 * legend_multiply)),
-                size  = guide_legend(override.aes = list(shape = 24, fill = "black"))
+                shape = guide_legend(
+                    override.aes = list(size = 5 * legend_multiply)
+                ),
+                size  = guide_legend(
+                    override.aes = list(shape = 24, fill = "black")
+                )
             ) +
             # Can also add lines to separate different groups
             {if (!is.na(intercepts[1])) geom_vline(xintercept = intercepts)}

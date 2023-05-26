@@ -23,7 +23,8 @@ plot_pathways(
 )
 }
 \arguments{
-\item{enriched_results}{Tibble of results from the function \code{enrich_pathway}}
+\item{enriched_results}{Tibble of results from the function
+\code{enrich_pathway}}
 
 \item{columns}{Number of columns to split the pathways across, especially if
 there are many pathways. Can specify up to 3 columns, with a default of 1.}

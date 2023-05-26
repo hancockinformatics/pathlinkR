@@ -24,8 +24,8 @@ ppi_build_network(
 determining which nodes to highlight as hubs when plotting the network.
 Options include "betweenness" (default), "degree", and "hubscore". These
 represent network statistics calculated by their respective
-\code{tidygraph::centrality_x}, functions, specifically \code{degree}, \code{betweenness},
-and \code{hub_score}.}
+\code{tidygraph::centrality_x}, functions, specifically \code{degree},
+\code{betweenness}, and \code{hub_score}.}
 
 \item{ppi_data}{Data frame of PPI data; must contain rows of interactions as
 pairs of Ensembl gene IDs, with columns named "ensembl_gene_A" and

@@ -33,10 +33,10 @@
 #'
 #' A data frame containing human PPI data from InnateDB, from the entry
 #' "All Experimentally Validated Interactions (updated weekly)" at
-#' <https://innatedb.com/redirect.do?go=downloadImported>. A few important steps
-#' have been taken to filter the data, namely the removal of duplicate
-#' interactions, and removing interactions that have the same components but are
-#' swapped between A and B
+#' <https://innatedb.com/redirect.do?go=downloadImported>.
+#' A few important steps have been taken to filter the data, namely the removal
+#' of duplicate interactions, and removing interactions that have the same
+#' components but are swapped between A and B.
 #'
 #' @format A data frame with 152259 rows and 4 columns:
 #' \describe{
@@ -147,7 +147,7 @@
 #' }
 "top_pathways_more"
 
-#' Manually-curated list of Reactome pathways with a simple category assignment
+#' Manually-curated Reactome pathways with a simple category assignment
 #'
 #' @format A data frame (tibble) with 1298 rows and 6 columns
 #' \describe{

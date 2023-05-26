@@ -8,8 +8,8 @@
 #' @param edge_alpha Alpha value for edges; defaults to `1`.
 #' @param node_size_range Size range for nodes, mapped to significance
 #'   (Bonferroni p-value). Defaults to `c(4, 8)`.
-#' @param edge_width_range Range of edge widths, mapped to `log10(similarity)`.
-#'   Defaults to `c(0.33, 3)`.
+#' @param edge_width_range Range of edge widths, mapped to
+#' `log10(similarity)`. Defaults to `c(0.33, 3)`.
 #' @param label_prop Proportion of "interactor" (i.e. non-enriched) pathways
 #'   that the function will attempt to label. E.g. setting this to 0.5 (the
 #'   default) means half of the non-enriched pathways will *potentially* be
@@ -68,7 +68,9 @@ pathnet_ggraph <- function(
     ))
 
     stopifnot(all(
-        "similarity" %in% colnames(as_tibble(tidygraph::activate(network, "edges")))
+        "similarity" %in% colnames(
+            as_tibble(tidygraph::activate(network, "edges"))
+        )
     ))
 
     interactors_all <- network %>%
@@ -106,7 +108,11 @@ pathnet_ggraph <- function(
 
         # Nodes
         geom_node_point(
-            aes(size = -log10(bonferroni), fill = node_fill, colour = grouped_pathway),
+            aes(
+                size = -log10(bonferroni),
+                fill = node_fill,
+                colour = grouped_pathway
+            ),
             pch = 21,
             stroke = 1.5
         ) +

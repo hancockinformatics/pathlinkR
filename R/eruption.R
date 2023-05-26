@@ -254,7 +254,9 @@ eruption <- function(
         theme_bw() +
         theme(
             axis.text = element_text(colour = "black", size = 11),
-            axis.title = element_text(size = 13, face = "bold", colour = "black"),
+            axis.title = element_text(
+                size = 13, face = "bold", colour = "black"
+            ),
             plot.title = element_text(face = "bold", size = 16),
             plot.subtitle = element_text(size = 14),
             plot.background = element_blank()
@@ -334,7 +336,9 @@ eruption <- function(
                 if (between(max(abs(xaxis)), 6.001, log2(100)))
                     # Up to log2FC = 6.64
                     scale_x_continuous(
-                        breaks = c(-log2(100), -log2(10), 0, log2(10), log2(100)),
+                        breaks = c(
+                            -log2(100), -log2(10), 0, log2(10), log2(100)
+                        ),
                         labels = c(
                             expression(-10 ^ 2),
                             expression(-10 ^ 1),
@@ -426,8 +430,10 @@ eruption <- function(
             } +
             {
                 if (max(abs(xaxis)) >= log2(100000))
-                    message("Something may be wrong with your DESeq model to have ",
-                            "fold changes >10^5...")
+                    message(
+                        "Something may be wrong with your DESeq model to have ",
+                        "fold changes >10^5..."
+                    )
             }
     }
 

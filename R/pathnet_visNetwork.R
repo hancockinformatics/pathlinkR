@@ -58,10 +58,16 @@ pathnet_visNetwork <- function(
         mutate(
             id = row_number(),
             value = if_else(is.na(bonferroni), 1, -log10(bonferroni)),
-            background = map_chr(grouped_pathway, ~grouped_pathway_colours[[.x]]),
+            background = map_chr(
+                grouped_pathway, ~grouped_pathway_colours[[.x]]
+            ),
             background = if_else(!is.na(bonferroni), background, "#ffffff"),
             border = map_chr(grouped_pathway, ~grouped_pathway_colours[[.x]]),
-            color = map2(background, border, ~list("background" = .x, "border" = .y))
+            color = map2(
+                background,
+                border,
+                ~list("background" = .x, "border" = .y)
+            )
         ) %>%
         dplyr::select(
             id,
@@ -95,11 +101,17 @@ pathnet_visNetwork <- function(
         visIgraphLayout(layout = net_layout, randomSeed = set_seed) %>%
         visEdges(
             color = edge_colour,
-            scaling = list("min" = edge_size_range[1], "max" = edge_size_range[2])
+            scaling = list(
+                "min" = edge_size_range[1],
+                "max" = edge_size_range[2]
+            )
         ) %>%
         visNodes(
             borderWidth = node_border_width,
-            scaling = list("min" = node_size_range[1], "max" = node_size_range[2])
+            scaling = list(
+                "min" = node_size_range[1],
+                "max" = node_size_range[2]
+            )
         ) %>%
         visOptions(
             highlightNearest = highlighting,
@@ -120,7 +132,11 @@ pathnet_visNetwork <- function(
 
     if (label_nodes) {
         out1 %>%
-            visNodes(font = paste0(node_label_size, "px arial ", node_label_colour))
+            visNodes(font = paste0(
+                node_label_size,
+                "px arial ",
+                node_label_colour
+            ))
     } else {
         out1
     }
