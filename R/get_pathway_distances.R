@@ -25,6 +25,12 @@
 #'
 #' @seealso <https://github.com/hancockinformatics/pathnet>
 #'
+#' @examples
+#' get_pathway_distances(
+#'     pathway_data = sigora_database,
+#'     dist_method = "jaccard"
+#' )
+#'
 get_pathway_distances <- function(
         pathway_data = sigora_database,
         dist_method = "jaccard"

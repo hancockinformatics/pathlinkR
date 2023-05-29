@@ -44,6 +44,15 @@
 #'
 #' @seealso <https://github.com/hancockinformatics/pathnet>
 #'
+#' @examples
+#' ex_results_sigora <- enrich_pathway(
+#'     deseq_example_list[c(5, 6)],
+#'     gps_repo = reaH,
+#'     filter_results = 0.001,
+#' )
+#'
+#' plot_pathways(ex_results_sigora, columns = 2)
+#'
 enrich_pathway <- function(
         input_list,
         filter_input = TRUE,

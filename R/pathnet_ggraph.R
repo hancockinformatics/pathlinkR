@@ -43,6 +43,27 @@
 #'
 #' @seealso <https://github.com/hancockinformatics/pathnet>
 #'
+#' @examples
+#' ex_starting_pathways <- create_foundation(
+#'     mat = pathway_distances_jaccard,
+#'     max_distance = 0.8
+#' )
+#'
+#' ex_pathnet <- create_pathnet(
+#'     sigora_result = sigora_examples[[1]],
+#'     foundation = ex_starting_pathways,
+#'     trim = TRUE,
+#'     trim_order = 1
+#' )
+#'
+#' pathnet_ggraph(
+#'     ex_pathnet,
+#'     label_prop = 0.1,
+#'     node_label_size = 4,
+#'     node_label_overlaps = 8,
+#'     seg_colour = "red"
+#' )
+#'
 pathnet_ggraph <- function(
         network,
         net_layout = "nicely",

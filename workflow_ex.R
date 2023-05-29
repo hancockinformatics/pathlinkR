@@ -59,13 +59,13 @@ plot_fold_change(
 
 # |- build_network --------------------------------------------------------
 
-test_de_genes <- deseq_example_list[[5]] %>%
+ex_de_genes <- deseq_example_list[[5]] %>%
   rownames_to_column("gene") %>%
   as_tibble() %>%
   filter(padj < 0.05 & abs(log2FoldChange) > log2(1.5))
 
 ex_network <- ppi_build_network(
-  df = test_de_genes,
+  df = ex_de_genes,
   col = "gene",
   order = "zero"
 )

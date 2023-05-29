@@ -51,6 +51,9 @@
 #'
 #' @seealso <https://github.com/hancockinformatics/pathnet>
 #'
+#' @examples
+#' eruption(deseq_results = deseq_example_list[[1]])
+#'
 eruption <- function(
         deseq_results,
         p_cutoff = 0.05,

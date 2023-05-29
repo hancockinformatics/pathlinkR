@@ -62,6 +62,12 @@
 #'
 #' @seealso <https://github.com/hancockinformatics/pathnet>
 #'
+#' @examples
+#' plot_fold_change(
+#'     deseq_example_list,
+#'     path_name = "Generation of second messenger molecules"
+#' )
+#'
 plot_fold_change <- function(
         input_list,
         path_name = NA,

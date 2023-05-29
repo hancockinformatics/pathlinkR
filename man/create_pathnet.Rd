@@ -31,6 +31,20 @@ With the "trim" option enabled, nodes (pathways) and subgraphs which
 are not sufficiently connected to enriched pathways will be removed. How
 aggressively this is done can be controlled via the \code{trim_order} argument.
 }
+\examples{
+ex_starting_pathways <- create_foundation(
+    mat = pathway_distances_jaccard,
+    max_distance = 0.8
+)
+
+ex_pathnet <- create_pathnet(
+    sigora_result = sigora_examples[[1]],
+    foundation = ex_starting_pathways,
+    trim = TRUE,
+    trim_order = 1
+)
+
+}
 \references{
 None.
 }

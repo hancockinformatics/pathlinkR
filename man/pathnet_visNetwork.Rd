@@ -59,6 +59,22 @@ allows for various forms of interactivity such as including text when
 hovering over nodes, node selection and dragging (including multiple
 selections).
 }
+\examples{
+ex_starting_pathways <- create_foundation(
+    mat = pathway_distances_jaccard,
+    max_distance = 0.8
+)
+
+ex_pathnet <- create_pathnet(
+    sigora_result = sigora_examples[[1]],
+    foundation = ex_starting_pathways,
+    trim = TRUE,
+    trim_order = 1
+)
+
+pathnet_visNetwork(ex_pathnet)
+
+}
 \references{
 \url{https://datastorm-open.github.io/visNetwork/}
 }

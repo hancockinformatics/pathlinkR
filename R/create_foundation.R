@@ -24,6 +24,12 @@
 #'
 #' @seealso <https://github.com/hancockinformatics/pathnet>
 #'
+#' @examples
+#' starting_pathways <- create_foundation(
+#'     mat = pathway_distances_jaccard,
+#'     max_distance = 0.8
+#' )
+#'
 create_foundation <- function(mat, max_distance = NA, prop_to_keep = NA) {
 
     stopifnot(all(rownames(mat) == colnames(mat)))
