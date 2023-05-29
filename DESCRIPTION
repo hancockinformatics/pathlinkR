@@ -1,7 +1,7 @@
 Package: pathnet
 Type: Package
 Title: Visualize pathways as networks
-Version: 0.99.124
+Version: 0.99.125
 Authors@R: c(
     person("Travis", "Blimkie", , "travis.m.blimkie@gmail.com", role = c("cre"), comment = c(ORCID = "0000-0001-8778-8627")),
     person("Andy", "An", , "andy@hancocklab.com", role = c("aut"))
@@ -44,3 +44,7 @@ Depends:
     R (>= 4.2.0)
 LazyDataCompression: xz
 LazyData: true
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr

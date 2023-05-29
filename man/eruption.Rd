@@ -13,7 +13,7 @@ eruption(
   alpha = 0.5,
   point_size = 1,
   title = NA,
-  absolute = FALSE,
+  nonlog2 = FALSE,
   xaxis = NA,
   yaxis = NA,
   select_genes = c(),
@@ -46,8 +46,7 @@ of >1.5}
 
 \item{title}{Title of the plot}
 
-\item{absolute}{Make x-axis absolute fold change instead of the default log2
-fold change (FALSE)}
+\item{nonlog2}{Show non-log2 fold change instead of log2 fold change (FALSE)}
 
 \item{xaxis}{Length-two numeric vector to manually specify limits of the
 x-axis in log2 fold change; defaults to NA which lets ggplot2 determine the

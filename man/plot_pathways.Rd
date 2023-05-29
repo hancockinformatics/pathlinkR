@@ -82,8 +82,7 @@ ex_results_sigora <- enrich_pathway(
     filter_results = 0.001,
 )
 
-
-
+plot_pathways(ex_results_sigora, columns = 2)
 
 }
 \references{
