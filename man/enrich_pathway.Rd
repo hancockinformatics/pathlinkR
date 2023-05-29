@@ -62,6 +62,16 @@ Column names are expected to comply with those output by
 \code{DESeq2::results()} function, namely: padj and log2FoldChange. Rownames are
 assumed to contain the input genes to be tested.
 }
+\examples{
+ex_results_sigora <- enrich_pathway(
+    deseq_example_list[c(5, 6)],
+    gps_repo = reaH,
+    filter_results = 0.001,
+)
+
+plot_pathways(ex_results_sigora, columns = 2)
+
+}
 \references{
 None.
 }
