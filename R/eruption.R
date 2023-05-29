@@ -10,8 +10,7 @@
 #' @param alpha Transparency of the points (0.5)
 #' @param point_size Size of the points (1)
 #' @param title Title of the plot
-#' @param absolute Make x-axis absolute fold change instead of the default log2
-#'   fold change (FALSE)
+#' @param nonlog2 Show non-log2 fold change instead of log2 fold change (FALSE)
 #' @param xaxis Length-two numeric vector to manually specify limits of the
 #'   x-axis in log2 fold change; defaults to NA which lets ggplot2 determine the
 #'   best values.
@@ -63,7 +62,7 @@ eruption <- function(
         alpha = 0.5,
         point_size = 1,
         title = NA,
-        absolute = FALSE,
+        nonlog2 = FALSE,
         xaxis = NA,
         yaxis = NA,
         select_genes = c(),
@@ -313,7 +312,7 @@ eruption <- function(
 
     # For plotting with fold change, not log2 fold change, manually add in
     # scientific notation based on the xaxis range.
-    if (absolute) {
+    if (nonlog2) {
 
         # If "xaxis" is not specified
         if (is.na(xaxis[1])) {
