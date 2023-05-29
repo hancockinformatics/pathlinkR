@@ -15,8 +15,9 @@
 #' @param analysis Default is SIGORA ("sigora"), others: ReactomePA
 #'   ("reactomepa"), mSigDB Hallmark gene sets ("hallmark")
 #' @param filter_results Should the output be filtered for significance? Use
-#'   `NA` to return the unfiltered results. Recommended value for Sigora is
-#'   0.001, or 0.05 for ReactomePA or Hallmark.
+#'   `1` to return the unfiltered results, or a number between 0 and 1 for a 
+#'   custom p-value cutoff. If `default`, the significance cutoffs for Sigora is
+#'   <0.001, and for ReactomePA or Hallmark is <0.05.
 #' @param gps_repo Gene Pair Signature object for Sigora to use to test for
 #'   enriched pathways. We recommend using the one which ships with Sigora,
 #'   which is already loaded as "reaH".
@@ -47,8 +48,7 @@
 #' @examples
 #' ex_results_sigora <- enrich_pathway(
 #'     deseq_example_list[c(5, 6)],
-#'     gps_repo = reaH,
-#'     filter_results = 0.001,
+#'     gps_repo = reaH
 #' )
 #'
 #' plot_pathways(ex_results_sigora, columns = 2)
@@ -60,7 +60,7 @@ enrich_pathway <- function(
         fc_cutoff = 1.5,
         split = TRUE,
         analysis = "sigora",
-        filter_results = 0.001,
+        filter_results = 'default',
         gps_repo = reaH,
         gene_universe = NULL
 ) {
@@ -132,6 +132,11 @@ enrich_pathway <- function(
             message("\tRunning enrichment using Sigora")
 
             run_sigora_safely <- purrr::possibly(run_sigora)
+            
+            # set default pvalue cutoff
+            if (filter_results == 'default') {
+                filter_results <- 0.001
+            }
 
             # Enrich with up- and down-regulated genes separately
             if (split) {
@@ -163,13 +168,18 @@ enrich_pathway <- function(
 
         ### ReactomePA analysis
         # Reactome uses regular over-representation analysis. Useful for finding
-        # more pathways, if you have fewer DE genes or pathways Less stringent
+        # more pathways, if you have fewer DE genes or pathways. Less stringent
         # than SIGORA enrichment. ReactomePA however is slow so we can use
-        # just the Enricher function that is ReactomePA is built off of without
-        # loading extra things
+        # just the enricher function that is ReactomePA is built off of without
+        # loading extra packages/annotaton files
         if (analysis == "reactomepa") {
 
             message("\tRunning enrichment using ReactomePA")
+            
+            # set default pvalue cutoff
+            if (filter_results == 'default') {
+                filter_results <- 0.05
+            }
 
             # ReactomePA needs to map to Entrez IDs, as it doesn't take Ensembl
             # IDs. We can use SIGORA's mapping data for consistency, though it
@@ -181,13 +191,6 @@ enrich_pathway <- function(
                     unique()
 
                 up_results <- up_gns_entrez %>%
-                    # Use ReactomePA (slower, needs to load a lot of extra
-                    # stuff)
-                    #   enrichPathway(
-                    #     readable = TRUE,
-                    #     universe = gene_universe
-                    #   ) %>%
-                    # Use Enricher that runs faster with the same results
                     enricher(
                         TERM2GENE = select(
                             reactome_database,
@@ -201,7 +204,7 @@ enrich_pathway <- function(
                         universe = gene_universe,
                         minGSSize = 10,
                         maxGSSize = 500,
-                        pvalueCutoff = 1
+                        pvalueCutoff = filter_results
                     ) %>%
                     as.data.frame() %>%
                     mutate(direction = "Up")
@@ -212,10 +215,6 @@ enrich_pathway <- function(
                     unique()
 
                 dn_results <- dn_gns_entrez %>%
-                    # enrichPathway(
-                    #   readable = TRUE,
-                    #   universe = gene_universe
-                    # ) %>%
                     enricher(
                         TERM2GENE = select(
                             reactome_database,
@@ -229,7 +228,7 @@ enrich_pathway <- function(
                         universe = gene_universe,
                         minGSSize = 10,
                         maxGSSize = 500,
-                        pvalueCutoff = 1
+                        pvalueCutoff = filter_results
                     ) %>%
                     as.data.frame() %>%
                     mutate(direction = "Down")
@@ -243,9 +242,6 @@ enrich_pathway <- function(
                     unique()
 
                 total_results <- all_gns_entrez %>%
-                    # enrichPathway(
-                    #   readable = TRUE,
-                    #   universe = gene_universe
                     enricher(
                         TERM2GENE = select(
                             reactome_database,
@@ -259,7 +255,7 @@ enrich_pathway <- function(
                         universe = gene_universe,
                         minGSSize = 10,
                         maxGSSize = 500,
-                        pvalueCutoff = 1
+                        pvalueCutoff = filter_results
                     ) %>%
                     as.data.frame() %>%
                     mutate(direction = "All")
@@ -313,13 +309,17 @@ enrich_pathway <- function(
         if (analysis == "hallmark") {
 
             message("\tRunning enrichment using Hallmark")
+            
+            if (filter_results == 'default') {
+                filter_results <- 0.05
+            }
 
             if (split) {
                 up_results <- enricher(
                     up_gns,
                     TERM2GENE = msigdbr_t2g,
                     universe = gene_universe,
-                    pvalueCutoff = 1
+                    pvalueCutoff = filter_results
                 ) %>%
                     as.data.frame() %>%
                     mutate(direction = "Up")
@@ -328,7 +328,7 @@ enrich_pathway <- function(
                     dn_gns,
                     TERM2GENE = msigdbr_t2g,
                     universe = gene_universe,
-                    pvalueCutoff = 1
+                    pvalueCutoff = filter_results
                 ) %>%
                     as.data.frame() %>%
                     mutate(direction = "Down")
@@ -340,7 +340,7 @@ enrich_pathway <- function(
                     all_gns,
                     TERM2GENE = msigdbr_t2g,
                     universe = gene_universe,
-                    pvalueCutoff = 1
+                    pvalueCutoff = filter_results
                 ) %>%
                     as.data.frame() %>%
                     mutate(direction = "All")
@@ -382,19 +382,10 @@ enrich_pathway <- function(
                 )
         }
 
-        # Filter based on desired threshold, or not!
-        if (!is.na(filter_results)) {
-            total_results_filtered <- total_results %>%
-                filter(p_value_adjusted < filter_results) %>%
-                arrange(p_value_adjusted)
-        } else {
-            total_results_filtered <- total_results
-        }
-
         # Annotate the  enrichment results by adding top pathways and
         # comparisons
         total_results_annotated <- left_join(
-            total_results_filtered,
+            total_results,
             top_pathways_more %>% dplyr::select(pathway_id, top_pathways),
             by = "pathway_id"
         )
