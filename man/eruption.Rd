@@ -91,6 +91,10 @@ Creates a volcano plot of genes output from \code{DESeq2::results()},
 with various options for tweaking the appearance. Ensembl gene IDs should
 be the rownames of the input data frame.
 }
+\examples{
+eruption(deseq_results = deseq_example_list[[1]])
+
+}
 \references{
 None.
 }

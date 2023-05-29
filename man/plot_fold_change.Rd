@@ -108,6 +108,13 @@ Creates a heatmap of fold changes values for results from the
 \code{DESeq2::results()} function, with various parameters to tweak the
 appearance.
 }
+\examples{
+plot_fold_change(
+    deseq_example_list,
+    path_name = "Generation of second messenger molecules"
+)
+
+}
 \references{
 \url{https://bioconductor.org/packages/ComplexHeatmap/}
 }
