@@ -98,6 +98,29 @@
 #'
 #' @seealso <https://github.com/hancockinformatics/pathnet/>
 #'
+#' @examples
+#' ex_de_genes <- deseq_example_list[[5]] %>%
+#'     rownames_to_column("gene") %>%
+#'     as_tibble() %>%
+#'     filter(padj < 0.05 & abs(log2FoldChange) > log2(1.5))
+#'
+#' ex_network <- ppi_build_network(
+#'     df = ex_de_genes,
+#'     col = "gene",
+#'     order = "zero"
+#' )
+#'
+#' ppi_plot_network(
+#'     ex_network,
+#'     fill_column = log2FoldChange,
+#'     fill_type = "fold_change",
+#'     layout = "lgl",
+#'     label = TRUE,
+#'     label_column = gene_name,
+#'     label_filter = 5,
+#'     legend = TRUE
+#' )
+#'
 ppi_plot_network <- function(
         network,
         fill_column,

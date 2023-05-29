@@ -36,6 +36,19 @@
 #'
 #' @seealso <https://github.com/hancockinformatics/pathnet/>
 #'
+#' @examples
+#' ex_de_genes <- deseq_example_list[[5]] %>%
+#'     rownames_to_column("gene") %>%
+#'     as_tibble() %>%
+#'     filter(padj < 0.05 & abs(log2FoldChange) > log2(1.5))
+#'
+#' ppi_build_network(
+#'     df = ex_de_genes,
+#'     col = "gene",
+#'     order = "zero"
+#' )
+#'
+#'
 ppi_build_network <- function(
         df,
         col,
