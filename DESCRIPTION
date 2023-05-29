@@ -1,9 +1,9 @@
 Package: pathnet
 Type: Package
 Title: Visualize pathways as networks
-Version: 0.99.122
+Version: 0.99.123
 Authors@R: c(
-    person("Travis", "Blimkie", , "travis@hancocklab.com", role = c("cre"), comment = c(ORCID = "0000-0001-8778-8627")),
+    person("Travis", "Blimkie", , "travis.m.blimkie@gmail.com", role = c("cre"), comment = c(ORCID = "0000-0001-8778-8627")),
     person("Andy", "An", , "andy@hancocklab.com", role = c("aut"))
     )
 Description: Create PPI-style networks from pathways, using overlap between 
@@ -12,7 +12,7 @@ Description: Create PPI-style networks from pathways, using overlap between
   a category/hierarchy term. One can then overlay the results of pathway 
   enrichment analyses onto this "foundational" network, mapping dysregulation
   and significance onto nodes (pathways) in the network.
-biocViews: GeneSetEnrichment, Network, Reactome, RNASeq
+biocViews: GeneSetEnrichment, Network, Pathways, Reactome, RNASeq
 BiocType: Software
 BugReports: https://github.com/hancockinformatics/pathnet
 License: GPL-3
@@ -43,3 +43,4 @@ Imports:
 Depends: 
     R (>= 4.2.0)
 LazyDataCompression: xz
+LazyData: true

@@ -29,6 +29,19 @@
 #'
 #' @seealso <https://github.com/hancockinformatics/pathnet>
 #'
+#' @examples
+#' ex_starting_pathways <- create_foundation(
+#'     mat = pathway_distances_jaccard,
+#'     max_distance = 0.8
+#' )
+#'
+#' ex_pathnet <- create_pathnet(
+#'     sigora_result = sigora_examples[[1]],
+#'     foundation = ex_starting_pathways,
+#'     trim = TRUE,
+#'     trim_order = 1
+#' )
+#'
 create_pathnet <- function(
         sigora_result,
         foundation,

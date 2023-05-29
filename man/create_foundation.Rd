@@ -26,6 +26,13 @@ constructing a pathway network. The cutoff can be adjusted to have more or
 fewer edges in the final network, depending on the number of pathways
 involved.
 }
+\examples{
+starting_pathways <- create_foundation(
+    mat = pathway_distances_jaccard,
+    max_distance = 0.8
+)
+
+}
 \references{
 None.
 }

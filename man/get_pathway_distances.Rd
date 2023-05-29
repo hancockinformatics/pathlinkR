@@ -23,6 +23,13 @@ overlap of their constituent genes.
 Given a data frame of pathways and their member genes, calculate
 the pairwise distances using a constructed identity matrix.
 }
+\examples{
+get_pathway_distances(
+    pathway_data = sigora_database,
+    dist_method = "jaccard"
+)
+
+}
 \references{
 None.
 }
