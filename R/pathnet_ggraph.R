@@ -78,7 +78,6 @@ pathnet_ggraph <- function(
         seg_colour = "black",
         theme_base_size = 16
 ) {
-
     # Check column names for both nodes and edges
     stopifnot(all(
         c(

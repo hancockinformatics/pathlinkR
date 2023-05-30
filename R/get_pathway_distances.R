@@ -53,7 +53,7 @@ get_pathway_distances <- function(
 
     message("Creating identity matrix...")
     identity_table <- pathway_data %>%
-        dplyr::select(all_of(c(gene_id_col, pathway_id_col))) %>%
+        select(all_of(c(gene_id_col, pathway_id_col))) %>%
         distinct() %>%
         mutate(present = 1) %>%
         pivot_wider(
@@ -65,7 +65,7 @@ get_pathway_distances <- function(
         column_to_rownames(all_of(pathway_id_col)) %>%
         as.matrix()
 
-    if ( length(unique(pathway_data[[pathway_id_col]])) > 500 ) {
+    if (length(unique(pathway_data[[pathway_id_col]])) > 500) {
         message("Running distance calculations (this may take a while)...")
     } else {
         message("Running distance calculations...")

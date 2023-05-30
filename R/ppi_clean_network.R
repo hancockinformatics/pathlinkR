@@ -20,7 +20,7 @@ ppi_clean_network <- function(network) {
             seed = if_else(types == "Seed", TRUE, FALSE),
             hub_score_btw = centrality_betweenness()
         ) %>%
-        dplyr::select(
+        select(
             name,
             degree,
             betweenness,
