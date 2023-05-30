@@ -56,6 +56,16 @@ ppi_build_network <- function(
         hub_measure = "betweenness",
         ppi_data = innatedb_exp
 ) {
+    if (!grepl(x = gene_vector[1], pattern = "^ENSG")) {
+        stop("Input genes must be human Ensembl IDs")
+    }
+
+    if (!all(c("ensembl_gene_A", "ensembl_gene_B") %in% colnames(ppi_data))) {
+        stop(
+            "Argument 'ppi_data' must be a data frame containing columns ",
+            "'ensembl_gene_A' and 'ensembl_gene_B' (case sensitive)"
+        )
+    }
 
     # Check for and remove any duplicate IDs, which will cause problems later.
     # Make sure to warn the user about this.
@@ -88,19 +98,7 @@ ppi_build_network <- function(
         }
     }
 
-    if (!grepl(x = gene_vector[1], pattern = "^ENSG")) {
-        stop("Input genes must be human Ensembl IDs")
-    }
-
-    if ( !all(c("ensembl_gene_A", "ensembl_gene_B") %in% colnames(ppi_data)) ) {
-        stop(
-            "Argument 'ppi_data' must be a data frame containing columns ",
-            "'ensembl_gene_A' and 'ensembl_gene_B' (case sensitive)"
-        )
-    }
-
-    ppi_data_ensembl <- ppi_data %>%
-        dplyr::select(starts_with("ensembl"))
+    ppi_data_ensembl <- select(ppi_data, starts_with("ensembl"))
 
     message("Finding interactions...")
     if (order == "zero") {
@@ -137,11 +135,11 @@ ppi_build_network <- function(
         ppi_remove_subnetworks() %>%
         as_tbl_graph() %>%
         mutate(
-            degree      = centrality_degree(),
+            degree = centrality_degree(),
             betweenness = centrality_betweenness(),
-            seed        = (name %in% gene_vector)
+            seed = (name %in% gene_vector)
         ) %>%
-        dplyr::select(-comp)
+        select(-comp)
 
     network_init_2 <-
         if (hub_measure == "betweenness") {
@@ -220,8 +218,7 @@ ppi_build_network <- function(
     }
 
     message("Mapping input Ensembl IDs to HGNC symbols...")
-    ensembl_to_hgnc <- mapping_file %>%
-        dplyr::select("name" = ensg_id, gene_name)
+    ensembl_to_hgnc <- select(mapping_file, "name" = ensg_id, gene_name)
 
     network_mapped <- left_join(
         network_out_2,
