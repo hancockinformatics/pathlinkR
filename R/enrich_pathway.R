@@ -120,7 +120,7 @@ enrich_pathway <- function(
             )
         } else {
             all_gns <- rownames(deseq_results)
-            message("DEGs used: ", length(all_gns))
+            message("\tDEGs used: ", length(all_gns))
         }
 
         ### Sigora analysis
