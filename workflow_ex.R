@@ -92,6 +92,9 @@ enriched_results_sigora <- enrich_pathway(
 )
 
 # If we only have one data frame, that's already been filtered
+test_de_genes <- ex_de_genes %>%
+    column_to_rownames("gene")
+
 enriched_results_sigora_2 <- enrich_pathway(
   list("one" = test_de_genes),
   gps_repo = reaH,
@@ -115,7 +118,7 @@ enriched_results_rpa <- enrich_pathway(
   filter_results = 0.05
 )
 
-# enrich with Hallmark gene sets
+# Enrich with Hallmark gene sets
 enriched_results_hm <- enrich_pathway(
   deseq_example_list[c(5, 6)],
   analysis = "hallmark",
@@ -125,25 +128,25 @@ enriched_results_hm <- enrich_pathway(
 
 # plot_pathways -----------------------------------------------------------
 
-# plot the different outputs
+# Plot the different outputs
 plot_pathways(enriched_results_sigora, columns = 2)
 plot_pathways(enriched_results_rpa, columns = 2)
 plot_pathways(enriched_results_hm)
 
-# if you only want "immune system" pathways
+# If you only want "Immune System" pathways
 plot_pathways(enriched_results_sigora,
               specific_top_pathways = "Immune System")
 
-# if you want to include gene ratio
+# If you want to include gene ratio
 plot_pathways(enriched_results_sigora,
               specific_top_pathways = "Immune System",
               include_gene_ratio = TRUE)
 
-# if you want change up the format (change names, change label side)
+# If you want change up the format (change names, change label side)
 plot_pathways(enriched_results_sigora,
               specific_top_pathways = "Immune System",
-              pathway_position = 'left',
-              new_group_names = c('Pos', 'Neg'))
+              pathway_position = "left",
+              new_group_names = c("Pos", "Neg"))
 
 
 # Pathway networks v1 -----------------------------------------------------
@@ -176,9 +179,7 @@ pathnet_ggraph(
 )
 
 # Interactive plot with visNetwork
-pathnet_visNetwork(
-  my_pathway_network,
-)
+pathnet_visNetwork(my_pathway_network)
 
 
 # Pathway networks v2 -----------------------------------------------------
