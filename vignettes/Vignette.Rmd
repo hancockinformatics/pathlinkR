@@ -78,6 +78,13 @@ enriched_results_sigora <- enrich_pathway(
   gps_repo = reaH # specify the gene-pair signatures repository. More on this in the Supplemental section
 )
 
+# Enrichment without splitting 
+enriched_results_sigora_nosplit <- enrich_pathway(
+  input_list = time_examples,
+  gps_repo = reaH, 
+  split = FALSE
+)
+
 ```
 
 For those who still prefer traditional over-representation analysis, we include the option of doing so by setting `analysis = 'reactomepa'`, which uses ReactomePA (Yu et al. 2016).
@@ -98,7 +105,36 @@ enriched_results_hm <- enrich_pathway(
   analysis = "hallmark"
 )
 ```
+## Visualizing pathways
 
+Now that we have (a lot of) pathway enrichment results from multiple comparisons, it is time to visualize them. The function `plot_pathways` does this by grouping Reactome pathways or Hallmark gene sets under parent groups and indicating if each pathway is up/down-regulated across different comparisons, making it easy to identify which pathways are shared or unique to which comparisons. Because there are often many pathways, you can split the plot up into multiple columns (up to 3) or truncate the pathway names.
+
+Sometimes, after splitting, a pathway can be enriched by both up and down-regulated genes (these usually occur with larger pathways), and are indicated by a white asterisk where the more significant (lower p-value) directionality is displayed. You can also change the angle/labels of the comparisons or add the number of DEGs in each comparison to the labels. Lastly, you can specify which pathways or top pathway groups to pull out to visualize.
+
+```{r plot pathways}
+# Plot the SIGORA results in two columns
+plot_pathways(enriched_results_sigora, columns = 2)
+
+# Plot the SIGORA results, but only the immune system pathways, and condense the names
+plot_pathways(enriched_results_sigora, 
+              specific_top_pathways = 'Immune System', # only plot enriched Immune System pathways
+              new_group_names = c('Pos', 'Neg'), # set new names, must be in same order as the original names
+              show_num_genes = TRUE, # add the number of DEGs used for enrichment
+              x_angle = 'horizontal', # make the labels horizontal
+              name_width = 50 # increase the truncation cutoff value for more words
+              )
+```
+From these results, you can see that while many of the immune system pathways change in the same direction over time in COVID-19 and non-COVID-19 sepsis patients, a few unique ones stand out, mostly related to interferon signaling ("Interferon Signaling", "Interferon gamma signaling", 'Interferon alpha/beta signaling", "ISG15 antiviral mechanism"). This reflects the elevated early antiviral response in COVID-19 patients that decreased over time, compared to no change in non-COVID-19 sepsis patients.
+
+We can also verify this by looking at fold change heatmaps of genes involved in these pathways. The function `plot_foldchange` can do so by taking in an input list of DESeq2 dataframes.
+
+```{r plot fold changes}
+plot_fold_change(deseq_example_list, 
+                 path_name = 'Interferon alpha/beta signaling',
+                 col_split = c('Positive', 'Positive', "Negative", "Negative", "Time", "Time"),
+                 cluster_columns = FALSE
+                 )
+```
 
 ## Supplemental
 
