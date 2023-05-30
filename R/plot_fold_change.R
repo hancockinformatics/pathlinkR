@@ -16,14 +16,14 @@
 #' @param plot_significant_only Boolean (TRUE) Only plot genes that are
 #'   differentially expressed (pass p_cutoff and fc_cutoff) in any comparison
 #' @param show_stars Boolean (TRUE) show significance stars on heatmap
-#' @param hide_nonsig_fc Boolean (TRUE) If a gene is significant in one 
+#' @param hide_nonsig_fc Boolean (TRUE) If a gene is significant in one
 #'   comparison but not in another, this will set the colour of the non-
-#'   significant gene as grey to visually emphasize the significant genes. If 
-#'   set to FALSE, it will set the colour to the fold change, and if the p value 
-#'   passes p_cutoff, it will also display the p value (the asterisks will be 
-#'   grey instead of black).
-#' @param vjust Adjustment of the position of the significance stars. Default is
-#'   0.75. May need to adjust if there are many genes
+#'   significant gene as grey to visually emphasize the significant genes. If
+#'   set to FALSE, it will set the colour to the fold change, and if the p
+#'   value passes p_cutoff, it will also display the p value (the asterisks
+#'   will be grey instead of black).
+#' @param vjust Adjustment of the position of the significance stars. Default
+#'   is 0.75. May need to adjust if there are many genes
 #' @param rot Rotation of the position of the significance stars. Default is 0
 #' @param invert Boolean (FALSE) Default plots genes as rows and conditions as
 #'   columns, set to TRUE if you want genes as columns and conditions as rows
@@ -44,8 +44,8 @@
 #' @param col_center whether to center column text. Default is TRUE, should set
 #'   to FALSE if angled column name (e.g. col_angle = 45)
 #' @param row_angle angle of row text. Set default to 0
-#' @param row_center whether to center column text. Default is FALSE, should set
-#'   to TRUE if vertical column name (e.g. row_angle = 90)
+#' @param row_center whether to center column text. Default is FALSE, should
+#'   set to TRUE if vertical column name (e.g. row_angle = 90).
 #'
 #'
 #' @return A heatmap of fold changes for genes of interest
@@ -194,7 +194,7 @@ plot_fold_change <- function(
         column_to_rownames(var = "gene_name") %>%
         as.matrix()
     mat_fc[is.na(mat_fc)] <- 0 # make any NAs into 0
-    
+
 
     mat_p <- df_p %>%
         left_join(mapping_file) %>%
@@ -203,12 +203,12 @@ plot_fold_change <- function(
         column_to_rownames(var = "gene_name") %>%
         as.matrix()
     mat_p[is.na(mat_p)] <- 1 # make any NAs into 1s
-    
+
     if (hide_nonsig_fc) {
         mat_fc[abs(mat_fc) < log2(fc_cutoff)] <- 0 # did not pass fc cutoff
-        mat_fc[mat_p > p_cutoff] <- 0 # did not pass pval cutoff 
+        mat_fc[mat_p > p_cutoff] <- 0 # did not pass pval cutoff
     }
-    
+
     # Set the limits for colours for the plotting heatmap
     limit <- max(abs(mat_fc), na.rm = TRUE) %>% ceiling()
     ## If plotting real fold changes instead of log2
