@@ -54,8 +54,7 @@
 #'     filter_results = 0.001,
 #' )
 #'
-#'
-#'
+#' plot_pathways(ex_results_sigora, columns = 2)
 #'
 plot_pathways <- function(
         enriched_results,
