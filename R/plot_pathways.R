@@ -102,10 +102,11 @@ plot_pathways <- function(
         enriched_results$direction <- factor(
             enriched_results$direction,
             levels = c("Up", "Down"))
-    } else {
-        enriched_results$direction <- factor(
-            enriched_results$direction,
-            levels = c("Up", "Down", "All"))
+    } else if ('All' %in% enriched_results$direction &
+               any(c('Up', 'Down') %in% enriched_results$direction)) {
+            enriched_results$direction <- factor(
+                enriched_results$direction,
+                levels = c("Up", "Down", "All"))
     }
 
     # Order the comparisons by the order they were inputted (not alphabetical)
