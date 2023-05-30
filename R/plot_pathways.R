@@ -70,7 +70,7 @@ plot_pathways <- function(
         size = 5,
         legend_multiply = 1,
         show_num_genes = FALSE,
-        pathway_position = 'right',
+        pathway_position = "right",
         new_group_names = NA
 ) {
 
@@ -97,15 +97,17 @@ plot_pathways <- function(
     )
 
     # Order the directionality of results, if up and down are used
-    if (!'All' %in% enriched_results$direction) {
+    if (!"All" %in% enriched_results$direction) {
         enriched_results$direction <- factor(
             enriched_results$direction,
             levels = c("Up", "Down"))
-    } else if ('All' %in% enriched_results$direction &
-               any(c('Up', 'Down') %in% enriched_results$direction)) {
-            enriched_results$direction <- factor(
-                enriched_results$direction,
-                levels = c("Up", "Down", "All"))
+    } else if (
+        "All" %in% enriched_results$direction &
+        any(c("Up", "Down") %in% enriched_results$direction)
+    ) {
+        enriched_results$direction <- factor(
+            enriched_results$direction,
+            levels = c("Up", "Down", "All"))
     }
 
     # Order the comparisons by the order they were inputted (not alphabetical)
