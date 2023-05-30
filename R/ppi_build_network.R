@@ -56,10 +56,6 @@ ppi_build_network <- function(
         hub_measure = "betweenness",
         ppi_data = innatedb_exp
 ) {
-    if (!grepl(x = gene_vector[1], pattern = "^ENSG")) {
-        stop("Input genes must be human Ensembl IDs")
-    }
-
     if (!all(c("ensembl_gene_A", "ensembl_gene_B") %in% colnames(ppi_data))) {
         stop(
             "Argument 'ppi_data' must be a data frame containing columns ",
@@ -96,6 +92,10 @@ ppi_build_network <- function(
                 exdent = 2
             ))
         }
+    }
+
+    if (!grepl(x = gene_vector[1], pattern = "^ENSG")) {
+        stop("Input genes must be human Ensembl IDs")
     }
 
     ppi_data_ensembl <- select(ppi_data, starts_with("ensembl"))
