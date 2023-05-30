@@ -16,12 +16,12 @@
 #' @param plot_significant_only Boolean (TRUE) Only plot genes that are
 #'   differentially expressed (pass p_cutoff and fc_cutoff) in any comparison
 #' @param show_stars Boolean (TRUE) show significance stars on heatmap
-#' @param hide_low_fc Boolean (TRUE) If a gene is significant in one comparison
-#'   but not in another, this will set the colour of the non-significant gene
-#'   as grey to visually emphasize the significant genes. If set to FALSE, it
-#'   will set the colour to the fold change, and if the p value passes p_cutoff,
-#'   it will also display the p value (the asterisks will be grey instead of
-#'   black).
+#' @param hide_nonsig_fc Boolean (TRUE) If a gene is significant in one 
+#'   comparison but not in another, this will set the colour of the non-
+#'   significant gene as grey to visually emphasize the significant genes. If 
+#'   set to FALSE, it will set the colour to the fold change, and if the p value 
+#'   passes p_cutoff, it will also display the p value (the asterisks will be 
+#'   grey instead of black).
 #' @param vjust Adjustment of the position of the significance stars. Default is
 #'   0.75. May need to adjust if there are many genes
 #' @param rot Rotation of the position of the significance stars. Default is 0
@@ -80,7 +80,7 @@ plot_fold_change <- function(
         fc_cutoff = 1.5,
         plot_significant_only = TRUE,
         show_stars = TRUE,
-        hide_low_fc = TRUE,
+        hide_nonsig_fc = TRUE,
         vjust = 0.75,
         rot = 0,
         invert = FALSE,
@@ -194,9 +194,7 @@ plot_fold_change <- function(
         column_to_rownames(var = "gene_name") %>%
         as.matrix()
     mat_fc[is.na(mat_fc)] <- 0 # make any NAs into 0
-    if (hide_low_fc) {
-        mat_fc[abs(mat_fc) < log2(fc_cutoff)] <- 0
-    }
+    
 
     mat_p <- df_p %>%
         left_join(mapping_file) %>%
@@ -205,7 +203,12 @@ plot_fold_change <- function(
         column_to_rownames(var = "gene_name") %>%
         as.matrix()
     mat_p[is.na(mat_p)] <- 1 # make any NAs into 1s
-
+    
+    if (hide_nonsig_fc) {
+        mat_fc[abs(mat_fc) < log2(fc_cutoff)] <- 0 # did not pass fc cutoff
+        mat_fc[mat_p > p_cutoff] <- 0 # did not pass pval cutoff 
+    }
+    
     # Set the limits for colours for the plotting heatmap
     limit <- max(abs(mat_fc), na.rm = TRUE) %>% ceiling()
     ## If plotting real fold changes instead of log2
@@ -271,7 +274,7 @@ plot_fold_change <- function(
 
                 # If plotting significance values for genes that don't pass
                 # fc_cutoff
-                if (abs(mat_fc[i,j]) < log2(1.5) & !hide_low_fc) {
+                if (abs(mat_fc[i,j]) < log2(1.5) & !hide_nonsig_fc) {
                     if (mat_p[i, j] < 0.001) {
                         grid::grid.text(
                             "***",
