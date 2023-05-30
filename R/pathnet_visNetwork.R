@@ -67,7 +67,6 @@ pathnet_visNetwork <- function(
         highlighting = TRUE,
         set_seed = 123
 ) {
-
     visnet_nodes <- network %>%
         as_tibble() %>%
         mutate(
@@ -84,7 +83,7 @@ pathnet_visNetwork <- function(
                 ~list("background" = .x, "border" = .y)
             )
         ) %>%
-        dplyr::select(
+        select(
             id,
             "title" = pathway_name_1,
             everything(),

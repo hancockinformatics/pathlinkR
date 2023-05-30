@@ -15,7 +15,7 @@
 #' @import dplyr
 #' @import stringr
 #' @importFrom igraph neighborhood as.igraph
-#' @importFrom tidygraph tbl_graph
+#' @importFrom tidygraph tbl_graph activate
 #' @importFrom purrr map map_chr
 #'
 #' @description Creates a tidygraph network object from the pathway information,
@@ -52,13 +52,13 @@ create_pathnet <- function(
     stopifnot(all(c("pathway_id", "bonferroni") %in% colnames(sigora_result)))
 
     starting_nodes <- foundation %>%
-        dplyr::select(pathway_1, pathway_name_1) %>%
+        select(pathway_1, pathway_name_1) %>%
         distinct() %>%
         left_join(sigora_result, by = c("pathway_1" = "pathway_id"))
 
     starting_edges <- foundation %>%
         mutate(similarity = 1 / distance) %>%
-        dplyr::select(pathway_1, pathway_2, similarity, distance)
+        select(pathway_1, pathway_2, similarity, distance)
 
     pathways_as_network <- tbl_graph(
         nodes = starting_nodes,
@@ -83,26 +83,26 @@ create_pathnet <- function(
 
             pathways_as_network %>%
                 filter(rn %in% c(x1, valid_nodes)) %>%
-                dplyr::select(-rn)
+                select(-rn)
         } else {
-            dplyr::select(pathways_as_network, -rn)
+            select(pathways_as_network, -rn)
         }
 
     pathways_as_network_3 <- pathways_as_network_2 %>%
-        tidygraph::activate("edges") %>%
+        activate("edges") %>%
         distinct() %>%
-        tidygraph::activate("nodes")
+        activate("nodes")
 
     pathways_as_network_4 <- pathways_as_network_3 %>%
         left_join(
             x  = .,
-            y  = dplyr::select(
+            y  = select(
                 top_pathways_more, pathway_id,
                 pathway_name, grouped_pathway
             ),
             by = c("pathway_1" = "pathway_id")
         ) %>%
-        dplyr::select(
+        select(
             pathway_1,
             pathway_name_1,
             everything(),
