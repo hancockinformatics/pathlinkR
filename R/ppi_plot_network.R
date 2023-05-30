@@ -152,6 +152,8 @@ ppi_plot_network <- function(
 
     # Set up fill scaling based on argument `fill_type`
     if (fill_type == "fold_change") {
+        stopifnot(is.numeric(pull(network, {{fill_column}})))
+        
         network <- network %>%
             mutate(
                 new_fill_col = case_when(
