@@ -15,7 +15,7 @@
 #' @param analysis Default is SIGORA ("sigora"), others: ReactomePA
 #'   ("reactomepa"), mSigDB Hallmark gene sets ("hallmark")
 #' @param filter_results Should the output be filtered for significance? Use
-#'   `1` to return the unfiltered results, or a number between 0 and 1 for a 
+#'   `1` to return the unfiltered results, or a number between 0 and 1 for a
 #'   custom p-value cutoff. If `default`, the significance cutoffs for Sigora is
 #'   <0.001, and for ReactomePA or Hallmark is <0.05.
 #' @param gps_repo Gene Pair Signature object for Sigora to use to test for
@@ -46,12 +46,10 @@
 #' @seealso <https://github.com/hancockinformatics/pathnet>
 #'
 #' @examples
-#' ex_results_sigora <- enrich_pathway(
+#' enrich_pathway(
 #'     deseq_example_list[c(5, 6)],
 #'     gps_repo = reaH
 #' )
-#'
-#' plot_pathways(ex_results_sigora, columns = 2)
 #'
 enrich_pathway <- function(
         input_list,
@@ -132,7 +130,7 @@ enrich_pathway <- function(
             message("\tRunning enrichment using Sigora")
 
             run_sigora_safely <- purrr::possibly(run_sigora)
-            
+
             # set default pvalue cutoff
             if (filter_results == 'default') {
                 filter_results <- 0.001
@@ -175,7 +173,7 @@ enrich_pathway <- function(
         if (analysis == "reactomepa") {
 
             message("\tRunning enrichment using ReactomePA")
-            
+
             # set default pvalue cutoff
             if (filter_results == 'default') {
                 filter_results <- 0.05
@@ -309,7 +307,7 @@ enrich_pathway <- function(
         if (analysis == "hallmark") {
 
             message("\tRunning enrichment using Hallmark")
-            
+
             if (filter_results == 'default') {
                 filter_results <- 0.05
             }
