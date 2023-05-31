@@ -1,20 +1,26 @@
 ---
 title: "Analyze and visualize RNA-Seq data with pathnet"
-author: "Andy An & Travis Blimkie"
-date: "`r format(Sys.time(), '%B %d, %Y')`"
+author:
+- Andy An
+- Travis Blimkie
 output:
-    BiocStyle: html_document
-    toc: true
-    toc_depth: 4
+    BiocStyle::html_document:
+        toc: true
+        toc_depth: 3
+        toc_float: true
 vignette: >
   %\VignetteIndexEntry{Analyze and visualize RNA-Seq data with pathnet}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
+<head>
+<link rel="shortcut icon" href="favicon_32.svg">
+<link rel="shortcut icon" href="favicon_16.svg">
+</head>
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, comment = "", fig.align="center")
+knitr::opts_chunk$set(echo = TRUE, comment = "", fig.align = "center")
 library(dplyr)
 ```
 
@@ -33,12 +39,12 @@ pathophysiology from their gene expression studies.
 # Installation
 To install and load the package:
 ```{r load_library}
-# Install code will go here, make sure to set "eval=FALSE"
+# Install code will go here, make sure to set "eval=FALSE"!
 library(pathnet)
 ```
 
 
-# Volcano plots
+# Creating volcano plots
 One of the first visualizations with gene expression studies is finding how many
 DEGs there are. DEGs are usually defined by specific cutoffs for fold changes
 and adjusted p-values. Generally, cutoffs of adjusted p-value <0.05 and absolute
@@ -96,13 +102,53 @@ eruption(
 
 Unsurprisingly, we see quite a lot of interferon signaling genes that are
 up-regulated in COVID-19 patients at ICU admission compared to healthy controls.
-However, it's difficult to get a sense of whether this is due to chance or there
-is biological significance, as there are also many interferon genes that were
-not DEGs. This is where pathway enrichment can tell us statistically if what we
-see is real biology or not.
+However, it's difficult to get a sense of whether this is due to chance or if
+there is a true biological significance, as there are also many interferon genes
+that were not DEGs. This is where pathway enrichment can tell us statistically
+if what we see is real biology or not.
 
 
-# Pathway Enrichment
+# Building and visualizing PPI networks
+`pathnet` also provides tools for constructing and visualizing Protein-Protein
+Interaction (PPI) networks. We leverage PPI data gathered from [InnateDB]() to
+generate a list of interactions among DE genes identified in RNA-Seq analyses.
+These interactions can then be used to build PPI networks using tools from
+`igraph` and `tidygraph`, will multiple options for controlling the resulting
+type of network, such as support for first, minimum, or zero order networks. The
+two main functions used to accomplish this are `ppi_build_network` and
+`ppi_plot_network`.
+```{r ppi_networks, fig.width=12, fig.height=10, warning=FALSE}
+# Start by filtered one of the example DE gene lists for significant genes
+ex_de_genes <- deseq_example_list[[5]] %>%
+    tibble::rownames_to_column("gene") %>%
+    as_tibble() %>%
+    filter(padj < 0.05 & abs(log2FoldChange) > log2(1.5))
+
+# Construct a zero order network, i.e. it will only contain the input genes, 
+# no interactors
+ex_network <- ppi_build_network(
+    df = ex_de_genes,
+    col = "gene",
+    order = "zero"
+)
+
+# Plot the PPI network, colouring the nodes based on their log2 fold change
+# values. Many options are available to customize the final plot; see
+# `?ppi_plot_network` for all the details.
+ppi_plot_network(
+    ex_network,
+    fill_column = log2FoldChange,
+    fill_type = "fold_change",
+    layout = "lgl",
+    label = TRUE,
+    label_column = gene_name,
+    label_filter = 5,
+    legend = TRUE
+)
+```
+
+
+# Performing pathway enrichment
 The essence of pathway enrichment is the concept of over-representation. In
 other words, are there more "pathway A" genes in a list of analyzed genes (e.g.,
 DEGs) than expected? To calculate this, the simplest method is to compare the
@@ -177,7 +223,7 @@ enriched_results_hm <- enrich_pathway(
 ```
 
 
-# Visualizing pathways
+# Plotting pathway enrichment results
 Now that we have (a lot of) pathway enrichment results from multiple
 comparisons, it is time to visualize them. The function `plot_pathways` does
 this by grouping Reactome pathways or Hallmark gene sets under parent groups and
@@ -223,7 +269,49 @@ signaling", "ISG15 antiviral mechanism"). This reflects the elevated early
 antiviral response in COVID-19 patients that decreased over time, compared to no
 change in non-COVID-19 sepsis patients.
 
-# Visualizing fold changes
+
+# Generating networks from enriched pathways
+`pathnet` also includes functions for turning the pathway enrichment results
+from `sigora` into networks, using the overlap of the genes assigned to each
+pathway to determine their similarity to each other. In these networks, each
+pathway is a node, with connections or edges between them determined via
+distance measures. A threshold can be set, where two pathways with a minimum
+similarity measure are considered connected, and would have an edge drawn
+between their nodes.
+
+We provide a pre-computed distance matrix of Reactome pathways, generated using
+Jaccard distance, but there is support for multiple distance measures to be
+used.
+```{r pathway_network_I, fig.width=12, fig.height=10, warning=FALSE}
+starting_pathways <- create_foundation(
+    mat = pathway_distances_jaccard,
+    max_distance = 0.8
+)
+
+my_pathway_network <- create_pathnet(
+    sigora_result = sigora_examples[[1]],
+    foundation = starting_pathways,
+    trim = TRUE,
+    trim_order = 1
+)
+
+# Static plot with ggraph
+pathnet_ggraph(
+    my_pathway_network,
+    label_prop = 0.1,
+    node_label_size = 4,
+    node_label_overlaps = 8,
+    seg_colour = "red"
+)
+```
+
+```{r pathway_network_II}
+# Interactive plot with visNetwork
+pathnet_visNetwork(my_pathway_network)
+```
+
+
+# Visualizing fold changes across comparisons
 We can also verify this by looking at fold change heatmaps of genes involved in
 these pathways. The function `plot_fold_change` can do so by taking in an input
 list of DESeq2 data frames.
