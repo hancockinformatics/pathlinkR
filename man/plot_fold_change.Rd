@@ -16,7 +16,7 @@ plot_fold_change(
   fc_cutoff = 1.5,
   plot_significant_only = TRUE,
   show_stars = TRUE,
-  hide_low_fc = TRUE,
+  hide_nonsig_fc = TRUE,
   vjust = 0.75,
   rot = 0,
   invert = FALSE,
@@ -58,15 +58,15 @@ differentially expressed (pass p_cutoff and fc_cutoff) in any comparison}
 
 \item{show_stars}{Boolean (TRUE) show significance stars on heatmap}
 
-\item{hide_low_fc}{Boolean (TRUE) If a gene is significant in one comparison
-but not in another, this will set the colour of the non-significant gene
-as grey to visually emphasize the significant genes. If set to FALSE, it
-will set the colour to the fold change, and if the p value passes p_cutoff,
-it will also display the p value (the asterisks will be grey instead of
-black).}
+\item{hide_nonsig_fc}{Boolean (TRUE) If a gene is significant in one
+comparison but not in another, this will set the colour of the non-
+significant gene as grey to visually emphasize the significant genes. If
+set to FALSE, it will set the colour to the fold change, and if the p
+value passes p_cutoff, it will also display the p value (the asterisks
+will be grey instead of black).}
 
-\item{vjust}{Adjustment of the position of the significance stars. Default is
-0.75. May need to adjust if there are many genes}
+\item{vjust}{Adjustment of the position of the significance stars. Default
+is 0.75. May need to adjust if there are many genes}
 
 \item{rot}{Rotation of the position of the significance stars. Default is 0}
 
@@ -97,8 +97,8 @@ to FALSE if angled column name (e.g. col_angle = 45)}
 
 \item{row_angle}{angle of row text. Set default to 0}
 
-\item{row_center}{whether to center column text. Default is FALSE, should set
-to TRUE if vertical column name (e.g. row_angle = 90)}
+\item{row_center}{whether to center column text. Default is FALSE, should
+set to TRUE if vertical column name (e.g. row_angle = 90).}
 }
 \value{
 A heatmap of fold changes for genes of interest
