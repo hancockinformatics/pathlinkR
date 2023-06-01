@@ -9,7 +9,7 @@
 #'   Options include "betweenness" (default), "degree", and "hubscore". These
 #'   represent network statistics calculated by their respective
 #'   `tidygraph::centrality_x`, functions, specifically `degree`,
-#'    `betweenness`, and `hub_score`.
+#'    `betweenness`, and `hubscore`.
 #' @param ppi_data Data frame of PPI data; must contain rows of interactions as
 #'   pairs of Ensembl gene IDs, with columns named "ensembl_gene_A" and
 #'   "ensembl_gene_B". Defaults to pre-packaged InnateDB PPI data.
@@ -57,27 +57,37 @@ ppi_build_network <- function(
         hub_measure = "betweenness",
         ppi_data = innatedb_exp
 ) {
-    if (!all(c("ensembl_gene_A", "ensembl_gene_B") %in% colnames(ppi_data))) {
-        stop(
-            "Argument 'ppi_data' must be a data frame containing columns ",
-            "'ensembl_gene_A' and 'ensembl_gene_B' (case sensitive)"
-        )
-    }
 
-    # Check for and remove any duplicate IDs, which will cause problems later.
-    # Make sure to warn the user about this.
+    stopifnot(is(df, "data.frame"))
+    stopifnot(col %in% colnames(df))
+    stopifnot(order %in% c("zero", "first", "min_simple", "min_steiner"))
+    stopifnot(hub_measure %in% c("betweenness", "degree", "hubscore"))
+    stopifnot(
+        "'ppi_data' must have columns 'ensembl_gene_A', 'ensembl_gene_B'" = all(
+            c("ensembl_gene_A", "ensembl_gene_B") %in% colnames(ppi_data)
+        )
+    )
+
+    # Check for and remove any duplicate IDs
     message("Cleaning input data...")
     df_clean <- distinct(df, !!sym(col), .keep_all = TRUE)
     gene_vector <- unique(df_clean[[col]])
+
+    stopifnot(
+        "Input genes must be human Ensembl IDs" = grepl(
+            x = gene_vector[1],
+            pattern = "^ENSG"
+        )
+    )
+
     lost_ids <- df[[col]][duplicated(df[[col]])]
 
     if (length(gene_vector) < nrow(df)) {
-
         num_dups <- nrow(df) - length(gene_vector)
 
         message(
-            "  INFO: Found ", num_dups,
-            " duplicate IDs in the input column, which have been removed:"
+            "INFO: Found ", num_dups,
+            "duplicate IDs in the input column, which have been removed:"
         )
 
         if (num_dups <= 10) {
@@ -95,10 +105,6 @@ ppi_build_network <- function(
         }
     }
 
-    if (!grepl(x = gene_vector[1], pattern = "^ENSG")) {
-        stop("Input genes must be human Ensembl IDs")
-    }
-
     ppi_data_ensembl <- select(ppi_data, starts_with("ensembl"))
 
     message("Finding interactions...")
@@ -106,32 +112,14 @@ ppi_build_network <- function(
         edge_table <- ppi_data_ensembl %>% filter(
             ensembl_gene_A %in% gene_vector & ensembl_gene_B %in% gene_vector
         )
-    } else if (order %in% c("first", "min_simple", "min_steiner")) {
+    } else {
         edge_table <- ppi_data_ensembl %>% filter(
             ensembl_gene_A %in% gene_vector | ensembl_gene_B %in% gene_vector
-        )
-    } else {
-        stop(
-            "Argument 'order' must be one of: ",
-            "'zero', 'first', 'min_simple', or 'min_steiner'"
-        )
-    }
-
-    if (hub_measure == "betweenness") {
-        hub_fn <- centrality_betweenness
-    } else if (hub_measure == "degree") {
-        hub_fn <- centrality_degree
-    } else if (hub_measure == "hubscore") {
-        hub_fn <- centrality_hub
-    } else {
-        stop(
-            "Argument 'hub_measure' must be one of 'betweenness', 'degree', ",
-            "or 'hubscore'"
         )
     }
 
     message("Creating network...")
-    network_init_1 <- edge_table %>%
+    network_init <- edge_table %>%
         as_tbl_graph(directed = FALSE) %>%
         ppi_remove_subnetworks() %>%
         as_tbl_graph() %>%
@@ -142,22 +130,12 @@ ppi_build_network <- function(
         ) %>%
         select(-comp)
 
-    network_init_2 <-
-        if (hub_measure == "betweenness") {
-            network_init_1 %>% mutate(hub_score_btw = betweenness)
-        } else if (hub_measure == "degree") {
-            network_init_1 %>% mutate(hub_score_deg = degree)
-        } else if (hub_measure == "hubscore") {
-            network_init_1 %>% mutate(hub_score_hub = centrality_hub())
-        }
-
-
     # Perform node filtering/trimming for minimum order networks, and
-    # recalculate the network statistics
+    # recalculate degree and betweenness
     if (order == "min_simple") {
-
         message("Performing 'simple' minimum network trimming...")
-        network_out_1 <- network_init_2 %>%
+
+        network_out_1 <- network_init %>%
             filter(
                 !(degree == 1 & !seed),
                 !(betweenness == 0 & !seed)
@@ -167,20 +145,10 @@ ppi_build_network <- function(
                 betweenness = centrality_betweenness()
             )
 
-        network_out_2 <-
-            if (hub_measure == "betweenness") {
-                network_out_1 %>% mutate(hub_score_btw = betweenness)
-            } else if (hub_measure == "degree") {
-                network_out_1 %>% mutate(hub_score_deg = degree)
-            } else if (hub_measure == "hubscore") {
-                network_out_1 %>% mutate(hub_score_hub = centrality_hub())
-            }
-
     } else if (order == "min_steiner") {
-
         message("Performing 'Steiner' minimum network trimming...")
 
-        terminals <- network_init_2 %>%
+        terminals <- network_init %>%
             activate(nodes) %>%
             pull(name) %>%
             intersect(gene_vector)
@@ -188,7 +156,7 @@ ppi_build_network <- function(
         network_out_1 <- SteinerNet::steinertree(
             type      = "SP",
             terminals = terminals,
-            graph     = network_init_2,
+            graph     = network_init,
             color     = FALSE
         ) %>%
             .[[1]] %>%
@@ -198,18 +166,18 @@ ppi_build_network <- function(
                 betweenness = centrality_betweenness()
             )
 
-        network_out_2 <-
-            if (hub_measure == "betweenness") {
-                network_out_1 %>% mutate(hub_score_btw = betweenness)
-            } else if (hub_measure == "degree") {
-                network_out_1 %>% mutate(hub_score_deg = degree)
-            } else if (hub_measure == "hubscore") {
-                network_out_1 %>% mutate(hub_score_hub = centrality_hub())
-            }
-
     } else {
-        network_out_2 <- network_init_2
+        network_out_1 <- network_init
     }
+
+    network_out_2 <-
+        if (hub_measure == "betweenness") {
+            network_out_1 %>% mutate(hub_score_btw = betweenness)
+        } else if (hub_measure == "degree") {
+            network_out_1 %>% mutate(hub_score_deg = degree)
+        } else if (hub_measure == "hubscore") {
+            network_out_1 %>% mutate(hub_score_hub = centrality_hub())
+        }
 
     if (nrow(as_tibble(network_out_2)) > 2000) {
         message(
@@ -219,11 +187,9 @@ ppi_build_network <- function(
     }
 
     message("Mapping input Ensembl IDs to HGNC symbols...")
-    ensembl_to_hgnc <- select(mapping_file, "name" = ensg_id, gene_name)
-
     network_mapped <- left_join(
         network_out_2,
-        ensembl_to_hgnc,
+        select(mapping_file, "name" = ensg_id, gene_name),
         by = "name"
     )
 
