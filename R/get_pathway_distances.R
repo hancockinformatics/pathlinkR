@@ -38,6 +38,8 @@ get_pathway_distances <- function(
         dist_method = "jaccard"
 ) {
 
+    stopifnot(is(sigora_database, "data.frame"))
+
     gene_id_col <- colnames(pathway_data)[
         unlist(map(pathway_data[1, ], ~str_detect(.x, "ENSG")))
     ]

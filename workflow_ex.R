@@ -57,8 +57,6 @@ plot_fold_change(
 # PPI networks ------------------------------------------------------------
 
 
-# |- build_network --------------------------------------------------------
-
 ex_de_genes <- deseq_example_list[[5]] %>%
     rownames_to_column("gene") %>%
     as_tibble() %>%
@@ -67,7 +65,9 @@ ex_de_genes <- deseq_example_list[[5]] %>%
 ex_network <- ppi_build_network(
     df = ex_de_genes,
     col = "gene",
-    order = "zero"
+    order = "first",
+    hub_measure = "hubscore",
+    ppi_data = innatedb_exp
 )
 
 ppi_plot_network(
