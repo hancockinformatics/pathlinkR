@@ -3,14 +3,28 @@
 \docType{data}
 \name{sigora_examples}
 \alias{sigora_examples}
-\title{A list of three example outputs from}
+\title{Example outut from \code{enrich_pathways} run on "deseq_example_list"}
 \format{
-A list of three data frames.
+A data frame (tibble) with 265 rows and 12 columns
+\describe{
+\item{pathway_id}{Reactome pathway identifier}
+\item{pathway_description}{Description of the pathway}
+\item{direction}{Was the pathway enriched in up or down regulated genes}
+\item{p_value}{Nominal p value for the enrichment}
+\item{p_value_adjusted}{p value adjusted for multiple testing}
+\item{genes}{Genes in the pathway/input}
+\item{num_candidate_genes}{Analyzed genes found in the pathway of interest}
+\item{num_bg_genes}{All genes from the pathway database}
+\item{gene_ratio}{Quotient of the number of candidate and background genes}
+\item{top_pathways}{Pathway category}
+\item{comparison}{Comparison from which results are dervied; name of input list}
+\item{total_genes}{Total number of input genes}
+}
 }
 \usage{
 sigora_examples
 }
 \description{
-A list of three example outputs from
+Example outut from \code{enrich_pathways} run on "deseq_example_list"
 }
 \keyword{datasets}

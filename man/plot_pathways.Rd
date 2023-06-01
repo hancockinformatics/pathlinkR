@@ -76,13 +76,10 @@ up- and down-regulated based on fold change, and automatically assigned
 each pathway into an informative top-level category.
 }
 \examples{
-ex_results_sigora <- enrich_pathway(
-    deseq_example_list[c(5, 6)],
-    gps_repo = reaH,
-    filter_results = 0.001,
+plot_pathways(
+    dplyr::bind_rows(sigora_examples[c(1, 2)], .id = "name"),
+    columns = 2
 )
-
-plot_pathways(ex_results_sigora, columns = 2)
 
 }
 \references{
