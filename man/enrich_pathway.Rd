@@ -65,7 +65,7 @@ assumed to contain the input genes to be tested.
 }
 \examples{
 enrich_pathway(
-    deseq_example_list[c(5, 6)],
+    deseq_example_list[1],
     gps_repo = reaH
 )
 

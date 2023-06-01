@@ -47,7 +47,7 @@
 #'
 #' @examples
 #' enrich_pathway(
-#'     deseq_example_list[c(5, 6)],
+#'     deseq_example_list[1],
 #'     gps_repo = reaH
 #' )
 #'
@@ -58,7 +58,7 @@ enrich_pathway <- function(
         fc_cutoff = 1.5,
         split = TRUE,
         analysis = "sigora",
-        filter_results = 'default',
+        filter_results = "default",
         gps_repo = reaH,
         gene_universe = NULL
 ) {
