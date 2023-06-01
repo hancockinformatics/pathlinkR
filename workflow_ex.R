@@ -84,6 +84,13 @@ ppi_plot_network(
 
 # enrich_pathway ----------------------------------------------------------
 
+# TODO Run to generate "sigora_examples" once deseq_example_list is trimmed down
+# enriched_results_sigora <- enrich_pathway(
+#     deseq_example_list,
+#     gps_repo = reaH,
+#     filter_results = "default",
+# )
+
 # Enrich with SIGORA
 enriched_results_sigora <- enrich_pathway(
     deseq_example_list[c(5, 6)],
