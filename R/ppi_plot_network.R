@@ -99,8 +99,10 @@
 #' @seealso <https://github.com/hancockinformatics/pathnet/>
 #'
 #' @examples
-#' ex_de_genes <- deseq_example_list[[5]] %>%
-#'     rownames_to_column("gene") %>%
+#' library(dplyr)
+#'
+#' ex_de_genes <- deseq_example_list[[2]] %>%
+#'     tibble::rownames_to_column("gene") %>%
 #'     as_tibble() %>%
 #'     filter(padj < 0.05 & abs(log2FoldChange) > log2(1.5))
 #'
@@ -153,7 +155,7 @@ ppi_plot_network <- function(
     # Set up fill scaling based on argument `fill_type`
     if (fill_type == "fold_change") {
         stopifnot(is.numeric(pull(network, {{fill_column}})))
-        
+
         network <- network %>%
             mutate(
                 new_fill_col = case_when(

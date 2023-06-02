@@ -20,7 +20,7 @@ vignette: >
 </head>
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, comment = "", fig.align = "center")
+knitr::opts_chunk$set(echo = TRUE, comment = "")
 library(dplyr)
 ```
 
@@ -76,7 +76,7 @@ points, change x and y axis limits, convert between log2 and non-log fold change
 Since we're looking at COVID-19 in these example data sets, let's highlight
 genes in the interferon signaling pathway. We will use a database of Reactome
 pathways used by the pathway enrichment software `sigora` to generate a list of
-genes involved in interferon signaling. More on Reactome and SIGORA in the
+genes involved in interferon signaling. More on Reactome and Sigora in the
 pathway enrichment section below.
 ```{r customized_volcano_plot}
 ifn_genes <- sigora_database %>% 
@@ -139,7 +139,7 @@ ppi_plot_network(
     ex_network,
     fill_column = log2FoldChange,
     fill_type = "fold_change",
-    layout = "lgl",
+    layout = "nicely",
     label = TRUE,
     label_column = gene_name,
     label_filter = 5,
@@ -179,14 +179,14 @@ perform enrichment separately (set `split = FALSE` to perform enrichment without
 splitting). The name of the dataframe(s) in the list should indicate the
 comparison that resulted in the DESeq2 results.
 ```{r sigora_enrichment}
-# Perform enrichment with SIGORA (default). We also need to specify the
+# Perform enrichment with Sigora (default). We also need to specify the
 # gene-pair signature repository (more in the Supplemental section).
 enriched_results_sigora <- enrich_pathway(
     input_list = deseq_example_list,
     gps_repo = reaH
 )
 
-# Enrichment without splitting 
+# Enrichment without splitting by fold change direction
 enriched_results_sigora_nosplit <- enrich_pathway(
     input_list = deseq_example_list,
     gps_repo = reaH, 
@@ -336,7 +336,7 @@ generate your own GPS repo using `sigora` and your own set of pathways (e.g.
 from another pathway database like GO or KEGG). Please consult `sigora`
 documentation on how to generate your custom GPS repo.
 
-## Why are there different p-value cut-offs for SIGORA vs ReactomePA/Hallmark?
+## Why are there different p-value cut-offs for Sigora vs ReactomePA/Hallmark?
 Because there are now multiple gene pairs vs just genes, the gene-pair
 "universe" is greatly increased and it is more likely for a result to be
 significant. Therefore, the cutoff threshold for significance is more stringent
@@ -359,7 +359,7 @@ Fabregat A, Sidiropoulos K, Viteri G, Forner O, Marin-Garcia P, Arnau V,
 D’Eustachio P, Stein L, Hermjakob H. Reactome pathway analysis: a
 high-performance in-memory approach. BMC Bioinform. 2017;18:142.
 
-Foroushani ABK, Brinkman FSL, Lynn DJ. Pathway-GPS and SIGORA: identifying
+Foroushani ABK, Brinkman FSL, Lynn DJ. Pathway-GPS and Sigora: identifying
 relevant pathways based on the over-representation of their gene-pair
 signatures. PeerJ. 2013;1:e229.
 
