@@ -1,6 +1,6 @@
 #' List of example results from DESeq2
 #'
-#' @format A six-element list of data frames, each with 6 columns, containing
+#' @format A list of two data frames, each with 6 columns, containing
 #'   example results from DESeq2. Each data frame has the following columns.
 #' \describe{
 #' \item{baseMean}{A combined score for the gene}
@@ -131,7 +131,7 @@
 
 #' Example outut from `enrich_pathways` run on "deseq_example_list"
 #'
-#' @format A data frame (tibble) with 265 rows and 12 columns
+#' @format A data frame (tibble) with 66 rows and 12 columns
 #' \describe{
 #' \item{pathway_id}{Reactome pathway identifier}
 #' \item{pathway_description}{Description of the pathway}
