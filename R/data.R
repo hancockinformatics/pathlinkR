@@ -129,7 +129,7 @@
 #' }
 "sigora_database"
 
-#' Example outut from `enrich_pathways` run on "deseq_example_list"
+#' Example output from `enrich_pathways` run on "deseq_example_list"
 #'
 #' @format A data frame (tibble) with 66 rows and 12 columns
 #' \describe{
