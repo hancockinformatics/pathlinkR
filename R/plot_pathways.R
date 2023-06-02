@@ -49,7 +49,7 @@
 #'
 #' @examples
 #' plot_pathways(
-#'     dplyr::bind_rows(sigora_examples[c(1, 2)], .id = "name"),
+#'     sigora_examples,
 #'     columns = 2
 #' )
 #'

@@ -75,7 +75,7 @@ ex_starting_pathways <- create_foundation(
 )
 
 ex_pathnet <- create_pathnet(
-    sigora_result = sigora_examples[[1]],
+    sigora_result = sigora_examples,
     foundation = ex_starting_pathways,
     trim = TRUE,
     trim_order = 1

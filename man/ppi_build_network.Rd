@@ -25,7 +25,7 @@ determining which nodes to highlight as hubs when plotting the network.
 Options include "betweenness" (default), "degree", and "hubscore". These
 represent network statistics calculated by their respective
 \code{tidygraph::centrality_x}, functions, specifically \code{degree},
-\code{betweenness}, and \code{hub_score}.}
+\code{betweenness}, and \code{hubscore}.}
 
 \item{ppi_data}{Data frame of PPI data; must contain rows of interactions as
 pairs of Ensembl gene IDs, with columns named "ensembl_gene_A" and
@@ -51,7 +51,7 @@ at \code{?igraph::hub_score}.
 \examples{
 library(dplyr)
 
-ex_de_genes <- deseq_example_list[[5]] \%>\%
+ex_de_genes <- deseq_example_list[[1]] \%>\%
     tibble::rownames_to_column("gene") \%>\%
     as_tibble() \%>\%
     filter(padj < 0.05 & abs(log2FoldChange) > log2(1.5))

@@ -1,7 +1,7 @@
 #' create_pathnet
 #'
 #' @param sigora_result Data frame of results from Sigora. Must contain columns
-#' "pathway_id" and "bonferroni".
+#' "pathway_id" and "p_value_adjusted".
 #' @param foundation List of pathway pairs to use in constructing a network,
 #'   output from `create_foundation`.
 #' @param trim Remove subgraphs which don't contain any enriched pathways
@@ -36,7 +36,7 @@
 #' )
 #'
 #' ex_pathnet <- create_pathnet(
-#'     sigora_result = sigora_examples[[1]],
+#'     sigora_result = sigora_examples,
 #'     foundation = ex_starting_pathways,
 #'     trim = TRUE,
 #'     trim_order = 1
@@ -49,7 +49,9 @@ create_pathnet <- function(
         trim_order = 1
 ) {
 
-    stopifnot(all(c("pathway_id", "bonferroni") %in% colnames(sigora_result)))
+    stopifnot(
+        all(c("pathway_id", "p_value_adjusted") %in% colnames(sigora_result))
+    )
 
     starting_nodes <- foundation %>%
         select(pathway_1, pathway_name_1) %>%
@@ -70,7 +72,7 @@ create_pathnet <- function(
     pathways_as_network_2 <-
         if (trim) {
             x1 <- pathways_as_network %>%
-                filter(!is.na(bonferroni)) %>%
+                filter(!is.na(p_value_adjusted)) %>%
                 pull(rn)
 
             valid_nodes <- map(x1, ~neighborhood(

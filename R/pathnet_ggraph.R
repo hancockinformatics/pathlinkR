@@ -50,7 +50,7 @@
 #' )
 #'
 #' ex_pathnet <- create_pathnet(
-#'     sigora_result = sigora_examples[[1]],
+#'     sigora_result = sigora_examples,
 #'     foundation = ex_starting_pathways,
 #'     trim = TRUE,
 #'     trim_order = 1
@@ -82,7 +82,7 @@ pathnet_ggraph <- function(
     stopifnot(all(
         c(
             "pathway_name_1",
-            "bonferroni",
+            "p_value_adjusted",
             "grouped_pathway"
         ) %in% colnames(as_tibble(network))
     ))
@@ -94,7 +94,7 @@ pathnet_ggraph <- function(
     ))
 
     interactors_all <- network %>%
-        filter(is.na(bonferroni)) %>%
+        filter(is.na(p_value_adjusted)) %>%
         pull(pathway_name_1)
 
     interactors_to_label <- sample(
@@ -104,9 +104,9 @@ pathnet_ggraph <- function(
     )
 
     network_to_plot <- network %>% mutate(
-        node_fill = if_else(!is.na(bonferroni), grouped_pathway, NA_character_),
+        node_fill = if_else(!is.na(p_value_adjusted), grouped_pathway, NA_character_),
         node_label = case_when(
-            !is.na(bonferroni) ~ pathway_name_1,
+            !is.na(p_value_adjusted) ~ pathway_name_1,
             pathway_name_1 %in% interactors_to_label ~ pathway_name_1,
             TRUE ~ NA_character_
         ),
@@ -114,7 +114,7 @@ pathnet_ggraph <- function(
             node_label,
             ~trunc_neatly(.x, l = 40) %>% str_wrap(width = 20)
         ),
-        bonferroni = if_else(!is.na(bonferroni), bonferroni, 1)
+        p_value_adjusted = if_else(!is.na(p_value_adjusted), p_value_adjusted, 1)
     )
 
     ggraph(network_to_plot, layout = net_layout) +
@@ -129,7 +129,7 @@ pathnet_ggraph <- function(
         # Nodes
         geom_node_point(
             aes(
-                size = -log10(bonferroni),
+                size = -log10(p_value_adjusted),
                 fill = node_fill,
                 colour = grouped_pathway
             ),
