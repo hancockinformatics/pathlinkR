@@ -5,7 +5,7 @@
 \alias{sigora_examples}
 \title{Example outut from \code{enrich_pathways} run on "deseq_example_list"}
 \format{
-A data frame (tibble) with 265 rows and 12 columns
+A data frame (tibble) with 66 rows and 12 columns
 \describe{
 \item{pathway_id}{Reactome pathway identifier}
 \item{pathway_description}{Description of the pathway}
