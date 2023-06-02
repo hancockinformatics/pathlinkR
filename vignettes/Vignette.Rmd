@@ -54,8 +54,8 @@ plot, we can use the function `eruption()` in this package.
 We have included example gene expression study results in this package:
 `deseq_example_list`. This is a list of 6 data frames generated using DESeq2
 (Love et al. 2014). Data is from an RNA-Seq study investigating COVID-19 and
-non-COVID-19 sepsis patients at admission (T1) and ~1 week later (T2) in the
-ICU, compared to healthy controls or indexed over time (An et al. 2023).
+non-COVID-19 sepsis patients at admission (T1) compared to ~1 week later (T2) in 
+the ICU, indexed over time (i.e., T2 vs T1) (An et al. 2023).
 ```{r datasets_and_preliminary_volcano_plot}
 # Six different comparisons are included
 names(deseq_example_list)
@@ -100,12 +100,12 @@ eruption(
 )
 ```
 
-Unsurprisingly, we see quite a lot of interferon signaling genes that are
-up-regulated in COVID-19 patients at ICU admission compared to healthy controls.
-However, it's difficult to get a sense of whether this is due to chance or if
-there is a true biological significance, as there are also many interferon genes
-that were not DEGs. This is where pathway enrichment can tell us statistically
-if what we see is real biology or not.
+We see quite a lot of interferon signaling genes that are down-regulated in 
+COVID-19 patients at ICU admission, perhaps reflective of some resolution of an
+antiviral response. However, it's difficult to get a sense of whether this is 
+due to chance or if there is a true biological significance, as there are also 
+many interferon genes that were not DEGs. This is where pathway enrichment can 
+tell us statistically if what we see is real biology or not.
 
 
 # Building and visualizing PPI networks
@@ -119,7 +119,7 @@ two main functions used to accomplish this are `ppi_build_network` and
 `ppi_plot_network`.
 ```{r ppi_networks, fig.width=12, fig.height=10, warning=FALSE}
 # Start by filtered one of the example DE gene lists for significant genes
-ex_de_genes <- deseq_example_list[[5]] %>%
+ex_de_genes <- deseq_example_list[[1]] %>%
     tibble::rownames_to_column("gene") %>%
     as_tibble() %>%
     filter(padj < 0.05 & abs(log2FoldChange) > log2(1.5))
@@ -179,20 +179,16 @@ perform enrichment separately (set `split = FALSE` to perform enrichment without
 splitting). The name of the dataframe(s) in the list should indicate the
 comparison that resulted in the DESeq2 results.
 ```{r sigora_enrichment}
-# Let's use the time-indexed comparisons, i.e. T2 vs T1 for COVID-19 and
-# non-COVID-19 sepsis patients
-time_examples <- deseq_example_list[c(5, 6)]
-
 # Perform enrichment with SIGORA (default). We also need to specify the
 # gene-pair signature repository (more in the Supplemental section).
 enriched_results_sigora <- enrich_pathway(
-    input_list = time_examples,
+    input_list = deseq_example_list,
     gps_repo = reaH
 )
 
 # Enrichment without splitting 
 enriched_results_sigora_nosplit <- enrich_pathway(
-    input_list = time_examples,
+    input_list = deseq_example_list,
     gps_repo = reaH, 
     split = FALSE
 )
@@ -204,7 +200,7 @@ ReactomePA (Yu et al. 2016).
 ```{r reactomepa_enrichment}
 # Perform enrichment with ReactomePA
 enriched_results_rpa <- enrich_pathway(
-    input_list = time_examples,
+    input_list = deseq_example_list,
     analysis = "reactomepa"
 )
 ```
@@ -217,7 +213,7 @@ This database provides a more high-level summary of key biological processes
 compared to the more granular Reactome pathways.
 ```{r hallmark_enrichment}
 enriched_results_hm <- enrich_pathway(
-    input_list = time_examples,
+    input_list = deseq_example_list,
     analysis = "hallmark"
 )
 ```
@@ -265,7 +261,7 @@ From these results, you can see that while many of the immune system pathways
 change in the same direction over time in COVID-19 and non-COVID-19 sepsis
 patients, a few unique ones stand out, mostly related to interferon signaling
 ("Interferon Signaling", "Interferon gamma signaling", "Interferon alpha/beta
-signaling", "ISG15 antiviral mechanism"). This reflects the elevated early
+signaling", "ISG15 antiviral mechanism"). This likely reflects an elevated early
 antiviral response in COVID-19 patients that decreased over time, compared to no
 change in non-COVID-19 sepsis patients.
 
@@ -320,8 +316,7 @@ plot_fold_change(
     deseq_example_list,
     path_name = "Interferon alpha/beta signaling",
     col_split = c(
-        "Positive", "Positive", "Negative",
-        "Negative", "Time", "Time"
+        "Positive", "Negative"
     ),
     cluster_columns = FALSE
 )
