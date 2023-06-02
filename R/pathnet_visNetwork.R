@@ -46,7 +46,7 @@
 #' )
 #'
 #' ex_pathnet <- create_pathnet(
-#'     sigora_result = sigora_examples[[1]],
+#'     sigora_result = sigora_examples,
 #'     foundation = ex_starting_pathways,
 #'     trim = TRUE,
 #'     trim_order = 1
@@ -71,11 +71,11 @@ pathnet_visNetwork <- function(
         as_tibble() %>%
         mutate(
             id = row_number(),
-            value = if_else(is.na(bonferroni), 1, -log10(bonferroni)),
+            value = if_else(is.na(p_value_adjusted), 1, -log10(p_value_adjusted)),
             background = map_chr(
                 grouped_pathway, ~grouped_pathway_colours[[.x]]
             ),
-            background = if_else(!is.na(bonferroni), background, "#ffffff"),
+            background = if_else(!is.na(p_value_adjusted), background, "#ffffff"),
             border = map_chr(grouped_pathway, ~grouped_pathway_colours[[.x]]),
             color = map2(
                 background,
@@ -87,14 +87,14 @@ pathnet_visNetwork <- function(
             id,
             "title" = pathway_name_1,
             everything(),
-            -c(background, border, direction, description, pvalue)
+            -c(background, border, direction, pathway_description, p_value)
         )
 
     if (label_nodes) {
         visnet_nodes <- mutate(
             visnet_nodes,
             label = map_chr(
-                if_else(!is.na(bonferroni), title, ""),
+                if_else(!is.na(p_value_adjusted), title, ""),
                 trunc_neatly,
                 30
             )

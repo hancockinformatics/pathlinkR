@@ -8,7 +8,7 @@ create_pathnet(sigora_result, foundation, trim = TRUE, trim_order = 1)
 }
 \arguments{
 \item{sigora_result}{Data frame of results from Sigora. Must contain columns
-"pathway_id" and "bonferroni".}
+"pathway_id" and "p_value_adjusted".}
 
 \item{foundation}{List of pathway pairs to use in constructing a network,
 output from \code{create_foundation}.}
@@ -38,7 +38,7 @@ ex_starting_pathways <- create_foundation(
 )
 
 ex_pathnet <- create_pathnet(
-    sigora_result = sigora_examples[[1]],
+    sigora_result = sigora_examples,
     foundation = ex_starting_pathways,
     trim = TRUE,
     trim_order = 1

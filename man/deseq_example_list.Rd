@@ -5,7 +5,7 @@
 \alias{deseq_example_list}
 \title{List of example results from DESeq2}
 \format{
-A six-element list of data frames, each with 6 columns, containing
+A list of two data frames, each with 6 columns, containing
 example results from DESeq2. Each data frame has the following columns.
 \describe{
 \item{baseMean}{A combined score for the gene}
