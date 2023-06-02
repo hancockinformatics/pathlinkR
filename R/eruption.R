@@ -80,33 +80,41 @@ eruption <- function(
     # Data frame
     stopifnot(is.data.frame(deseq_results))
 
-    # Ensembl IDs as rownames
-    stopifnot(str_detect(rownames(deseq_results)[1], "^ENSG"))
-
     # Columns: padj, log2FoldChange
     stopifnot(all(c("padj", "log2FoldChange") %in% colnames(deseq_results)))
 
-    # Annotate Ensembl gene IDs with gene names from the mapping file. For
-    # Ensembl gene IDs without gene names, just use the Ensembl gene ID.
-    res <- deseq_results %>%
-        rownames_to_column("ensg_id") %>%
-        filter(!is.na(padj)) %>%
-        left_join(
-            mapping_file,
-            by = "ensg_id"
-        ) %>%
-        mutate(
-            gene_name = case_when(
-                is.na(gene_name) ~ ensg_id,
-                !is.na(gene_name) ~ gene_name
-            ),
-            significant = case_when(
-                padj < p_cutoff & abs(log2FoldChange) > log2(fc_cutoff) ~ "SIG",
-                TRUE ~ "NS"
-            ),
-            in_list = case_when(ensg_id %in% select_genes ~ "Y", TRUE ~ "N"),
-            neglogp = -log10(padj)
-        )
+    # If ENSG ids are detected, annotate Ensembl gene IDs with gene names from 
+    # the mapping file. For Ensembl gene IDs without gene names, just use the 
+    # Ensembl gene ID. If rownames are not ENSG ids, they will be used as is, 
+    # and you can map it to your own ids beforehand
+    
+    if (str_detect(rownames(deseq_results)[1], "^ENSG")) {
+        res <- deseq_results %>%
+            rownames_to_column("ensg_id") %>%
+            filter(!is.na(padj)) %>%
+            left_join(
+                mapping_file,
+                by = "ensg_id"
+            ) %>%
+            mutate(
+                gene_name = case_when(
+                    is.na(gene_name) ~ ensg_id,
+                    !is.na(gene_name) ~ gene_name
+                )
+            )
+    } else {
+        res <- deseq_results %>% 
+            rownames_to_column("ensg_id") %>% 
+            mutate(gene_name = ensg_id)
+    }
+    res <- res %>% mutate(
+        significant = case_when(
+            padj < p_cutoff & abs(log2FoldChange) > log2(fc_cutoff) ~ "SIG",
+            TRUE ~ "NS"
+        ),
+        in_list = case_when(ensg_id %in% select_genes ~ "Y", TRUE ~ "N"),
+        neglogp = -log10(padj)
+    )
 
     # If specifying x and y axis limits, remove any genes that fall outside the
     # specified ranges
