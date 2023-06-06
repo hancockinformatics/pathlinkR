@@ -66,17 +66,14 @@ enrich_pathway <- function(
     ### Check inputs
     stopifnot(analysis %in% c("sigora", "reactomepa", "hallmark"))
 
-    if (
-        !is.list(input_list) |
-        !all(unlist(lapply(input_list, is.data.frame))) |
-        is.null(names(input_list))
-    ) {
-        stop(
-            "Provide a named list of data frames of results, with the name of ",
-            "each item in the list as the comparison name."
-        )
-    }
-
+    stopifnot(
+        "Provide a named list of data frames of results, with the name
+        of each item in the list as the comparison name."  = {
+            is.list(input_list)
+            !is.null(names(input_list))
+            all(unlist(lapply(input_list, is.data.frame)))
+        }
+    )
 
     # Start looping through each data frame in "input_list"
     for (i in seq_len(length(input_list))) {
@@ -131,21 +128,21 @@ enrich_pathway <- function(
 
             run_sigora_safely <- purrr::possibly(run_sigora)
 
-            # set default pvalue cutoff
-            if (filter_results == 'default') {
+            # set default p value cutoff
+            if (filter_results == "default") {
                 filter_results <- 0.001
             }
 
             # Enrich with up- and down-regulated genes separately
             if (split) {
                 up_results <- run_sigora_safely(
-                    up_gns,
+                    enrich_genes = up_gns,
                     direction = "Up",
                     gps_repo = gps_repo,
                     pval_filter = filter_results
                 )
                 dn_results <- run_sigora_safely(
-                    dn_gns,
+                    enrich_genes = dn_gns,
                     direction = "Down",
                     gps_repo = gps_repo,
                     pval_filter = filter_results
@@ -155,7 +152,7 @@ enrich_pathway <- function(
                 # Or just use all DE genes for enrichment
             } else {
                 total_results <- run_sigora_safely(
-                    all_gns,
+                    enrich_genes = all_gns,
                     direction = "All",
                     gps_repo = gps_repo,
                     pval_filter = filter_results
