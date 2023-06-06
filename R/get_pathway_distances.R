@@ -26,7 +26,7 @@
 #' @seealso <https://github.com/hancockinformatics/pathnet>
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'     get_pathway_distances(
 #'         pathway_data = sigora_database,
 #'         dist_method = "jaccard"
