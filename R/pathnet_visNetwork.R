@@ -71,11 +71,19 @@ pathnet_visNetwork <- function(
         as_tibble() %>%
         mutate(
             id = row_number(),
-            value = if_else(is.na(p_value_adjusted), 1, -log10(p_value_adjusted)),
+            value = if_else(
+                is.na(p_value_adjusted),
+                1,
+                -log10(p_value_adjusted)
+            ),
             background = map_chr(
                 grouped_pathway, ~grouped_pathway_colours[[.x]]
             ),
-            background = if_else(!is.na(p_value_adjusted), background, "#ffffff"),
+            background = if_else(
+                !is.na(p_value_adjusted),
+                background,
+                "#ffffff"
+            ),
             border = map_chr(grouped_pathway, ~grouped_pathway_colours[[.x]]),
             color = map2(
                 background,

@@ -13,7 +13,7 @@
 #' @seealso <https://github.com/hancockinformatics/pathnet/>
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' tj1 <- jsonlite::read_json(
 #'     "~/Downloads/networkanalyst_0.json",
 #'     simplifyVector = TRUE
