@@ -27,14 +27,16 @@ plot_fold_change(
 
 # Separate out the different conditions so that the names don"t take up so much
 # space
-deseq_example_list_renamed <- deseq_example_list
-names(deseq_example_list_renamed) <-
-    c("PosT1", "PosT2", "NegT1", "NegT2", "Pos", "Neg")
+deseq_example_list_renamed <- purrr::set_names(
+    deseq_example_list,
+    c("Pos", "Neg")
+)
+
 
 plot_fold_change(
     deseq_example_list_renamed,
     path_name = "Generation of second messenger molecules",
-    col_split = c("Pos", "Pos", "Neg", "Neg", "Time", "Time"),
+    col_split = c("Pos", "Neg"),
     col_angle = 0
 )
 
@@ -45,7 +47,7 @@ plot_fold_change(
     manual_title = "Genes I like",
     genes_to_plot = c("CD4", "CD8A","CD8B", "CD28", "ZAP70"),
     gene_format = "hgnc",
-    col_split = c("Pos", "Pos", "Neg", "Neg", "Time", "Time"),
+    col_split = c("Pos", "Neg"),
     log2_foldchange = TRUE,
     col_angle = 45,
     cluster_rows = FALSE,
@@ -56,8 +58,7 @@ plot_fold_change(
 
 # PPI networks ------------------------------------------------------------
 
-
-ex_de_genes <- deseq_example_list[[5]] %>%
+ex_de_genes <- deseq_example_list[[1]] %>%
     rownames_to_column("gene") %>%
     as_tibble() %>%
     filter(padj < 0.05 & abs(log2FoldChange) > log2(1.5))
@@ -65,7 +66,7 @@ ex_de_genes <- deseq_example_list[[5]] %>%
 ex_network <- ppi_build_network(
     df = ex_de_genes,
     col = "gene",
-    order = "first",
+    order = "zero",
     hub_measure = "hubscore",
     ppi_data = innatedb_exp
 )
@@ -84,50 +85,42 @@ ppi_plot_network(
 
 # enrich_pathway ----------------------------------------------------------
 
-# TODO Run to generate "sigora_examples" once deseq_example_list is trimmed down
-# enriched_results_sigora <- enrich_pathway(
-#     deseq_example_list,
-#     gps_repo = reaH,
-#     filter_results = "default",
-# )
-
 # Enrich with SIGORA
 enriched_results_sigora <- enrich_pathway(
-    deseq_example_list[c(5, 6)],
+    input_list = deseq_example_list,
+    filter_input = TRUE,
+    split = TRUE,
+    analysis = "sigora",
     gps_repo = reaH,
-    filter_results = 0.001,
+    filter_results = "default",
 )
 
 # If we only have one data frame, that's already been filtered
-test_de_genes <- ex_de_genes %>%
-    column_to_rownames("gene")
-
 enriched_results_sigora_2 <- enrich_pathway(
-    list("one" = test_de_genes),
+    list("one" = ex_de_genes),
     gps_repo = reaH,
     filter_input = FALSE,
-    filter_results = 0.001
+    filter_results = "default"
 )
 
 # If we want all pathways (even non-significant ones, will be slower)
-enriched_results_sigora_3 <- enrich_pathway(
-    list("one" = test_de_genes),
-    gps_repo = reaH,
-    filter_input = FALSE,
-    filter_results = NA
-)
+# enriched_results_sigora_3 <- enrich_pathway(
+#     list("one" = test_de_genes),
+#     gps_repo = reaH,
+#     filter_input = FALSE,
+#     filter_results = 1
+# )
 
 # Enrich with ReactomePA
 enriched_results_rpa <- enrich_pathway(
-    deseq_example_list[c(5, 6)],
+    deseq_example_list,
     filter_input = TRUE,
-    analysis = "reactomepa",
-    filter_results = 0.05
+    analysis = "reactomepa"
 )
 
 # Enrich with Hallmark gene sets
 enriched_results_hm <- enrich_pathway(
-    deseq_example_list[c(5, 6)],
+    deseq_example_list,
     analysis = "hallmark",
     filter_input = TRUE
 )
@@ -141,19 +134,25 @@ plot_pathways(enriched_results_rpa, columns = 2)
 plot_pathways(enriched_results_hm)
 
 # If you only want "Immune System" pathways
-plot_pathways(enriched_results_sigora,
-              specific_top_pathways = "Immune System")
+plot_pathways(
+    enriched_results_sigora,
+    specific_top_pathways = "Immune System"
+)
 
 # If you want to include gene ratio
-plot_pathways(enriched_results_sigora,
-              specific_top_pathways = "Immune System",
-              include_gene_ratio = TRUE)
+plot_pathways(
+    enriched_results_sigora,
+    specific_top_pathways = "Immune System",
+    include_gene_ratio = TRUE
+)
 
 # If you want change up the format (change names, change label side)
-plot_pathways(enriched_results_sigora,
-              specific_top_pathways = "Immune System",
-              pathway_position = "left",
-              new_group_names = c("Pos", "Neg"))
+plot_pathways(
+    enriched_results_sigora,
+    specific_top_pathways = "Immune System",
+    pathway_position = "left",
+    new_group_names = c("Pos", "Neg")
+)
 
 
 # Pathway networks v1 -----------------------------------------------------
@@ -170,7 +169,7 @@ starting_pathways <- create_foundation(
 )
 
 my_pathway_network <- create_pathnet(
-    sigora_result = sigora_examples[[1]],
+    sigora_result = filter(sigora_examples, comparison == "COVID Pos Over Time"),
     foundation = starting_pathways,
     trim = TRUE,
     trim_order = 1
