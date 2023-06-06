@@ -17,7 +17,8 @@ A data frame (tibble) with 66 rows and 12 columns
 \item{num_bg_genes}{All genes from the pathway database}
 \item{gene_ratio}{Quotient of the number of candidate and background genes}
 \item{top_pathways}{Pathway category}
-\item{comparison}{Comparison from which results are dervied; name of input list}
+\item{comparison}{Comparison from which results are dervied; name of input
+list}
 \item{total_genes}{Total number of input genes}
 }
 }

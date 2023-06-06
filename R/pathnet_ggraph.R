@@ -104,7 +104,11 @@ pathnet_ggraph <- function(
     )
 
     network_to_plot <- network %>% mutate(
-        node_fill = if_else(!is.na(p_value_adjusted), grouped_pathway, NA_character_),
+        node_fill = if_else(
+            !is.na(p_value_adjusted),
+            grouped_pathway,
+            NA_character_
+        ),
         node_label = case_when(
             !is.na(p_value_adjusted) ~ pathway_name_1,
             pathway_name_1 %in% interactors_to_label ~ pathway_name_1,
@@ -114,7 +118,11 @@ pathnet_ggraph <- function(
             node_label,
             ~trunc_neatly(.x, l = 40) %>% str_wrap(width = 20)
         ),
-        p_value_adjusted = if_else(!is.na(p_value_adjusted), p_value_adjusted, 1)
+        p_value_adjusted = if_else(
+            !is.na(p_value_adjusted),
+            p_value_adjusted,
+            1
+        )
     )
 
     ggraph(network_to_plot, layout = net_layout) +
