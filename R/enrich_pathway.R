@@ -75,299 +75,182 @@ enrich_pathway <- function(
         }
     )
 
-    # Start looping through each data frame in "input_list"
-    for (i in seq_len(length(input_list))) {
+    # Iterating through each element of "input_list", preparing for next steps
+    result_list <- imap(input_list, function(x, comparison) {
+        stopifnot(
+            "Elements of 'input_list' should be named" = !is.null(comparison)
+        )
 
-        # Make sure the rownames aren't just 1:nrow(), which can happen if the
-        # input data frame is a tibble
-        if (all(rownames(input_list[[i]]) == seq_len(nrow(input_list[[i]])))) {
+        if (all(rownames(x) == seq_len(nrow(x)))) {
             stop(
                 "The rownames of the data frame for the element with name '",
-                names(input_list[i]),
-                "' don't look like gene IDs!"
+                comparison, "' don't look like gene IDs!"
             )
         }
 
-        comparison <- names(input_list[i])
         message("Comparison being analyzed: ", comparison)
 
         # Use the DE genes, filtering if specified
-        if (filter_input) {
-            stopifnot(
-                c("padj", "log2FoldChange") %in% colnames(input_list[[i]])
-            )
-            message("\tFiltering the results using before testing for pathways")
-
-            deseq_results <- input_list[[i]] %>%
-                filter(padj < p_cutoff, abs(log2FoldChange) > log2(fc_cutoff))
-        } else {
-            deseq_results <- input_list[[i]]
-        }
+        deseq_results <-
+            if (filter_input) {
+                stopifnot(
+                    c("padj", "log2FoldChange") %in% colnames(x)
+                )
+                message("\tFiltering the results before testing...")
+                filter(
+                    x,
+                    padj < p_cutoff,
+                    abs(log2FoldChange) > log2(fc_cutoff)
+                )
+            } else {
+                x
+            }
 
         # If splitting into up- and down-regulated DE genes
         if (split) {
-            up_gns <- filter(deseq_results, log2FoldChange > 0) %>% rownames()
-            dn_gns <- filter(deseq_results, log2FoldChange < 0) %>% rownames()
+            prepped_genes <- list(
+                "Up"   = rownames(filter(deseq_results, log2FoldChange > 0)),
+                "Down" = rownames(filter(deseq_results, log2FoldChange < 0))
+            )
             message(
                 "\tDEGs used: ",
-                length(up_gns), " Up, ",
-                length(dn_gns), " Down"
+                length(prepped_genes$Up), " Up, ",
+                length(prepped_genes$Down), " Down..."
             )
         } else {
-            all_gns <- rownames(deseq_results)
-            message("\tDEGs used: ", length(all_gns))
+            prepped_genes <- list("All" = rownames(deseq_results))
+            message("\tDEGs used: ", length(prepped_genes$All), "...")
         }
 
-        ### Sigora analysis
-        # Sigora uses gene pairs with the Reactome database, which often
-        # eliminates duplicate, closely related pathways (e.g. TLR7/8/9
-        # pathways). Useful for if you have a lot of DEGs that might enrich for
-        # a lot of pathways, making it difficult analyze.
+        ### Sigora ###
         if (analysis == "sigora") {
-            message("\tRunning enrichment using Sigora")
+            message("\tRunning enrichment using Sigora...")
 
             run_sigora_safely <- purrr::possibly(run_sigora)
 
-            # set default p value cutoff
-            if (filter_results == "default") {
-                filter_results <- 0.001
-            }
+            result_final <- purrr::imap_dfr(
+                .x  = prepped_genes,
+                .id = "direction",
+                function(y, direction) {
+                    run_sigora_safely(
+                        y,
+                        gps_repo = gps_repo,
+                        pval_filter = ifelse(
+                            filter_results == "default",
+                            0.001,
+                            filter_results
+                        )
+                    )
+                }
+            )
 
-            # Enrich with up- and down-regulated genes separately
-            if (split) {
-                up_results <- run_sigora_safely(
-                    enrich_genes = up_gns,
-                    direction = "Up",
-                    gps_repo = gps_repo,
-                    pval_filter = filter_results
-                )
-                dn_results <- run_sigora_safely(
-                    enrich_genes = dn_gns,
-                    direction = "Down",
-                    gps_repo = gps_repo,
-                    pval_filter = filter_results
-                )
-                total_results <- rbind(up_results, dn_results)
-
-                # Or just use all DE genes for enrichment
-            } else {
-                total_results <- run_sigora_safely(
-                    enrich_genes = all_gns,
-                    direction = "All",
-                    gps_repo = gps_repo,
-                    pval_filter = filter_results
-                )
-            }
+            message(
+                "\tDone! Found ",
+                nrow(result_final),
+                " enriched pathways.\n"
+            )
+            return(result_final)
         }
 
 
-        ### ReactomePA analysis
-        # Reactome uses regular over-representation analysis. Useful for finding
-        # more pathways, if you have fewer DE genes or pathways. Less stringent
-        # than SIGORA enrichment. ReactomePA however is slow so we can use
-        # just the enricher function that is ReactomePA is built off of without
-        # loading extra packages/annotaton files
-        if (analysis == "reactomepa") {
+        ### ReactomePA or Hallmark ###
+        if (analysis %in% c("reactomepa", "hallmark")) {
 
-            message("\tRunning enrichment using ReactomePA")
+            ### ReactomePA ###
+            if (analysis == "reactomepa") {
+                message("\tRunning enrichment using ReactomePA")
 
-            # set default pvalue cutoff
-            if (filter_results == 'default') {
-                filter_results <- 0.05
-            }
+                rpa_hall_result <- purrr::imap_dfr(
+                    .x  = prepped_genes,
+                    .id = "direction",
+                    function(y, direction) {
 
-            # ReactomePA needs to map to Entrez IDs, as it doesn't take Ensembl
-            # IDs. We can use SIGORA's mapping data for consistency, though it
-            # maps fewer Entrez symbols than our own mapping file.
-            if (split) {
-                up_gns_entrez <- idmap %>%
-                    filter(Ensembl.Gene.ID %in% up_gns) %>%
-                    pull(EntrezGene.ID) %>%
-                    unique()
+                        genes_entrez <- idmap %>%
+                            filter(Ensembl.Gene.ID %in% y) %>%
+                            pull(EntrezGene.ID) %>%
+                            unique()
 
-                up_results <- up_gns_entrez %>%
-                    enricher(
-                        TERM2GENE = select(
-                            reactome_database,
-                            pathway_id, entrez_id
-                        ),
-                        TERM2NAME = select(
-                            reactome_database,
-                            pathway_id,
-                            pathway_name
-                        ),
-                        universe = gene_universe,
-                        minGSSize = 10,
-                        maxGSSize = 500,
-                        pvalueCutoff = filter_results
-                    ) %>%
-                    as.data.frame() %>%
-                    mutate(direction = "Up")
-
-                dn_gns_entrez <- idmap %>%
-                    filter(Ensembl.Gene.ID %in% dn_gns) %>%
-                    pull(EntrezGene.ID) %>%
-                    unique()
-
-                dn_results <- dn_gns_entrez %>%
-                    enricher(
-                        TERM2GENE = select(
-                            reactome_database,
-                            pathway_id, entrez_id
-                        ),
-                        TERM2NAME = select(
-                            reactome_database,
-                            pathway_id,
-                            pathway_name
-                        ),
-                        universe = gene_universe,
-                        minGSSize = 10,
-                        maxGSSize = 500,
-                        pvalueCutoff = filter_results
-                    ) %>%
-                    as.data.frame() %>%
-                    mutate(direction = "Down")
-
-                total_results <- rbind(up_results, dn_results)
-
-            } else {
-                all_gns_entrez <- idmap %>%
-                    filter(Ensembl.Gene.ID %in% all_gns) %>%
-                    pull(EntrezGene.ID) %>%
-                    unique()
-
-                total_results <- all_gns_entrez %>%
-                    enricher(
-                        TERM2GENE = select(
-                            reactome_database,
-                            pathway_id, entrez_id
-                        ),
-                        TERM2NAME = select(
-                            reactome_database,
-                            pathway_id,
-                            pathway_name
-                        ),
-                        universe = gene_universe,
-                        minGSSize = 10,
-                        maxGSSize = 500,
-                        pvalueCutoff = filter_results
-                    ) %>%
-                    as.data.frame() %>%
-                    mutate(direction = "All")
-            }
-
-            # Map the entrez ids to hgnc symbols
-            hgnc_gene_list <- c()
-            for (r in seq_len(nrow(total_results))) {
-                genelist <- total_results[r, "geneID"]
-                genelist <- str_split(genelist, "/") %>% unlist()
-                hgnc_genes <- mapping_file %>%
-                    filter(entrez_id %in% genelist) %>%
-                    .$gene_name
-                hgnc_genes <- paste(hgnc_genes, collapse = ";")
-                hgnc_gene_list <- c(hgnc_gene_list, hgnc_genes)
-            }
-            total_results$genes <- hgnc_gene_list
-
-            # Clean up the column names
-            total_results <- total_results %>%
-                separate(
-                    GeneRatio,
-                    into = c("num_candidate_genes", "num_bg_genes"),
-                    sep = "/"
+                        enricher(
+                            genes_entrez,
+                            TERM2GENE = select(
+                                reactome_database,
+                                pathway_id, entrez_id
+                            ),
+                            TERM2NAME = select(
+                                reactome_database,
+                                pathway_id,
+                                pathway_name
+                            ),
+                            universe = gene_universe,
+                            minGSSize = 10,
+                            maxGSSize = 500,
+                            pvalueCutoff = ifelse(
+                                filter_results == "default",
+                                0.05,
+                                filter_results
+                            )
+                        ) %>% as_tibble()
+                    }
                 ) %>%
-                # Replace "/" with ";" for consistency in "candidate_genes"
-                # column
-                mutate(
-                    across(c(num_candidate_genes, num_bg_genes), as.numeric),
-                    gene_ratio = num_candidate_genes / num_bg_genes,
-                ) %>%
-                select(
-                    "pathway_id" = ID,
-                    "pathway_description" = Description,
-                    direction,
-                    "p_value" = pvalue,
-                    "p_value_adjusted" = p.adjust,
-                    genes,
-                    num_candidate_genes,
-                    num_bg_genes,
-                    gene_ratio
-                )
-        }
-
-        ### Hallmark enrichment from mSigDB
-        # The Hallmark gene sets summarize and represent 50 specific
-        # well-defined biological states or processes and display coherent
-        # expression. They are a useful tool for looking at broad mechanisms,
-        # and can "validate" enrichment findings from SIGORA or ReactomePA if
-        # similar mechanisms appear.
-        if (analysis == "hallmark") {
-
-            message("\tRunning enrichment using Hallmark")
-
-            if (filter_results == 'default') {
-                filter_results <- 0.05
+                    rename("entrez_id" = geneID) %>%
+                    mutate(entrez_id = as.character(entrez_id)) %>%
+                    separate_longer_delim(entrez_id, delim = "/") %>%
+                    left_join(mapping_file) %>%
+                    select(-any_of(c("entrez_id", "ensg_id"))) %>%
+                    group_by(ID) %>%
+                    mutate(genes = paste(gene_name, collapse = ";")) %>%
+                    ungroup() %>%
+                    select(-gene_name) %>%
+                    distinct()
             }
 
-            if (split) {
-                up_results <- enricher(
-                    up_gns,
-                    TERM2GENE = msigdbr_t2g,
-                    universe = gene_universe,
-                    pvalueCutoff = filter_results
-                ) %>%
-                    as.data.frame() %>%
-                    mutate(direction = "Up")
+            ### Hallmark ###
+            if (analysis == "hallmark") {
+                message("\tRunning enrichment using Hallmark...")
 
-                dn_results <- enricher(
-                    dn_gns,
-                    TERM2GENE = msigdbr_t2g,
-                    universe = gene_universe,
-                    pvalueCutoff = filter_results
-                ) %>%
-                    as.data.frame() %>%
-                    mutate(direction = "Down")
+                rpa_hall_result <- purrr::imap_dfr(
+                    .x  = prepped_genes,
+                    .id = "direction",
+                    function(y, direction) {
 
-                total_results <- rbind(up_results, dn_results)
-
-            } else {
-                total_results <- enricher(
-                    all_gns,
-                    TERM2GENE = msigdbr_t2g,
-                    universe = gene_universe,
-                    pvalueCutoff = filter_results
+                        enricher(
+                            y,
+                            TERM2GENE = msigdbr_t2g,
+                            universe = gene_universe,
+                            pvalueCutoff = ifelse(
+                                filter_results == "default",
+                                0.05,
+                                filter_results
+                            )
+                        ) %>% as_tibble()
+                    }
                 ) %>%
-                    as.data.frame() %>%
-                    mutate(direction = "All")
+                    rename("ensg_id" = geneID) %>%
+                    separate_longer_delim(ensg_id, delim = "/") %>%
+                    left_join(mapping_file) %>%
+                    select(-any_of(c("entrez_id", "ensg_id"))) %>%
+                    group_by(ID) %>%
+                    mutate(genes = paste(gene_name, collapse = ";")) %>%
+                    ungroup() %>%
+                    select(-gene_name) %>%
+                    distinct()
             }
 
-            # annotate the genes as hgnc symbols and add them into the table
-            hgnc_gene_list <- c()
-            for (r in seq_len(nrow(total_results))) {
-                genelist <- total_results[r, "geneID"]
-                genelist <- str_split(genelist, "/") %>% unlist()
-                hgnc_genes <- mapping_file %>%
-                    filter(ensg_id %in% genelist) %>%
-                    .$gene_name
-                hgnc_genes <- paste(hgnc_genes, collapse = ";")
-                hgnc_gene_list <- c(hgnc_gene_list, hgnc_genes)
-            }
-            total_results$genes <- hgnc_gene_list
-
-            total_results <- total_results %>%
-                separate(
-                    GeneRatio,
-                    into = c("num_candidate_genes", "num_bg_genes"),
-                    sep = "/"
+            ### ReactomePA or Hallmark ###
+            result_final <- rpa_hall_result %>%
+                separate_wider_delim(
+                    cols = GeneRatio,
+                    delim = "/",
+                    names = c("num_candidate_genes", "num_bg_genes")
                 ) %>%
                 mutate(
                     across(c(num_candidate_genes, num_bg_genes), as.numeric),
                     gene_ratio = num_candidate_genes / num_bg_genes
                 ) %>%
                 select(
+                    direction,
                     "pathway_id" = ID,
                     "pathway_description" = Description,
-                    direction,
                     "p_value" = pvalue,
                     "p_value_adjusted" = p.adjust,
                     genes,
@@ -375,39 +258,16 @@ enrich_pathway <- function(
                     num_bg_genes,
                     gene_ratio
                 )
+
+            message(
+                "\tDone! Found ",
+                nrow(result_final),
+                " enriched pathways.\n"
+            )
+            return(result_final)
         }
+    })
 
-        # Annotate the  enrichment results by adding top pathways and
-        # comparisons
-        total_results_annotated <- left_join(
-            total_results,
-            top_pathways_more %>% dplyr::select(pathway_id, top_pathways),
-            by = "pathway_id"
-        )
-
-        total_results_annotated$comparison <- comparison
-        total_results_annotated$total_genes <- nrow(deseq_results)
-
-        message(
-            "\tDone! Enriched pathways: ", nrow(total_results_annotated), "\n"
-        )
-
-        # This adds the next dataframe to the previous one
-        if (i == 1) {
-            final_enriched_results <- total_results_annotated
-        } else {
-            final_enriched_results <-
-                rbind(final_enriched_results, total_results_annotated)
-        }
-    }
-
-    # Order the comparisons in the same order as entered (for graphing purposes
-    # later)
-    final_enriched_results$comparison <- factor(
-        final_enriched_results$comparison,
-        levels = c(names(input_list))
-    )
-
-    # Return the results, which is a tibble of all the pathway results
-    return(as_tibble(final_enriched_results))
+    results_all_comparisons <- bind_rows(result_list, .id = "comparison")
+    return(results_all_comparisons)
 }
