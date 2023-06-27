@@ -19,7 +19,7 @@ enrich_pathway(
 \arguments{
 \item{input_list}{list of data frames of DESeq2 results. The list names
 are used as the comparison for each dataframe (e.g. COVID vs Healthy). Data
-frames should have Ensembl gene IDs as rownames.}
+frames must have Ensembl gene IDs as the rownames.}
 
 \item{filter_input}{If providing list of data frames containing the
 unfiltered output from \code{DESeq2::results()}, set this to TRUE to filter for
@@ -27,31 +27,32 @@ DE genes using the thresholds set by the \code{p_cutoff} and \code{fc_cutoff}
 arguments. When FALSE it's assumed your passing the filtered
 results into \code{input_list} and no more filtering will be done.}
 
-\item{p_cutoff}{Adjusted p value cutoff, defaults to < 0.05.}
+\item{p_cutoff}{Adjusted p value cutoff, defaults to 0.05.}
 
-\item{fc_cutoff}{Absolute fold change, defaults to |FC| > 1.5.}
+\item{fc_cutoff}{Minimum absolute fold change, defaults to 1.5.}
 
-\item{split}{Boolean (TRUE); Split into up and down-regulated DEGs and do
-enrichment separately}
+\item{split}{Boolean (TRUE); Split into up and down-regulated DEGs using the
+column "log2FoldChange", and do enrichment separately}
 
-\item{analysis}{Default is SIGORA ("sigora"), others: ReactomePA
-("reactomepa"), mSigDB Hallmark gene sets ("hallmark")}
+\item{analysis}{Default is "sigora", but can also be "reactomepa" or
+"hallmark"}
 
-\item{filter_results}{Should the output be filtered for significance? Use
-\code{1} to return the unfiltered results, or a number between 0 and 1 for a
-custom p-value cutoff. If \code{default}, the significance cutoffs for Sigora is
-<0.001, and for ReactomePA or Hallmark is <0.05.}
+\item{filter_results}{Should the output be filtered for significance? Use \code{1}
+to return the unfiltered results, or any number less than 1 for a custom
+p-value cutoff. If \code{default}, the significance cutoff for Sigora is 0.001,
+and for ReactomePA or Hallmark is 0.05.}
 
-\item{gps_repo}{Gene Pair Signature object for Sigora to use to test for
-enriched pathways. We recommend using the one which ships with Sigora,
-which is already loaded as "reaH".}
+\item{gps_repo}{Only applies to \code{analysis = "sigora"}. Gene Pair Signature
+object for Sigora to use to test for enriched pathways. We recommend using
+the one which ships with Sigora, which is already loaded as "reaH".}
 
-\item{gene_universe}{Optional. Set of background genes to use when testing
-with ReactomePA or Hallmark gene sets. For ReactomePA this must be a
-character vector of Entrez genes. For Hallmark, it must be Ensembl IDs.}
+\item{gene_universe}{Only applies when \code{analysis} is "reactomepa" or
+"hallmark". The set of background genes to use when testing with ReactomePA
+or Hallmark gene sets. For ReactomePA this must be a character vector of
+Entrez genes. For Hallmark, it must be Ensembl IDs.}
 }
 \value{
-A data frame of pathway enrichment results
+A data frame of pathway enrichment results for all input comparisons
 }
 \description{
 This function provides a simple and consistent interface to
@@ -65,8 +66,12 @@ assumed to contain the input genes to be tested.
 }
 \examples{
 enrich_pathway(
-    deseq_example_list[1],
-    gps_repo = reaH
+    input_list = deseq_example_list[1],
+    filter_input = TRUE,
+    split = TRUE,
+    analysis = "sigora",
+    gps_repo = reaH,
+    filter_results = "default",
 )
 
 }
