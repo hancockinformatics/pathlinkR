@@ -151,6 +151,8 @@ enrich_pathway <- function(
                 }
             )
 
+            result_final$total_genes <- nrow(deseq_results)
+
             message(
                 "\tDone! Found ",
                 nrow(result_final),
@@ -250,7 +252,8 @@ enrich_pathway <- function(
                 ) %>%
                 mutate(
                     across(c(num_candidate_genes, num_bg_genes), as.numeric),
-                    gene_ratio = num_candidate_genes / num_bg_genes
+                    gene_ratio = num_candidate_genes / num_bg_genes,
+                    total_genes = nrow(deseq_results)
                 ) %>%
                 select(
                     direction,
@@ -261,7 +264,8 @@ enrich_pathway <- function(
                     genes,
                     num_candidate_genes,
                     num_bg_genes,
-                    gene_ratio
+                    gene_ratio,
+                    total_genes
                 )
 
             message(
@@ -273,6 +277,14 @@ enrich_pathway <- function(
         }
     })
 
-    results_all_comparisons <- bind_rows(result_list, .id = "comparison")
+    results_all_comparisons <- result_list %>%
+        bind_rows(.id = "comparison") %>%
+        left_join(
+            .,
+            select(top_pathways_more, pathway_id, top_pathways),
+            by = "pathway_id"
+        ) %>%
+        as_tibble()
+
     return(results_all_comparisons)
 }
