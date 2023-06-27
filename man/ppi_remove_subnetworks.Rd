@@ -2,7 +2,7 @@
 % Please edit documentation in R/ppi_remove_subnetworks.R
 \name{ppi_remove_subnetworks}
 \alias{ppi_remove_subnetworks}
-\title{Find and return the largest subnetwork}
+\title{INTERNAL Find and return the largest subnetwork}
 \usage{
 ppi_remove_subnetworks(input)
 }
@@ -13,7 +13,7 @@ ppi_remove_subnetworks(input)
 Largest subnetwork from the input network list as an igraph object
 }
 \description{
-Find and return the largest subnetwork
+INTERNAL Find and return the largest subnetwork
 }
 \seealso{
 \url{https://github.com/hancockinformatics/pathnet/}

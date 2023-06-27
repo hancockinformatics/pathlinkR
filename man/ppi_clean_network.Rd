@@ -17,7 +17,7 @@ functions such as \code{plot_network}
 Clean GraphML or JSON input
 }
 \examples{
-\donttest{
+\dontrun{
 tj1 <- jsonlite::read_json(
     "~/Downloads/networkanalyst_0.json",
     simplifyVector = TRUE
