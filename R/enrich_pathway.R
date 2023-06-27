@@ -2,35 +2,36 @@
 #'
 #' @param input_list list of data frames of DESeq2 results. The list names
 #'   are used as the comparison for each dataframe (e.g. COVID vs Healthy). Data
-#'   frames should have Ensembl gene IDs as rownames.
+#'   frames must have Ensembl gene IDs as the rownames.
 #' @param filter_input If providing list of data frames containing the
 #'   unfiltered output from `DESeq2::results()`, set this to TRUE to filter for
 #'   DE genes using the thresholds set by the `p_cutoff` and `fc_cutoff`
 #'   arguments. When FALSE it's assumed your passing the filtered
 #'   results into `input_list` and no more filtering will be done.
-#' @param p_cutoff Adjusted p value cutoff, defaults to < 0.05.
-#' @param fc_cutoff Absolute fold change, defaults to |FC| > 1.5.
-#' @param split Boolean (TRUE); Split into up and down-regulated DEGs and do
-#'   enrichment separately
-#' @param analysis Default is SIGORA ("sigora"), others: ReactomePA
-#'   ("reactomepa"), mSigDB Hallmark gene sets ("hallmark")
-#' @param filter_results Should the output be filtered for significance? Use
-#'   `1` to return the unfiltered results, or a number between 0 and 1 for a
-#'   custom p-value cutoff. If `default`, the significance cutoffs for Sigora is
-#'   <0.001, and for ReactomePA or Hallmark is <0.05.
-#' @param gps_repo Gene Pair Signature object for Sigora to use to test for
-#'   enriched pathways. We recommend using the one which ships with Sigora,
-#'   which is already loaded as "reaH".
-#' @param gene_universe Optional. Set of background genes to use when testing
-#'   with ReactomePA or Hallmark gene sets. For ReactomePA this must be a
-#'   character vector of Entrez genes. For Hallmark, it must be Ensembl IDs.
+#' @param p_cutoff Adjusted p value cutoff, defaults to 0.05.
+#' @param fc_cutoff Minimum absolute fold change, defaults to 1.5.
+#' @param split Boolean (TRUE); Split into up and down-regulated DEGs using the
+#'   column "log2FoldChange", and do enrichment separately
+#' @param analysis Default is "sigora", but can also be "reactomepa" or
+#'   "hallmark"
+#' @param filter_results Should the output be filtered for significance? Use `1`
+#'   to return the unfiltered results, or any number less than 1 for a custom
+#'   p-value cutoff. If `default`, the significance cutoff for Sigora is 0.001,
+#'   and for ReactomePA or Hallmark is 0.05.
+#' @param gps_repo Only applies to `analysis = "sigora"`. Gene Pair Signature
+#'   object for Sigora to use to test for enriched pathways. We recommend using
+#'   the one which ships with Sigora, which is already loaded as "reaH".
+#' @param gene_universe Only applies when `analysis` is "reactomepa" or
+#'   "hallmark". The set of background genes to use when testing with ReactomePA
+#'   or Hallmark gene sets. For ReactomePA this must be a character vector of
+#'   Entrez genes. For Hallmark, it must be Ensembl IDs.
 #'
-#' @return A data frame of pathway enrichment results
+#' @return A data frame of pathway enrichment results for all input comparisons
 #' @export
 #'
-#' @importFrom purrr possibly
-#' @importFrom clusterProfiler enricher
 #' @import dplyr
+#' @importFrom purrr possibly imap_dfr
+#' @importFrom clusterProfiler enricher
 #'
 #' @description This function provides a simple and consistent interface to
 #'   three different pathway enrichment tools: Sigora and ReactomePA (which both
@@ -47,8 +48,12 @@
 #'
 #' @examples
 #' enrich_pathway(
-#'     deseq_example_list[1],
-#'     gps_repo = reaH
+#'     input_list = deseq_example_list[1],
+#'     filter_input = TRUE,
+#'     split = TRUE,
+#'     analysis = "sigora",
+#'     gps_repo = reaH,
+#'     filter_results = "default",
 #' )
 #'
 enrich_pathway <- function(
@@ -75,8 +80,10 @@ enrich_pathway <- function(
         }
     )
 
-    # Iterating through each element of "input_list", preparing for next steps
+    ### Iterate through each element of "input_list"
     result_list <- imap(input_list, function(x, comparison) {
+
+        # Basic checks before continuing
         stopifnot(
             "Elements of 'input_list' should be named" = !is.null(comparison)
         )
@@ -90,7 +97,7 @@ enrich_pathway <- function(
 
         message("Comparison being analyzed: ", comparison)
 
-        # Use the DE genes, filtering if specified
+        # Filter the input genes if specified
         deseq_results <-
             if (filter_input) {
                 stopifnot(
@@ -106,7 +113,7 @@ enrich_pathway <- function(
                 x
             }
 
-        # If splitting into up- and down-regulated DE genes
+        # Turn the input into a list of gene IDs, split by direction or not
         if (split) {
             prepped_genes <- list(
                 "Up"   = rownames(filter(deseq_results, log2FoldChange > 0)),
@@ -126,9 +133,9 @@ enrich_pathway <- function(
         if (analysis == "sigora") {
             message("\tRunning enrichment using Sigora...")
 
-            run_sigora_safely <- purrr::possibly(run_sigora)
+            run_sigora_safely <- possibly(run_sigora)
 
-            result_final <- purrr::imap_dfr(
+            result_final <- imap_dfr(
                 .x  = prepped_genes,
                 .id = "direction",
                 function(y, direction) {
@@ -160,7 +167,7 @@ enrich_pathway <- function(
             if (analysis == "reactomepa") {
                 message("\tRunning enrichment using ReactomePA")
 
-                rpa_hall_result <- purrr::imap_dfr(
+                rpa_hall_result <- imap_dfr(
                     .x  = prepped_genes,
                     .id = "direction",
                     function(y, direction) {
@@ -192,11 +199,10 @@ enrich_pathway <- function(
                         ) %>% as_tibble()
                     }
                 ) %>%
-                    rename("entrez_id" = geneID) %>%
-                    mutate(entrez_id = as.character(entrez_id)) %>%
-                    separate_longer_delim(entrez_id, delim = "/") %>%
-                    left_join(mapping_file) %>%
-                    select(-any_of(c("entrez_id", "ensg_id"))) %>%
+                    mutate(geneID = as.character(geneID)) %>%
+                    separate_longer_delim(geneID, delim = "/") %>%
+                    left_join(mapping_file, by = c("geneID" = "entrez_id")) %>%
+                    select(-any_of(c("geneID", "entrez_id", "ensg_id"))) %>%
                     group_by(ID) %>%
                     mutate(genes = paste(gene_name, collapse = ";")) %>%
                     ungroup() %>%
@@ -208,7 +214,7 @@ enrich_pathway <- function(
             if (analysis == "hallmark") {
                 message("\tRunning enrichment using Hallmark...")
 
-                rpa_hall_result <- purrr::imap_dfr(
+                rpa_hall_result <- imap_dfr(
                     .x  = prepped_genes,
                     .id = "direction",
                     function(y, direction) {
@@ -225,10 +231,9 @@ enrich_pathway <- function(
                         ) %>% as_tibble()
                     }
                 ) %>%
-                    rename("ensg_id" = geneID) %>%
-                    separate_longer_delim(ensg_id, delim = "/") %>%
-                    left_join(mapping_file) %>%
-                    select(-any_of(c("entrez_id", "ensg_id"))) %>%
+                    separate_longer_delim(geneID, delim = "/") %>%
+                    left_join(mapping_file, by = c("geneID" = "ensg_id")) %>%
+                    select(-any_of(c("geneID", "entrez_id", "ensg_id"))) %>%
                     group_by(ID) %>%
                     mutate(genes = paste(gene_name, collapse = ";")) %>%
                     ungroup() %>%
