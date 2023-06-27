@@ -1,7 +1,6 @@
 #' INTERNAL run_sigora
 #'
 #' @param enrich_genes Vector of genes to enrich
-#' @param direction If up or down-regulated genes were used
 #' @param gps_repo GPS object to use for testing pathways
 #' @param pval_filter Desired threshold for filtering results
 #'
