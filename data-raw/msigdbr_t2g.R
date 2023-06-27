@@ -3,12 +3,12 @@ library(msigdbr)
 library(dplyr)
 
 # Get Hallmark info
-hallmark <- msigdbr(category = 'H')
+hallmark <- msigdbr(category = "H")
 
 hallmark <- hallmark %>%
-  tidyr::separate(gs_name, sep = 'HALLMARK_', into = c('blank', 'gs_name'))
+  tidyr::separate(gs_name, sep = "HALLMARK_", into = c("blank", "gs_name"))
 
-hallmark$gs_name <- gsub('_', ' ', hallmark$gs_name)
+hallmark$gs_name <- gsub("_", " ", hallmark$gs_name)
 
 # Annotate the gene sets to their top gene set
 top_terms <- list(
@@ -55,7 +55,7 @@ top_terms <- list(
     "MYC TARGETS V2"
   ),
   signaling = c(
-    'ANDROGEN RESPONSE',
+    "ANDROGEN RESPONSE",
     "ESTROGEN RESPONSE EARLY",
     "ESTROGEN RESPONSE LATE",
     "KRAS SIGNALING DN",
@@ -73,14 +73,14 @@ top_terms <- list(
 )
 
 hallmark_annotated <- hallmark %>% mutate(top_pathways = case_when(
-  gs_name %in% top_terms$cell_comp ~ 'Cellular',
-  gs_name %in% top_terms$development ~ 'Development',
-  gs_name %in% top_terms$dna_damage ~ 'DNA Damage',
-  gs_name %in% top_terms$immune ~ 'Immune',
-  gs_name %in% top_terms$metabolism ~ 'Metabolic',
-  gs_name %in% top_terms$stress ~ 'Stress',
-  gs_name %in% top_terms$proliferation ~ 'Growth',
-  gs_name %in% top_terms$signaling ~ 'Signaling'
+  gs_name %in% top_terms$cell_comp ~ "Cellular",
+  gs_name %in% top_terms$development ~ "Development",
+  gs_name %in% top_terms$dna_damage ~ "DNA Damage",
+  gs_name %in% top_terms$immune ~ "Immune",
+  gs_name %in% top_terms$metabolism ~ "Metabolic",
+  gs_name %in% top_terms$stress ~ "Stress",
+  gs_name %in% top_terms$proliferation ~ "Growth",
+  gs_name %in% top_terms$signaling ~ "Signaling"
 ))
 
 hallmark_db <- hallmark_annotated %>%
