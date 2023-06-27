@@ -376,4 +376,3 @@ and visualization. Mol Biosyst. 2016;12(2):477-9.
 ```{r session_information, echo=FALSE}
 sessionInfo()
 ```
-
