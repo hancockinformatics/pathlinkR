@@ -73,7 +73,6 @@ run_sigora <- function(
         select(
             "pathway_id" = pathwy.id,
             "pathway_description" = description,
-            # direction,
             "p_value" = pvalues,
             "p_value_adjusted" = Bonferroni,
             genes,
