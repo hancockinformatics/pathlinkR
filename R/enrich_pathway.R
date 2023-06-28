@@ -140,7 +140,7 @@ enrich_pathway <- function(
                 .id = "direction",
                 function(y, direction) {
                     run_sigora_safely(
-                        y,
+                        enrich_genes = y,
                         gps_repo = gps_repo,
                         pval_filter = ifelse(
                             filter_results == "default",
