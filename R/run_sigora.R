@@ -68,7 +68,12 @@ run_sigora <- function(
         ungroup() %>%
         mutate(gene_ratio = num_candidate_genes / n_genes)
 
-    left_join(sigora_result_2, sigora_detailed_list_2, by = "pathwy.id") %>%
+    left_join(
+        sigora_result_2,
+        sigora_detailed_list_2,
+        by = "pathwy.id",
+        multiple = "all"
+    ) %>%
         mutate(num_bg_genes = n_genes) %>%
         select(
             "pathway_id" = pathwy.id,

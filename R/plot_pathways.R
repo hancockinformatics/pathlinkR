@@ -77,7 +77,11 @@ plot_pathways <- function(
             comparison = unique(enriched_results$comparison),
             new_names = new_group_names
         )
-        enriched_results <- left_join(enriched_results, map_names) %>%
+        enriched_results <- left_join(
+            enriched_results,
+            map_names,
+            multiple = "all"
+        ) %>%
             select(!comparison) %>%
             mutate(comparison = new_names) %>%
             select(!new_names)
@@ -135,21 +139,6 @@ plot_pathways <- function(
         top_pathways %in% specific_top_pathways,
         pathway_description %in% specific_pathways
     )
-
-    # enriched_results_graph$description <-
-    #     factor(enriched_results_graph$description,
-    #            levels = rev(specific_pathways))
-    # enriched_results_graph <-
-    #     enriched_results %>% filter(group %in% group_name)
-
-    # # Organize the groups (e.g. D1, D7, etc.)
-    # enriched_results_graph$group <-
-    #     factor(enriched_results_graph$group, levels = group_name)
-    # # Organize the id/comparisons (the different column names, e.g. sepsis vs
-    # healthy) in the appropriate order
-    # enriched_results_graph$id <-
-    #     factor(enriched_results_graph$id,
-    #            levels = unique(enriched_results_graph$id))
 
     # In certain cases, a pathway may be enriched by both up- and down-regulated
     # genes. Find duplicated pathways, and only show the one that is more
