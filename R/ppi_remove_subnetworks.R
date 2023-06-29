@@ -1,4 +1,4 @@
-#' Find and return the largest subnetwork
+#' INTERNAL Find and return the largest subnetwork
 #'
 #' @param input Graph object
 #'
