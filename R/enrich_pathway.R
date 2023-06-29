@@ -14,10 +14,10 @@
 #'   column "log2FoldChange", and do enrichment separately
 #' @param analysis Default is "sigora", but can also be "reactomepa" or
 #'   "hallmark"
-#' @param filter_results Should the output be filtered for significance? Use `1`
-#'   to return the unfiltered results, or any number less than 1 for a custom
-#'   p-value cutoff. If `default`, the significance cutoff for Sigora is 0.001,
-#'   and for ReactomePA or Hallmark is 0.05.
+#' @param filter_results Should the output be filtered for significance? Use
+#'   `1` to return the unfiltered results, or any number less than 1 for a
+#'   custom p-value cutoff. If `default`, the significance cutoff for Sigora
+#'   is 0.001, and for ReactomePA or Hallmark is 0.05.
 #' @param gps_repo Only applies to `analysis = "sigora"`. Gene Pair Signature
 #'   object for Sigora to use to test for enriched pathways. We recommend using
 #'   the one which ships with Sigora, which is already loaded as "reaH".
