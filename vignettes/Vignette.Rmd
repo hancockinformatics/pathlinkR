@@ -21,7 +21,7 @@ vignette: >
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, comment = "")
-library(tidyverse)
+library(dplyr)
 ```
 
 
@@ -320,7 +320,7 @@ pathnet_visNetwork(my_pathway_network)
 candidate_data <- sigora_examples %>%
     filter(comparison == "COVID Pos Over Time") %>% 
     select(pathway_id, genes) %>%
-    separate_rows(genes, sep = ";") %>%
+    tidyr::separate_rows(genes, sep = ";") %>%
     left_join(
         sigora_database,
         by = c("pathway_id", "genes" = "Symbol"),
