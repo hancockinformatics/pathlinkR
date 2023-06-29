@@ -336,7 +336,10 @@ candidate_starting_pathways <- create_foundation(
 )
 
 candidates_as_network <- create_pathnet(
-    sigora_result = filter(sigora_examples, comparison == "COVID Pos Over Time"),
+    sigora_result = filter(
+        sigora_examples, 
+        comparison == "COVID Pos Over Time"
+    ),
     foundation = candidate_starting_pathways,
     trim = FALSE
 )
