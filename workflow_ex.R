@@ -92,7 +92,7 @@ enriched_results_sigora <- enrich_pathway(
     split = TRUE,
     analysis = "sigora",
     gps_repo = reaH,
-    filter_results = "default",
+    filter_results = "default"
 )
 
 # If we only have one data frame, that's already been filtered

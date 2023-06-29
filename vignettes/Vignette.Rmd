@@ -21,7 +21,7 @@ vignette: >
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, comment = "")
-library(dplyr)
+library(tidyverse)
 ```
 
 
@@ -309,17 +309,76 @@ pathnet_ggraph(
 pathnet_visNetwork(my_pathway_network)
 ```
 
+## Pathway networks using only DE genes
+```{r pathway_network_III}
+candidate_data <- sigora_examples %>%
+    filter(comparison == "COVID Pos Over Time") %>% 
+    select(pathway_id, genes) %>%
+    separate_rows(genes, sep = ";") %>%
+    left_join(
+        sigora_database,
+        by = c("pathway_id", "genes" = "Symbol"),
+        multiple = "all"
+    ) %>%
+    relocate(pathway_id, Ensembl.Gene.ID, "Symbol" = genes, pathway_name) %>%
+    distinct()
+
+# Now that we have a smaller table in the same format as sigora_database, we can
+# construct our own matrix of pathway distances
+candidate_dist_data <- get_pathway_distances(
+    pathway_data = candidate_data,
+    dist_method = "jaccard"
+)
+
+candidate_starting_pathways <- create_foundation(
+    mat = candidate_dist_data,
+    max_distance = 0.9
+)
+
+candidates_as_network <- create_pathnet(
+    sigora_result = filter(
+        sigora_examples, 
+        comparison == "COVID Pos Over Time"
+    ),
+    foundation = candidate_starting_pathways,
+    trim = FALSE
+)
+
+pathnet_visNetwork(candidates_as_network)
+```
+
 
 # Visualizing fold changes across comparisons
 We can also verify this by looking at fold change heatmaps of genes involved in
 these pathways. The function `plot_fold_change` can do so by taking in an input
 list of DESeq2 data frames.
-```{r plot_fold_changes, fig.height=10}
+```{r plot_fold_changes_I, fig.height=10}
 plot_fold_change(
     deseq_example_list,
     path_name = "Interferon alpha/beta signaling",
     col_split = c("Positive", "Negative"),
     cluster_columns = FALSE
+)
+```
+
+Another example, with more customization:
+```{r plot_fold_changes_II}
+deseq_example_list_renamed <- purrr::set_names(
+    deseq_example_list,
+    c("Pos", "Neg")
+)
+
+plot_fold_change(
+    deseq_example_list_renamed,
+    manual_title = "Genes I like",
+    genes_to_plot = c("CD4", "CD8A","CD8B", "CD28", "ZAP70"),
+    gene_format = "hgnc",
+    col_split = c("Pos", "Neg"),
+    log2_foldchange = TRUE,
+    col_angle = 45,
+    cluster_rows = FALSE,
+    cluster_columns = TRUE,
+    invert = TRUE
 )
 ```
 
@@ -376,4 +435,3 @@ and visualization. Mol Biosyst. 2016;12(2):477-9.
 ```{r session_information, echo=FALSE}
 sessionInfo()
 ```
-
