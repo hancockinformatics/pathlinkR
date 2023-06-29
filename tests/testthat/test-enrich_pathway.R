@@ -1,5 +1,3 @@
-test_result_sigora <- enrich_pathway(input_list = deseq_example_list)
-
 test_result_reactomepa <- enrich_pathway(
     input_list = deseq_example_list,
     analysis = "reactomepa"
@@ -10,6 +8,8 @@ test_result_hallmark <- enrich_pathway(
     analysis = "hallmark",
     split = FALSE
 )
+
+test_result_sigora <- sigora_examples
 
 expected_colnames <- c(
     "comparison",
