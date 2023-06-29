@@ -178,14 +178,20 @@ and by default will split the genes into up and down-regulated genes, then
 perform enrichment separately (set `split = FALSE` to perform enrichment without
 splitting). The name of the dataframe(s) in the list should indicate the
 comparison that resulted in the DESeq2 results.
-```{r sigora_enrichment}
+```{r sigora_enrichment, eval=FALSE}
 # Perform enrichment with Sigora (default). We also need to specify the
 # gene-pair signature repository (more in the Supplemental section).
 enriched_results_sigora <- enrich_pathway(
     input_list = deseq_example_list,
     gps_repo = reaH
 )
+```
 
+```{r hidden_sigora, echo=FALSE}
+enriched_results_sigora <- sigora_examples
+```
+
+```{r sigora_enrichment_no_split, eval=FALSE}
 # Enrichment without splitting by fold change direction
 enriched_results_sigora_nosplit <- enrich_pathway(
     input_list = deseq_example_list,
