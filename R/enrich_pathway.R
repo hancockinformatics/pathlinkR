@@ -203,7 +203,11 @@ enrich_pathway <- function(
                 ) %>%
                     mutate(geneID = as.character(geneID)) %>%
                     separate_longer_delim(geneID, delim = "/") %>%
-                    left_join(mapping_file, by = c("geneID" = "entrez_id")) %>%
+                    left_join(
+                        mapping_file,
+                        by = c("geneID" = "entrez_id"),
+                        multiple = "all"
+                    ) %>%
                     select(-any_of(c("geneID", "entrez_id", "ensg_id"))) %>%
                     group_by(ID) %>%
                     mutate(genes = paste(gene_name, collapse = ";")) %>%
@@ -234,7 +238,11 @@ enrich_pathway <- function(
                     }
                 ) %>%
                     separate_longer_delim(geneID, delim = "/") %>%
-                    left_join(mapping_file, by = c("geneID" = "ensg_id")) %>%
+                    left_join(
+                        mapping_file,
+                        by = c("geneID" = "ensg_id"),
+                        multiple = "all"
+                    ) %>%
                     select(-any_of(c("geneID", "entrez_id", "ensg_id"))) %>%
                     group_by(ID) %>%
                     mutate(genes = paste(gene_name, collapse = ";")) %>%
@@ -282,7 +290,8 @@ enrich_pathway <- function(
         left_join(
             .,
             select(top_pathways_more, pathway_id, top_pathways),
-            by = "pathway_id"
+            by = "pathway_id",
+            multiple = "all"
         ) %>%
         as_tibble()
 

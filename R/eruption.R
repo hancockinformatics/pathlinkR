@@ -83,18 +83,19 @@ eruption <- function(
     # Columns: padj, log2FoldChange
     stopifnot(all(c("padj", "log2FoldChange") %in% colnames(deseq_results)))
 
-    # If ENSG ids are detected, annotate Ensembl gene IDs with gene names from 
-    # the mapping file. For Ensembl gene IDs without gene names, just use the 
-    # Ensembl gene ID. If rownames are not ENSG ids, they will be used as is, 
+    # If ENSG ids are detected, annotate Ensembl gene IDs with gene names from
+    # the mapping file. For Ensembl gene IDs without gene names, just use the
+    # Ensembl gene ID. If rownames are not ENSG ids, they will be used as is,
     # and you can map it to your own ids beforehand
-    
+
     if (str_detect(rownames(deseq_results)[1], "^ENSG")) {
         res <- deseq_results %>%
             rownames_to_column("ensg_id") %>%
             filter(!is.na(padj)) %>%
             left_join(
                 mapping_file,
-                by = "ensg_id"
+                by = "ensg_id",
+                multiple = "all"
             ) %>%
             mutate(
                 gene_name = case_when(
@@ -103,8 +104,8 @@ eruption <- function(
                 )
             )
     } else {
-        res <- deseq_results %>% 
-            rownames_to_column("ensg_id") %>% 
+        res <- deseq_results %>%
+            rownames_to_column("ensg_id") %>%
             mutate(gene_name = ensg_id)
     }
     res <- res %>% mutate(
