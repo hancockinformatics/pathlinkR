@@ -16,22 +16,22 @@ data("idmap", "reaH", package = "sigora")
 # Relationship between each pathway and the one above it (hierarchy)
 reactome_db <-
   read.csv(
-    'https://reactome.org/download/current/ReactomePathwaysRelation.txt',
-    sep = '\t',
+    "https://reactome.org/download/current/ReactomePathwaysRelation.txt",
+    sep = "\t",
     header = FALSE
   ) %>%
-  filter(grepl('HSA', V1)) %>%
+  filter(grepl("HSA", V1)) %>%
   as_tibble()
-colnames(reactome_db) <- c('parent', 'child')
+colnames(reactome_db) <- c("parent", "child")
 
 # Names of each pathway
 reactome_names <-
   read.csv(
-    'https://reactome.org/download/current/ReactomePathways.txt',
-    sep = '\t',
+    "https://reactome.org/download/current/ReactomePathways.txt",
+    sep = "\t",
     header = FALSE
   ) %>%
-  filter(V3 == 'Homo sapiens') %>%
+  filter(V3 == "Homo sapiens") %>%
   as_tibble() %>%
   mutate(
     V2 = stringr::str_replace(
@@ -40,12 +40,12 @@ reactome_names <-
       "Biosynthesis of electrophilic omega-3 PUFA oxo-derivatives"
     )
   )
-colnames(reactome_names) <- c('pathway_id', 'pathway_name', 'species')
+colnames(reactome_names) <- c("pathway_id", "pathway_name", "species")
 
 # Reactome provides some annotation on what pathways belong to which top pathways
 reactome_top <- read.csv(
-  'https://reactome.org/download/current/Complex_2_Pathway_human.txt',
-  sep = '\t'
+  "https://reactome.org/download/current/Complex_2_Pathway_human.txt",
+  sep = "\t"
 ) %>%
   transmute(pathway_id = pathway, top_pathway = top_level_pathway) %>%
   unique() %>%
@@ -57,7 +57,7 @@ reactome_top <- read.csv(
 reactome_levels <- full_join(
   reactome_names,
   reactome_top,
-  multiple = 'all'
+  multiple = "all"
 ) %>%
   left_join(
     reactome_names %>% transmute(top_pathway = pathway_id, top_pathway_name = pathway_name)
@@ -76,7 +76,7 @@ for (original_id in reactome_missing$pathway_id) {
 
   # Look in the hierarchy table first. Make sure the pathway in question is not
   # already a top pathway, i.e. it is not found in any of the pathways under
-  # 'child'
+  # "child"
   if (original_id %in% reactome_db$child) {
     order <- c()
     level <- original_id
@@ -109,7 +109,7 @@ reactome_hierarchy_df <- reactome_hierarchy %>%
 
 rownames(reactome_hierarchy_df) <- NULL
 colnames(reactome_hierarchy_df) <-
-  c('pathway_id', 'pathway_name', 'top_pathway_name', 'hierarchy')
+  c("pathway_id", "pathway_name", "top_pathway_name", "hierarchy")
 
 reactome_hierarchy_df <- reactome_hierarchy_df %>% left_join(
   reactome_names %>% transmute(top_pathway = pathway_id, top_pathway_name = pathway_name)
@@ -122,7 +122,7 @@ reactome_hierarchy_df <- reactome_hierarchy_df %>% left_join(
 # multiple top pathways. Some other pathways also were originally annotated to
 # multiple pathways. Annotate these 39 manually to a single top pathway.
 reactome_dupe <- plyr::rbind.fill(
-  reactome_hierarchy_df %>% filter(top_pathway_name == 'character(0)'),
+  reactome_hierarchy_df %>% filter(top_pathway_name == "character(0)"),
   reactome_levels %>% filter(pathway_name %in% reactome_levels$pathway_name[duplicated(reactome_levels$pathway_id)])
 )
 
@@ -147,7 +147,7 @@ reactome_all_annotated <- plyr::rbind.fill(
   reactome_levels %>%
     filter(!is.na(top_pathway), !pathway_id %in% reactome_dupe$pathway_id),
   reactome_hierarchy_df %>%
-    filter(top_pathway_name != 'character(0)') %>%
+    filter(top_pathway_name != "character(0)") %>%
     select(!hierarchy),
   manual_dupe_annotation
 )
@@ -179,11 +179,11 @@ all(sigora_pathways$pathway_id %in% reactome_all_annotated$pathway_id)
 reactome_all_annotated <- reactome_all_annotated %>% mutate(
   top_pathway_name_original = top_pathway_name,
   top_pathway_name = case_when(
-    top_pathway_name == 'Gene expression (Transcription)' ~ 'Gene expression',
-    top_pathway_name == 'Transport of small molecules' ~ 'Transport small molecules',
-    top_pathway_name == 'Extracellular matrix organization' ~ 'ECM organization',
-    top_pathway_name == 'Cellular responses to stimuli' ~ 'Cell responses to stimuli',
-    top_pathway_name == 'Organelle biogenesis and maintenance' ~ 'Organelle biogenesis',
+    top_pathway_name == "Gene expression (Transcription)" ~ "Gene expression",
+    top_pathway_name == "Transport of small molecules" ~ "Transport small molecules",
+    top_pathway_name == "Extracellular matrix organization" ~ "ECM organization",
+    top_pathway_name == "Cellular responses to stimuli" ~ "Cell responses to stimuli",
+    top_pathway_name == "Organelle biogenesis and maintenance" ~ "Organelle biogenesis",
     TRUE ~ top_pathway_name_original
   )
 )
@@ -192,43 +192,43 @@ reactome_all_annotated <- reactome_all_annotated %>% mutate(
 reactome_all_grouped <- reactome_all_annotated %>% mutate(
   grouped_pathway = case_when(
     top_pathway_name %in% c(
-      'Autophagy',
-      'ECM organization',
-      'Organelle biogenesis',
-      'Programmed Cell Death',
-      'Protein localization',
-      'Transport small molecules',
-      'Vesicle-mediated transport'
-    ) ~ 'Cell Process',
+      "Autophagy",
+      "ECM organization",
+      "Organelle biogenesis",
+      "Programmed Cell Death",
+      "Protein localization",
+      "Transport small molecules",
+      "Vesicle-mediated transport"
+    ) ~ "Cell Process",
     top_pathway_name %in% c(
-      'Cell Cycle',
-      'Chromatin organization',
-      'DNA Repair',
-      'DNA Replication'
-    ) ~ 'Cell Replication',
-    top_pathway_name %in% c('Gene expression') ~ 'Gene Expression',
-    top_pathway_name %in% c('Hemostasis', 'Immune System') ~ 'Immune/Hemostasis',
+      "Cell Cycle",
+      "Chromatin organization",
+      "DNA Repair",
+      "DNA Replication"
+    ) ~ "Cell Replication",
+    top_pathway_name %in% c("Gene expression") ~ "Gene Expression",
+    top_pathway_name %in% c("Hemostasis", "Immune System") ~ "Immune/Hemostasis",
     top_pathway_name %in% c(
-      'Metabolism',
-      'Metabolism of proteins',
-      'Metabolism of RNA',
-      'Drug ADME'
-    ) ~ 'Metabolism',
+      "Metabolism",
+      "Metabolism of proteins",
+      "Metabolism of RNA",
+      "Drug ADME"
+    ) ~ "Metabolism",
     top_pathway_name %in% c(
-      'Cell responses to stimuli',
-      'Cell-Cell communication',
-      'Signal Transduction'
-    ) ~ 'Signaling',
+      "Cell responses to stimuli",
+      "Cell-Cell communication",
+      "Signal Transduction"
+    ) ~ "Signaling",
     top_pathway_name %in% c(
-      'Circadian Clock',
-      'Developmental Biology',
-      'Digestion and absorption',
-      'Muscle contraction',
-      'Neuronal System',
-      'Reproduction',
-      'Sensory Perception'
-    ) ~ 'Tissue Function',
-    top_pathway_name %in% c('Disease') ~ 'Disease'
+      "Circadian Clock",
+      "Developmental Biology",
+      "Digestion and absorption",
+      "Muscle contraction",
+      "Neuronal System",
+      "Reproduction",
+      "Sensory Perception"
+    ) ~ "Tissue Function",
+    top_pathway_name %in% c("Disease") ~ "Disease"
   )
 )
 
@@ -241,14 +241,14 @@ reactome_all_grouped <- reactome_all_annotated %>% mutate(
 #
 # # Use the entrez mappers, the ensg mappers aren't available for all pathways
 # reactome_genes_data <- read.csv(
-#   'https://reactome.org/download/current/NCBI2Reactome_All_Levels.txt',
-#   sep = '\t',
+#   "https://reactome.org/download/current/NCBI2Reactome_All_Levels.txt",
+#   sep = "\t",
 #   header = FALSE
 # )
 #
 # reactome_genes <- reactome_genes_data %>%
 #   transmute(gene_id = V1, pathway_id = V2, pathway_name = V4) %>%
-#   filter(grepl('HSA', pathway_id))
+#   filter(grepl("HSA", pathway_id))
 #
 # # Are all the disease pathways in this database? Five that are not present, deal
 # # with them manually afterwards
@@ -272,7 +272,7 @@ reactome_all_grouped <- reactome_all_annotated %>% mutate(
 #     values_from = "present"
 #   ) %>%
 #   replace(is.na(.), 0) %>%
-#   column_to_rownames(var = 'pathway_id') %>%
+#   column_to_rownames(var = "pathway_id") %>%
 #   as.matrix()
 #
 # distance_matrix <- identity_table %>%
@@ -298,7 +298,7 @@ reactome_all_grouped <- reactome_all_annotated %>% mutate(
 #
 # # Select the closest grouped pathway for each Disease pathway
 # disease_grouped_pathway <- matrix(nrow = 0, ncol = 2)
-# colnames(disease_grouped_pathway) <- c('pathway_id', 'grouped_pathway')
+# colnames(disease_grouped_pathway) <- c("pathway_id", "grouped_pathway")
 #
 # for (i in 1:nrow(distance_matrix_filtered)) {
 #   values <- distance_matrix_filtered[i, ]
@@ -330,12 +330,12 @@ reactome_all_grouped <- reactome_all_annotated %>% mutate(
 
 # mSigDB Hallmark gene sets -----------------------------------------------
 
-hallmark <- msigdbr(category = 'H')
+hallmark <- msigdbr(category = "H")
 
 hallmark <- hallmark %>%
-  tidyr::separate(gs_name, sep = 'HALLMARK_', into = c('blank', 'gs_name'))
+  tidyr::separate(gs_name, sep = "HALLMARK_", into = c("blank", "gs_name"))
 
-hallmark$gs_name <- gsub('_', ' ', hallmark$gs_name)
+hallmark$gs_name <- gsub("_", " ", hallmark$gs_name)
 
 # Annotate the gene sets to their top gene set
 cell_comp <- c("APICAL SURFACE", "APICAL JUNCTION", "PEROXISOME")
@@ -381,7 +381,7 @@ proliferation <- c(
   "MYC TARGETS V2"
 )
 signaling <- c(
-  'ANDROGEN RESPONSE',
+  "ANDROGEN RESPONSE",
   "ESTROGEN RESPONSE EARLY",
   "ESTROGEN RESPONSE LATE",
   "KRAS SIGNALING DN",
@@ -398,14 +398,14 @@ signaling <- c(
 )
 
 hallmark_annotated <- hallmark %>% mutate(top_pathways = case_when(
-  gs_name %in% cell_comp ~ 'Cellular',
-  gs_name %in% development ~ 'Development',
-  gs_name %in% dna_damage ~ 'DNA Damage',
-  gs_name %in% immune ~ 'Immune',
-  gs_name %in% metabolism ~ 'Metabolic',
-  gs_name %in% stress ~ 'Stress',
-  gs_name %in% proliferation ~ 'Growth',
-  gs_name %in% signaling ~ 'Signaling'
+  gs_name %in% cell_comp ~ "Cellular",
+  gs_name %in% development ~ "Development",
+  gs_name %in% dna_damage ~ "DNA Damage",
+  gs_name %in% immune ~ "Immune",
+  gs_name %in% metabolism ~ "Metabolic",
+  gs_name %in% stress ~ "Stress",
+  gs_name %in% proliferation ~ "Growth",
+  gs_name %in% signaling ~ "Signaling"
 ))
 
 hallmark_db <- hallmark_annotated %>%
