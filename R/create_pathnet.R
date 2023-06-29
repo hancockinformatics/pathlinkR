@@ -56,7 +56,11 @@ create_pathnet <- function(
     starting_nodes <- foundation %>%
         select(pathway_1, pathway_name_1) %>%
         distinct() %>%
-        left_join(sigora_result, by = c("pathway_1" = "pathway_id"))
+        left_join(
+            sigora_result,
+            by = c("pathway_1" = "pathway_id"),
+            multiple = "all"
+        )
 
     starting_edges <- foundation %>%
         mutate(similarity = 1 / distance) %>%
@@ -102,7 +106,8 @@ create_pathnet <- function(
                 top_pathways_more, pathway_id,
                 pathway_name, grouped_pathway
             ),
-            by = c("pathway_1" = "pathway_id")
+            by = c("pathway_1" = "pathway_id"),
+            multiple = "all"
         ) %>%
         select(
             pathway_1,

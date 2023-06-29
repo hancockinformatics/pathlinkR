@@ -160,8 +160,9 @@ plot_fold_change <- function(
             df_fc <- fold_change
             df_p <- signif
         } else {
-            df_fc <- full_join(df_fc, fold_change, by = "ensg_id")
-            df_p <- full_join(df_p, signif, by = "ensg_id")
+            df_fc <-
+                full_join(df_fc, fold_change, by = "ensg_id", multiple = "all")
+            df_p <- full_join(df_p, signif, by = "ensg_id", multiple = "all")
         }
 
         ## If any are significantly DE, record them
@@ -188,7 +189,7 @@ plot_fold_change <- function(
     # Prepare the Heatmap matrices
     ## Map the ensg_id to hgnc symbols
     mat_fc <- df_fc %>%
-        left_join(mapping_file) %>%
+        left_join(mapping_file, multiple = "all") %>%
         select(!ensg_id) %>%
         select(!entrez_id) %>%
         column_to_rownames(var = "gene_name") %>%
@@ -197,7 +198,7 @@ plot_fold_change <- function(
 
 
     mat_p <- df_p %>%
-        left_join(mapping_file) %>%
+        left_join(mapping_file, multiple = "all") %>%
         select(!ensg_id) %>%
         select(!entrez_id) %>%
         column_to_rownames(var = "gene_name") %>%

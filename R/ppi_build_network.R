@@ -190,13 +190,15 @@ ppi_build_network <- function(
     network_mapped <- left_join(
         network_out_2,
         select(mapping_file, "name" = ensg_id, gene_name),
-        by = "name"
+        by = "name",
+        multiple = "all"
     )
 
     network_final <- left_join(
         network_mapped,
         df_clean,
-        by = c("name" = col)
+        by = c("name" = col),
+        multiple = "all"
     )
 
     attr(network_final, "order") <- order
