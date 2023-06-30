@@ -68,7 +68,7 @@ ppi_build_network <- function(
         )
     )
 
-    # Check for and remove any duplicate IDs
+    ## Check for and remove any duplicate IDs, warning the user when this occurs
     message("Cleaning input data...")
     df_clean <- distinct(df, !!sym(col), .keep_all = TRUE)
     gene_vector <- unique(df_clean[[col]])
@@ -130,8 +130,8 @@ ppi_build_network <- function(
         ) %>%
         select(-comp)
 
-    # Perform node filtering/trimming for minimum order networks, and
-    # recalculate degree and betweenness
+    ## Perform node filtering/trimming for minimum order networks, and
+    ## recalculate degree and betweenness
     if (order == "min_simple") {
         message("Performing 'simple' minimum network trimming...")
 
