@@ -1,17 +1,15 @@
 Package: pathnet
 Type: Package
-Title: Visualize pathways as networks
-Version: 0.99.157
+Title: Analyze and interpret RNA-Seq results
+Version: 0.99.158
 Authors@R: c(
     person("Travis", "Blimkie", , "travis.m.blimkie@gmail.com", role = c("cre"), comment = c(ORCID = "0000-0001-8778-8627")),
     person("Andy", "An", , "andy@hancocklab.com", role = c("aut"))
     )
-Description: Create PPI-style networks from pathways, using overlap between 
-  their constituent genes to define interactions/edges. This will allow for 
-  visualization of similar pathways based on their underlying genes, instead of
-  a category/hierarchy term. One can then overlay the results of pathway 
-  enrichment analyses onto this "foundational" network, mapping dysregulation
-  and significance onto nodes (pathways) in the network.
+Description: pathnet is an R package designed to facilitate analysis of RNA-Seq 
+    results. Specifically, our aim with pathnet was to provide a number of tools
+    which take a list of DE genes and perform different analyses on them, aiding
+    with the interpretation of results.
 biocViews: GeneSetEnrichment, Network, Pathways, Reactome, RNASeq
 BiocType: Software
 BugReports: https://github.com/hancockinformatics/pathnet
