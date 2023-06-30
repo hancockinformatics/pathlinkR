@@ -3,7 +3,12 @@
 \docType{data}
 \name{innatedb_exp}
 \alias{innatedb_exp}
-\title{Experimentally verified human PPI data downloaded from InnateDB}
+\title{A data frame containing human PPI data from InnateDB, from the entry
+"All Experimentally Validated Interactions (updated weekly)" at
+\url{https://innatedb.com/redirect.do?go=downloadImported}.
+A few important steps have been taken to filter the data, namely the removal
+of duplicate interactions, and removing interactions that have the same
+components but are swapped between A and B.}
 \format{
 A data frame with 152259 rows and 4 columns:
 \describe{
