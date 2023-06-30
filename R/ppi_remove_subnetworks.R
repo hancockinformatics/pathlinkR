@@ -1,6 +1,6 @@
 #' INTERNAL Find and return the largest subnetwork
 #'
-#' @param input Graph object
+#' @param network Graph object
 #'
 #' @return Largest subnetwork from the input network list as an igraph object
 #'
@@ -8,15 +8,15 @@
 #'
 #' @seealso <https://github.com/hancockinformatics/pathnet/>
 #'
-ppi_remove_subnetworks <- function(input) {
-    igraph::V(input)$comp <- components(input)$membership
+ppi_remove_subnetworks <- function(network) {
+    igraph::V(network)$comp <- components(network)$membership
 
-    max_subnet_id <- igraph::V(input)$comp %>%
+    max_subnet_id <- igraph::V(network)$comp %>%
         table() %>%
         tibble::enframe() %>%
         arrange(desc(value)) %>%
         .[[1, 1]] %>%
         as.numeric()
 
-    induced_subgraph(input, igraph::V(input)$comp == max_subnet_id)
+    induced_subgraph(network, igraph::V(network)$comp == max_subnet_id)
 }
