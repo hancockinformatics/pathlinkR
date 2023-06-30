@@ -93,8 +93,7 @@ plot_fold_change <- function(
         row_angle = 0,
         row_center = FALSE) {
 
-    # First identify the pathway to plot
-    ## If pathway name is provided
+    # If pathway name is provided
     if (!is.na(path_name)) {
         path_id <- sigora_database %>%
             filter(pathway_name == path_name) %>%
@@ -103,7 +102,7 @@ plot_fold_change <- function(
         plot_title <- path_name
     }
 
-    ## If pathway ID is provided
+    # If pathway ID is provided
     if (!is.na(path_id)) {
         plot_title <- sigora_database %>%
             filter(pathway_id == path_id) %>%
@@ -111,19 +110,23 @@ plot_fold_change <- function(
             unlist() %>% .[1] %>% as.character()
     }
 
-    ## If a title is provided manually, overwrite
+    # If a title is provided manually, overwrite
     if(!is.na(manual_title)){
         plot_title <- manual_title
     }
 
-    # Get the genes to plot in the pathway or gene list of interest
-    # get all the genes in the pathway of interest, and make them Ensembl IDs
-    if (is.na(genes_to_plot[1])){ # get from pathway database
+    # Get the genes to plot in the pathway or gene list of interest, and make
+    # them Ensembl IDs
+    if (is.na(genes_to_plot[1])) {
+
         genes <- sigora_database %>%
             filter(pathway_id == path_id) %>%
             .$Ensembl.Gene.ID
-    } else { # get from manual gene input
+
+    } else {
+
         genes <- genes_to_plot
+
         if (gene_format == "hgnc") {
             genes <- mapping_file %>%
                 filter(gene_name %in% genes_to_plot) %>%
@@ -134,64 +137,43 @@ plot_fold_change <- function(
         }
     }
 
-    # Get fold changes and significance for each dataframe in input_list
-
-    ## Collection of significant genes in each dataframe
-    sig_genes <- c()
-
-    ## Loop across each dataframe in the input_list
-    for (n in seq_len(length(input_list))) {
-        ## Get fold changes for each gene of interest
-        fold_change <- input_list[[n]] %>%
+    df_fc <- imap(input_list, function(list_item, item_name) {
+        list_item %>%
             filter(rownames(.) %in% genes, !is.na(log2FoldChange)) %>%
-            select(log2FoldChange) %>%
-            rownames_to_column()
-        names(fold_change) <- c("ensg_id", names(input_list)[n])
+            rownames_to_column("ensg_id") %>%
+            select(ensg_id, {{item_name}} := log2FoldChange)
+    }) %>% plyr::join_all(by = "ensg_id", type = "full")
 
-        ## Get significance values for each gene of interest
-        signif <- input_list[[n]] %>%
+    df_p <- imap(input_list, function(list_item, item_name) {
+        list_item %>%
             filter(rownames(.) %in% genes, !is.na(padj)) %>%
-            select(padj) %>%
-            rownames_to_column()
-        names(signif) <- c("ensg_id", names(input_list)[n])
+            rownames_to_column("ensg_id") %>%
+            select(ensg_id, {{item_name}} := padj)
+    }) %>% plyr::join_all(by = "ensg_id", type = "full")
 
-        ## Add to the fold change and p value dataframes
-        if (n == 1) {
-            df_fc <- fold_change
-            df_p <- signif
-        } else {
-            df_fc <-
-                full_join(df_fc, fold_change, by = "ensg_id", multiple = "all")
-            df_p <- full_join(df_p, signif, by = "ensg_id", multiple = "all")
-        }
-
-        ## If any are significantly DE, record them
-        sig_genes <- c(
-            sig_genes,
-            input_list[[n]] %>%
-                rownames_to_column(var = "ensg_id") %>%
-                filter(
-                    ensg_id %in% genes,
-                    padj < p_cutoff,
-                    abs(log2FoldChange) > log2(fc_cutoff)
-                ) %>%
-                .$ensg_id)
-    }
-
-    # From all the dataframes, get the genes that were significant in any
-    sig_genes <- unique(sig_genes)
+    # From all the data frames, get the genes that were significant in any of
+    # them
+    sig_genes <- input_list %>% map(
+        ~rownames_to_column(.x, "ensg_id") %>%
+            filter(
+                ensg_id %in% genes,
+                padj < p_cutoff,
+                abs(log2FoldChange) > log2(fc_cutoff)
+            ) %>%
+            pull(ensg_id)
+    ) %>%
+        unlist() %>%
+        unique()
 
     if (plot_significant_only) {
         df_fc <- df_fc %>% filter(ensg_id %in% sig_genes)
         df_p <- df_p %>% filter(ensg_id %in% sig_genes)
     }
 
-    # Prepare the Heatmap matrices
-    ## Map the ensg_id to hgnc symbols
+    # Prepare the Heatmap matrices, and map the Ensembl IDs to HGNC symbols
     mat_fc <- df_fc %>%
         left_join(mapping_file, multiple = "all") %>%
-        select(!ensg_id) %>%
-        select(!entrez_id) %>%
+        select(-c(ensg_id, entrez_id)) %>%
         column_to_rownames(var = "gene_name") %>%
         as.matrix()
     mat_fc[is.na(mat_fc)] <- 0 # make any NAs into 0
@@ -199,8 +181,7 @@ plot_fold_change <- function(
 
     mat_p <- df_p %>%
         left_join(mapping_file, multiple = "all") %>%
-        select(!ensg_id) %>%
-        select(!entrez_id) %>%
+        select(-c(ensg_id, entrez_id)) %>%
         column_to_rownames(var = "gene_name") %>%
         as.matrix()
     mat_p[is.na(mat_p)] <- 1 # make any NAs into 1s
@@ -211,8 +192,9 @@ plot_fold_change <- function(
     }
 
     # Set the limits for colours for the plotting heatmap
-    limit <- max(abs(mat_fc), na.rm = TRUE) %>% ceiling()
-    ## If plotting real fold changes instead of log2
+    limit <- ceiling(max(abs(mat_fc), na.rm = TRUE))
+
+    # If plotting real fold changes instead of log2
     if(!log2_foldchange){
         if ((limit %% 2) == 0) {
             range <- c(-limit, -limit/2, 0, limit/2, limit)
@@ -245,7 +227,7 @@ plot_fold_change <- function(
     row_split <- rep(NA, nrow(mat_fc))
     row_title <- NULL
 
-    # If plotting so that rownames are conditions and colnames are genes
+    # If plotting so that row names are conditions and column names are genes
     if (invert) {
         mat_fc <- t(mat_fc)
         mat_p <- t(mat_p)
@@ -323,5 +305,4 @@ plot_fold_change <- function(
         row_names_centered = row_center
 
     ), column_title = plot_title)
-
 }
