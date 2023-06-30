@@ -13,13 +13,12 @@
 "deseq_example_list"
 
 #' Colour assignments for grouped pathways
+#'
 #' @format A length 8 named vector of hex colour values
 "grouped_pathway_colours"
 
-#' Human gene ID mapping from Sigora
-#'
-#' A data frame of ID mappings for different human ID types. From the Sigora
-#' package.
+#' A data frame (tibble) of ID mappings for different human ID types. From the
+#' Sigora package.
 #'
 #' @format A data frame with 47037 rows and 3 columns
 #' \describe{
@@ -29,8 +28,6 @@
 #' }
 "idmap"
 
-#' Experimentally verified human PPI data downloaded from InnateDB
-#'
 #' A data frame containing human PPI data from InnateDB, from the entry
 #' "All Experimentally Validated Interactions (updated weekly)" at
 #' <https://innatedb.com/redirect.do?go=downloadImported>.
@@ -66,7 +63,7 @@
 
 #' Table of human gene ID mappings
 #'
-#' @format A data frame with 42,099 rows and 3 columns
+#' @format A data frame (tibble) with 42,099 rows and 3 columns
 #' \describe{
 #' \item{ensg_id}{Ensembl IDs}
 #' \item{gene_name}{HGNC symbols}
@@ -143,7 +140,7 @@
 #' \item{num_bg_genes}{All genes from the pathway database}
 #' \item{gene_ratio}{Quotient of the number of candidate and background genes}
 #' \item{top_pathways}{Pathway category}
-#' \item{comparison}{Comparison from which results are dervied; name of input
+#' \item{comparison}{Comparison from which results are derived; name of input
 #' list}
 #' \item{total_genes}{Total number of input genes}
 #' }
