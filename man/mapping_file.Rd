@@ -5,7 +5,7 @@
 \alias{mapping_file}
 \title{Table of human gene ID mappings}
 \format{
-A data frame with 42,099 rows and 3 columns
+A data frame (tibble) with 42,099 rows and 3 columns
 \describe{
 \item{ensg_id}{Ensembl IDs}
 \item{gene_name}{HGNC symbols}

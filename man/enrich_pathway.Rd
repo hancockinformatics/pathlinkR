@@ -37,10 +37,10 @@ column "log2FoldChange", and do enrichment separately}
 \item{analysis}{Default is "sigora", but can also be "reactomepa" or
 "hallmark"}
 
-\item{filter_results}{Should the output be filtered for significance? Use \code{1}
-to return the unfiltered results, or any number less than 1 for a custom
-p-value cutoff. If \code{default}, the significance cutoff for Sigora is 0.001,
-and for ReactomePA or Hallmark is 0.05.}
+\item{filter_results}{Should the output be filtered for significance? Use
+\code{1} to return the unfiltered results, or any number less than 1 for a
+custom p-value cutoff. If \code{default}, the significance cutoff for Sigora
+is 0.001, and for ReactomePA or Hallmark is 0.05.}
 
 \item{gps_repo}{Only applies to \code{analysis = "sigora"}. Gene Pair Signature
 object for Sigora to use to test for enriched pathways. We recommend using
