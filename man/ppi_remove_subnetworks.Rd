@@ -4,10 +4,10 @@
 \alias{ppi_remove_subnetworks}
 \title{INTERNAL Find and return the largest subnetwork}
 \usage{
-ppi_remove_subnetworks(input)
+ppi_remove_subnetworks(network)
 }
 \arguments{
-\item{input}{Graph object}
+\item{network}{Graph object}
 }
 \value{
 Largest subnetwork from the input network list as an igraph object
