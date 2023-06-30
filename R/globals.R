@@ -1,4 +1,5 @@
 utils::globalVariables(c(
+    ":=",
     ".",
     "Bonferroni",
     "Description",
