@@ -87,7 +87,6 @@ eruption <- function(
     # the mapping file. For Ensembl gene IDs without gene names, just use the
     # Ensembl gene ID. If rownames are not ENSG ids, they will be used as is,
     # and you can map it to your own ids beforehand
-
     if (str_detect(rownames(deseq_results)[1], "^ENSG")) {
         res <- deseq_results %>%
             rownames_to_column("ensg_id") %>%
@@ -108,6 +107,7 @@ eruption <- function(
             rownames_to_column("ensg_id") %>%
             mutate(gene_name = ensg_id)
     }
+
     res <- res %>% mutate(
         significant = case_when(
             padj < p_cutoff & abs(log2FoldChange) > log2(fc_cutoff) ~ "SIG",
@@ -334,118 +334,7 @@ eruption <- function(
         p <- p +
             xlab("Fold Change") +
             theme(axis.text.x = element_text(vjust = 0, size = 11)) +
-            {
-                if (between(max(abs(xaxis)), 0, 6))
-                    # Up to log2FC = 6
-                    scale_x_continuous(
-                        breaks = c(-6, -4, -2, 0, 2, 4, 6),
-                        labels = c(-32, -16, -4, 1, 4, 16, 32),
-                        limits = xaxis
-                    )
-            } +
-            {
-                if (between(max(abs(xaxis)), 6.001, log2(100)))
-                    # Up to log2FC = 6.64
-                    scale_x_continuous(
-                        breaks = c(
-                            -log2(100), -log2(10), 0, log2(10), log2(100)
-                        ),
-                        labels = c(
-                            expression(-10 ^ 2),
-                            expression(-10 ^ 1),
-                            1,
-                            expression(10 ^ 1),
-                            expression(10 ^ 2)
-                        ),
-                        limits = xaxis
-                    )
-            } +
-            {
-                if (between(max(abs(xaxis)), log2(100), log2(1000)))
-                    # Up to log2FC = 9.97
-                    scale_x_continuous(
-                        breaks = c(
-                            -log2(1000),
-                            -log2(100),
-                            -log2(10),
-                            0,
-                            log2(10),
-                            log2(100),
-                            log2(1000)
-                        ),
-                        labels = c(
-                            expression(-10 ^ 3),
-                            expression(-10 ^ 2),
-                            expression(-10 ^ 1),
-                            1,
-                            expression(10 ^ 1),
-                            expression(10 ^ 2),
-                            expression(10 ^ 3)
-                        ),
-                        limits = xaxis
-                    )
-            } +
-            {
-                if (between(max(abs(xaxis)), log2(1000), log2(10000)))
-                    # Up to log2FC = 13.29
-                    scale_x_continuous(
-                        breaks = c(
-                            -log2(10000),
-                            -log2(1000),
-                            -log2(100),
-                            -log2(10),
-                            0,
-                            log2(10),
-                            log2(100),
-                            log2(1000),
-                            log2(10000)
-                        ),
-                        labels = c(
-                            expression(-10 ^ 4),
-                            expression(-10 ^ 3),
-                            expression(-10 ^ 2),
-                            expression(-10 ^ 1),
-                            1,
-                            expression(10 ^ 1),
-                            expression(10 ^ 2),
-                            expression(10 ^ 3),
-                            expression(10 ^ 4)
-                        ),
-                        limits = xaxis
-                    )
-            } +
-            {
-                if (between(max(abs(xaxis)), log2(10000), log2(100000)))
-                    # Up to log2FC = 16.61
-                    scale_x_continuous(
-                        breaks = c(
-                            -log2(10 ^ 5),
-                            -log2(10 ^ 3),
-                            -log2(10),
-                            0,
-                            log2(10),
-                            log2(10 ^ 3),
-                            log2(10 ^ 5)
-                        ),
-                        labels = c(
-                            expression(-10 ^ 5),
-                            expression(-10 ^ 3),
-                            expression(-10 ^ 1),
-                            1,
-                            expression(10 ^ 1),
-                            expression(10 ^ 3),
-                            expression(10 ^ 5)
-                        ),
-                        limits = xaxis
-                    )
-            } +
-            {
-                if (max(abs(xaxis)) >= log2(100000))
-                    message(
-                        "Something may be wrong with your DESeq model to have ",
-                        "fold changes >10^5..."
-                    )
-            }
+            eruption_breaks(xaxis)
     }
 
     return(p)
