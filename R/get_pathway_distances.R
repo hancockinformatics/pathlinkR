@@ -45,9 +45,10 @@ get_pathway_distances <- function(
     ]
 
     pathway_id_col <- colnames(pathway_data)[
-        unlist(
-            map(pathway_data[1, ], ~str_detect(.x, "R-[A-Z]{3}-[0-9]{1,10}"))
-        )
+        unlist(map(
+            pathway_data[1, ],
+            ~str_detect(.x, "R-[A-Z]{3}-[0-9]{1,10}")
+        ))
     ]
 
     message(
@@ -75,13 +76,12 @@ get_pathway_distances <- function(
         message("Running distance calculations...")
     }
 
-    distance_matrix <- identity_table %>%
-        vegan::vegdist(
-            method = "jaccard",
-            binary = TRUE,
-            diag = TRUE
-        ) %>%
-        as.matrix()
+    distance_matrix <- as.matrix(vegan::vegdist(
+        identity_table,
+        method = "jaccard",
+        binary = TRUE,
+        diag = TRUE
+    ))
 
     message("Done!\n")
     return(distance_matrix)
