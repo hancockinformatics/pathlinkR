@@ -49,12 +49,15 @@ of the Kleinburg hub centrality score - details on this method can be found
 at \code{?igraph::hub_score}.
 }
 \examples{
-library(dplyr)
 
-ex_de_genes <- deseq_example_list[[1]] \%>\%
-    tibble::rownames_to_column("gene") \%>\%
-    as_tibble() \%>\%
-    filter(padj < 0.05 & abs(log2FoldChange) > log2(1.5))
+ex_de_genes <- dplyr::filter(
+    dplyr::as_tibble(tibble::rownames_to_column(
+        deseq_example_list[[1]],
+        "gene"
+    )),
+    padj < 0.05,
+    abs(log2FoldChange) > log2(1.5)
+)
 
 ppi_build_network(
     df = ex_de_genes,
