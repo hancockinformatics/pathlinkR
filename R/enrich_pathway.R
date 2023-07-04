@@ -133,7 +133,7 @@ enrich_pathway <- function(
         if (analysis == "sigora") {
             message("\tRunning enrichment using Sigora...")
 
-            run_sigora_safely <- possibly(run_sigora)
+            run_sigora_safely <- possibly(.runSigora)
 
             result_final <- imap_dfr(
                 .x  = prepped_genes,

@@ -116,7 +116,7 @@ pathnet_ggraph <- function(
         ),
         node_label = map_chr(
             node_label,
-            ~trunc_neatly(.x, l = 40) %>% str_wrap(width = 20)
+            ~.truncNeatly(.x, l = 40) %>% str_wrap(width = 20)
         ),
         p_value_adjusted = if_else(
             !is.na(p_value_adjusted),
