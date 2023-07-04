@@ -334,7 +334,7 @@ eruption <- function(
         p <- p +
             xlab("Fold Change") +
             theme(axis.text.x = element_text(vjust = 0, size = 11)) +
-            eruption_breaks(xaxis)
+            .eruptionBreaks(xaxis)
     }
 
     return(p)

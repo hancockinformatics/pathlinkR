@@ -12,7 +12,7 @@
 #'
 #' @seealso <https://github.com/hancockinformatics/pathnet>
 #'
-eruption_breaks <- function(x) {
+.eruptionBreaks <- function(x) {
 
     # Up to log2FC = 6
     if (between(max(abs(x)), 0, 6)) {

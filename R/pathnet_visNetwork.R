@@ -103,7 +103,7 @@ pathnet_visNetwork <- function(
             visnet_nodes,
             label = map_chr(
                 if_else(!is.na(p_value_adjusted), title, ""),
-                trunc_neatly,
+                .truncNeatly,
                 30
             )
         )
