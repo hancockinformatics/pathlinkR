@@ -1,4 +1,4 @@
-#' INTERNAL trunc_neatly
+#' INTERNAL .truncNeatly
 #'
 #' @param x Character to be truncated
 #' @param l Desired maximum length for the output character
@@ -15,7 +15,7 @@
 #'
 #' @seealso <https://github.com/hancockinformatics/pathnet>
 #'
-trunc_neatly <- function(x, l = 60) {
+.truncNeatly <- function(x, l = 60) {
     map_chr(
         x,
         ~if (is.na(.x)) {

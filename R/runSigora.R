@@ -1,4 +1,4 @@
-#' INTERNAL run_sigora
+#' INTERNAL .runSigora
 #'
 #' @param enrich_genes Vector of genes to enrich
 #' @param gps_repo GPS object to use for testing pathways
@@ -17,7 +17,7 @@
 #'
 #' @seealso <https://github.com/hancockinformatics/pathnet>
 #'
-run_sigora <- function(
+.runSigora <- function(
         enrich_genes,
         gps_repo,
         pval_filter = NA

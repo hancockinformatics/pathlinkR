@@ -291,7 +291,7 @@ plot_pathways <- function(
             # Wrap and truncate pathway names if necessary
             scale_y_discrete(
                 labels = ~str_wrap(
-                    trunc_neatly(.x, name_trunc),
+                    .truncNeatly(.x, name_trunc),
                     width = name_width
                 ),
                 position = pathway_position
