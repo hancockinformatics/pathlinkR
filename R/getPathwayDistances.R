@@ -1,10 +1,10 @@
-#' get_pathway_distances
+#' getPathwayDistances
 #'
-#' @param pathway_data Three column-data frame of pathways and their constituent
-#'   genes. Defaults to the provided `sigora_database` object. Must contain
+#' @param pathwayData Three column-data frame of pathways and their constituent
+#'   genes. Defaults to the provided `sigoraDatabase` object. Must contain
 #'   Ensembl gene IDs in the first column, pathway IDs in the second, and
 #'   pathway descriptions in the third.
-#' @param dist_method Character; method used to determine pairwise pathway
+#' @param distMethod Character; method used to determine pairwise pathway
 #'   distances. Can be any option supported by `vegan::vegdist()`.
 #'
 #' @return Matrix of the pairwise pathway distances (dissimilarity) based on
@@ -27,62 +27,62 @@
 #'
 #' @examples
 #' \donttest{
-#'     get_pathway_distances(
-#'         pathway_data = sigora_database,
-#'         dist_method = "jaccard"
+#'     getPathwayDistances(
+#'         pathwayData = sigoraDatabase,
+#'         distMethod = "jaccard"
 #'     )
 #' }
 #'
-get_pathway_distances <- function(
-        pathway_data = sigora_database,
-        dist_method = "jaccard"
+getPathwayDistances <- function(
+        pathwayData = sigoraDatabase,
+        distMethod = "jaccard"
 ) {
 
-    stopifnot(is(sigora_database, "data.frame"))
+    stopifnot(is(sigoraDatabase, "data.frame"))
 
-    gene_id_col <- colnames(pathway_data)[
-        unlist(map(pathway_data[1, ], ~str_detect(.x, "ENSG")))
+    geneIdCol <- colnames(pathwayData)[
+        unlist(map(pathwayData[1, ], ~str_detect(.x, "ENSG")))
     ]
 
-    pathway_id_col <- colnames(pathway_data)[
+    pathwayIdCol <- colnames(pathwayData)[
         unlist(map(
-            pathway_data[1, ],
+            pathwayData[1, ],
             ~str_detect(.x, "R-[A-Z]{3}-[0-9]{1,10}")
         ))
     ]
 
     message(
-        "Using '", gene_id_col,"' for gene IDs and '",
-        pathway_id_col, "' for pathway IDs..."
+        "Using '", geneIdCol,"' for gene IDs and '",
+        pathwayIdCol, "' for pathway IDs..."
     )
 
     message("Creating identity matrix...")
-    identity_table <- pathway_data %>%
-        select(all_of(c(gene_id_col, pathway_id_col))) %>%
+    identityTable <- pathwayData %>%
+        select(all_of(c(geneIdCol, pathwayIdCol))) %>%
         distinct() %>%
         mutate(present = 1) %>%
         pivot_wider(
-            id_cols     = all_of(pathway_id_col),
-            names_from  = all_of(gene_id_col),
+            id_cols     = all_of(pathwayIdCol),
+            names_from  = all_of(geneIdCol),
             values_from = "present"
         ) %>%
         replace(is.na(.), 0) %>%
-        column_to_rownames(all_of(pathway_id_col)) %>%
+        column_to_rownames(all_of(pathwayIdCol)) %>%
         as.matrix()
 
-    if (length(unique(pathway_data[[pathway_id_col]])) > 500) {
+    if (length(unique(pathwayData[[pathwayIdCol]])) > 500) {
         message("Running distance calculations (this may take a while)...")
     } else {
         message("Running distance calculations...")
     }
 
-    distance_matrix <- as.matrix(vegan::vegdist(
-        identity_table,
+    distanceMatrix <- as.matrix(vegan::vegdist(
+        identityTable,
         method = "jaccard",
         binary = TRUE,
         diag = TRUE
     ))
 
     message("Done!\n")
-    return(distance_matrix)
+    return(distanceMatrix)
 }
