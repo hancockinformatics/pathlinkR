@@ -54,7 +54,7 @@ innatedbMapped <- innatedbNoDups %>%
 
 
 # Remove proteins/genes with more than 1000 interactions (e.g. UBC)
-innatedbExp <- innatedbMapped %>%
+innateDbExp <- innatedbMapped %>%
   group_by(ensemblGeneA) %>%
   filter(n() < 1000) %>%
   ungroup() %>%
@@ -64,4 +64,4 @@ innatedbExp <- innatedbMapped %>%
 
 
 # Save the data, being sure to enable compression to reduce the size
-usethis::use_data(innatedbExp, overwrite = TRUE, compress = "bzip2")
+usethis::use_data(innateDbExp, overwrite = TRUE, compress = "bzip2")

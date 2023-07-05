@@ -2,8 +2,8 @@
 #'
 #' @param network `tidygraph` object from a GraphML or JSON file
 #'
-#' @return `tidygraph` object which can be forwarded to other `networker`
-#' functions such as `plot_network`
+#' @return `tidygraph` object which can be forwarded to other `pathnet`
+#' functions such as `ppiPlotNetwork`
 #'
 #' @export
 #'
@@ -25,26 +25,26 @@
 #'     vertices = select(tj1$nodes, id, label, x, y, "types" = molType, expr)
 #' )
 #'
-#' tj3 <- clean_network(tidygraph::as_tbl_graph(tj2))
+#' tj3 <- ppiCleanNetwork(tidygraph::as_tbl_graph(tj2))
 #' }
 #'
-ppi_clean_network <- function(network) {
+ppiCleanNetwork <- function(network) {
     network %>%
         mutate(
             degree = centrality_degree(),
             betweenness = centrality_betweenness(),
             seed = if_else(types == "Seed", TRUE, FALSE),
-            hub_score_btw = centrality_betweenness()
+            hubScoreBtw = centrality_betweenness()
         ) %>%
         select(
             name,
             degree,
             betweenness,
             seed,
-            hub_score_btw,
-            "gene_name" = label,
+            hubScoreBtw,
+            "geneName" = label,
             everything()
         ) %>%
-        ppi_remove_subnetworks() %>%
+        ppiRemoveSubnetworks() %>%
         as_tbl_graph()
 }

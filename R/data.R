@@ -46,7 +46,7 @@
 #'   \item{hgncSymbolB}{HGNC symbol for the second gene/protein in the
 #'     interaction}
 #' }
-"innatedbExp"
+"innateDbExp"
 
 #' Table of Reactome pathways that had multiple top pathways originally, and
 #' manually curated to only have one top pathway in find_top_pathways.R
