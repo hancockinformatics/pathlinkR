@@ -3,16 +3,16 @@
 #' @param df Input data frame containing genes of interest
 #' @param col Column of input genes as Ensembl IDs (character)
 #' @param order Desired network order. Possible options are "zero" (default),
-#'   "first," "min_simple," or "min_steiner."
-#' @param hub_measure Character denoting what measure should be used in
+#'   "first," "minSimple," or "minSteiner."
+#' @param hubMeasure Character denoting what measure should be used in
 #'   determining which nodes to highlight as hubs when plotting the network.
 #'   Options include "betweenness" (default), "degree", and "hubscore". These
 #'   represent network statistics calculated by their respective
 #'   `tidygraph::centrality_x`, functions, specifically `degree`,
 #'    `betweenness`, and `hubscore`.
-#' @param ppi_data Data frame of PPI data; must contain rows of interactions as
-#'   pairs of Ensembl gene IDs, with columns named "ensembl_gene_A" and
-#'   "ensembl_gene_B". Defaults to pre-packaged InnateDB PPI data.
+#' @param ppiData Data frame of PPI data; must contain rows of interactions as
+#'   pairs of Ensembl gene IDs, with columns named "ensemblGeneA" and
+#'   "ensemblGeneB". Defaults to pre-packaged InnateDB PPI data.
 #'
 #' @return `tidygraph` object for plotting or further analysis
 #' @export
@@ -20,12 +20,12 @@
 #' @import dplyr
 #' @import tidygraph
 #'
-#' @details The "min_steiner" method is implemented with the `SteinerNet`
+#' @details The "minSteiner" method is implemented with the `SteinerNet`
 #'   package.
 #'
-#' The "hub_measure" argument determines how `build_network` assesses
+#' The "hubMeasure" argument determines how `ppiBuildNetwork` assesses
 #' connectedness of nodes in the network, which will be used to highlight nodes
-#' when visualizing with `plot_network`. The options are "degree",
+#' when visualizing with `ppiPlotNetwork`. The options are "degree",
 #' "betweenness", or "hubscore". This last option uses the igraph implementation
 #' of the Kleinburg hub centrality score - details on this method can be found
 #' at `?igraph::hub_score`.
@@ -38,107 +38,107 @@
 #'
 #' @examples
 #'
-#' ex_de_genes <- dplyr::filter(
+#' exDEGenes <- dplyr::filter(
 #'     dplyr::as_tibble(tibble::rownames_to_column(
-#'         deseq_example_list[[1]],
+#'         deseqExampleList[[1]],
 #'         "gene"
 #'     )),
 #'     padj < 0.05,
 #'     abs(log2FoldChange) > log2(1.5)
 #' )
 #'
-#' ppi_build_network(
-#'     df = ex_de_genes,
+#' ppiBuildNetwork(
+#'     df = exDEGenes,
 #'     col = "gene",
 #'     order = "zero"
 #' )
 #'
-ppi_build_network <- function(
+ppiBuildNetwork <- function(
         df,
         col,
         order,
-        hub_measure = "betweenness",
-        ppi_data = innatedb_exp
+        hubMeasure = "betweenness",
+        ppiData = innateDbExp
 ) {
 
     stopifnot(is(df, "data.frame"))
     stopifnot(col %in% colnames(df))
-    stopifnot(order %in% c("zero", "first", "min_simple", "min_steiner"))
-    stopifnot(hub_measure %in% c("betweenness", "degree", "hubscore"))
+    stopifnot(order %in% c("zero", "first", "minSimple", "minSteiner"))
+    stopifnot(hubMeasure %in% c("betweenness", "degree", "hubscore"))
     stopifnot(
-        "'ppi_data' must have columns 'ensembl_gene_A', 'ensembl_gene_B'" = all(
-            c("ensembl_gene_A", "ensembl_gene_B") %in% colnames(ppi_data)
+        "'ppiData' must have columns 'ensemblGeneA', 'ensemblGeneB'" = all(
+            c("ensemblGeneA", "ensemblGeneB") %in% colnames(ppiData)
         )
     )
 
     ## Check for and remove any duplicate IDs, warning the user when this occurs
     message("Cleaning input data...")
-    df_clean <- distinct(df, !!sym(col), .keep_all = TRUE)
-    gene_vector <- unique(df_clean[[col]])
+    dfClean <- distinct(df, !!sym(col), .keep_all = TRUE)
+    geneVector <- unique(dfClean[[col]])
 
     stopifnot(
         "Input genes must be human Ensembl IDs" = grepl(
-            x = gene_vector[1],
+            x = geneVector[1],
             pattern = "^ENSG"
         )
     )
 
-    lost_ids <- df[[col]][duplicated(df[[col]])]
+    LostIds <- df[[col]][duplicated(df[[col]])]
 
-    if (length(gene_vector) < nrow(df)) {
-        num_dups <- nrow(df) - length(gene_vector)
+    if (length(geneVector) < nrow(df)) {
+        numDups <- nrow(df) - length(geneVector)
 
         message(
-            "INFO: Found ", num_dups,
+            "INFO: Found ", numDups,
             "duplicate IDs in the input column, which have been removed:"
         )
 
-        if (num_dups <= 10) {
+        if (numDups <= 10) {
             message(stringr::str_wrap(
-                paste(lost_ids, collapse = ", "),
+                paste(LostIds, collapse = ", "),
                 indent = 2,
                 exdent = 2
             ))
         } else {
             message(stringr::str_wrap(
-                paste0(paste(lost_ids[seq_len(10)], collapse = ", "), "..."),
+                paste0(paste(LostIds[seq_len(10)], collapse = ", "), "..."),
                 indent = 2,
                 exdent = 2
             ))
         }
     }
 
-    ppi_data_ensembl <- select(ppi_data, starts_with("ensembl"))
+    ppiDataEnsembl <- select(ppiData, starts_with("ensembl"))
 
     message("Finding interactions...")
     if (order == "zero") {
-        edge_table <- ppi_data_ensembl %>% filter(
-            ensembl_gene_A %in% gene_vector & ensembl_gene_B %in% gene_vector
+        edgeTable <- ppiDataEnsembl %>% filter(
+            ensemblGeneA %in% geneVector & ensemblGeneB %in% geneVector
         )
     } else {
-        edge_table <- ppi_data_ensembl %>% filter(
-            ensembl_gene_A %in% gene_vector | ensembl_gene_B %in% gene_vector
+        edgeTable <- ppiDataEnsembl %>% filter(
+            ensemblGeneA %in% geneVector | ensemblGeneB %in% geneVector
         )
     }
 
     message("Creating network...")
-    network_init <- edge_table %>%
+    networkInit <- edgeTable %>%
         as_tbl_graph(directed = FALSE) %>%
-        ppi_remove_subnetworks() %>%
+        ppiRemoveSubnetworks() %>%
         as_tbl_graph() %>%
         mutate(
             degree = centrality_degree(),
             betweenness = centrality_betweenness(),
-            seed = (name %in% gene_vector)
+            seed = (name %in% geneVector)
         ) %>%
         select(-comp)
 
     ## Perform node filtering/trimming for minimum order networks, and
     ## recalculate degree and betweenness
-    if (order == "min_simple") {
+    if (order == "minSimple") {
         message("Performing 'simple' minimum network trimming...")
 
-        network_out_1 <- network_init %>%
+        networkOut1 <- networkInit %>%
             filter(
                 !(degree == 1 & !seed),
                 !(betweenness == 0 & !seed)
@@ -151,15 +151,15 @@ ppi_build_network <- function(
     } else if (order == "min_steiner") {
         message("Performing 'Steiner' minimum network trimming...")
 
-        terminals <- network_init %>%
+        terminals <- networkInit %>%
             activate(nodes) %>%
             pull(name) %>%
-            intersect(gene_vector)
+            intersect(geneVector)
 
-        network_out_1 <- SteinerNet::steinertree(
+        networkOut1 <- SteinerNet::steinertree(
             type      = "SP",
             terminals = terminals,
-            graph     = network_init,
+            graph     = networkInit,
             color     = FALSE
         ) %>%
             .[[1]] %>%
@@ -170,19 +170,19 @@ ppi_build_network <- function(
             )
 
     } else {
-        network_out_1 <- network_init
+        networkOut1 <- networkInit
     }
 
-    network_out_2 <-
-        if (hub_measure == "betweenness") {
-            network_out_1 %>% mutate(hub_score_btw = betweenness)
-        } else if (hub_measure == "degree") {
-            network_out_1 %>% mutate(hub_score_deg = degree)
-        } else if (hub_measure == "hubscore") {
-            network_out_1 %>% mutate(hub_score_hub = centrality_hub())
+    networkOut2 <-
+        if (hubMeasure == "betweenness") {
+            networkOut1 %>% mutate(hubScoreBtw = betweenness)
+        } else if (hubMeasure == "degree") {
+            networkOut1 %>% mutate(hubScoreDeg = degree)
+        } else if (hubMeasure == "hubscore") {
+            networkOut1 %>% mutate(hubScoreHub = centrality_hub())
         }
 
-    if (nrow(as_tibble(network_out_2)) > 2000) {
+    if (nrow(as_tibble(networkOut2)) > 2000) {
         message(
             "Your network contains more than 2000 nodes, and will likely be ",
             "difficult to interpret when plotted."
@@ -190,22 +190,22 @@ ppi_build_network <- function(
     }
 
     message("Mapping input Ensembl IDs to HGNC symbols...")
-    network_mapped <- left_join(
-        network_out_2,
-        select(mapping_file, "name" = ensg_id, gene_name),
+    networkMapped <- left_join(
+        networkOut2,
+        select(mappingFile, "name" = ensemblGeneId, hgncSymbol),
         by = "name",
         multiple = "all"
     )
 
-    network_final <- left_join(
-        network_mapped,
-        df_clean,
+    networkFinal <- left_join(
+        networkMapped,
+        dfClean,
         by = c("name" = col),
         multiple = "all"
     )
 
-    attr(network_final, "order") <- order
+    attr(networkFinal, "order") <- order
 
     message("Done.\n")
-    return(network_final)
+    return(networkFinal)
 }
