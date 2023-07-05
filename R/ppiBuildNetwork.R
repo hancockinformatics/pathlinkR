@@ -83,7 +83,7 @@ ppiBuildNetwork <- function(
         )
     )
 
-    LostIds <- df[[col]][duplicated(df[[col]])]
+    lostIds <- df[[col]][duplicated(df[[col]])]
 
     if (length(geneVector) < nrow(df)) {
         numDups <- nrow(df) - length(geneVector)
@@ -95,13 +95,13 @@ ppiBuildNetwork <- function(
 
         if (numDups <= 10) {
             message(stringr::str_wrap(
-                paste(LostIds, collapse = ", "),
+                paste(lostIds, collapse = ", "),
                 indent = 2,
                 exdent = 2
             ))
         } else {
             message(stringr::str_wrap(
-                paste0(paste(LostIds[seq_len(10)], collapse = ", "), "..."),
+                paste0(paste(lostIds[seq_len(10)], collapse = ", "), "..."),
                 indent = 2,
                 exdent = 2
             ))

@@ -246,24 +246,24 @@ ppiPlotNetwork <- function(
 
     } else {
 
-        hub_nodes <- as_tibble(network) %>%
+        hubNodes <- as_tibble(network) %>%
             rename("hubScore" = starts_with("hubScore")) %>%
             arrange(desc(hubScore)) %>%
             slice_head(n = 3 + ceiling(nrow(as_tibble(network)) * 0.01)) %>%
             pull(name)
 
-        network_w_labels <- network %>% mutate(
+        networkLabeled <- network %>% mutate(
             node_label = case_when(
                 degree > labelFilter ~ {{labelColumn}},
                 TRUE ~ NA_character_
             ),
             is_hub = case_when(
-                name %in% hub_nodes ~ "y",
+                name %in% hubNodes ~ "y",
                 TRUE ~ "n"
             )
         )
 
-        ggraph(network_w_labels, layout = layoutObject) +
+        ggraph(networkLabeled, layout = layoutObject) +
             geom_edge_link(
                 show.legend = FALSE,
                 edge_alpha = edgeAlpha,
