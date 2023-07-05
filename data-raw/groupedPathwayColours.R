@@ -1,12 +1,12 @@
 # Use the colours from one of the RColorBrewer sets, plus one custom colour
 # as the eighth from the set is grey, which I'd like to avoid using here.
 
-grouped_pathway_colours <- c(
+groupedPathwayColours <- c(
   RColorBrewer::brewer.pal(n = 7, name = "Set2"),
   "#A65628"
 )
 
-names(grouped_pathway_colours) <- c(
+names(groupedPathwayColours) <- c(
   "Cell Process",
   "Cell Replication",
   "Signaling",
@@ -17,4 +17,4 @@ names(grouped_pathway_colours) <- c(
   "Disease"
 )
 
-usethis::use_data(grouped_pathway_colours, overwrite = TRUE)
+usethis::use_data(groupedPathwayColours, overwrite = TRUE)
