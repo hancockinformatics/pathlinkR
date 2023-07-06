@@ -86,7 +86,7 @@
 #' @examples
 #' library(dplyr)
 #'
-#' exDEGenes <- deseqExampleList[[2]] %>%
+#' exDEGenes <- deseqExampleList[[1]] %>%
 #'     tibble::rownames_to_column("gene") %>%
 #'     as_tibble() %>%
 #'     filter(padj < 0.05 & abs(log2FoldChange) > log2(1.5))
@@ -103,7 +103,7 @@
 #'     fillType = "foldChange",
 #'     layout = "lgl",
 #'     label = TRUE,
-#'     labelColumn = geneName,
+#'     labelColumn = hgncSymbol,
 #'     labelFilter = 5,
 #'     legend = TRUE
 #' )
