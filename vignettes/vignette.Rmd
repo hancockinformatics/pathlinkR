@@ -285,72 +285,72 @@ We provide a pre-computed distance matrix of Reactome pathways, generated using
 Jaccard distance, but there is support for multiple distance measures to be
 used.
 ```{r pathway_network_I, fig.width=12, fig.height=10, warning=FALSE}
-starting_pathways <- create_foundation(
-    mat = pathway_distances_jaccard,
-    max_distance = 0.8
+startingPathways <- createFoundation(
+    mat = pathwayDistancesJaccard,
+    maxDistance = 0.8
 )
 
-ex_pathway_network_input <- enriched_results_sigora %>% 
+exPathwayNetworkInput <- sigoraExamples %>% 
     filter(comparison == "COVID Pos Over Time")
 
-my_pathway_network <- create_pathnet(
-    sigora_result = sigora_examples,
-    foundation = starting_pathways,
+myPathwayNetwork <- createPathnet(
+    sigoraResult = exPathwayNetworkInput,
+    foundation = startingPathways,
     trim = TRUE,
-    trim_order = 1
+    trimOrder = 1
 )
 
 # Static plot with ggraph
-pathnet_ggraph(
-    my_pathway_network,
-    label_prop = 0.1,
-    node_label_size = 4,
-    node_label_overlaps = 8,
-    seg_colour = "red"
+pathnetGGraph(
+    myPathwayNetwork,
+    labelProp = 0.1,
+    nodeLabelSize = 4,
+    nodeLabelOverlaps = 8,
+    segColour = "red"
 )
 ```
 
 ```{r pathway_network_II}
 # Interactive plot with visNetwork
-pathnet_visNetwork(my_pathway_network)
+pathnetVisNetwork(myPathwayNetwork)
 ```
 
 ## Pathway networks using only DE genes
 ```{r pathway_network_III}
-candidate_data <- sigora_examples %>%
+candidateData <- sigoraExamples %>%
     filter(comparison == "COVID Pos Over Time") %>% 
-    select(pathway_id, genes) %>%
+    select(pathwayId, genes) %>%
     tidyr::separate_rows(genes, sep = ";") %>%
     left_join(
-        sigora_database,
-        by = c("pathway_id", "genes" = "Symbol"),
+        sigoraDatabase,
+        by = c("pathwayId", "genes" = "hgncSymbol"),
         multiple = "all"
     ) %>%
-    relocate(pathway_id, Ensembl.Gene.ID, "Symbol" = genes, pathway_name) %>%
+    relocate(pathwayId, ensemblGeneId, "hgncSymbol" = genes, pathwayName) %>%
     distinct()
 
 # Now that we have a smaller table in the same format as sigora_database, we can
 # construct our own matrix of pathway distances
-candidate_dist_data <- get_pathway_distances(
-    pathway_data = candidate_data,
-    dist_method = "jaccard"
+candidateDistData <- getPathwayDistances(
+    pathwayData = candidateData,
+    distMethod = "jaccard"
 )
 
-candidate_starting_pathways <- create_foundation(
-    mat = candidate_dist_data,
-    max_distance = 0.9
+candidateStartingPathways <- createFoundation(
+    mat = candidateDistData,
+    maxDistance = 0.9
 )
 
-candidates_as_network <- create_pathnet(
-    sigora_result = filter(
-        sigora_examples, 
+candidatesAsNetwork <- createPathnet(
+    sigoraResult = filter(
+        sigoraExamples, 
         comparison == "COVID Pos Over Time"
     ),
-    foundation = candidate_starting_pathways,
+    foundation = candidateStartingPathways,
     trim = FALSE
 )
 
-pathnet_visNetwork(candidates_as_network)
+pathnetVisNetwork(candidatesAsNetwork)
 ```
 
 

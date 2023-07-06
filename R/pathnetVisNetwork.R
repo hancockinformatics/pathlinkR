@@ -1,25 +1,23 @@
 #' Visualize enriched Reactome pathways as an interactive network
 #'
-#' @param network Tidygraph network object as output by `create_pathnet`
-#' @param net_layout Desired layout for the network visualization. Defaults to
+#' @param network Tidygraph network object as output by `createPathnet`
+#' @param networkLayout Desired layout for the network visualization. Defaults to
 #'   "layout_nicely", should support most igraph layouts. See
 #'   `?visIgraphLayout()` for more details.
-#' @param edge_colour Colour of network edges; defaults to "#848484".
-#' @param edge_size_range Edge width is mapped to the similarity measure (one
+#' @param edgeColour Colour of network edges; defaults to "#848484".
+#' @param edgeSizeRange Edge width is mapped to the similarity measure (one
 #'   over distance). This length-two numeric vector controls the minimum and
 #'   maximum width of edges. Defaults to `c(5, 20)`.
-#' @param node_size_range Node size is mapped to the negative log of the
+#' @param nodeSizeRange Node size is mapped to the negative log of the
 #'   Bonferroni-adjusted p value, and this length-two numeric vector controls
 #'   the minimum and maximum. Defaults to `c(20, 50)`.
-#' @param node_border_width Size of the node border, defaults to 2.5
+#' @param nodeBorderWidth Size of the node border, defaults to 2.5
 #' @param highlighting When clicking on a node, should directly neighbouring
 #'   nodes be highlighted (other nodes are dimmed)? Defaults to TRUE.
-#' @param set_seed Random seed to use for reproducible node placement, defaults
-#'   to 123.
-#' @param label_nodes Boolean determining if nodes should be labeled. Note it
+#' @param labelNodes Boolean determining if nodes should be labeled. Note it
 #'   will only ever label enriched nodes/pathways.
-#' @param node_label_size Size of the node labels in pixels; defaults to 60.
-#' @param node_label_colour Colour of the node labels; defaults to "black".
+#' @param nodeLabelSize Size of the node labels in pixels; defaults to 60.
+#' @param nodeLabelColour Colour of the node labels; defaults to "black".
 #'
 #' @return Interactive visNetwork plot
 #' @export
@@ -40,51 +38,50 @@
 #' @seealso <https://github.com/hancockinformatics/pathnet>
 #'
 #' @examples
-#' ex_starting_pathways <- create_foundation(
-#'     mat = pathway_distances_jaccard,
-#'     max_distance = 0.8
+#' startingPathways <- createFoundation(
+#'     mat = pathwayDistancesJaccard,
+#'     maxDistance = 0.8
 #' )
 #'
-#' ex_pathnet <- create_pathnet(
-#'     sigora_result = sigora_examples,
-#'     foundation = ex_starting_pathways,
+#' exPathnet <- createPathnet(
+#'     sigoraResult = sigoraExamples,
+#'     foundation = startingPathways,
 #'     trim = TRUE,
-#'     trim_order = 1
+#'     trimOrder = 1
 #' )
 #'
-#' pathnet_visNetwork(ex_pathnet)
+#' pathnetVisNetwork(exPathnet)
 #'
-pathnet_visNetwork <- function(
+pathnetVisNetwork <- function(
         network,
-        net_layout = "layout_nicely",
-        edge_colour = "#848484",
-        edge_size_range = c(5, 20),
-        node_size_range = c(20, 50),
-        node_border_width = 2.5,
-        label_nodes = TRUE,
-        node_label_size = 60,
-        node_label_colour = "black",
-        highlighting = TRUE,
-        set_seed = 123
+        networkLayout = "layout_nicely",
+        edgeColour = "#848484",
+        edgeSizeRange = c(5, 20),
+        nodeSizeRange = c(20, 50),
+        nodeBorderWidth = 2.5,
+        labelNodes = TRUE,
+        nodeLabelSize = 60,
+        nodeLabelColour = "black",
+        highlighting = TRUE
 ) {
-    visnet_nodes <- network %>%
+    visNetNodes <- network %>%
         as_tibble() %>%
         mutate(
             id = row_number(),
             value = if_else(
-                is.na(p_value_adjusted),
+                is.na(pValueAdjusted),
                 1,
-                -log10(p_value_adjusted)
+                -log10(pValueAdjusted)
             ),
             background = map_chr(
-                grouped_pathway, ~grouped_pathway_colours[[.x]]
+                groupedPathway, ~groupedPathwayColours[[.x]]
             ),
             background = if_else(
-                !is.na(p_value_adjusted),
+                !is.na(pValueAdjusted),
                 background,
                 "#ffffff"
             ),
-            border = map_chr(grouped_pathway, ~grouped_pathway_colours[[.x]]),
+            border = map_chr(groupedPathway, ~groupedPathwayColours[[.x]]),
             color = map2(
                 background,
                 border,
@@ -93,52 +90,52 @@ pathnet_visNetwork <- function(
         ) %>%
         select(
             id,
-            "title" = pathway_name_1,
+            "title" = pathwayName1,
             everything(),
-            -c(background, border, direction, pathway_description, p_value)
+            -c(background, border, direction, pathwayDescription, pValue)
         )
 
-    if (label_nodes) {
-        visnet_nodes <- mutate(
-            visnet_nodes,
+    if (labelNodes) {
+        visNetNodes <- mutate(
+            visNetNodes,
             label = map_chr(
-                if_else(!is.na(p_value_adjusted), title, ""),
+                if_else(!is.na(pValueAdjusted), title, ""),
                 .truncNeatly,
                 30
             )
         )
     }
 
-    visnet_edges <- network %>%
+    visnetEdges <- network %>%
         activate("edges") %>%
         as_tibble() %>%
         rename("value" = similarity) %>%
         distinct()
 
-    legend_df <- grouped_pathway_colours %>%
+    legendDf <- groupedPathwayColours %>%
         enframe("label", "icon.color") %>%
         mutate(shape = "dot", size = 15)
 
-    out1 <- visNetwork(nodes = visnet_nodes, edges = visnet_edges) %>%
-        visIgraphLayout(layout = net_layout, randomSeed = set_seed) %>%
+    out1 <- visNetwork(nodes = visNetNodes, edges = visnetEdges) %>%
+        visIgraphLayout(layout = networkLayout) %>%
         visEdges(
-            color = edge_colour,
+            color = edgeColour,
             scaling = list(
-                "min" = edge_size_range[1],
-                "max" = edge_size_range[2]
+                "min" = edgeSizeRange[1],
+                "max" = edgeSizeRange[2]
             )
         ) %>%
         visNodes(
-            borderWidth = node_border_width,
+            borderWidth = nodeBorderWidth,
             scaling = list(
-                "min" = node_size_range[1],
-                "max" = node_size_range[2]
+                "min" = nodeSizeRange[1],
+                "max" = nodeSizeRange[2]
             )
         ) %>%
         visOptions(
             highlightNearest = highlighting,
             selectedBy = list(
-                "variable" = "grouped_pathway",
+                "variable" = "groupedPathway",
                 "style" = "width: 175px; height: 26px",
                 "main" = "Select pathway group"
             )
@@ -148,16 +145,16 @@ pathnet_visNetwork <- function(
             useGroups = FALSE,
             position = "right",
             main = "Grouped pathway",
-            addNodes = legend_df,
+            addNodes = legendDf,
         ) %>%
         visExport(float = "right")
 
-    if (label_nodes) {
+    if (labelNodes) {
         out1 %>%
             visNodes(font = paste0(
-                node_label_size,
+                nodeLabelSize,
                 "px arial ",
-                node_label_colour
+                nodeLabelColour
             ))
     } else {
         out1
