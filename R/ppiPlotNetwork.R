@@ -253,11 +253,11 @@ ppiPlotNetwork <- function(
             pull(name)
 
         networkLabeled <- network %>% mutate(
-            node_label = case_when(
+            nodeLabel = case_when(
                 degree > labelFilter ~ {{labelColumn}},
                 TRUE ~ NA_character_
             ),
-            is_hub = case_when(
+            isHub = case_when(
                 name %in% hubNodes ~ "y",
                 TRUE ~ "n"
             )
@@ -281,7 +281,7 @@ ppiPlotNetwork <- function(
             themeTweaks +
             networkFillGuide +
             geom_node_text(
-                aes(label = node_label, colour = is_hub),
+                aes(label = nodeLabel, colour = isHub),
                 size          = labelSize,
                 repel         = TRUE,
                 family        = fontfamily,
