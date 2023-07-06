@@ -153,7 +153,7 @@ ppiPlotNetwork(
     fillType = "foldChange",
     layout = "lgl",
     label = TRUE,
-    labelColumn = geneName,
+    labelColumn = hgncSymbol,
     labelFilter = 5,
     legend = TRUE
 )
