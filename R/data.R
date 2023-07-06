@@ -17,8 +17,8 @@
 #' @format A length 8 named vector of hex colour values
 "groupedPathwayColours"
 
-#' A data frame (tibble) of ID mappings for different human ID types. From
-#' the Sigora package.
+#' A data frame (tibble) of ID mappings for different human ID types, from the
+#' Sigora package.
 #'
 #' @format A data frame with 47037 rows and 3 columns
 #' \describe{
@@ -120,9 +120,9 @@
 #' @format A tibble with 60775 rows and 4 columns
 #' \describe{
 #'   \item{pathwayId}{Reactome pathway identifier}
+#'   \item{pathwayName}{Reactome pathway description}
 #'   \item{ensemblGeneId}{Ensembl gene identifier}
 #'   \item{hgncSymbol}{HGNC gene symbol}
-#'   \item{pathwayName}{Reactome pathway description}
 #' }
 "sigoraDatabase"
 

@@ -72,9 +72,7 @@ topTerms <- list(
 
 # Get Hallmark info -------------------------------------------------------
 
-hallmark1 <- msigdbr(category = "H")
-
-hallmark2 <- hallmark1 %>%
+hallmark <- msigdbr(category = "H") %>%
     select(gs_name, "ensemblGeneId" = ensembl_gene) %>%
     mutate(
         pathwayId = str_replace_all(gs_name, c("HALLMARK_" = "", "_" = " ")),
@@ -84,21 +82,19 @@ hallmark2 <- hallmark1 %>%
     )
 
 
-hallmarkAnnotated <- hallmark2 %>%
-    left_join(topTerms)
+mSigDbTermToGene <- hallmark %>%
+    left_join(topTerms, multiple = "all") %>%
+    relocate(
+        pathwayId,
+        topPathway,
+        pathwayName,
+        ensemblGeneId,
+        groupedPathway,
+        topPathwaysOriginal
+    ) %>%
+    distinct(pathwayId, ensemblGeneId)
 
-hallmarkDb <- hallmarkAnnotated %>%
-  relocate(
-    pathwayId,
-    topPathway,
-    pathwayName,
-    ensemblGeneId,
-    groupedPathway,
-    topPathwaysOriginal
-  )
 
-mSigDbTermToGene <- hallmarkDb %>%
-  distinct(pathwayId, ensemblGeneId)
+# Save the data -----------------------------------------------------------
 
-# Save this for gene set enrichment for hallmark
-usethis::use_data(mSigDbTermToGene, overwrite = TRUE, compress = "bzip2")
+usethis::use_data(mSigDbTermToGene, overwrite = TRUE)
