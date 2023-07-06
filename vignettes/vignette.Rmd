@@ -359,31 +359,31 @@ We can also verify this by looking at fold change heatmaps of genes involved in
 these pathways. The function `plot_fold_change` can do so by taking in an input
 list of DESeq2 data frames.
 ```{r plot_fold_changes_I, fig.height=10}
-plot_fold_change(
-    deseq_example_list,
-    path_name = "Interferon alpha/beta signaling",
-    col_split = c("Positive", "Negative"),
-    cluster_columns = FALSE
+plotFoldChange(
+    deseqExampleList,
+    pathName = "Interferon alpha/beta signaling",
+    colSplit = c("Positive", "Negative"),
+    clusterColumns = FALSE
 )
 ```
 
 Another example, with more customization:
 ```{r plot_fold_changes_II}
-deseq_example_list_renamed <- purrr::set_names(
-    deseq_example_list,
+deseqExampleListRenamed <- purrr::set_names(
+    deseqExampleList,
     c("Pos", "Neg")
 )
 
-plot_fold_change(
-    deseq_example_list_renamed,
-    manual_title = "Genes I like",
-    genes_to_plot = c("CD4", "CD8A","CD8B", "CD28", "ZAP70"),
-    gene_format = "hgnc",
-    col_split = c("Pos", "Neg"),
-    log2_foldchange = TRUE,
-    col_angle = 45,
-    cluster_rows = FALSE,
-    cluster_columns = TRUE,
+plotFoldChange(
+    deseqExampleListRenamed,
+    manualTitle = "Genes I like",
+    genesToPlot = c("CD4", "CD8A","CD8B", "CD28", "ZAP70"),
+    geneFormat = "hgnc",
+    colSplit = c("Pos", "Neg"),
+    log2FoldChange = TRUE,
+    colAngle = 45,
+    clusterRows = FALSE,
+    clusterColumns = TRUE,
     invert = TRUE
 )
 ```
