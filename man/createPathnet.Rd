@@ -34,7 +34,7 @@ aggressively this is done can be controlled via the \code{trimOrder} argument.
 \examples{
 startingPathways <- createFoundation(
     mat = pathwayDistancesJaccard,
-    max_distance = 0.8
+    maxDistance = 0.8
 )
 
 exPathnet <- createPathnet(

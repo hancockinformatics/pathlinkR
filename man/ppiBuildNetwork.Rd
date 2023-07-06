@@ -49,7 +49,6 @@ of the Kleinburg hub centrality score - details on this method can be found
 at \code{?igraph::hub_score}.
 }
 \examples{
-
 exDEGenes <- dplyr::filter(
     dplyr::as_tibble(tibble::rownames_to_column(
         deseqExampleList[[1]],
