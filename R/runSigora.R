@@ -1,8 +1,8 @@
 #' INTERNAL .runSigora
 #'
-#' @param enrich_genes Vector of genes to enrich
-#' @param gps_repo GPS object to use for testing pathways
-#' @param pval_filter Desired threshold for filtering results
+#' @param enrichGenes Vector of genes to enrich
+#' @param gpsRepo GPS object to use for testing pathways
+#' @param pValFilter Desired threshold for filtering results
 #'
 #' @return Data frame of results from Sigora
 #'
@@ -18,44 +18,44 @@
 #' @seealso <https://github.com/hancockinformatics/pathnet>
 #'
 .runSigora <- function(
-        enrich_genes,
-        gps_repo,
-        pval_filter = NA
+        enrichGenes,
+        gpsRepo,
+        pValFilter = NA
 ) {
 
     # Run SIGORA based on default settings (GPSrepo = reaH, level = 4)
     invisible(capture.output(
-        sigora_result_1 <- sigora(
-            GPSrepo = gps_repo,
+        sigoraResult1 <- sigora(
+            GPSrepo = gpsRepo,
             level = 4,
             markers = TRUE,
-            queryList = enrich_genes
+            queryList = enrichGenes
         )
     ))
 
-    sigora_result_2 <-
-        if (is.na(pval_filter)) {
-            sigora_result_1$summary_results
+    sigoraResult2 <-
+        if (is.na(pValFilter)) {
+            sigoraResult1$summary_results
         } else {
-            filter(sigora_result_1$summary_results, Bonferroni < pval_filter)
+            filter(sigoraResult1$summary_results, Bonferroni < pValFilter)
         }
 
     # Start by calculating n
-    n_genes <- length(enrich_genes[enrich_genes %in% idmap$Ensembl.Gene.ID])
+    nGenes <- length(enrichGenes[enrichGenes %in% idmap$Ensembl.Gene.ID])
 
     # Get the DE genes that were enriched for each pathway
-    sigora_detailed_list_1 <- sigora_result_1$detailed_results %>%
+    sigoraDetailedList1 <- sigoraResult1$detailed_results %>%
         as_tibble() %>%
         select(pathway, contains("gene")) %>%
         split(x = ., f = .$pathway)
 
-    sigora_detailed_list_2 <- sigora_detailed_list_1 %>% imap(
+    sigoraDetailedList2 <- sigoraDetailedList1 %>% imap(
         ~tibble(
             pathwy.id = .y,
             EntrezGene.ID = unique(c(pull(.x, gene1), pull(.x, gene2)))
         ) %>%
             left_join(idmap, by = "EntrezGene.ID", multiple = "all") %>%
-            filter(Ensembl.Gene.ID %in% enrich_genes, Symbol != "^$") %>%
+            filter(Ensembl.Gene.ID %in% enrichGenes, Symbol != "^$") %>%
             select(pathwy.id, Symbol) %>%
             mutate(across(everything(), as.character)) %>%
             distinct() %>%
@@ -64,25 +64,25 @@
         bind_rows() %>%
         group_by(pathwy.id) %>%
         summarize(genes = paste0(Symbol, collapse = ";")) %>%
-        mutate(num_candidate_genes = 1 + str_count(genes, ";")) %>%
+        mutate(numCandidateGenes = 1 + str_count(genes, ";")) %>%
         ungroup() %>%
-        mutate(gene_ratio = num_candidate_genes / n_genes)
+        mutate(geneRatio = numCandidateGenes / nGenes)
 
     left_join(
-        sigora_result_2,
-        sigora_detailed_list_2,
+        sigoraResult2,
+        sigoraDetailedList2,
         by = "pathwy.id",
         multiple = "all"
     ) %>%
-        mutate(num_bg_genes = n_genes) %>%
+        mutate(numBgGenes = nGenes) %>%
         select(
-            "pathway_id" = pathwy.id,
-            "pathway_description" = description,
-            "p_value" = pvalues,
-            "p_value_adjusted" = Bonferroni,
+            "pathwayId" = pathwy.id,
+            "pathwayName" = description,
+            "pValue" = pvalues,
+            "pValueAdjusted" = Bonferroni,
             genes,
-            num_candidate_genes,
-            num_bg_genes,
-            gene_ratio
-        )
+            numCandidateGenes,
+            numBgGenes,
+            geneRatio
+        ) %>% as_tibble()
 }
