@@ -4,14 +4,14 @@
 \alias{.runSigora}
 \title{INTERNAL .runSigora}
 \usage{
-.runSigora(enrich_genes, gps_repo, pval_filter = NA)
+.runSigora(enrichGenes, gpsRepo, pValFilter = NA)
 }
 \arguments{
-\item{enrich_genes}{Vector of genes to enrich}
+\item{enrichGenes}{Vector of genes to enrich}
 
-\item{gps_repo}{GPS object to use for testing pathways}
+\item{gpsRepo}{GPS object to use for testing pathways}
 
-\item{pval_filter}{Desired threshold for filtering results}
+\item{pValFilter}{Desired threshold for filtering results}
 }
 \value{
 Data frame of results from Sigora
