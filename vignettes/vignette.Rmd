@@ -58,14 +58,14 @@ non-COVID-19 sepsis patients at admission (T1) compared to ~1 week later (T2)
 in the ICU, indexed over time (i.e., T2 vs T1) (An et al. 2023).
 ```{r datasets_and_preliminary_volcano_plot}
 # Two different comparisons are included
-names(deseq_example_list)
+names(deseqExampleList)
 
 # A quick look at what a DESeq2 result looks like
-deseq_example <- deseq_example_list[[1]]
-as_tibble(deseq_example)
+deseqExample <- deseqExampleList[[1]]
+head(deseqExample)
 
 # Generate a volcano plot using this first dataframe
-eruption(deseq_example)
+eruption(deseqExample)
 ```
 
 There are multiple options available for customizing this volcano plot. You can
@@ -79,9 +79,9 @@ pathways used by the pathway enrichment software `sigora` to generate a list of
 genes involved in interferon signaling. More on Reactome and Sigora in the
 pathway enrichment section below.
 ```{r customized_volcano_plot}
-ifn_genes <- sigora_database %>% 
-    filter(pathway_name == "Interferon Signaling") %>% 
-    pull(Ensembl.Gene.ID)
+ifnGenes <- sigoraDatabase %>% 
+    filter(pathwayName == "Interferon Signaling") %>% 
+    pull(ensemblGeneId)
 
 # Here we give the following options:
 # - Highlight these interferon genes
@@ -90,13 +90,13 @@ ifn_genes <- sigora_database %>%
 # - Label only the top 5 up and down-regulated genes
 # - These top genes should be only from the interferon gene list
 eruption(
-    deseq_results = deseq_example,
-    title         = names(deseq_example_list)[1],
-    select_genes  = ifn_genes, 
-    select_name   = "Interferon genes", 
-    nonlog2       = TRUE, 
-    n             = 5, 
-    label         = "select" 
+    deseqResults = deseqExample,
+    title        = names(deseqExampleList)[1],
+    selectGenes  = ifnGenes, 
+    selectName   = "Interferon genes", 
+    nonlog2      = TRUE, 
+    n            = 5, 
+    label        = "select" 
 )
 ```
 

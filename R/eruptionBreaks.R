@@ -113,7 +113,9 @@
         )
 
     } else if (max(abs(x)) >= log2(100000)) {
-        message("Something may be wrong with your DESeq model to have ",
-                "fold changes >10^5...")
+        message(
+            "Something may be wrong with your DESeq model to have fold ",
+            "changes > 10^5..."
+        )
     }
 }
