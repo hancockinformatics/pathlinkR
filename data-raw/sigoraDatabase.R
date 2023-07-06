@@ -87,6 +87,7 @@ sigoraDatabaseLevel4 <- left_join(sigoraDatabaseLevel4, pathwayNames)
 # Decreased from 61045 to 60775 gene-pathway relations
 sigoraDatabase <- sigoraDatabaseLevel4 %>%
     select(-entrezGeneId) %>%
-    distinct()
+    distinct() %>%
+    mutate(across(everything(), as.character))
 
 usethis::use_data(sigoraDatabase, overwrite = TRUE)
