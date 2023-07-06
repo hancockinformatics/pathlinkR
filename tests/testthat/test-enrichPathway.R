@@ -9,7 +9,7 @@ testResultHallmark <- enrichPathway(
     split = FALSE
 )
 
-test_result_sigora <- sigoraExamples
+testResultSigora <- sigoraExamples
 
 expectedColnames <- c(
     "comparison",
