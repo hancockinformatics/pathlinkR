@@ -52,7 +52,7 @@ fold change >1.5 are used, which are set as defaults here. To generate a volcano
 plot, we can use the function `eruption()` in this package.
 
 We have included example gene expression study results in this package:
-`deseq_example_list`. This is a list of 6 data frames generated using DESeq2
+`deseqExampleList`. This is a list of 6 data frames generated using DESeq2
 (Love et al. 2014). Data is from an RNA-Seq study investigating COVID-19 and
 non-COVID-19 sepsis patients at admission (T1) compared to ~1 week later (T2)
 in the ICU, indexed over time (i.e., T2 vs T1) (An et al. 2023).
@@ -170,10 +170,10 @@ One solution is to use gene pairs, as elegantly described by the creators of the
 package `sigora` (Foroushani et al. 2013). In our experience, this methodology
 decreases the number of similar pathways as well as unrelated pathways from
 promiscuous genes, leaving behind only the pathways that are likely related to
-the underlying biology. In our pathway enrichment function `enrich_pathway()`,
+the underlying biology. In our pathway enrichment function `enrichPathway()`,
 the default enrichment method is `sigora`.
 
-The `enrich_pathway()` function takes in a list of DESeq2 result data frames,
+The `enrichPathway()` function takes in a list of DESeq2 result data frames,
 and by default will split the genes into up and down-regulated genes, then
 perform enrichment separately (set `split = FALSE` to perform enrichment without
 splitting). The name of the dataframe(s) in the list should indicate the
@@ -181,21 +181,21 @@ comparison that resulted in the DESeq2 results.
 ```{r sigora_enrichment, eval=FALSE}
 # Perform enrichment with Sigora (default). We also need to specify the
 # gene-pair signature repository (more in the Supplemental section).
-enriched_results_sigora <- enrich_pathway(
-    input_list = deseq_example_list,
-    gps_repo = reaH
+enrichedResultsSigora <- enrichPathway(
+    inputList = deseqExampleList,
+    gpsRepo = reaH
 )
 ```
 
 ```{r hidden_sigora, echo=FALSE}
-enriched_results_sigora <- sigora_examples
+enrichedResultsSigora <- sigoraExamples
 ```
 
 ```{r sigora_enrichment_no_split, eval=FALSE}
 # Enrichment without splitting by fold change direction
-enriched_results_sigora_nosplit <- enrich_pathway(
-    input_list = deseq_example_list,
-    gps_repo = reaH, 
+enrichedResultsSigoraNoSplit <- enrichPathway(
+    inputList = deseqExampleList,
+    gpsRepo = reaH, 
     split = FALSE
 )
 ```
@@ -205,8 +205,8 @@ the option of doing so by setting `analysis = "reactomepa"`, which uses
 ReactomePA (Yu et al. 2016).
 ```{r reactomepa_enrichment}
 # Perform enrichment with ReactomePA
-enriched_results_rpa <- enrich_pathway(
-    input_list = deseq_example_list,
+enrichedResultsRpa <- enrichPathway(
+    inputList = deseqExampleList,
     analysis = "reactomepa"
 )
 ```
@@ -218,8 +218,8 @@ biological states or processes with coherent expression” (Liberzon et al. 2015
 This database provides a more high-level summary of key biological processes
 compared to the more granular Reactome pathways.
 ```{r hallmark_enrichment}
-enriched_results_hm <- enrich_pathway(
-    input_list = deseq_example_list,
+enrichedResultsHm <- enrichPathway(
+    inputList = deseqExampleList,
     analysis = "hallmark"
 )
 ```
@@ -227,7 +227,7 @@ enriched_results_hm <- enrich_pathway(
 
 # Plotting pathway enrichment results
 Now that we have (a lot of) pathway enrichment results from multiple
-comparisons, it is time to visualize them. The function `plot_pathways` does
+comparisons, it is time to visualize them. The function `plotPathways` does
 this by grouping Reactome pathways or Hallmark gene sets under parent groups and
 indicating if each pathway is up/down-regulated across different comparisons,
 making it easy to identify which pathways are shared or unique to which
@@ -243,7 +243,7 @@ you can specify which pathways or top pathway groups to pull out to visualize.
 
 ```{r plot_pathways_I, fig.width=12, fig.height=10}
 # Plot the Sigora results in two columns
-plot_pathways(enriched_results_sigora, columns = 2)
+plotPathways(enrichedResultsSigora, columns = 2)
 ```
 
 ```{r plot_pathways_II, fig.width=8, fig.height=8}
@@ -253,13 +253,13 @@ plot_pathways(enriched_results_sigora, columns = 2)
 # - Add the number of DEGs used for enrichment
 # - Make the labels horizontal
 # - Increase the truncation cutoff value for more words
-plot_pathways(
-    enriched_results_sigora, 
-    specific_top_pathways = "Immune System",
-    new_group_names = c("Pos", "Neg"), 
-    show_num_genes = TRUE,
-    x_angle = "horizontal",
-    name_width = 50
+plotPathways(
+    enrichedResultsSigora, 
+    specificTopPathways = "Immune System",
+    newGroupNames = c("Pos", "Neg"), 
+    showNumGenes = TRUE,
+    xAngle = "horizontal",
+    nameWidth = 50
 )
 ```
 
@@ -406,8 +406,8 @@ significant. Therefore, the cutoff threshold for significance is more stringent
 (p-value < 0.001) and a more conservative adjustment method (Bonferroni) is
 used. For regular over-representation analysis, a less conservative adjustment
 method (Benjamini-Hochberg) is used with adjusted p-value <0.05. These are
-automatically set with `filter_results = "default"`. You can adjust these
-cut-offs by setting `filter_results` to different values between 0 and 1, or `1`
+automatically set with `filterResults = "default"`. You can adjust these
+cut-offs by setting `filterResults` to different values between 0 and 1, or `1`
 if you want all the pathways (this may be useful for comparing which enriched
 genes appear in which comparisons, even if the enrichment is not significant).
 
