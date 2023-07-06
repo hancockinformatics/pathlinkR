@@ -111,7 +111,10 @@ createPathnet <- function(
             pathway1,
             pathwayName1,
             everything(),
-            -any_of(c("pathwayName", "level_1", "level_2", "level1", "level2"))
+            -any_of(c(
+                "pathwayName.x", "pathwayName.y", "level_1",
+                "level_2", "level1", "level2"
+            ))
         )
 
     return(pathwaysAsNetwork4)
