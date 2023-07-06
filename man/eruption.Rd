@@ -5,44 +5,44 @@
 \title{Create a volcano plot from DESeq2 results}
 \usage{
 eruption(
-  deseq_results,
-  p_cutoff = 0.05,
-  fc_cutoff = 1.5,
-  base_colour = "steelblue4",
-  nonsig_colour = "lightgrey",
+  deseqResults,
+  pCutoff = 0.05,
+  fcCutoff = 1.5,
+  baseColour = "steelblue4",
+  nonsigColour = "lightgrey",
   alpha = 0.5,
-  point_size = 1,
+  pointSize = 1,
   title = NA,
   nonlog2 = FALSE,
   xaxis = NA,
   yaxis = NA,
-  select_genes = c(),
-  select_colour = "red",
-  select_name = "Selected",
+  selectGenes = c(),
+  selectColour = "red",
+  selectName = "Selected",
   label = "auto",
-  manual_genes = c(),
-  remove_unannotated = TRUE,
+  manualGenes = c(),
+  removeUnannotated = TRUE,
   n = 10,
-  label_size = 3.5,
+  labelSize = 3.5,
   pad = 1.4
 )
 }
 \arguments{
-\item{deseq_results}{Data frame of DESeq2 results with Ensembl gene IDs as
+\item{deseqResults}{Data frame of DESeq2 results with Ensembl gene IDs as
 rownames}
 
-\item{p_cutoff}{Adjusted p value cutoff, defaults to <0.05}
+\item{pCutoff}{Adjusted p value cutoff, defaults to <0.05}
 
-\item{fc_cutoff}{Absolute fold change cutoff, defaults to an absolute value
+\item{fcCutoff}{Absolute fold change cutoff, defaults to an absolute value
 of >1.5}
 
-\item{base_colour}{Colour of points for significant DE genes ("steelblue4")}
+\item{baseColour}{Colour of points for significant DE genes ("steelblue4")}
 
-\item{nonsig_colour}{Colour of non-DE genes ("lightgrey")}
+\item{nonsigColour}{Colour of non-DE genes ("lightgrey")}
 
 \item{alpha}{Transparency of the points (0.5)}
 
-\item{point_size}{Size of the points (1)}
+\item{pointSize}{Size of the points (1)}
 
 \item{title}{Title of the plot}
 
@@ -56,29 +56,29 @@ best values.}
 y-axis (in -log10); defaults to NA which lets ggplot2 determine the best
 values.}
 
-\item{select_genes}{Vector of genes to emphasize by colouring differently
+\item{selectGenes}{Vector of genes to emphasize by colouring differently
 (e.g. genes of interest); should be Ensembl IDs.}
 
-\item{select_colour}{Colour for the \code{select_genes}}
+\item{selectColour}{Colour for the \code{selectGenes}}
 
-\item{select_name}{Optional name to call the \code{select_genes} (e.g. Unique,
+\item{selectName}{Optional name to call the \code{selectGenes} (e.g. Unique,
 Shared, Immune Related, etc.)}
 
 \item{label}{When set to "auto" (default), label the top n up- and
 down-regulated DE genes. When set to "select", label top n up- and
-down-regulated genes provided in \code{select_genes}. When set to "manual" label
-a custom selection of genes provided in \code{manual_genes}}
+down-regulated genes provided in \code{selectGenes}. When set to "manual" label
+a custom selection of genes provided in \code{manualGenes}}
 
-\item{manual_genes}{If \code{label = "manual"}, these are the genes to
+\item{manualGenes}{If \code{label = "manual"}, these are the genes to
 specifically label. Can be HGNC symbols or Ensembl gene IDs.}
 
-\item{remove_unannotated}{Boolean: Remove genes without annotations (no HGNC
+\item{removeUnannotated}{Boolean: Remove genes without annotations (no HGNC
 symbol). Defaults to TRUE.}
 
 \item{n}{number of top up- and down-regulated genes to label, applies when
 \code{label} is set to "auto" or "select".}
 
-\item{label_size}{Size of font for labels}
+\item{labelSize}{Size of font for labels}
 
 \item{pad}{Padding of labels; adjust this if the labels overlap}
 }
@@ -91,7 +91,7 @@ with various options for tweaking the appearance. Ensembl gene IDs should
 be the rownames of the input data frame.
 }
 \examples{
-eruption(deseq_results = deseq_example_list[[1]])
+eruption(deseqResults = deseqExampleList[[1]])
 
 }
 \references{
