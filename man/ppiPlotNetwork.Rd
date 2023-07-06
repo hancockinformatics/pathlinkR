@@ -136,7 +136,7 @@ the respective functions from the \code{tidygraph} package.
 \examples{
 library(dplyr)
 
-exDEGenes <- deseqExampleList[[2]] \%>\%
+exDEGenes <- deseqExampleList[[1]] \%>\%
     tibble::rownames_to_column("gene") \%>\%
     as_tibble() \%>\%
     filter(padj < 0.05 & abs(log2FoldChange) > log2(1.5))
