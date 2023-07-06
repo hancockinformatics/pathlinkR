@@ -37,7 +37,6 @@
 #' @seealso <https://github.com/hancockinformatics/pathnet/>
 #'
 #' @examples
-#'
 #' exDEGenes <- dplyr::filter(
 #'     dplyr::as_tibble(tibble::rownames_to_column(
 #'         deseqExampleList[[1]],
