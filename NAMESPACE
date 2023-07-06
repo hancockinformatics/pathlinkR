@@ -2,7 +2,7 @@
 
 export(createFoundation)
 export(createPathnet)
-export(enrich_pathway)
+export(enrichPathway)
 export(eruption)
 export(getPathwayDistances)
 export(pathnetGGraph)
