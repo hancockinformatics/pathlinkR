@@ -130,19 +130,19 @@
 #'
 #' @format A data frame (tibble) with 66 rows and 12 columns
 #' \describe{
-#'   \item{pathway_id}{Reactome pathway identifier}
-#'   \item{pathway_description}{Description of the pathway}
+#'   \item{comparison}{Comparison from which results are derived; names of the
+#'     input list}
 #'   \item{direction}{Was the pathway enriched in up or down regulated genes}
-#'   \item{p_value}{Nominal p value for the enrichment}
-#'   \item{p_value_adjusted}{p value adjusted for multiple testing}
+#'   \item{pathwayId}{Reactome pathway identifier}
+#'   \item{pathwayName}{Description of the pathway}
+#'   \item{pValue}{Nominal p value for the enrichment}
+#'   \item{pValueAdjusted}{p value adjusted for multiple testing}
 #'   \item{genes}{Genes in the pathway/input}
-#'   \item{num_candidate_genes}{Analyzed genes found in the pathway of interest}
-#'   \item{num_bg_genes}{All genes from the pathway database}
-#'   \item{gene_ratio}{Quotient of the number of candidate and background genes}
-#'   \item{top_pathways}{Pathway category}
-#'   \item{comparison}{Comparison from which results are derived; name of input
-#'     list}
-#'   \item{total_genes}{Total number of input genes}
+#'   \item{numCandidateGenes}{Analyzed genes found in the pathway of interest}
+#'   \item{numBgGenes}{All genes from the pathway database}
+#'   \item{geneRatio}{Quotient of the number of candidate and background genes}
+#'   \item{totalGenes}{Total number of input genes}
+#'   \item{topPathways}{Pathway category}
 #' }
 "sigoraExamples"
 

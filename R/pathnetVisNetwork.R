@@ -92,7 +92,7 @@ pathnetVisNetwork <- function(
             id,
             "title" = pathwayName1,
             everything(),
-            -c(background, border, direction, pathwayDescription, pValue)
+            -any_of(c("background", "border", "direction", "pathwayName", "pValue"))
         )
 
     if (labelNodes) {
