@@ -32,7 +32,7 @@
 #' @examples
 #' startingPathways <- createFoundation(
 #'     mat = pathwayDistancesJaccard,
-#'     max_distance = 0.8
+#'     maxDistance = 0.8
 #' )
 #'
 #' exPathnet <- createPathnet(
