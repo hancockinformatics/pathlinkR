@@ -1,21 +1,21 @@
 #' List of example results from DESeq2
 #'
-#' @format A list of two data frames, each with 6 columns, containing
-#'   example results from DESeq2. Each data frame has the following columns.
+#' @format A list of two data frames, each with 6 columns (and rownames),
+#'   containing example results from DESeq2
 #' \describe{
-#' \item{baseMean}{A combined score for the gene}
-#' \item{log2FoldChange}{Fold change value for the gene}
-#' \item{lfcSE}{Standard error for the fold change value}
-#' \item{stat}{The statistic value}
-#' \item{pvalue}{The nominal p value for the gene}
-#' \item{padj}{The adjusted p value for the gene}
+#'   \item{baseMean}{A combined score for the gene}
+#'   \item{log2FoldChange}{Fold change value for the gene}
+#'   \item{lfcSE}{Standard error for the fold change value}
+#'   \item{stat}{The statistic value}
+#'   \item{pvalue}{The nominal p value for the gene}
+#'   \item{padj}{The adjusted p value for the gene}
 #' }
-"deseq_example_list"
+"deseqExampleList"
 
 #' Colour assignments for grouped pathways
 #'
 #' @format A length 8 named vector of hex colour values
-"grouped_pathway_colours"
+"groupedPathwayColours"
 
 #' A data frame (tibble) of ID mappings for different human ID types. From
 #' the Sigora package.
@@ -37,67 +37,67 @@
 #'
 #' @format A data frame with 152259 rows and 4 columns:
 #' \describe{
-#'   \item{ensembl_gene_A}{Ensembl gene ID for the first gene/protein in the
+#'   \item{ensemblGeneA}{Ensembl gene ID for the first gene/protein in the
 #'     interaction}
-#'   \item{hgnc_symbol_A}{HGNC symbol for the first gene/protein in the
+#'   \item{hgncSymbolA}{HGNC symbol for the first gene/protein in the
 #'     interaction}
-#'   \item{ensembl_gene_B}{Ensembl gene ID for the second gene/protein in the
+#'   \item{ensemblGeneB}{Ensembl gene ID for the second gene/protein in the
 #'     interaction}
-#'   \item{hgnc_symbol_B}{HGNC symbol for the second gene/protein in the
+#'   \item{hgncSymbolB}{HGNC symbol for the second gene/protein in the
 #'     interaction}
 #' }
-"innatedb_exp"
+"innateDbExp"
 
 #' Table of Reactome pathways that had multiple top pathways originally, and
 #' manually curated to only have one top pathway in find_top_pathways.R
 #'
 #' @format A tibble with 25 rows and 2 columns
 #' \describe{
-#' \item{pathway_id}{Reactome pathway ID}
-#' \item{pathway_name}{Name of the pathway}
-#' \item{top_pathway_name}{Name of the top pathway}
-#' \item{species}{species}
-#' \item{top_pathway}{ID of the top pathway}
+#'   \item{pathwayId}{Reactome pathway ID}
+#'   \item{pathwayName}{Name of the pathway}
+#'   \item{topPathwayName}{Name of the top pathway}
+#'   \item{species}{species}
+#'   \item{topPathway}{ID of the top pathway}
 #' }
-"manual_dupe_annotation"
+"manualDupeAnnotation"
 
 #' Table of human gene ID mappings
 #'
 #' @format A data frame (tibble) with 42,099 rows and 3 columns
 #' \describe{
-#' \item{ensg_id}{Ensembl IDs}
-#' \item{gene_name}{HGNC symbols}
-#' \item{entrez_id}{NCBI Entrez IDs}
+#'   \item{ensemblGeneId}{Ensembl IDs}
+#'   \item{hgncSymbol}{HGNC symbols}
+#'   \item{entrezGeneId}{NCBI Entrez IDs}
 #' }
-"mapping_file"
+"mappingFile"
 
 #' Table of Hallmark gene sets and their genes
 #'
 #' @format A data frame with 8,209 rows and 2 columns
 #' \describe{
-#' \item{pathway_id}{Name of the Hallmark Gene Set}
-#' \item{ensg_id}{Ensembl IDs}
+#'   \item{pathwayId}{Name of the Hallmark Gene Set}
+#'   \item{ensemblGeneId}{Ensembl IDs}
 #' }
-"msigdbr_t2g"
+"mSigDbTermToGene"
 
 #' Matrix of pairwise Jaccard indices for all human Reactome pathways
 #'
 #' @format A matrix with 1001 rows and columns
 #' \describe{
-#' \item{Rows}{Reactome pathway identifiers}
-#' \item{Columns}{Reactome pathway identifiers}
+#'   \item{Rows}{Reactome pathway identifiers}
+#'   \item{Columns}{Reactome pathway identifiers}
 #' }
-"pathway_distances_jaccard"
+"pathwayDistancesJaccard"
 
 #' Table of all Reactome pathways and genes
 #'
-#' @format A data frame with 123519 rows and 3 columns
+#' @format A data frame with 123574 rows and 3 columns
 #' \describe{
-#'   \item{pathway_id}{Reactome pathway ID}
-#'   \item{entrez_id}{Entrez gene ID}
-#'   \item{pathway_name}{Name of the Reactome pathway}
+#'   \item{pathwayId}{Reactome pathway ID}
+#'   \item{entrezGeneId}{Entrez gene ID}
+#'   \item{pathwayName}{Name of the Reactome pathway}
 #' }
-"reactome_database"
+"reactomeDatabase"
 
 #' The default Sigora Gene Pair Signature (GPS) object
 #'
@@ -119,56 +119,56 @@
 #'
 #' @format A tibble with 60775 rows and 4 columns
 #' \describe{
-#' \item{pathway_id}{Reactome pathway identifier}
-#' \item{EnsemblGene.ID}{Ensembl gene identifier}
-#' \item{Symbol}{HGNC gene symbol}
-#' \item{pathway_name}{Reactome pathway description}
+#'   \item{pathwayId}{Reactome pathway identifier}
+#'   \item{ensemblGeneId}{Ensembl gene identifier}
+#'   \item{hgncSymbol}{HGNC gene symbol}
+#'   \item{pathwayName}{Reactome pathway description}
 #' }
-"sigora_database"
+"sigoraDatabase"
 
-#' Example output from `enrich_pathways` run on "deseq_example_list"
+#' Example output from `enrich_pathways` run on "deseqExampleList"
 #'
 #' @format A data frame (tibble) with 66 rows and 12 columns
 #' \describe{
-#' \item{pathway_id}{Reactome pathway identifier}
-#' \item{pathway_description}{Description of the pathway}
-#' \item{direction}{Was the pathway enriched in up or down regulated genes}
-#' \item{p_value}{Nominal p value for the enrichment}
-#' \item{p_value_adjusted}{p value adjusted for multiple testing}
-#' \item{genes}{Genes in the pathway/input}
-#' \item{num_candidate_genes}{Analyzed genes found in the pathway of interest}
-#' \item{num_bg_genes}{All genes from the pathway database}
-#' \item{gene_ratio}{Quotient of the number of candidate and background genes}
-#' \item{top_pathways}{Pathway category}
-#' \item{comparison}{Comparison from which results are derived; name of input
-#' list}
-#' \item{total_genes}{Total number of input genes}
+#'   \item{comparison}{Comparison from which results are derived; names of the
+#'     input list}
+#'   \item{direction}{Was the pathway enriched in up or down regulated genes}
+#'   \item{pathwayId}{Reactome pathway identifier}
+#'   \item{pathwayName}{Description of the pathway}
+#'   \item{pValue}{Nominal p value for the enrichment}
+#'   \item{pValueAdjusted}{p value adjusted for multiple testing}
+#'   \item{genes}{Genes in the pathway/input}
+#'   \item{numCandidateGenes}{Analyzed genes found in the pathway of interest}
+#'   \item{numBgGenes}{All genes from the pathway database}
+#'   \item{geneRatio}{Quotient of the number of candidate and background genes}
+#'   \item{totalGenes}{Total number of input genes}
+#'   \item{topPathways}{Pathway category}
 #' }
-"sigora_examples"
+"sigoraExamples"
 
 #' Manually-curated list of Reactome and Hallmark pathways and their top
 #' pathways and grouped pathways
 #'
 #' @format A data frame (tibble) with 2671 rows and 5 columns
 #' \describe{
-#' \item{pathway_id}{Reactome or Hallmark pathway identifier}
-#' \item{top_pathways}{Top hierarchy pathway term, shortened in some cases}
-#' \item{pathway_name}{Pathway name}
-#' \item{grouped_pathway}{Top grouped pathway, 8 for Reactome}
-#' \item{top_pathways_original}{Original top pathway name}
+#'   \item{pathwayId}{Reactome or Hallmark pathway identifier}
+#'   \item{topPathways}{Top hierarchy pathway term, shortened in some cases}
+#'   \item{pathwayName}{Pathway name}
+#'   \item{groupedPathway}{Top grouped pathway, 8 for Reactome}
+#'   \item{topPathwaysOriginal}{Original top pathway name}
 #' }
-"top_pathways_more"
+"topPathwaysMore"
 
 #' Manually-curated Reactome pathways with a simple category assignment
 #'
 #' @format A data frame (tibble) with 1298 rows and 6 columns
 #' \describe{
-#' \item{pathway_id}{Reactome pathway identifier}
-#' \item{top_pathways}{Top hierarchy pathway term}
-#' \item{second_top_pathway}{Seond-highest hierarchy term}
-#' \item{comments}{Comments about the pathway}
-#' \item{pathway_name}{Pathway name}
-#' \item{grouped_pathway}{Manually-curated pathway type; seven possible values}
-#' \item{top_pathways_original}{Original top pathway}
+#'   \item{pathwayId}{Reactome pathway identifier}
+#'   \item{topPathways}{Top hierarchy pathway term}
+#'   \item{secondTopPathway}{Seond-highest hierarchy term}
+#'   \item{comments}{Comments about the pathway}
+#'   \item{pathwayName}{Pathway name}
+#'   \item{groupedPathway}{Manually-curated pathway type; seven possible values}
+#'   \item{topPathwaysOriginal}{Original top pathway}
 #' }
-"top_pathways"
+"topPathways"
