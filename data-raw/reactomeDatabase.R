@@ -5,30 +5,38 @@ library(org.Hs.eg.db)
 library(tidyverse)
 
 
-# Create a local Reactome database file ReactomePA ------------------------
+# Create a local Reactome database file -----------------------------------
 
-humanGenes <- keys(org.Hs.eg.db, keytype = "ENTREZID")
+reactomeIds <- as.list(reactomePATHID2EXTID) %>%
+    enframe("pathwayId", "entrezGeneId") %>%
+    filter(str_detect(pathwayId, "^R-HSA")) %>%
+    unnest(entrezGeneId)
 
-# Get mapping of pathway IDs to Entrez IDs
-reactomeDb <- as.list(reactomePATHID2EXTID) %>%
-    enframe() %>%
-    unnest(cols = c(value)) %>%
-    filter(grepl("HSA", name))
 
-# Get mapping of pathway IDs to pathway names
 reactomeNames <- as.list(reactomePATHID2NAME) %>%
-    enframe() %>%
-    unnest(cols = c(value)) %>%
-    filter(grepl("HSA", name)) %>%
-    mutate(pathwayName = str_remove(value, "Homo sapiens: ")) %>%
-    dplyr::select(-value)
+    enframe("pathwayId", "pathwayName") %>%
+    filter(str_detect(pathwayId, "^R-HSA")) %>%
+    unnest(pathwayName) %>%
+    mutate(pathwayName = str_remove(pathwayName, "Homo sapiens: "))
 
-reactomeDb <- left_join(reactomeDb, reactomeNames) %>%
-    dplyr::rename("pathwayId" = name, "entrezGeneId" = value)
 
-# Filter out genes that aren't human; some are genes from other organisms (e.g.
-# microbes for Immune System)
+# Map pathway IDs to pathway names ----------------------------------------
+
+reactomeDb <- left_join(
+    reactomeIds,
+    reactomeNames,
+    by = "pathwayId",
+    multiple = "all"
+)
+
+
+# Filter non-human genes --------------------------------------------------
+
+# Some are genes from other organisms (e.g. microbes for Immune System)
 reactomeDatabase <- reactomeDb %>%
-    filter(entrezGeneId %in% humanGenes)
+    filter(entrezGeneId %in% keys(org.Hs.eg.db, keytype = "ENTREZID"))
+
+
+# Save the data -----------------------------------------------------------
 
 usethis::use_data(reactomeDatabase, overwrite = TRUE)
