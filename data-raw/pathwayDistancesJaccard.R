@@ -1,6 +1,14 @@
+# Load packages -----------------------------------------------------------
+
 library(dplyr)
 
+
+# Use existing sigoraDatabase to start ------------------------------------
+
 load("data/sigoraDatabase.rda")
+
+
+# Create identity matrix of all pathways ----------------------------------
 
 identityTable <- sigoraDatabase %>%
   select(ensemblGeneId, pathwayId) %>%
@@ -15,6 +23,9 @@ identityTable <- sigoraDatabase %>%
   tibble::column_to_rownames("pathwayId") %>%
   as.matrix()
 
+
+# Calculate Jaccard distances ---------------------------------------------
+
 pathwayDistancesJaccard <- identityTable %>%
   vegan::vegdist(
     method = "jaccard",
@@ -23,4 +34,7 @@ pathwayDistancesJaccard <- identityTable %>%
   ) %>%
   as.matrix()
 
-usethis::use_data(pathwayDistancesJaccard, overwrite = TRUE, compress = "bzip2")
+
+# Save the data -----------------------------------------------------------
+
+usethis::use_data(pathwayDistancesJaccard, overwrite = TRUE)

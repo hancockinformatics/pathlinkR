@@ -1,12 +1,13 @@
-# Load packages
+# Load packages -----------------------------------------------------------
+
 library(biomaRt)
 library(dplyr)
 
 
-# Load and filter InnateDB data
+# Load and tidy InnateDB data ---------------------------------------------
+
 innatedbInit <-
   readr::read_tsv("https://innatedb.com/download/interactions/all.mitab.gz")
-
 
 # We just want human interactions
 innatedbFiltered <- innatedbInit %>% filter(
@@ -25,17 +26,22 @@ innatedbTrimmed <- innatedbFiltered %>%
   distinct(ensemblGeneA, ensemblGeneB)
 
 
-# Remove interactions that are the same, but reversed between the two columns
+# Remove duplicate reversed interactions ----------------------------------
+
 innatedbNoDups <- innatedbTrimmed[
   !duplicated(data.frame(t(apply(innatedbTrimmed, 1, sort)))),
 ]
 
 
-# Get gene mapping from biomaRt
+# Get gene mapping from biomaRt -------------------------------------------
+
 biomartMapping <- getBM(
   mart = useMart("ensembl", dataset = "hsapiens_gene_ensembl"),
   attributes = c("ensembl_gene_id", "hgnc_symbol")
 )
+
+
+# Map the interactors -----------------------------------------------------
 
 innatedbMapped <- innatedbNoDups %>%
   left_join(
@@ -53,7 +59,8 @@ innatedbMapped <- innatedbNoDups %>%
   relocate(ends_with("A"))
 
 
-# Remove proteins/genes with more than 1000 interactions (e.g. UBC)
+# Remove promiscuous interactors ------------------------------------------
+
 innateDbExp <- innatedbMapped %>%
   group_by(ensemblGeneA) %>%
   filter(n() < 1000) %>%
@@ -63,5 +70,6 @@ innateDbExp <- innatedbMapped %>%
   ungroup()
 
 
-# Save the data, being sure to enable compression to reduce the size
-usethis::use_data(innateDbExp, overwrite = TRUE, compress = "bzip2")
+# Save the data -----------------------------------------------------------
+
+usethis::use_data(innateDbExp, overwrite = TRUE)
