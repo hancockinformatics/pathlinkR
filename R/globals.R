@@ -24,6 +24,7 @@ utils::globalVariables(c(
     "ensemblGeneB",
     "ensemblGeneId",
     "entrezGeneId",
+    "gene",
     "geneID",
     "geneName",
     "gene_ratio",

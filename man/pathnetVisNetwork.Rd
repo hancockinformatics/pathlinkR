@@ -20,15 +20,15 @@ pathnetVisNetwork(
 \arguments{
 \item{network}{Tidygraph network object as output by \code{createPathnet}}
 
-\item{networkLayout}{Desired layout for the network visualization. Defaults to
-"layout_nicely", should support most igraph layouts. See
+\item{networkLayout}{Desired layout for the network visualization. Defaults
+to "layout_nicely", should support most igraph layouts. See
 \code{?visIgraphLayout()} for more details.}
 
 \item{edgeColour}{Colour of network edges; defaults to "#848484".}
 
-\item{edgeSizeRange}{Edge width is mapped to the similarity measure (one
-over distance). This length-two numeric vector controls the minimum and
-maximum width of edges. Defaults to \code{c(5, 20)}.}
+\item{edgeSizeRange}{Edge width is mapped to the similarity measure (one over
+distance). This length-two numeric vector controls the minimum and maximum
+width of edges. Defaults to \code{c(5, 20)}.}
 
 \item{nodeSizeRange}{Node size is mapped to the negative log of the
 Bonferroni-adjusted p value, and this length-two numeric vector controls

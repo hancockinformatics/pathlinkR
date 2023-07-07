@@ -84,16 +84,9 @@
 #' @seealso <https://github.com/hancockinformatics/pathnet/>
 #'
 #' @examples
-#' library(dplyr)
-#'
-#' exDEGenes <- deseqExampleList[[1]] %>%
-#'     tibble::rownames_to_column("gene") %>%
-#'     as_tibble() %>%
-#'     filter(padj < 0.05 & abs(log2FoldChange) > log2(1.5))
-#'
 #' exNetwork <- ppiBuildNetwork(
-#'     df = exDEGenes,
-#'     col = "gene",
+#'     deseqResults = deseqExampleList[[1]],
+#'     filterInput = TRUE,
 #'     order = "zero"
 #' )
 #'
@@ -148,7 +141,10 @@ ppiPlotNetwork <- function(
         )
 
         networkFillGeom <- scale_fill_manual(
-            values   = c("Up" = foldChangeColours[1], "Down" = foldChangeColours[2]),
+            values   = c(
+                "Up" = foldChangeColours[1],
+                "Down" = foldChangeColours[2]
+            ),
             na.value = intColour
         )
 

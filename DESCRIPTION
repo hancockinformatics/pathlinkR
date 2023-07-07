@@ -1,7 +1,7 @@
 Package: pathnet
 Type: Package
 Title: Analyze and interpret RNA-Seq results
-Version: 0.99.174
+Version: 0.99.175
 Authors@R: c(
     person("Travis", "Blimkie", , "travis.m.blimkie@gmail.com", role = c("cre"), comment = c(ORCID = "0000-0001-8778-8627")),
     person("Andy", "An", , "andy@hancocklab.com", role = c("aut"))
@@ -9,7 +9,10 @@ Authors@R: c(
 Description: pathnet is an R package designed to facilitate analysis of RNA-Seq 
     results. Specifically, our aim with pathnet was to provide a number of tools
     which take a list of DE genes and perform different analyses on them, aiding
-    with the interpretation of results.
+    with the interpretation of results. Functions are included to perform 
+    pathway enrichment, with muliplte databases supported, and tools for 
+    visualizing these results. Genes can also be used to create and plot 
+    protein-protein interaction networks, all from inside of R. 
 biocViews: GeneSetEnrichment, Network, Pathways, Reactome, RNASeq
 BiocType: Software
 BugReports: https://github.com/hancockinformatics/pathnet

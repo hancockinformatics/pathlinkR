@@ -8,9 +8,9 @@
 A tibble with 60775 rows and 4 columns
 \describe{
 \item{pathwayId}{Reactome pathway identifier}
+\item{pathwayName}{Reactome pathway description}
 \item{ensemblGeneId}{Ensembl gene identifier}
 \item{hgncSymbol}{HGNC gene symbol}
-\item{pathwayName}{Reactome pathway description}
 }
 }
 \usage{

@@ -217,7 +217,8 @@ eruption <- function(
     # Manual labeling ("manual"): label the genes you provided in `manualGenes`
     if (label == "manual") {
         res <- res %>% mutate(label = case_when(
-            ensemblGeneId %in% manualGenes | geneName %in% manualGenes ~ geneName
+            ensemblGeneId %in% manualGenes |
+                geneName %in% manualGenes ~ geneName
         ))
     }
 

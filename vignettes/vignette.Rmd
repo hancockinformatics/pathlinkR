@@ -118,17 +118,11 @@ type of network, such as support for first, minimum, or zero order networks. The
 two main functions used to accomplish this are `ppiBuildNetwork` and
 `ppiPlotNetwork`.
 ```{r ppi_networks, fig.width=12, fig.height=10, warning=FALSE}
-# Start by filtered one of the example DE gene lists for significant genes
-exDEGenes <- deseqExampleList[[1]] %>%
-    tibble::rownames_to_column("gene") %>%
-    as_tibble() %>%
-    filter(padj < 0.05 & abs(log2FoldChange) > log2(1.5))
-
 # Construct a zero order network, i.e. it will only contain the input genes, 
 # no interactors
 exNetwork <- ppiBuildNetwork(
-    df = exDEGenes,
-    col = "gene",
+    deseqResult = deseqExampleList[[1]],
+    filter = TRUE,
     order = "zero"
 )
 
