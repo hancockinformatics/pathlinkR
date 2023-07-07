@@ -1,7 +1,15 @@
 #' Construct a PPI network from input genes and InnateDB's database
 #'
-#' @param df Input data frame containing genes of interest
-#' @param col Column of input genes as Ensembl IDs (character)
+#' @param deseqResults Data frame of DESeq2 results with Ensembl gene IDs as
+#'   rownames
+#' @param filterInput If providing list of data frames containing the
+#'   unfiltered output from `DESeq2::results()`, set this to TRUE to filter for
+#'   DE genes using the thresholds set by the `pCutoff` and `fcCutoff`
+#'   arguments. When FALSE it's assumed your passing the filtered
+#'   results into `inputList` and no more filtering will be done.
+#' @param pCutoff Adjusted p value cutoff, defaults to <0.05
+#' @param fcCutoff Absolute fold change cutoff, defaults to an absolute value
+#'   of >1.5
 #' @param order Desired network order. Possible options are "zero" (default),
 #'   "first," "minSimple," or "minSteiner."
 #' @param hubMeasure Character denoting what measure should be used in
@@ -37,31 +45,25 @@
 #' @seealso <https://github.com/hancockinformatics/pathnet/>
 #'
 #' @examples
-#' exDEGenes <- dplyr::filter(
-#'     dplyr::as_tibble(tibble::rownames_to_column(
-#'         deseqExampleList[[1]],
-#'         "gene"
-#'     )),
-#'     padj < 0.05,
-#'     abs(log2FoldChange) > log2(1.5)
-#' )
-#'
 #' ppiBuildNetwork(
-#'     df = exDEGenes,
-#'     col = "gene",
+#'     deseqResults = deseqExampleList[[1]],
+#'     filterInput = TRUE,
 #'     order = "zero"
 #' )
 #'
 ppiBuildNetwork <- function(
-        df,
-        col,
-        order,
+        deseqResults,
+        filterInput = TRUE,
+        pCutoff = 0.05,
+        fcCutoff = 1.5,
+        order = "zero",
         hubMeasure = "betweenness",
         ppiData = innateDbExp
 ) {
 
-    stopifnot(is(df, "data.frame"))
-    stopifnot(col %in% colnames(df))
+    stopifnot(is(deseqResults, "data.frame"))
+    stopifnot(grepl(pattern = "ENSG", x = rownames(deseqResults)[1]))
+    stopifnot(all(c("padj", "log2FoldChange") %in% colnames(deseqResults)))
     stopifnot(order %in% c("zero", "first", "minSimple", "minSteiner"))
     stopifnot(hubMeasure %in% c("betweenness", "degree", "hubscore"))
     stopifnot(
@@ -70,19 +72,30 @@ ppiBuildNetwork <- function(
         )
     )
 
-    ## Check for and remove any duplicate IDs, warning the user when this occurs
-    message("Cleaning input data...")
-    dfClean <- distinct(df, !!sym(col), .keep_all = TRUE)
-    geneVector <- unique(dfClean[[col]])
+    df <- deseqResults %>%
+        rownames_to_column("gene") %>%
+        as_tibble()
 
-    stopifnot(
-        "Input genes must be human Ensembl IDs" = grepl(
-            x = geneVector[1],
-            pattern = "^ENSG"
+    if (filterInput) {
+        df <- filter(
+            df,
+            padj < pCutoff,
+            abs(log2FoldChange) > log2(fcCutoff)
         )
+    }
+
+    message(
+        "ppiBuildNetwork will use ",
+        nrow(df),
+        " genes for network construction..."
     )
 
-    lostIds <- df[[col]][duplicated(df[[col]])]
+    ## Check for and remove any duplicate IDs, warning the user when this occurs
+    message("Cleaning the input data...")
+    dfClean <- distinct(df, gene, .keep_all = TRUE)
+    geneVector <- unique(dfClean[["gene"]])
+
+    lostIds <- df[["gene"]][duplicated(df[["gene"]])]
 
     if (length(geneVector) < nrow(df)) {
         numDups <- nrow(df) - length(geneVector)
@@ -120,7 +133,7 @@ ppiBuildNetwork <- function(
         )
     }
 
-    message("Creating network...")
+    message("Creating the network...")
     networkInit <- edgeTable %>%
         as_tbl_graph(directed = FALSE) %>%
         ppiRemoveSubnetworks() %>%
@@ -199,7 +212,7 @@ ppiBuildNetwork <- function(
     networkFinal <- left_join(
         networkMapped,
         dfClean,
-        by = c("name" = col),
+        by = c("name" = "gene"),
         multiple = "all"
     )
 

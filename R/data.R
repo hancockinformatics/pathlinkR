@@ -17,8 +17,8 @@
 #' @format A length 8 named vector of hex colour values
 "groupedPathwayColours"
 
-#' A data frame (tibble) of ID mappings for different human ID types, from the
-#' Sigora package.
+#' A data frame (tibble) of ID mappings for different human ID types, from
+#' the Sigora package.
 #'
 #' @format A data frame with 47037 rows and 3 columns
 #' \describe{
