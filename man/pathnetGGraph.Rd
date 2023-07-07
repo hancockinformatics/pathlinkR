@@ -23,24 +23,23 @@ pathnetGGraph(
 \item{network}{Tidygraph network object, output from \code{createPathnet}. See
 Details for specific requirements.}
 
-\item{networkLayout}{Desired layout for the network visualization. Defaults to
-"nicely", but supports any method found in \code{?layout_tbl_graph_igraph}}
+\item{networkLayout}{Desired layout for the network visualization. Defaults
+to "nicely", but supports any method found in \code{?layout_tbl_graph_igraph}}
 
-\item{nodeSizeRange}{Size range for nodes, mapped to significance
-(Bonferroni p-value). Defaults to \code{c(4, 8)}.}
+\item{nodeSizeRange}{Size range for nodes, mapped to significance (Bonferroni
+p-value). Defaults to \code{c(4, 8)}.}
 
 \item{edgeColour}{Colour of network edges; defaults to "grey30".}
 
 \item{edgeAlpha}{Alpha value for edges; defaults to \code{1}.}
 
-\item{edgeWidthRange}{Range of edge widths, mapped to
-\code{log10(similarity)}. Defaults to \code{c(0.33, 3)}.}
+\item{edgeWidthRange}{Range of edge widths, mapped to \code{log10(similarity)}.
+Defaults to \code{c(0.33, 3)}.}
 
-\item{labelProp}{Proportion of "interactor" (i.e. non-enriched) pathways
-that the function will attempt to label. E.g. setting this to 0.5 (the
-default) means half of the non-enriched pathways will \emph{potentially} be
-labeled - it won't be exact because the node labeling is done with
-\code{ggrepel}.}
+\item{labelProp}{Proportion of "interactor" (i.e. non-enriched) pathways that
+the function will attempt to label. E.g. setting this to 0.5 (the default)
+means half of the non-enriched pathways will \emph{potentially} be labeled - it
+won't be exact because the node labeling is done with \code{ggrepel}.}
 
 \item{nodeLabelSize}{Size of node labels; defaults to 5.}
 
@@ -49,11 +48,10 @@ labeled - it won't be exact because the node labeling is done with
 \item{nodeLabelOverlaps}{Max overlaps for node labels, from \code{ggrepel}.
 Defaults to \code{6}.}
 
-\item{segColour}{Colour of line segments connecting labels to nodes.
-Defaults to "black".}
+\item{segColour}{Colour of line segments connecting labels to nodes. Defaults
+to "black".}
 
-\item{themeBaseSize}{Base font size for all plot elements. Defaults to
-\code{16}.}
+\item{themeBaseSize}{Base font size for all plot elements. Defaults to \code{16}.}
 }
 \value{
 An object of class "gg"

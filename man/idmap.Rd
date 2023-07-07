@@ -3,7 +3,7 @@
 \docType{data}
 \name{idmap}
 \alias{idmap}
-\title{A data frame (tibble) of ID mappings for different human ID types. From
+\title{A data frame (tibble) of ID mappings for different human ID types, from
 the Sigora package.}
 \format{
 A data frame with 47037 rows and 3 columns
@@ -17,7 +17,7 @@ A data frame with 47037 rows and 3 columns
 idmap
 }
 \description{
-A data frame (tibble) of ID mappings for different human ID types. From
+A data frame (tibble) of ID mappings for different human ID types, from
 the Sigora package.
 }
 \keyword{datasets}

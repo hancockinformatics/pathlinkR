@@ -1,28 +1,26 @@
 #' Visualize enriched Reactome pathways as a network
 #'
 #' @param network Tidygraph network object, output from `createPathnet`. See
-#'  Details for specific requirements.
-#' @param networkLayout Desired layout for the network visualization. Defaults to
-#'   "nicely", but supports any method found in `?layout_tbl_graph_igraph`
+#'   Details for specific requirements.
+#' @param networkLayout Desired layout for the network visualization. Defaults
+#'   to "nicely", but supports any method found in `?layout_tbl_graph_igraph`
 #' @param edgeColour Colour of network edges; defaults to "grey30".
 #' @param edgeAlpha Alpha value for edges; defaults to `1`.
-#' @param nodeSizeRange Size range for nodes, mapped to significance
-#'   (Bonferroni p-value). Defaults to `c(4, 8)`.
-#' @param edgeWidthRange Range of edge widths, mapped to
-#' `log10(similarity)`. Defaults to `c(0.33, 3)`.
-#' @param labelProp Proportion of "interactor" (i.e. non-enriched) pathways
-#'   that the function will attempt to label. E.g. setting this to 0.5 (the
-#'   default) means half of the non-enriched pathways will *potentially* be
-#'   labeled - it won't be exact because the node labeling is done with
-#'   `ggrepel`.
+#' @param nodeSizeRange Size range for nodes, mapped to significance (Bonferroni
+#'   p-value). Defaults to `c(4, 8)`.
+#' @param edgeWidthRange Range of edge widths, mapped to `log10(similarity)`.
+#'   Defaults to `c(0.33, 3)`.
+#' @param labelProp Proportion of "interactor" (i.e. non-enriched) pathways that
+#'   the function will attempt to label. E.g. setting this to 0.5 (the default)
+#'   means half of the non-enriched pathways will *potentially* be labeled - it
+#'   won't be exact because the node labeling is done with `ggrepel`.
 #' @param nodeLabelSize Size of node labels; defaults to 5.
 #' @param nodeLabelAlpha Transparency of node labels. Defaults to `0.67`.
 #' @param nodeLabelOverlaps Max overlaps for node labels, from `ggrepel`.
 #'   Defaults to `6`.
-#' @param segColour Colour of line segments connecting labels to nodes.
-#'   Defaults to "black".
-#' @param themeBaseSize Base font size for all plot elements. Defaults to
-#'   `16`.
+#' @param segColour Colour of line segments connecting labels to nodes. Defaults
+#'   to "black".
+#' @param themeBaseSize Base font size for all plot elements. Defaults to `16`.
 #'
 #' @return An object of class "gg"
 #' @export

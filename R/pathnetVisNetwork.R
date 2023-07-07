@@ -1,13 +1,13 @@
 #' Visualize enriched Reactome pathways as an interactive network
 #'
 #' @param network Tidygraph network object as output by `createPathnet`
-#' @param networkLayout Desired layout for the network visualization. Defaults to
-#'   "layout_nicely", should support most igraph layouts. See
+#' @param networkLayout Desired layout for the network visualization. Defaults
+#'   to "layout_nicely", should support most igraph layouts. See
 #'   `?visIgraphLayout()` for more details.
 #' @param edgeColour Colour of network edges; defaults to "#848484".
-#' @param edgeSizeRange Edge width is mapped to the similarity measure (one
-#'   over distance). This length-two numeric vector controls the minimum and
-#'   maximum width of edges. Defaults to `c(5, 20)`.
+#' @param edgeSizeRange Edge width is mapped to the similarity measure (one over
+#'   distance). This length-two numeric vector controls the minimum and maximum
+#'   width of edges. Defaults to `c(5, 20)`.
 #' @param nodeSizeRange Node size is mapped to the negative log of the
 #'   Bonferroni-adjusted p value, and this length-two numeric vector controls
 #'   the minimum and maximum. Defaults to `c(20, 50)`.
@@ -92,7 +92,9 @@ pathnetVisNetwork <- function(
             id,
             "title" = pathwayName1,
             everything(),
-            -any_of(c("background", "border", "direction", "pathwayName", "pValue"))
+            -any_of(c(
+                "background", "border", "direction", "pathwayName", "pValue"
+            ))
         )
 
     if (labelNodes) {
