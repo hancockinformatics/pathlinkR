@@ -5,17 +5,29 @@
 \title{Construct a PPI network from input genes and InnateDB's database}
 \usage{
 ppiBuildNetwork(
-  df,
-  col,
-  order,
+  deseqResults,
+  filterInput = TRUE,
+  pCutoff = 0.05,
+  fcCutoff = 1.5,
+  order = "zero",
   hubMeasure = "betweenness",
   ppiData = innateDbExp
 )
 }
 \arguments{
-\item{df}{Input data frame containing genes of interest}
+\item{deseqResults}{Data frame of DESeq2 results with Ensembl gene IDs as
+rownames}
 
-\item{col}{Column of input genes as Ensembl IDs (character)}
+\item{filterInput}{If providing list of data frames containing the
+unfiltered output from \code{DESeq2::results()}, set this to TRUE to filter for
+DE genes using the thresholds set by the \code{pCutoff} and \code{fcCutoff}
+arguments. When FALSE it's assumed your passing the filtered
+results into \code{inputList} and no more filtering will be done.}
+
+\item{pCutoff}{Adjusted p value cutoff, defaults to <0.05}
+
+\item{fcCutoff}{Absolute fold change cutoff, defaults to an absolute value
+of >1.5}
 
 \item{order}{Desired network order. Possible options are "zero" (default),
 "first," "minSimple," or "minSteiner."}
@@ -49,18 +61,9 @@ of the Kleinburg hub centrality score - details on this method can be found
 at \code{?igraph::hub_score}.
 }
 \examples{
-exDEGenes <- dplyr::filter(
-    dplyr::as_tibble(tibble::rownames_to_column(
-        deseqExampleList[[1]],
-        "gene"
-    )),
-    padj < 0.05,
-    abs(log2FoldChange) > log2(1.5)
-)
-
 ppiBuildNetwork(
-    df = exDEGenes,
-    col = "gene",
+    deseqResults = deseqExampleList[[1]],
+    filterInput = TRUE,
     order = "zero"
 )
 
