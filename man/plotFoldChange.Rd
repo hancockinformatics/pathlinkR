@@ -2,7 +2,7 @@
 % Please edit documentation in R/plotFoldChange.R
 \name{plotFoldChange}
 \alias{plotFoldChange}
-\title{Create fold change plots to visualize DESeq2 results}
+\title{Create a heatmap of fold changes to visualize DESeq2 results}
 \usage{
 plotFoldChange(
   inputList,
@@ -32,73 +32,79 @@ plotFoldChange(
 }
 \arguments{
 \item{inputList}{List of data frames of DESeq2 results. The list names are
-used as the comparison for each dataframe (e.g. COVID vs Healthy). Data
-frames should have Ensembl gene IDs as rownames.}
+used as the comparison name for each dataframe (e.g. COVID vs Healthy).
+Data frames should have Ensembl gene IDs as rownames.}
 
-\item{pathName}{Name of pathway to pull genes from, will be plot title}
+\item{pathName}{The name of a Reactome pathway to pull genes from, also used
+for the plot title}
 
-\item{pathId}{ID of pathway to pull genes from, if pathName is not given}
+\item{pathId}{ID of a Reactome pathway to pull genes from. Alternative to
+\code{pathName}.}
 
-\item{manualTitle}{Set this as your title instead of pathway name}
+\item{manualTitle}{Provide your own title, and override the use of a pathway
+name}
 
 \item{titleSize}{Font size for title}
 
-\item{genesToPlot}{Set if you want a specific vector of genes instead of
-pulling from a pathway}
+\item{genesToPlot}{Provide a vector of genes you want to plot instead of
+pulling the genes from a pathway}
 
 \item{geneFormat}{Default is Ensembl gene IDs ("ensg"), can also input a
 vector of HGNC symbols ("hgnc")}
 
-\item{pCutoff}{P value cutoff. Default is p < 0.05}
+\item{pCutoff}{P value cutoff, default is p<0.05}
 
-\item{fcCutoff}{Fold change cutoff. Default is |FC| > 1.5}
+\item{fcCutoff}{Absolute fold change cutoff, default is FC>1.5}
 
-\item{plotSignificantOnly}{Boolean (TRUE) Only plot genes that are
-differentially expressed (pass pCutoff and fcCutoff) in any comparison}
+\item{plotSignificantOnly}{Boolean (TRUE). Only plot genes that are
+differentially expressed (i.e. they pass \code{pCutoff} and \code{fcCutoff}) in
+any comparison.}
 
-\item{showStars}{Boolean (TRUE) show significance stars on heatmap}
+\item{showStars}{Boolean (TRUE) show significance stars on the heatmap}
 
 \item{hideNonsigFC}{Boolean (TRUE) If a gene is significant in one
 comparison but not in another, this will set the colour of the non-
 significant gene as grey to visually emphasize the significant genes. If
 set to FALSE, it will set the colour to the fold change, and if the p
-value passes pCutoff, it will also display the p value (the asterisks
+value passes \code{pCutoff}, it will also display the p value (the asterisks
 will be grey instead of black).}
 
 \item{vjust}{Adjustment of the position of the significance stars. Default
-is 0.75. May need to adjust if there are many genes}
+is 0.75. May need to adjust if there are many genes.}
 
-\item{rot}{Rotation of the position of the significance stars. Default is 0}
+\item{rot}{Rotation of the position of the significance stars. Default is 0.}
 
-\item{invert}{Boolean (FALSE) Default plots genes as rows and conditions as
-columns, set to TRUE if you want genes as columns and conditions as rows}
+\item{invert}{Boolean (FALSE). The default plots genes as rows and
+comparisons as columns, so setting this to TRUE will place genes as columns
+and comparisons as rows.}
 
-\item{log2FoldChange}{Boolean (FALSE) Default plots the fold changes in the
-legend as the true fold change, set to TRUE if you want log2 fold change}
+\item{log2FoldChange}{Boolean (FALSE). Default plots the fold changes in the
+legend as the true fold change, set to TRUE if you want log2 fold change.}
 
-\item{colSplit}{Split each condition into groups for better visualization.
-To do so, create a vector where each item of the vector corresponds to
-which group the dataframe belongs to in inputList. E.g. ('Positive',
+\item{colSplit}{Split each condition into groups for better visualization. To
+do so, create a vector where each item of the vector corresponds to which
+group the dataframe belongs to in \code{inputList}. E.g. ('Positive',
 'Positive', "Negative", "Negative", "Time", "Time"). The order of these
 groups is set in the order they appear; if you want to change the order,
-change the order of data frames in inputList and write colSplit in the
-order you want. Order will be ignored if clusterColumns is set to TRUE}
+change the order of data frames in \code{inputList} and write \code{colSplit}
+in the order you want. Order will be ignored if \code{clusterColumns} is set
+to TRUE.}
 
-\item{clusterRows}{Boolean (TRUE) Whether to cluster the rows (genes). May
-need to change if invert = TRUE.}
+\item{clusterRows}{Boolean (TRUE). Whether to cluster the rows (genes). May
+need to change if \code{invert = TRUE}.}
 
-\item{clusterColumns}{Boolean (FALSE) Whether to cluster the columns
-(conditions). Will override order of colSplit if set to TRUE.}
+\item{clusterColumns}{Boolean (FALSE). Whether to cluster the columns
+(comparisons). Will override order of \code{colSplit} if set to TRUE.}
 
-\item{colAngle}{angle of column text. Set default to 90}
+\item{colAngle}{Angle of column text. Defaults to 90.}
 
-\item{colCenter}{whether to center column text. Default is TRUE, should set
-to FALSE if angled column name (e.g. colAngle = 45)}
+\item{colCenter}{Whether to center column text. Default is TRUE, should set
+to FALSE if angled column name (e.g. \code{colAngle = 45}).}
 
-\item{rowAngle}{angle of row text. Set default to 0}
+\item{rowAngle}{angle of row text, defaults to 0.}
 
-\item{rowCenter}{whether to center column text. Default is FALSE, should
-set to TRUE if vertical column name (e.g. rowAngle = 90).}
+\item{rowCenter}{whether to center column text. Default is FALSE, should set
+to TRUE if vertical column name (e.g. \code{rowAngle = 90}).}
 }
 \value{
 A heatmap of fold changes for genes of interest

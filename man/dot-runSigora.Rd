@@ -2,7 +2,7 @@
 % Please edit documentation in R/runSigora.R
 \name{.runSigora}
 \alias{.runSigora}
-\title{INTERNAL .runSigora}
+\title{INTERNAL Wrapper around Sigora's enrichment function}
 \usage{
 .runSigora(enrichGenes, gpsRepo, pValFilter = NA)
 }

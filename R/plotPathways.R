@@ -1,7 +1,6 @@
 #' Plot Reactome pathway enrichment results
 #'
-#' @param enrichedResults Tibble of results from the function
-#'   `enrichPathway`
+#' @param enrichedResults Tibble of results from the function `enrichPathway`
 #' @param columns Number of columns to split the pathways across, especially if
 #'   there are many pathways. Can specify up to 3 columns, with a default of 1.
 #' @param specificTopPathways Only plot pathways from a specific vector of
@@ -13,21 +12,22 @@
 #'   Defaults to 1.
 #' @param xAngle Angle of x axis labels, set to "angled" (45 degrees),
 #'   "horizontal" (0 degrees), or "vertical" (90 degrees).
-#' @param maxPVal P values below "10 ^ -maxPVal" will be set to that value
-#' @param intercepts Add vertical lines to separate different groupings, is a
-#'   vector of intercepts (e.g. c(1.5, 2.5)). Defaults to "NA".
-#' @param includeGeneRatio Boolean; should be plotted? If so, then it is
-#'   attributed to the size of the triangles.
+#' @param maxPVal P values below `10 ^ -maxPVal` will be set to that value.
+#' @param intercepts Add vertical lines to separate different groupings, by
+#'   providing a vector of intercepts (e.g. c(1.5, 2.5)). Defaults to `NA`.
+#' @param includeGeneRatio Boolean (FALSE). Should the gene ratio be included as
+#'   an aesthetic mapping?If so, then it is attributed to the size of the
+#'   triangles.
 #' @param size Size of points if not scaling to gene ratio. Defaults to 5.
-#' @param legendMultiply Size of the legend, e.g. increase if there are a lot
-#'   of pathways which makes the legend small and unreadable by comparison.
+#' @param legendMultiply Size of the legend, e.g. increase if there are a lot of
+#'   pathways which makes the legend small and unreadable by comparison.
 #'   Defaults to 1, i.e. no increase in legend size.
-#' @param showNumGenes Boolean, defaults to FALSE. Show the number of genes
-#'   for each comparison as brackets under the comparison's name.
+#' @param showNumGenes Boolean, defaults to FALSE. Show the number of genes for
+#'   each comparison as brackets under the comparison's name.
 #' @param pathwayPosition Whether to have the y-axis labels (pathway names) on
 #'   the left or right side. Default is "right".
-#' @param newGroupNames If you want to change the names of the comparisons
-#'   to different names. Input a vector in the order as they appear.
+#' @param newGroupNames If you want to change the names of the comparisons to
+#'   different names. Input a vector in the order as they appear.
 #'
 #' @return A ggplot object
 #' @export
@@ -42,6 +42,10 @@
 #'   enrichment results from multiple DE comparisons. Can split input genes into
 #'   up- and down-regulated based on fold change, and automatically assigned
 #'   each pathway into an informative top-level category.
+#'
+#' @details
+#' Additional details...
+#'
 #'
 #' @references None.
 #'
@@ -71,7 +75,7 @@ plotPathways <- function(
         newGroupNames = NA
 ) {
 
-    # If new group names are to be used, add them in
+    ## If new group names are to be used, add them in
     if (!is.na(newGroupNames[1])) {
         mapNames <- tibble(
             comparison = unique(enrichedResults$comparison),
@@ -87,9 +91,9 @@ plotPathways <- function(
             select(!newNames)
     }
 
-    # Convert to -log10 p value and arbitrarily set to a max -log10 p value of
-    # 50 (i.e. adj pval = 10^-50), which some enrichment results surpass,
-    # especially for Sigora.
+    ## Convert to -log10 p value and arbitrarily set to a max -log10 p value of
+    ## 50 (i.e. adj pval = 10^-50), which some enrichment results surpass,
+    ## especially for Sigora.
     enrichedResults <- enrichedResults %>% mutate(
         logMax = case_when(
             -log10(pValueAdjusted) > maxPVal ~ maxPVal,
@@ -97,7 +101,7 @@ plotPathways <- function(
         )
     )
 
-    # Order the directionality of results, if up and down are used
+    ## Order the directionality of results, if up and down are used
     if (!"All" %in% enrichedResults$direction) {
         enrichedResults$direction <- factor(
             enrichedResults$direction,
@@ -111,12 +115,12 @@ plotPathways <- function(
             levels = c("Up", "Down", "All"))
     }
 
-    # Order the comparisons by the order they were inputted (not alphabetical)
+    ## Order the comparisons by the order they were inputted (not alphabetical)
     enrichedResults$comparison <- factor(
         enrichedResults$comparison,
         levels = unique(enrichedResults$comparison))
 
-    # Add in the number of genes for each comparison if indicated
+    ## Add in the number of genes for each comparison if indicated
     if (showNumGenes) {
         enrichedResults <- enrichedResults %>% mutate(
             comparison = paste0(comparison, "\n(", totalGenes, ")")
@@ -127,7 +131,7 @@ plotPathways <- function(
         )
     }
 
-    # If did not specify to only plot specific pathways, otherwise filter them
+    ## If did not specify to only plot specific pathways, otherwise filter them
     if (specificTopPathways[1] == "any") {
         specificTopPathways <- unique(enrichedResults$topPathways)
     }
@@ -140,9 +144,9 @@ plotPathways <- function(
         pathwayName %in% specificPathways
     )
 
-    # In certain cases, a pathway may be enriched by both up- and down-regulated
-    # genes. Find duplicated pathways, and only show the one that is more
-    # enriched (lower p-value)
+    ## In certain cases, a pathway may be enriched by both up- and
+    ## down-regulated genes. Find duplicated pathways, and only show the one
+    ## that is more enriched (lower p-value)
     duplicates <- enrichedResultsGraph %>%
         group_by(pathwayName, comparison) %>%
         summarise(counts = n()) %>% filter(counts > 1) %>%
@@ -156,8 +160,8 @@ plotPathways <- function(
 
     enrichedResultsDupes <- enrichedResultsClean[0, ]
 
-    # This chooses the top enriched pathway of duplicates and also adds the
-    # other pathway into enrichedResultsDupes.
+    ## This chooses the top enriched pathway of duplicates and also adds the
+    ## other pathway into enrichedResultsDupes.
     if (nrow(duplicates) > 0) {
         message(
             "\nNote: The following pathways were enriched in both directions ",
@@ -175,20 +179,20 @@ plotPathways <- function(
                     pathwayName == row$pathwayName,
                     comparison == row$comparison
                 ) %>%
-                arrange(pValueAdjusted) # Choose the lowest p value
+                arrange(pValueAdjusted) ## Choose the lowest p value
 
-            # Add the lower p value to the clean dataframe
+            ## Add the lower p value to the clean dataframe
             enrichedResultsClean <-
                 rbind(enrichedResultsClean, choices[1, ])
 
-            # keep the other enrichment to the dupes dataframe
+            ## keep the other enrichment to the dupes dataframe
             enrichedResultsDupes <-
                 rbind(enrichedResultsDupes, choices[2, ])
         }
     }
 
-    # Now organize pathways into multiple columns. Maximum is 3 columns to
-    # graph, if inputted larger, will be set to 3.
+    ## Now organize pathways into multiple columns. Maximum is 3 columns to
+    ## graph, if inputted larger, will be set to 3.
     if (columns > 3) {
         message("Maximum is three columns to graph. Plotting three columns.")
         columns <- 3
@@ -202,20 +206,20 @@ plotPathways <- function(
         group_by(topPathways) %>%
         summarise(pathways = n() + 1)
 
-    # Arrange ascending
+    ## Arrange ascending
     numPathways <- numPathways %>% arrange(pathways)
 
-    # The n largest top pathways are chosen to start off the columns
+    ## The n largest top pathways are chosen to start off the columns
     columnSplitting <- numPathways %>% tail(columns)
 
-    # For cases when you specify specific pathways, make sure that there are
-    # more pathways than columns...
+    ## For cases when you specify specific pathways, make sure that there are
+    ## more pathways than columns...
     if (nrow(columnSplitting) < columns) {
         columns <- nrow(columnSplitting)
 
     } else {
         for (i in (columns + 1):nrow(numPathways)) {
-            # The "n + 1" largest top pathway to add
+            ## The "n + 1" largest top pathway to add
             add <- numPathways %>% tail(i) %>% .[1,]
 
             columnSmallest <- columnSplitting %>%
@@ -223,8 +227,8 @@ plotPathways <- function(
                 head(1) %>%
                 .$topPathways
 
-            # Now, add the name of the top pathway to one of the columns and
-            # increase the number of pathways
+            ## Now, add the name of the top pathway to one of the columns and
+            ## increase the number of pathways
             columnSplitting <- columnSplitting %>% mutate(
                 pathways = case_when(
                     topPathways == columnSmallest ~ pathways + add$pathways,
@@ -240,17 +244,17 @@ plotPathways <- function(
         }
     }
 
-    # Now create a list of top pathways for each column
+    ## Now create a list of top pathways for each column
     columnList <- columnSplitting$topPathways %>%
         as.list() %>%
         str_split(",")
 
-    # Plot pathways
+    ## Plot pathways
     plotlist <- list()
     name_trunc <- nameWidth * nameRows - 5
 
-    # Can be set to angled (45 degrees), "horizontal" (0 degrees), or "vertical"
-    # (90 degrees)
+    ## Can be set to angled (45 degrees), "horizontal" (0 degrees), or
+    ## "vertical" (90 degrees)
     if(xAngle == "angled") {
         angle <- 45
         hjust <- 1
@@ -288,7 +292,8 @@ plotPathways <- function(
                 colour = "white",
                 show.legend = FALSE
             ) +
-            # Wrap and truncate pathway names if necessary
+
+            ## Wrap and truncate pathway names if necessary
             scale_y_discrete(
                 labels = ~str_wrap(
                     .truncNeatly(.x, name_trunc),
@@ -296,7 +301,8 @@ plotPathways <- function(
                 ),
                 position = pathwayPosition
             ) +
-            # Keeps comparisons even if they don"t enrich for any pathways
+
+            ## Keeps comparisons even if they don"t enrich for any pathways
             scale_x_discrete(drop = FALSE) +
             facet_col(
                 facets = ~topPathways,
@@ -353,7 +359,7 @@ plotPathways <- function(
                     override.aes = list(shape = 24, fill = "black")
                 )
             ) +
-            # Can also add lines to separate different groups
+            ## Can also add lines to separate different groups
             {if (!is.na(intercepts[1])) geom_vline(xintercept = intercepts)}
 
         plotlist <- append(plotlist, list(plot))

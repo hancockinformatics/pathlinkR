@@ -1,4 +1,4 @@
-#' getPathwayDistances
+#' Calculate pairwise distances of a set of pathways
 #'
 #' @param pathwayData Three column-data frame of pathways and their constituent
 #'   genes. Defaults to the provided `sigoraDatabase` object. Must contain
@@ -19,31 +19,34 @@
 #' @importFrom purrr map
 #'
 #' @description Given a data frame of pathways and their member genes, calculate
-#'   the pairwise distances using a constructed identity matrix.
+#'   the pairwise distances using a constructed identity matrix. `pathnet`
+#'   includes an example distance object (`pathwayDistancesJaccard`), created
+#'   using the included "sigoraDatabase" object and Jaccard distance measure.
 #'
 #' @references None.
 #'
 #' @seealso <https://github.com/hancockinformatics/pathnet>
 #'
 #' @examples
-#' \donttest{
-#'     getPathwayDistances(
-#'         pathwayData = sigoraDatabase,
-#'         distMethod = "jaccard"
-#'     )
-#' }
+#' getPathwayDistances(
+#'     pathwayData = sigoraDatabase,
+#'     distMethod = "jaccard"
+#' )
 #'
 getPathwayDistances <- function(
         pathwayData = sigoraDatabase,
         distMethod = "jaccard"
 ) {
 
+    ## Input checks
     stopifnot(is(sigoraDatabase, "data.frame"))
 
+    ## Identify which columns has the Ensembl gene IDs
     geneIdCol <- colnames(pathwayData)[
         unlist(map(pathwayData[1, ], ~str_detect(.x, "ENSG")))
     ]
 
+    ## Identify which columns has the Reactome pathway IDs
     pathwayIdCol <- colnames(pathwayData)[
         unlist(map(
             pathwayData[1, ],

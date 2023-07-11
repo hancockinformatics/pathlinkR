@@ -14,7 +14,7 @@
 #'
 .eruptionBreaks <- function(x) {
 
-    # Up to log2FC = 6
+    ## Up to log2FC = 6
     if (between(max(abs(x)), 0, 6)) {
         scale_x_continuous(
             breaks = c(-6, -4, -2, 0, 2, 4, 6),
@@ -22,7 +22,7 @@
             limits = x
         )
 
-    # Up to log2FC = 6.64
+    ## Up to log2FC = 6.64
     } else if (between(max(abs(x)), 6.001, log2(100))) {
         scale_x_continuous(
             breaks = c(-log2(100), -log2(10), 0, log2(10), log2(100)),
@@ -36,7 +36,7 @@
             limits = x
         )
 
-    # Up to log2FC = 9.97
+    ## Up to log2FC = 9.97
     } else if (between(max(abs(x)), log2(100), log2(1000))) {
         scale_x_continuous(
             breaks = c(
@@ -60,7 +60,7 @@
             limits = x
         )
 
-    # Up to log2FC = 13.29
+    ## Up to log2FC = 13.29
     } else if (between(max(abs(x)), log2(1000), log2(10000))) {
         scale_x_continuous(
             breaks = c(
@@ -88,7 +88,7 @@
             limits = x
         )
 
-    # Up to log2FC = 16.61
+    ## Up to log2FC = 16.61
     } else if (between(max(abs(x)), log2(10000), log2(100000))) {
         scale_x_continuous(
             breaks = c(

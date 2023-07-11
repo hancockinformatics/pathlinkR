@@ -1,6 +1,6 @@
-#' Create a volcano plot from DESeq2 results
+#' Create a volcano plot from a DESeq2 results object
 #'
-#' @param deseqResults Data frame of DESeq2 results with Ensembl gene IDs as
+#' @param deseqResults Data frame of DESeq2 results, with Ensembl gene IDs as
 #'   rownames
 #' @param pCutoff Adjusted p value cutoff, defaults to <0.05
 #' @param fcCutoff Absolute fold change cutoff, defaults to an absolute value
@@ -76,17 +76,14 @@ eruption <- function(
         pad = 1.4
 ) {
 
-    # Input checks
-    # Data frame
-    stopifnot(is.data.frame(deseqResults))
-
-    # Columns: padj, log2FoldChange
+    ## Input checks
+    stopifnot(is(deseqResults, "data.frame"))
     stopifnot(all(c("padj", "log2FoldChange") %in% colnames(deseqResults)))
 
-    # If Ensembl gene IDs are detected, annotate them with gene names from the
-    # mapping file. For Ensembl gene IDs without gene names, just use the
-    # Ensembl gene ID. If rownames are not ENSG ids, they will be used as is,
-    # and you can map it to your own ids beforehand
+    ## If Ensembl gene IDs are detected, annotate them with gene names from the
+    ## mapping file. For Ensembl gene IDs without gene names, just use the
+    ## Ensembl gene ID. If rownames are not ENSG ids, they will be used as is,
+    ## and you can map it to your own ids beforehand
     if (str_detect(rownames(deseqResults)[1], "^ENSG")) {
         res <- deseqResults %>%
             rownames_to_column("ensemblGeneId") %>%
@@ -118,27 +115,32 @@ eruption <- function(
         negLogP = -log10(padj)
     )
 
-    # If specifying x and y axis limits, remove any genes that fall outside the
-    # specified ranges
-    if(!is.na(xaxis[1])) {
-        res <- res %>%
-            filter(log2FoldChange > xaxis[1] & log2FoldChange < xaxis[2])
+    ## If specifying x and y axis limits, remove any genes that fall outside the
+    ## specified ranges
+    if (!is.na(xaxis[1])) {
+        res <- filter(
+            res,
+            log2FoldChange > xaxis[1] & log2FoldChange < xaxis[2]
+        )
     }
-    if(!is.na(yaxis[1])) {
-        res <- res %>% filter(negLogP > yaxis[1] & negLogP < yaxis[2])
+    if (!is.na(yaxis[1])) {
+        res <- filter(
+            res,
+            negLogP > yaxis[1] & negLogP < yaxis[2]
+        )
     }
 
-    # Make sure selectGenes, if used, are in the data frame
+    ## Make sure selectGenes, if used, are in the data frame
     selectGenes <- selectGenes[selectGenes %in% res$ensemblGeneId]
 
-    # Identify top up- and down-regulated genes, and output them for the user
+    ## Identify top up- and down-regulated genes, and output them for the user
     upDf <- res %>%
         filter(padj < pCutoff, log2FoldChange > log2(fcCutoff))
 
     downDf <- res %>%
-        filter(padj < pCutoff, log2FoldChange < log2(1/fcCutoff))
+        filter(padj < pCutoff, log2FoldChange < log2(1 / fcCutoff))
 
-    # Number of up, down, and total DE genes
+    ## Number of up, down, and total DE genes
     numGenes <- c(nrow(upDf), nrow(downDf), nrow(upDf) + nrow(downDf))
 
     message(
@@ -156,10 +158,10 @@ eruption <- function(
         )
     }
 
-    # Select the genes to label. You can specify if you want to only label
-    # annotated genes (default), i.e. those that have a gene name. This is for
-    # "auto" and "select" labeling, i.e. it does not apply to manual labeling
-    # (e.g. if you want to manually label an unannotated gene).
+    ## Select the genes to label. You can specify if you want to only label
+    ## annotated genes (default), i.e. those that have a gene name. This is for
+    ## "auto" and "select" labeling, i.e. it does not apply to manual labeling
+    ## (e.g. if you want to manually label an unannotated gene).
     if (removeUnannotated) {
         possibleLabels <- res %>%
             filter(!grepl("ENSG", geneName)) %>%
@@ -168,9 +170,9 @@ eruption <- function(
         possibleLabels <- res$geneName
     }
 
-    # Auto-labeling (default): label the top 5 (or n) up and down-regulated
-    # genes. The "top" genes are those with the highest fold change and smallest
-    # p-value.
+    ## Auto-labeling (default): label the top 5 (or n) up and down-regulated
+    ## genes. The "top" genes are those with the highest fold change and
+    ## smallest p-value.
     if (label == "auto") {
         upGenes <- upDf %>%
             arrange(desc(log2FoldChange ^ 2 * log10(padj) ^ 2)) %>%
@@ -186,14 +188,14 @@ eruption <- function(
             dplyr::select(geneName) %>%
             unlist()
 
-        # Record which genes to label
+        ## Record which genes to label
         res <- res %>% mutate(
             label = case_when(geneName %in% c(upGenes, downGenes) ~ geneName)
         )
     }
 
-    # Selective labeling ("select"): label the top n up/down genes that are in
-    # `selectGenes`
+    ## Selective labeling ("select"): label the top n up/down genes that are in
+    ## `selectGenes`
     if (label == "select") {
         upGenes <- upDf %>%
             filter(inList == "Y", geneName %in% possibleLabels) %>%
@@ -214,7 +216,7 @@ eruption <- function(
         )
     }
 
-    # Manual labeling ("manual"): label the genes you provided in `manualGenes`
+    ## Manual labeling ("manual"): label the genes you provided in `manualGenes`
     if (label == "manual") {
         res <- res %>% mutate(label = case_when(
             ensemblGeneId %in% manualGenes |
@@ -222,10 +224,10 @@ eruption <- function(
         ))
     }
 
-    # Create the plot
+    ## Create the plot
     p <- ggplot(res, aes(x = log2FoldChange, y = negLogP)) +
 
-        # Plot the non-significant genes
+        ## Plot the non-significant genes
         geom_point(
             data = filter(res, significant == "NS", inList == "N"),
             alpha = alpha,
@@ -234,9 +236,9 @@ eruption <- function(
             colour = nonsigColour
         ) +
 
-        # Plot the significant genes and genes of interest ("selectGenes"),
-        # with those in `selectGenes` overlaying those not in `selectGenes`
-        # for emphasis.
+        ## Plot the significant genes and genes of interest ("selectGenes"),
+        ## with those in `selectGenes` plotted on top of those not in
+        ## `selectGenes` for added emphasis.
         geom_point(
             data = filter(res, significant == "SIG", inList == "N"),
             mapping = aes(x = log2FoldChange, y = negLogP),
@@ -253,7 +255,7 @@ eruption <- function(
             colour = selectColour
         ) +
 
-        # Add cutoff lines
+        ## Add cutoff lines
         geom_hline(
             yintercept = -log10(pCutoff),
             linetype = "dashed",
@@ -265,8 +267,7 @@ eruption <- function(
             colour = "gray20"
         ) +
 
-        # Some more graph adjustments: set to a clean theme, make labels easy to
-        # read
+        ## Set to a clean theme, and make the labels easier to read
         theme_bw() +
         theme(
             plot.title = element_text(face = "bold", size = 16),
@@ -283,11 +284,11 @@ eruption <- function(
             y = expression(bold(-log["10"]~P[adj]))
         ) +
 
-        # Set axes
+        ## Set axes
         {if(!is.na(yaxis[1])) ylim(yaxis)} +
         {if(!is.na(xaxis[1])) xlim(xaxis)} +
 
-        # Add in labels
+        ## Add in labels to the genes
         geom_text_repel(
             data = res %>% filter(!is.na(label)),
             mapping = aes(label = label),
@@ -301,12 +302,11 @@ eruption <- function(
             box.padding = pad
         ) +
 
-        # Add in informative subtitles for number of up and down-regulated
-        # genes, as well as number of genes in "selectGenes," add a title if
-        # provided
+        ## Add in informative subtitles for number of up and down-regulated
+        ## genes, the number of genes in "selectGenes," and a title if provided
         {if(!is.na(title)) labs(title = title)} +
 
-        # If there are no "selectGenes"
+        ## If there are no "selectGenes"
         {
             if (length(selectGenes) == 0)
                 labs(subtitle = paste0(
@@ -314,7 +314,7 @@ eruption <- function(
                 ))
         } +
 
-        # If "selectGenes" was given
+        ## If "selectGenes" was given
         {
             if (length(selectGenes) != 0)
                 labs(subtitle = paste0(
@@ -324,11 +324,11 @@ eruption <- function(
                 ))
         }
 
-    # For plotting with fold change, not log2 fold change, manually add in
-    # scientific notation based on the xaxis range.
+    ## For plotting with fold change, not log2 fold change, manually add the
+    ## scientific notation based on the x axis range
     if (nonlog2) {
 
-        # If "xaxis" is not specified
+        ## If "xaxis" is not specified
         if (is.na(xaxis[1])) {
             xaxis <- c(
                 min(res$log2FoldChange) - 0.1,
@@ -336,6 +336,8 @@ eruption <- function(
             )
         }
 
+        ## All the work for setting the x axis breaks/labels is done by
+        ## `.eruptionBreaks` to shorten and simplify this script
         p <- p +
             xlab("Fold Change") +
             theme(axis.text.x = element_text(vjust = 0, size = 11)) +

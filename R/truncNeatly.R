@@ -1,4 +1,4 @@
-#' INTERNAL .truncNeatly
+#' INTERNAL Break long strings at spaces
 #'
 #' @param x Character to be truncated
 #' @param l Desired maximum length for the output character

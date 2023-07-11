@@ -51,7 +51,8 @@ Defaults to \code{6}.}
 \item{segColour}{Colour of line segments connecting labels to nodes. Defaults
 to "black".}
 
-\item{themeBaseSize}{Base font size for all plot elements. Defaults to \code{16}.}
+\item{themeBaseSize}{Base font size for all plot elements. Defaults
+to \code{16}.}
 }
 \value{
 An object of class "gg"

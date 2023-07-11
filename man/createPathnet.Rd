@@ -2,13 +2,14 @@
 % Please edit documentation in R/createPathnet.R
 \name{createPathnet}
 \alias{createPathnet}
-\title{createPathnet}
+\title{Create a pathway network from enrichment results and a pathway
+foundation}
 \usage{
 createPathnet(sigoraResult, foundation, trim = TRUE, trimOrder = 1)
 }
 \arguments{
-\item{sigoraResult}{Data frame of results from Sigora. Must contain columns
-"pathwayId" and "pValueAdjusted".}
+\item{sigoraResult}{Data frame of results from Sigora. Must contain the
+columns "pathwayId" and "pValueAdjusted".}
 
 \item{foundation}{List of pathway pairs to use in constructing a network,
 output from \code{createFoundation}.}
@@ -20,7 +21,7 @@ output from \code{createFoundation}.}
 keep more non-enriched pathway nodes. Defaults to \code{1}.}
 }
 \value{
-A tidygraph network object
+A pathway network as a tidygraph object
 }
 \description{
 Creates a tidygraph network object from the pathway information,
@@ -37,8 +38,8 @@ startingPathways <- createFoundation(
     maxDistance = 0.8
 )
 
-exPathnet <- createPathnet(
-    sigoraResult = sigoraExamples,
+createPathnet(
+    sigoraResult = sigoraExamples[grepl("Pos", sigoraExamples$comparison), ],
     foundation = startingPathways,
     trim = TRUE,
     trimOrder = 1

@@ -39,7 +39,7 @@ pathophysiology from their gene expression studies.
 # Installation
 To install and load the package:
 ```{r load_library}
-# Install code will go here, make sure to set "eval=FALSE"!
+## Install code will go here, make sure to set "eval=FALSE"!
 library(pathnet)
 ```
 
@@ -57,14 +57,14 @@ We have included example gene expression study results in this package:
 non-COVID-19 sepsis patients at admission (T1) compared to ~1 week later (T2)
 in the ICU, indexed over time (i.e., T2 vs T1) (An et al. 2023).
 ```{r datasets_and_preliminary_volcano_plot}
-# Two different comparisons are included
+## Two different comparisons are included
 names(deseqExampleList)
 
-# A quick look at what a DESeq2 result looks like
+## A quick look at what a DESeq2 result looks like
 deseqExample <- deseqExampleList[[1]]
 head(deseqExample)
 
-# Generate a volcano plot using this first dataframe
+## Generate a volcano plot using this first dataframe
 eruption(deseqExample)
 ```
 
@@ -83,12 +83,12 @@ ifnGenes <- sigoraDatabase %>%
     filter(pathwayName == "Interferon Signaling") %>% 
     pull(ensemblGeneId)
 
-# Here we give the following options:
-# - Highlight these interferon genes
-# - Give them a description on the plot
-# - Converts the x-axis from log2 fold change to non-log2 fold change
-# - Label only the top 5 up and down-regulated genes
-# - These top genes should be only from the interferon gene list
+## Here we give the following options:
+## - Highlight these interferon genes
+## - Give them a description on the plot
+## - Converts the x-axis from log2 fold change to non-log2 fold change
+## - Label only the top 5 up and down-regulated genes
+## - These top genes should be only from the interferon gene list
 eruption(
     deseqResults = deseqExample,
     title        = names(deseqExampleList)[1],
@@ -118,17 +118,17 @@ type of network, such as support for first, minimum, or zero order networks. The
 two main functions used to accomplish this are `ppiBuildNetwork` and
 `ppiPlotNetwork`.
 ```{r ppi_networks, fig.width=12, fig.height=10, warning=FALSE}
-# Construct a zero order network, i.e. it will only contain the input genes, 
-# no interactors
+## Construct a zero order network, i.e. it will only contain the input genes, 
+## no interactors
 exNetwork <- ppiBuildNetwork(
     deseqResult = deseqExampleList[[1]],
     filter = TRUE,
     order = "zero"
 )
 
-# Plot the PPI network, colouring the nodes based on their log2 fold change
-# values. Many options are available to customize the final plot; see
-# `?ppiPlotNetwork` for all the details.
+## Plot the PPI network, colouring the nodes based on their log2 fold change
+## values. Many options are available to customize the final plot; see
+## `?ppiPlotNetwork` for all the details.
 ppiPlotNetwork(
     exNetwork,
     fillColumn = log2FoldChange,
@@ -173,8 +173,8 @@ perform enrichment separately (set `split = FALSE` to perform enrichment without
 splitting). The name of the dataframe(s) in the list should indicate the
 comparison that resulted in the DESeq2 results.
 ```{r sigora_enrichment, eval=FALSE}
-# Perform enrichment with Sigora (default). We also need to specify the
-# gene-pair signature repository (more in the Supplemental section).
+## Perform enrichment with Sigora (default). We also need to specify the
+## gene-pair signature repository (more in the Supplemental section).
 enrichedResultsSigora <- enrichPathway(
     inputList = deseqExampleList,
     gpsRepo = reaH
@@ -186,7 +186,7 @@ enrichedResultsSigora <- sigoraExamples
 ```
 
 ```{r sigora_enrichment_no_split, eval=FALSE}
-# Enrichment without splitting by fold change direction
+## Enrichment without splitting by fold change direction
 enrichedResultsSigoraNoSplit <- enrichPathway(
     inputList = deseqExampleList,
     gpsRepo = reaH, 
@@ -198,7 +198,7 @@ For those who still prefer traditional over-representation analysis, we include
 the option of doing so by setting `analysis = "reactomepa"`, which uses
 ReactomePA (Yu et al. 2016).
 ```{r reactomepa_enrichment}
-# Perform enrichment with ReactomePA
+## Perform enrichment with ReactomePA
 enrichedResultsRpa <- enrichPathway(
     inputList = deseqExampleList,
     analysis = "reactomepa"
@@ -236,17 +236,17 @@ comparisons or add the number of DEGs in each comparison to the labels. Lastly,
 you can specify which pathways or top pathway groups to pull out to visualize.
 
 ```{r plot_pathways_I, fig.width=12, fig.height=10}
-# Plot the Sigora results in two columns
+## Plot the Sigora results in two columns
 plotPathways(enrichedResultsSigora, columns = 2)
 ```
 
 ```{r plot_pathways_II, fig.width=8, fig.height=8}
-# Plot the Sigora results with the following tweaks:
-# - Only the immune system pathways
-# - Condense the names
-# - Add the number of DEGs used for enrichment
-# - Make the labels horizontal
-# - Increase the truncation cutoff value for more words
+## Plot the Sigora results with the following tweaks:
+## - Only the immune system pathways
+## - Condense the names
+## - Add the number of DEGs used for enrichment
+## - Make the labels horizontal
+## - Increase the truncation cutoff value for more words
 plotPathways(
     enrichedResultsSigora, 
     specificTopPathways = "Immune System",
@@ -294,7 +294,7 @@ myPathwayNetwork <- createPathnet(
     trimOrder = 1
 )
 
-# Static plot with ggraph
+## Static plot with ggraph
 pathnetGGraph(
     myPathwayNetwork,
     labelProp = 0.1,
@@ -305,7 +305,7 @@ pathnetGGraph(
 ```
 
 ```{r pathway_network_II}
-# Interactive plot with visNetwork
+## Interactive plot with visNetwork
 pathnetVisNetwork(myPathwayNetwork)
 ```
 
@@ -323,8 +323,8 @@ candidateData <- sigoraExamples %>%
     relocate(pathwayId, ensemblGeneId, "hgncSymbol" = genes, pathwayName) %>%
     distinct()
 
-# Now that we have a smaller table in the same format as sigora_database, we can
-# construct our own matrix of pathway distances
+## Now that we have a smaller table in the same format as sigora_database, we
+## can construct our own matrix of pathway distances
 candidateDistData <- getPathwayDistances(
     pathwayData = candidateData,
     distMethod = "jaccard"

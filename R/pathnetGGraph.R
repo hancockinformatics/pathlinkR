@@ -20,7 +20,8 @@
 #'   Defaults to `6`.
 #' @param segColour Colour of line segments connecting labels to nodes. Defaults
 #'   to "black".
-#' @param themeBaseSize Base font size for all plot elements. Defaults to `16`.
+#' @param themeBaseSize Base font size for all plot elements. Defaults
+#'   to `16`.
 #'
 #' @return An object of class "gg"
 #' @export
@@ -76,7 +77,7 @@ pathnetGGraph <- function(
         segColour = "black",
         themeBaseSize = 16
 ) {
-    # Check column names for both nodes and edges
+    ## Check column names for both nodes and edges
     stopifnot(all(
         c(
             "pathwayName1",
@@ -124,7 +125,7 @@ pathnetGGraph <- function(
     )
 
     ggraph(networkToPlot, layout = networkLayout) +
-        # Edges
+        ## Edges
         geom_edge_link(
             aes(edge_width = log10(similarity)),
             colour = edgeColour,
@@ -132,7 +133,7 @@ pathnetGGraph <- function(
         ) +
         scale_edge_width(range = edgeWidthRange, name = "Similarity") +
 
-        # Nodes
+        ## Nodes
         geom_node_point(
             aes(
                 size = -log10(pValueAdjusted),
@@ -153,7 +154,7 @@ pathnetGGraph <- function(
         ) +
         scale_colour_manual(values = groupedPathwayColours) +
 
-        # Node labels
+        ## Node labels
         geom_node_label(
             aes(label = nodeLabel),
             repel = TRUE,
@@ -164,7 +165,7 @@ pathnetGGraph <- function(
             max.overlaps = nodeLabelOverlaps
         ) +
 
-        # Misc
+        ## Misc
         labs(
             size = "Bonferroni\np-value",
             colour = "Pathway type"

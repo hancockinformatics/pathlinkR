@@ -1,7 +1,8 @@
-#' createPathnet
+#' Create a pathway network from enrichment results and a pathway
+#'   foundation
 #'
-#' @param sigoraResult Data frame of results from Sigora. Must contain columns
-#' "pathwayId" and "pValueAdjusted".
+#' @param sigoraResult Data frame of results from Sigora. Must contain the
+#'   columns "pathwayId" and "pValueAdjusted".
 #' @param foundation List of pathway pairs to use in constructing a network,
 #'   output from `createFoundation`.
 #' @param trim Remove subgraphs which don't contain any enriched pathways
@@ -9,7 +10,7 @@
 #' @param trimOrder Order to use when removing subgraphs; Higher values will
 #'   keep more non-enriched pathway nodes. Defaults to `1`.
 #'
-#' @return A tidygraph network object
+#' @return A pathway network as a tidygraph object
 #' @export
 #'
 #' @import dplyr
@@ -35,8 +36,8 @@
 #'     maxDistance = 0.8
 #' )
 #'
-#' exPathnet <- createPathnet(
-#'     sigoraResult = sigoraExamples,
+#' createPathnet(
+#'     sigoraResult = sigoraExamples[grepl("Pos", sigoraExamples$comparison), ],
 #'     foundation = startingPathways,
 #'     trim = TRUE,
 #'     trimOrder = 1
@@ -49,9 +50,22 @@ createPathnet <- function(
         trimOrder = 1
 ) {
 
+    ## Input checks
+    stopifnot(is(sigoraResult, "data.frame"))
     stopifnot(
         all(c("pathwayId", "pValueAdjusted") %in% colnames(sigoraResult))
     )
+
+    stopifnot(is(foundation, "data.frame"))
+    stopifnot(all(
+        c(
+            "pathwayName1",
+            "pathwayName2",
+            "distance",
+            "pathway1",
+            "pathway2"
+        ) %in% colnames(foundation)
+    ))
 
     startingNodes <- foundation %>%
         select(pathway1, pathwayName1) %>%
