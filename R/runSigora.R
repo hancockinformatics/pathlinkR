@@ -1,4 +1,4 @@
-#' INTERNAL .runSigora
+#' INTERNAL Wrapper around Sigora's enrichment function
 #'
 #' @param enrichGenes Vector of genes to enrich
 #' @param gpsRepo GPS object to use for testing pathways
@@ -23,7 +23,7 @@
         pValFilter = NA
 ) {
 
-    # Run SIGORA based on default settings (GPSrepo = reaH, level = 4)
+    ## Run SIGORA based on default settings (GPSrepo = reaH, level = 4)
     invisible(capture.output(
         sigoraResult1 <- sigora(
             GPSrepo = gpsRepo,
@@ -40,10 +40,10 @@
             filter(sigoraResult1$summary_results, Bonferroni < pValFilter)
         }
 
-    # Start by calculating n
+    ## Start by calculating n
     nGenes <- length(enrichGenes[enrichGenes %in% idmap$Ensembl.Gene.ID])
 
-    # Get the DE genes that were enriched for each pathway
+    ## Get the DE genes that were enriched for each pathway
     sigoraDetailedList1 <- sigoraResult1$detailed_results %>%
         as_tibble() %>%
         select(pathway, contains("gene")) %>%

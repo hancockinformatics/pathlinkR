@@ -2,7 +2,7 @@
 % Please edit documentation in R/truncNeatly.R
 \name{.truncNeatly}
 \alias{.truncNeatly}
-\title{INTERNAL .truncNeatly}
+\title{INTERNAL Break long strings at spaces}
 \usage{
 .truncNeatly(x, l = 60)
 }

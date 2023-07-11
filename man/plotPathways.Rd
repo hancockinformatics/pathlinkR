@@ -23,8 +23,7 @@ plotPathways(
 )
 }
 \arguments{
-\item{enrichedResults}{Tibble of results from the function
-\code{enrichPathway}}
+\item{enrichedResults}{Tibble of results from the function \code{enrichPathway}}
 
 \item{columns}{Number of columns to split the pathways across, especially if
 there are many pathways. Can specify up to 3 columns, with a default of 1.}
@@ -43,28 +42,29 @@ Defaults to 1.}
 \item{xAngle}{Angle of x axis labels, set to "angled" (45 degrees),
 "horizontal" (0 degrees), or "vertical" (90 degrees).}
 
-\item{maxPVal}{P values below "10 ^ -maxPVal" will be set to that value}
+\item{maxPVal}{P values below \code{10 ^ -maxPVal} will be set to that value.}
 
-\item{intercepts}{Add vertical lines to separate different groupings, is a
-vector of intercepts (e.g. c(1.5, 2.5)). Defaults to "NA".}
+\item{intercepts}{Add vertical lines to separate different groupings, by
+providing a vector of intercepts (e.g. c(1.5, 2.5)). Defaults to \code{NA}.}
 
-\item{includeGeneRatio}{Boolean; should be plotted? If so, then it is
-attributed to the size of the triangles.}
+\item{includeGeneRatio}{Boolean (FALSE). Should the gene ratio be included as
+an aesthetic mapping?If so, then it is attributed to the size of the
+triangles.}
 
 \item{size}{Size of points if not scaling to gene ratio. Defaults to 5.}
 
-\item{legendMultiply}{Size of the legend, e.g. increase if there are a lot
-of pathways which makes the legend small and unreadable by comparison.
+\item{legendMultiply}{Size of the legend, e.g. increase if there are a lot of
+pathways which makes the legend small and unreadable by comparison.
 Defaults to 1, i.e. no increase in legend size.}
 
-\item{showNumGenes}{Boolean, defaults to FALSE. Show the number of genes
-for each comparison as brackets under the comparison's name.}
+\item{showNumGenes}{Boolean, defaults to FALSE. Show the number of genes for
+each comparison as brackets under the comparison's name.}
 
 \item{pathwayPosition}{Whether to have the y-axis labels (pathway names) on
 the left or right side. Default is "right".}
 
-\item{newGroupNames}{If you want to change the names of the comparisons
-to different names. Input a vector in the order as they appear.}
+\item{newGroupNames}{If you want to change the names of the comparisons to
+different names. Input a vector in the order as they appear.}
 }
 \value{
 A ggplot object
@@ -74,6 +74,9 @@ Creates a plot to visualize and compare Reactome pathway
 enrichment results from multiple DE comparisons. Can split input genes into
 up- and down-regulated based on fold change, and automatically assigned
 each pathway into an informative top-level category.
+}
+\details{
+Additional details...
 }
 \examples{
 plotPathways(
