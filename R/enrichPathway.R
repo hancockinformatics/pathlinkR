@@ -67,7 +67,7 @@ enrichPathway <- function(
         geneUniverse = NULL
 ) {
 
-    ### Check inputs
+    ## Check inputs
     stopifnot(analysis %in% c("sigora", "reactomepa", "hallmark"))
 
     stopifnot(
@@ -79,10 +79,10 @@ enrichPathway <- function(
         }
     )
 
-    ### Iterate through each element of "inputList"
+    ## Iterate through each element of "inputList"
     resultList <- imap(inputList, function(x, comparison) {
 
-        # Basic checks before continuing
+        ## Basic checks before continuing
         stopifnot(
             "Elements of 'inputList' should be named" = !is.null(comparison)
         )
@@ -96,7 +96,7 @@ enrichPathway <- function(
 
         message("Comparison being analyzed: ", comparison)
 
-        # Filter the input genes if specified
+        ## Filter the input genes if specified
         deseqResults <-
             if (filterInput) {
                 stopifnot(
@@ -112,7 +112,7 @@ enrichPathway <- function(
                 x
             }
 
-        # Turn the input into a list of gene IDs, split by direction or not
+        ## Turn the input into a list of gene IDs, split by direction or not
         if (split) {
             preppedGenes <- list(
                 "Up"   = rownames(filter(deseqResults, log2FoldChange > 0)),
@@ -128,7 +128,7 @@ enrichPathway <- function(
             message("\tDEGs used: ", length(preppedGenes$All), "...")
         }
 
-        ### Sigora ###
+        ## Sigora
         if (analysis == "sigora") {
             message("\tRunning enrichment using Sigora...")
 
@@ -161,10 +161,10 @@ enrichPathway <- function(
         }
 
 
-        ### ReactomePA or Hallmark ###
+        ## ReactomePA or Hallmark
         if (analysis %in% c("reactomepa", "hallmark")) {
 
-            ### ReactomePA ###
+            ## ReactomePA
             if (analysis == "reactomepa") {
                 message("\tRunning enrichment using ReactomePA")
 
@@ -218,7 +218,7 @@ enrichPathway <- function(
                     distinct()
             }
 
-            ### Hallmark ###
+            ## Hallmark
             if (analysis == "hallmark") {
                 message("\tRunning enrichment using Hallmark...")
 
@@ -255,7 +255,7 @@ enrichPathway <- function(
                     distinct()
             }
 
-            ### ReactomePA or Hallmark ###
+            ## ReactomePA or Hallmark
             resultFinal <- rpaHallResult %>%
                 separate_wider_delim(
                     cols = GeneRatio,

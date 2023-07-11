@@ -2,7 +2,7 @@
 % Please edit documentation in R/getPathwayDistances.R
 \name{getPathwayDistances}
 \alias{getPathwayDistances}
-\title{getPathwayDistances}
+\title{Calculate pairwise distances of a set of pathways}
 \usage{
 getPathwayDistances(pathwayData = sigoraDatabase, distMethod = "jaccard")
 }
@@ -21,15 +21,15 @@ overlap of their constituent genes.
 }
 \description{
 Given a data frame of pathways and their member genes, calculate
-the pairwise distances using a constructed identity matrix.
+the pairwise distances using a constructed identity matrix. \code{pathnet}
+includes an example distance object (\code{pathwayDistancesJaccard}), created
+using the included "sigoraDatabase" object and Jaccard distance measure.
 }
 \examples{
-\donttest{
-    getPathwayDistances(
-        pathwayData = sigoraDatabase,
-        distMethod = "jaccard"
-    )
-}
+getPathwayDistances(
+    pathwayData = sigoraDatabase,
+    distMethod = "jaccard"
+)
 
 }
 \references{
