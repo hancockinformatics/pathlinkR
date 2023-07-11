@@ -2,7 +2,7 @@
 % Please edit documentation in R/eruption.R
 \name{eruption}
 \alias{eruption}
-\title{Create a volcano plot from DESeq2 results}
+\title{Create a volcano plot from a DESeq2 results object}
 \usage{
 eruption(
   deseqResults,
@@ -28,7 +28,7 @@ eruption(
 )
 }
 \arguments{
-\item{deseqResults}{Data frame of DESeq2 results with Ensembl gene IDs as
+\item{deseqResults}{Data frame of DESeq2 results, with Ensembl gene IDs as
 rownames}
 
 \item{pCutoff}{Adjusted p value cutoff, defaults to <0.05}
