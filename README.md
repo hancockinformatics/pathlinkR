@@ -2,6 +2,10 @@
 
 ![GitHub R package version (branch)](https://img.shields.io/github/r-package/v/hancockinformatics/pathnet/master?label=pathnet%40master)
 
+<!-- badges: start -->
+[![R-CMD-check](https://github.com/hancockinformatics/pathnet/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/hancockinformatics/pathnet/actions/workflows/R-CMD-check.yaml)
+<!-- badges: end -->
+
 **pathnet** is an R package designed to facilitate analysis of RNA-Seq results.
 Specifically, our aim with pathnet was to provide a number of tools which 
 take a list of DE genes and perform different analyses on them, aiding with the
