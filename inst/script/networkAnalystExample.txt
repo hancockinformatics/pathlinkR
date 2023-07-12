@@ -1,0 +1,12 @@
+The included example network was created from NetworkAnalyst:
+https://networkanalyst.ca. Steps to reproduce this data are listed below:
+- Select "Gene List Input"
+- Click "Try Examples", select "Gene list 1", and hit "Yes"
+- Click "Upload", then "Proceed"
+- On the next screen, choose "Generic PPI", the leave the defaults in the pop-up
+  ("First order" and "IMEx Interactome"); press "OK" then "Proceed"
+- Next, use the button on the right side to reduce the network to "Minimum
+  Network" and then "Proceed"
+- Look for the "Download" dropdown along the top of the visualization pane.
+  Select "JSON" from the list of options, then "NetworkAnalyst" from the next
+  dropdown
