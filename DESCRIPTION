@@ -1,7 +1,7 @@
 Package: pathnet
 Type: Package
 Title: Analyze and interpret RNA-Seq results
-Version: 0.99.177
+Version: 0.99.178
 Authors@R: c(
     person("Travis", "Blimkie", , "travis.m.blimkie@gmail.com", role = c("cre"), comment = c(ORCID = "0000-0001-8778-8627")),
     person("Andy", "An", , "andy@hancocklab.com", role = c("aut"))
@@ -31,7 +31,6 @@ Imports:
     ggraph,
     ggrepel,
     igraph,
-    jsonlite,
     methods,
     plyr,
     purrr,
@@ -49,6 +48,7 @@ Depends:
 LazyDataCompression: xz
 LazyData: true
 Suggests: 
+    jsonlite,
     knitr,
     rmarkdown,
     testthat (>= 3.0.0)
