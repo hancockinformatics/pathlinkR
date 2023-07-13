@@ -48,6 +48,7 @@ Depends:
 LazyDataCompression: xz
 LazyData: true
 Suggests: 
+    BiocStyle,
     jsonlite,
     knitr,
     rmarkdown,
