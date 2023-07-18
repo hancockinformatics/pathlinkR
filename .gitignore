@@ -40,3 +40,6 @@ vignettes/*.pdf
 .Renviron
 .Rproj.user
 inst/doc
+
+# Testing data
+tests/testthat/_snaps
