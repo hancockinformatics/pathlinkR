@@ -74,7 +74,10 @@ startingPathways <- createFoundation(
 )
 
 exPathnet <- createPathnet(
-    sigoraResult = sigoraExamples,
+    sigoraResult = dplyr::filter(
+        sigoraExamples,
+        comparison == "COVID Pos Over Time"
+    ),
     foundation = startingPathways,
     trim = TRUE,
     trimOrder = 1
