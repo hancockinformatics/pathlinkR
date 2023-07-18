@@ -28,10 +28,12 @@
 #' @seealso <https://github.com/hancockinformatics/pathnet>
 #'
 #' @examples
-#' getPathwayDistances(
-#'     pathwayData = sigoraDatabase,
-#'     distMethod = "jaccard"
-#' )
+#' if (FALSE) {
+#'     getPathwayDistances(
+#'         pathwayData = sigoraDatabase,
+#'         distMethod = "jaccard"
+#'     )
+#' }
 #'
 getPathwayDistances <- function(
         pathwayData = sigoraDatabase,
