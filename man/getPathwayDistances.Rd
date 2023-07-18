@@ -26,10 +26,12 @@ includes an example distance object (\code{pathwayDistancesJaccard}), created
 using the included "sigoraDatabase" object and Jaccard distance measure.
 }
 \examples{
-getPathwayDistances(
-    pathwayData = sigoraDatabase,
-    distMethod = "jaccard"
-)
+if (FALSE) {
+    getPathwayDistances(
+        pathwayData = sigoraDatabase,
+        distMethod = "jaccard"
+    )
+}
 
 }
 \references{
