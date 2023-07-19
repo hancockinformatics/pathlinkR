@@ -3,6 +3,6 @@ exPathwayPlot <- plotPathways(
     columns = 2
 )
 
-test_that("multiplication works", {
+test_that("pathway plots are correct", {
     vdiffr::expect_doppelganger("pathwayPlotExample", exPathwayPlot)
 })
