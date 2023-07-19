@@ -1,9 +1,9 @@
 # pathnet
 
-![GitHub R package version (branch)](https://img.shields.io/github/r-package/v/hancockinformatics/pathnet/master?label=pathnet%40master)
-
 <!-- badges: start -->
+![GitHub R package version (branch)](https://img.shields.io/github/r-package/v/hancockinformatics/pathnet/main?label=pathnet%40main)
 [![R-CMD-check](https://github.com/hancockinformatics/pathnet/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/hancockinformatics/pathnet/actions/workflows/R-CMD-check.yaml)
+[![Codecov test coverage](https://codecov.io/gh/hancockinformatics/pathnet/branch/main/graph/badge.svg)](https://app.codecov.io/gh/hancockinformatics/pathnet?branch=main)
 <!-- badges: end -->
 
 **pathnet** is an R package designed to facilitate analysis of RNA-Seq results.
