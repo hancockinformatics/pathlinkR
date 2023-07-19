@@ -43,3 +43,4 @@ inst/doc
 
 # Testing data
 tests/testthat/_snaps
+tests/testthat/Rplots.pdf
