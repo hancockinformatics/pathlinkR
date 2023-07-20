@@ -19,9 +19,22 @@
 #'
 .runSigora <- function(
         enrichGenes,
-        gpsRepo,
+        gpsRepo = reaH,
         pValFilter = NA
 ) {
+
+    stopifnot(
+        "Input must be a character vector" = { is(enrichGenes, "character") }
+    )
+    stopifnot(
+        "Input must be a character vector" = { is(enrichGenes, "vector") }
+    )
+
+    stopifnot(
+        "Your input vector doesn't look like Ensembl genes." = {
+            any(grepl(pattern = "^ENSG", enrichGenes))
+        }
+    )
 
     ## Run SIGORA based on default settings (GPSrepo = reaH, level = 4)
     invisible(capture.output(

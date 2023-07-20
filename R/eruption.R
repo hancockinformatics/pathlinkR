@@ -336,7 +336,7 @@ eruption <- function(
             )
         }
 
-        ## All the work for setting the x axis breaks/labels is done by
+        ## All the work for setting the x axis breaks/labels is done inside
         ## `.eruptionBreaks` to shorten and simplify this script
         p <- p +
             xlab("Fold Change") +
