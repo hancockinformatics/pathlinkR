@@ -35,6 +35,9 @@
 #' tj3 <- ppiCleanNetwork(tidygraph::as_tbl_graph(tj2))
 #'
 ppiCleanNetwork <- function(network) {
+
+    stopifnot(is(tidygraph::as_tbl_graph(network), "tbl_graph"))
+
     network %>%
         mutate(
             degree = centrality_degree(),
