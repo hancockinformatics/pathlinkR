@@ -28,12 +28,13 @@
 #' @seealso <https://github.com/hancockinformatics/pathnet>
 #'
 #' @examples
-#' if (FALSE) {
-#'     getPathwayDistances(
-#'         pathwayData = sigoraDatabase,
-#'         distMethod = "jaccard"
-#'     )
-#' }
+#' getPathwayDistances(
+#'     pathwayData = dplyr::slice_head(
+#'         dplyr::arrange(sigoraDatabase, pathwayId),
+#'         prop = 0.25
+#'     ),
+#'     distMethod = "jaccard"
+#' )
 #'
 getPathwayDistances <- function(
         pathwayData = sigoraDatabase,
@@ -41,7 +42,7 @@ getPathwayDistances <- function(
 ) {
 
     ## Input checks
-    stopifnot(is(sigoraDatabase, "data.frame"))
+    stopifnot(is(pathwayData, "data.frame"))
 
     ## Identify which columns has the Ensembl gene IDs
     geneIdCol <- colnames(pathwayData)[
@@ -55,6 +56,13 @@ getPathwayDistances <- function(
             ~str_detect(.x, "R-[A-Z]{3}-[0-9]{1,10}")
         ))
     ]
+
+    stopifnot(
+        "Couldn't find a column of Ensembl gene IDs" = length(geneIdCol) > 0
+    )
+    stopifnot(
+        "Couldn't find a column of pathway IDs" = length(pathwayIdCol) > 0
+    )
 
     message(
         "Using '", geneIdCol,"' for gene IDs and '",

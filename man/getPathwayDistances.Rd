@@ -26,12 +26,13 @@ includes an example distance object (\code{pathwayDistancesJaccard}), created
 using the included "sigoraDatabase" object and Jaccard distance measure.
 }
 \examples{
-if (FALSE) {
-    getPathwayDistances(
-        pathwayData = sigoraDatabase,
-        distMethod = "jaccard"
-    )
-}
+getPathwayDistances(
+    pathwayData = dplyr::slice_head(
+        dplyr::arrange(sigoraDatabase, pathwayId),
+        prop = 0.25
+    ),
+    distMethod = "jaccard"
+)
 
 }
 \references{
