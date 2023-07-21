@@ -80,7 +80,7 @@ getPathwayDistances <- function(
             values_from = "present"
         ) %>%
         replace(is.na(.), 0) %>%
-        column_to_rownames(all_of(pathwayIdCol)) %>%
+        column_to_rownames(pathwayIdCol) %>%
         as.matrix()
 
     if (length(unique(pathwayData[[pathwayIdCol]])) > 500) {

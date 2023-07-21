@@ -128,6 +128,8 @@ ppiPlotNetwork <- function(
         ...
 ) {
 
+    stopifnot(is(network, "tbl_graph"))
+
     ## Set up fill scaling based on argument `fillType`
     if (fillType == "foldChange") {
         stopifnot(is.numeric(pull(network, {{fillColumn}})))

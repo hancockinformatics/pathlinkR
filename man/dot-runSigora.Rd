@@ -4,7 +4,7 @@
 \alias{.runSigora}
 \title{INTERNAL Wrapper around Sigora's enrichment function}
 \usage{
-.runSigora(enrichGenes, gpsRepo, pValFilter = NA)
+.runSigora(enrichGenes, gpsRepo = reaH, pValFilter = NA)
 }
 \arguments{
 \item{enrichGenes}{Vector of genes to enrich}
