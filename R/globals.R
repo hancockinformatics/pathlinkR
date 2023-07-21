@@ -2,6 +2,7 @@ utils::globalVariables(c(
     ":=",
     ".",
     "Bonferroni",
+    "color",
     "Description",
     "Ensembl.Gene.ID",
     "EntrezGene.ID",

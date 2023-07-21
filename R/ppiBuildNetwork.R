@@ -160,7 +160,7 @@ ppiBuildNetwork <- function(
                 betweenness = centrality_betweenness()
             )
 
-    } else if (order == "min_steiner") {
+    } else if (order == "minSteiner") {
         message("Performing 'Steiner' minimum network trimming...")
 
         terminals <- networkInit %>%
@@ -176,6 +176,7 @@ ppiBuildNetwork <- function(
         ) %>%
             .[[1]] %>%
             as_tbl_graph(directed = FALSE) %>%
+            select(-color) %>%
             mutate(
                 degree = centrality_degree(),
                 betweenness = centrality_betweenness()

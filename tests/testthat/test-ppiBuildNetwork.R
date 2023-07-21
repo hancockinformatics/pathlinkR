@@ -1,3 +1,5 @@
+set.seed(1)
+
 exNetworkZero <- ppiBuildNetwork(
     deseqResults = deseqExampleList[[1]],
     filterInput = TRUE,
@@ -23,7 +25,10 @@ expectedColNames <- c(
 
 test_that("we get the right number of nodes and edges", {
     expect_length(exNetworkZero, 497)
-    expect_equal(nrow(as_tibble(tidygraph::activate(exNetworkZero, "edges"))), 997)
+    expect_equal(
+        nrow(as_tibble(tidygraph::activate(exNetworkZero, "edges"))),
+        997
+    )
 
     expect_length(exNetworkSimple, 3960)
     expect_equal(
@@ -31,10 +36,10 @@ test_that("we get the right number of nodes and edges", {
         15824
     )
 
-    expect_length(exNetworkSteiner, 6939)
+    expect_length(exNetworkSteiner, 1376)
     expect_equal(
         nrow(as_tibble(tidygraph::activate(exNetworkSteiner, "edges"))),
-        18944
+        1375
     )
 })
 
