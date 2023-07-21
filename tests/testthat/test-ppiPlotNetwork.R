@@ -5,7 +5,6 @@ exNetwork <- ppiBuildNetwork(
 )
 
 set.seed(1)
-
 exNetworkPlot <- ppiPlotNetwork(
     exNetwork,
     fillColumn = log2FoldChange,
