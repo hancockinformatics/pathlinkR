@@ -121,8 +121,8 @@ two main functions used to accomplish this are `ppiBuildNetwork` and
 ## Construct a zero order network, i.e. it will only contain the input genes, 
 ## no interactors
 exNetwork <- ppiBuildNetwork(
-    deseqResult = deseqExampleList[[1]],
-    filter = TRUE,
+    deseqResults = deseqExampleList[[1]],
+    filterInput = TRUE,
     order = "zero"
 )
 

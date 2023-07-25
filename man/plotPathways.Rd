@@ -75,9 +75,6 @@ enrichment results from multiple DE comparisons. Can split input genes into
 up- and down-regulated based on fold change, and automatically assigned
 each pathway into an informative top-level category.
 }
-\details{
-Additional details...
-}
 \examples{
 plotPathways(
     sigoraExamples,
