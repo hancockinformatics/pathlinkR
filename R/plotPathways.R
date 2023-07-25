@@ -170,7 +170,9 @@ plotPathways <- function(
             mutate(new = paste0("\t", comparison, ": ", pathwayName)) %>%
             pull(new) %>%
             as.character() %>%
+            str_remove_all("\n") %>%
             unique()
+
         message(paste0(
             duplicates_message,
             collapse = "\n"
