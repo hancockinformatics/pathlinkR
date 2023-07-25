@@ -36,16 +36,12 @@
 #' @import ggplot2
 #' @import stringr
 #' @importFrom ggforce facet_col
-#' @importFrom ggpubr rremove ggarrange
+#' @importFrom ggpubr ggarrange
 #'
 #' @description Creates a plot to visualize and compare Reactome pathway
 #'   enrichment results from multiple DE comparisons. Can split input genes into
 #'   up- and down-regulated based on fold change, and automatically assigned
 #'   each pathway into an informative top-level category.
-#'
-#' @details
-#' Additional details...
-#'
 #'
 #' @references None.
 #'
@@ -149,7 +145,7 @@ plotPathways <- function(
     ## that is more enriched (lower p-value)
     duplicates <- enrichedResultsGraph %>%
         group_by(pathwayName, comparison) %>%
-        summarise(counts = n()) %>% filter(counts > 1) %>%
+        filter(n() > 1) %>%
         mutate(uniqueId = paste0(pathwayName, comparison))
 
     enrichedResultsGraph <- enrichedResultsGraph %>%
@@ -167,9 +163,18 @@ plotPathways <- function(
             "\nNote: The following pathways were enriched in both directions ",
             "for the given comparisons. These are indicated with an asterisk ",
             "over the triangle, which is only shown for the lower p value ",
-            "result."
+            "result:"
         )
-        methods::show(as_tibble(duplicates[, c(2, 1)]))
+
+        duplicates_message <- duplicates %>%
+            mutate(new = paste0("\t", comparison, ": ", pathwayName)) %>%
+            pull(new) %>%
+            as.character() %>%
+            unique()
+        message(paste0(
+            duplicates_message,
+            collapse = "\n"
+        ))
 
         for (i in seq_len(nrow(duplicates))) {
             row <- duplicates[i, ]
@@ -255,7 +260,7 @@ plotPathways <- function(
 
     ## Can be set to angled (45 degrees), "horizontal" (0 degrees), or
     ## "vertical" (90 degrees)
-    if(xAngle == "angled") {
+    if (xAngle == "angled") {
         angle <- 45
         hjust <- 1
         vjust <- 1
@@ -271,22 +276,35 @@ plotPathways <- function(
 
 
     for (n in seq_len(length(columnList))) {
-        plot <- ggplot(
-            enrichedResultsClean %>%
-                filter(topPathways %in% columnList[n][[1]]),
-            aes(
-                x = comparison,
-                y = pathwayName,
-                fill = logMax,
-                shape = direction
-            )
-        ) +
+        plot <-
+            ggplot(
+                data = filter(
+                    enrichedResultsClean,
+                    topPathways %in% columnList[n][[1]]
+                ),
+                mapping = aes(
+                    x = comparison,
+                    y = pathwayName,
+                    fill = logMax,
+                    shape = direction
+                )
+            ) +
+
+            facet_col(
+                facets = ~topPathways,
+                scales = "free_y",
+                space = "free"
+            ) +
+
             {if (includeGeneRatio) geom_point(aes(size = gene_ratio))} +
             {if (!includeGeneRatio) geom_point(size = size)} +
+
             geom_point(
-                data = enrichedResultsDupes %>%
-                    filter(topPathways %in% columnList[n][[1]]),
-                aes(x = comparison, y = pathwayName),
+                data = filter(
+                    enrichedResultsDupes,
+                    topPathways %in% columnList[n][[1]]
+                ),
+                mapping = aes(x = comparison, y = pathwayName),
                 shape = 8,
                 size = 2,
                 colour = "white",
@@ -304,11 +322,34 @@ plotPathways <- function(
 
             ## Keeps comparisons even if they don"t enrich for any pathways
             scale_x_discrete(drop = FALSE) +
-            facet_col(
-                facets = ~topPathways,
-                scales = "free_y",
-                space = "free"
+
+            scale_shape_manual(
+                values = c("Down" = 25 , "Up" = 24, "All" = 21),
+                name = "Regulation",
+                na.value = NA,
+                drop = FALSE # Keep both up/down if only one direction enriched
             ) +
+
+            scale_fill_continuous(
+                name = expression(P[adjusted]),
+                limits = c(0, 50),
+                breaks = c(10, 20, 30, 40, 50),
+                labels = c(
+                    expression(10 ^ -10),
+                    expression(10 ^ -20),
+                    expression(10 ^ -30),
+                    expression(10 ^ -40),
+                    expression(10 ^ -50)
+                ),
+                low = "blue",
+                high = "red",
+                na.value = NA
+            ) +
+
+            ## Can also add lines to separate different groups
+            {if (!is.na(intercepts[1])) geom_vline(xintercept = intercepts)} +
+            labs(x = NULL, y = NULL) +
+
             theme_bw() +
             theme(
                 strip.text.x = element_text(
@@ -328,29 +369,6 @@ plotPathways <- function(
                     vjust = vjust
                 )
             ) +
-            rremove("xlab") +
-            rremove("ylab") +
-            scale_shape_manual(
-                values = c("Down" = 25 , "Up" = 24, "All" = 21),
-                name = "Regulation",
-                na.value = NA,
-                drop = FALSE # Keep both up/down if only one direction enriched
-            ) +
-            scale_fill_continuous(
-                name = expression(P[adjusted]),
-                limits = c(0, 50),
-                breaks = c(10, 20, 30, 40, 50),
-                labels = c(
-                    expression(10 ^ -10),
-                    expression(10 ^ -20),
-                    expression(10 ^ -30),
-                    expression(10 ^ -40),
-                    expression(10 ^ -50)
-                ),
-                low = "blue",
-                high = "red",
-                na.value = NA
-            ) +
             guides(
                 shape = guide_legend(
                     override.aes = list(size = 5 * legendMultiply)
@@ -358,10 +376,7 @@ plotPathways <- function(
                 size  = guide_legend(
                     override.aes = list(shape = 24, fill = "black")
                 )
-            ) +
-            ## Can also add lines to separate different groups
-            {if (!is.na(intercepts[1])) geom_vline(xintercept = intercepts)}
-
+            )
         plotlist <- append(plotlist, list(plot))
     }
 
