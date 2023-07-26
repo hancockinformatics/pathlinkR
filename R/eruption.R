@@ -26,7 +26,7 @@
 #'   down-regulated DE genes. When set to "select", label top n up- and
 #'   down-regulated genes provided in `selectGenes`. When set to "manual" label
 #'   a custom selection of genes provided in `manualGenes`
-#' @param manualGenes If `label = "manual"`, these are the genes to
+#' @param manualGenes If `label="manual"`, these are the genes to
 #'   specifically label. Can be HGNC symbols or Ensembl gene IDs.
 #' @param removeUnannotated Boolean: Remove genes without annotations (no HGNC
 #'   symbol). Defaults to TRUE.
@@ -52,29 +52,29 @@
 #' @seealso <https://github.com/hancockinformatics/pathnet>
 #'
 #' @examples
-#' eruption(deseqResults = deseqExampleList[[1]])
+#' eruption(deseqResults=deseqExampleList[[1]])
 #'
 eruption <- function(
         deseqResults,
-        pCutoff = 0.05,
-        fcCutoff = 1.5,
-        baseColour = "steelblue4",
-        nonsigColour = "lightgrey",
-        alpha = 0.5,
-        pointSize = 1,
-        title = NA,
-        nonlog2 = FALSE,
-        xaxis = NA,
-        yaxis = NA,
-        selectGenes = c(),
-        selectColour = "red",
-        selectName = "Selected",
-        label = "auto",
-        manualGenes = c(),
-        removeUnannotated = TRUE,
-        n = 10,
-        labelSize = 3.5,
-        pad = 1.4
+        pCutoff=0.05,
+        fcCutoff=1.5,
+        baseColour="steelblue4",
+        nonsigColour="lightgrey",
+        alpha=0.5,
+        pointSize=1,
+        title=NA,
+        nonlog2=FALSE,
+        xaxis=NA,
+        yaxis=NA,
+        selectGenes=c(),
+        selectColour="red",
+        selectName="Selected",
+        label="auto",
+        manualGenes=c(),
+        removeUnannotated=TRUE,
+        n=10,
+        labelSize=3.5,
+        pad=1.4
 ) {
 
     ## Input checks
@@ -91,11 +91,11 @@ eruption <- function(
             filter(!is.na(padj)) %>%
             left_join(
                 mappingFile,
-                by = "ensemblGeneId",
-                multiple = "all"
+                by="ensemblGeneId",
+                multiple="all"
             ) %>%
             mutate(
-                geneName = ifelse(
+                geneName=ifelse(
                     !is.na(hgncSymbol),
                     hgncSymbol,
                     ensemblGeneId
@@ -104,16 +104,16 @@ eruption <- function(
     } else {
         res <- deseqResults %>%
             rownames_to_column("ensemblGeneId") %>%
-            mutate(geneName = ensemblGeneId)
+            mutate(geneName=ensemblGeneId)
     }
 
     res <- res %>% mutate(
-        significant = case_when(
+        significant=case_when(
             padj < pCutoff & abs(log2FoldChange) > log2(fcCutoff) ~ "SIG",
             TRUE ~ "NS"
         ),
-        inList = case_when(ensemblGeneId %in% selectGenes ~ "Y", TRUE ~ "N"),
-        negLogP = -log10(padj)
+        inList=case_when(ensemblGeneId %in% selectGenes ~ "Y", TRUE ~ "N"),
+        negLogP=-log10(padj)
     )
 
     ## If specifying x and y axis limits, remove any genes that fall outside the
@@ -191,7 +191,7 @@ eruption <- function(
 
         ## Record which genes to label
         res <- res %>% mutate(
-            label = case_when(geneName %in% c(upGenes, downGenes) ~ geneName)
+            label=case_when(geneName %in% c(upGenes, downGenes) ~ geneName)
         )
     }
 
@@ -213,76 +213,76 @@ eruption <- function(
             unlist()
 
         res <- res %>% mutate(
-            label = case_when(geneName %in% c(upGenes, downGenes) ~ geneName)
+            label=case_when(geneName %in% c(upGenes, downGenes) ~ geneName)
         )
     }
 
     ## Manual labeling ("manual"): label the genes you provided in `manualGenes`
     if (label == "manual") {
-        res <- res %>% mutate(label = case_when(
+        res <- res %>% mutate(label=case_when(
             ensemblGeneId %in% manualGenes |
                 geneName %in% manualGenes ~ geneName
         ))
     }
 
     ## Create the plot
-    p <- ggplot(res, aes(x = log2FoldChange, y = negLogP)) +
+    p <- ggplot(res, aes(x=log2FoldChange, y=negLogP)) +
 
         ## Plot the non-significant genes
         geom_point(
-            data = filter(res, significant == "NS", inList == "N"),
-            alpha = alpha,
-            show.legend = FALSE,
-            size = pointSize,
-            colour = nonsigColour
+            data=filter(res, significant == "NS", inList == "N"),
+            alpha=alpha,
+            show.legend=FALSE,
+            size=pointSize,
+            colour=nonsigColour
         ) +
 
         ## Plot the significant genes and genes of interest ("selectGenes"),
         ## with those in `selectGenes` plotted on top of those not in
         ## `selectGenes` for added emphasis.
         geom_point(
-            data = filter(res, significant == "SIG", inList == "N"),
-            mapping = aes(x = log2FoldChange, y = negLogP),
-            size = pointSize,
-            alpha = alpha,
-            colour = baseColour
+            data=filter(res, significant == "SIG", inList == "N"),
+            mapping=aes(x=log2FoldChange, y=negLogP),
+            size=pointSize,
+            alpha=alpha,
+            colour=baseColour
         ) +
 
         geom_point(
-            data = filter(res, inList == "Y"),
-            mapping = aes(x = log2FoldChange, y = negLogP),
-            size = pointSize,
-            alpha = alpha,
-            colour = selectColour
+            data=filter(res, inList == "Y"),
+            mapping=aes(x=log2FoldChange, y=negLogP),
+            size=pointSize,
+            alpha=alpha,
+            colour=selectColour
         ) +
 
         ## Add cutoff lines
         geom_hline(
-            yintercept = -log10(pCutoff),
-            linetype = "dashed",
-            colour = "gray20"
+            yintercept=-log10(pCutoff),
+            linetype="dashed",
+            colour="gray20"
         ) +
         geom_vline(
-            xintercept = c(log2(fcCutoff), -log2(fcCutoff)),
-            linetype = "dashed",
-            colour = "gray20"
+            xintercept=c(log2(fcCutoff), -log2(fcCutoff)),
+            linetype="dashed",
+            colour="gray20"
         ) +
 
         ## Set to a clean theme, and make the labels easier to read
         theme_bw() +
         theme(
-            plot.title = element_text(face = "bold", size = 16),
-            plot.subtitle = element_text(size = 14),
-            plot.background = element_blank(),
-            axis.text = element_text(colour = "black", size = 11),
-            axis.title = element_text(
-                size = 13, face = "bold", colour = "black"
+            plot.title=element_text(face="bold", size=16),
+            plot.subtitle=element_text(size=14),
+            plot.background=element_blank(),
+            axis.text=element_text(colour="black", size=11),
+            axis.title=element_text(
+                size=13, face="bold", colour="black"
             )
         ) +
 
         labs(
-            x = expression(bold(log["2"]~Fold~Change)),
-            y = expression(bold(-log["10"]~P[adj]))
+            x=expression(bold(log["2"]~Fold~Change)),
+            y=expression(bold(-log["10"]~P[adj]))
         ) +
 
         ## Set axes
@@ -291,26 +291,26 @@ eruption <- function(
 
         ## Add in labels to the genes
         geom_text_repel(
-            data = res %>% filter(!is.na(label)),
-            mapping = aes(label = label),
-            segment.color = "darkgrey",
-            color = "black",
-            bg.color = "white",
-            bg.r = .05,
-            max.overlaps = Inf,
-            fontface = "bold",
-            size = labelSize,
-            box.padding = pad
+            data=res %>% filter(!is.na(label)),
+            mapping=aes(label=label),
+            segment.color="darkgrey",
+            color="black",
+            bg.color="white",
+            bg.r=.05,
+            max.overlaps=Inf,
+            fontface="bold",
+            size=labelSize,
+            box.padding=pad
         ) +
 
         ## Add in informative subtitles for number of up and down-regulated
         ## genes, the number of genes in "selectGenes," and a title if provided
-        {if (!is.na(title)) labs(title = title)} +
+        {if (!is.na(title)) labs(title=title)} +
 
         ## If there are no "selectGenes"
         {
             if (length(selectGenes) == 0)
-                labs(subtitle = paste0(
+                labs(subtitle=paste0(
                     "Down: ", numGenes[2], ", Up: ", numGenes[1]
                 ))
         } +
@@ -318,7 +318,7 @@ eruption <- function(
         ## If "selectGenes" was given
         {
             if (length(selectGenes) != 0)
-                labs(subtitle = paste0(
+                labs(subtitle=paste0(
                     "Down: ", numGenes[2],
                     ", Up: ", numGenes[1], ", ",
                     selectName, ": ", length(selectGenes)
@@ -341,7 +341,7 @@ eruption <- function(
         ## `.eruptionBreaks` to shorten and simplify this script
         p <- p +
             xlab("Fold Change") +
-            theme(axis.text.x = element_text(vjust = 0, size = 11)) +
+            theme(axis.text.x=element_text(vjust=0, size=11)) +
             .eruptionBreaks(xaxis)
     }
 

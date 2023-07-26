@@ -6,6 +6,6 @@
             "! If you encounter any bugs or problems, please submit an issue ",
             "at the Github page: https://github.com/hancockinformatics/",
             "pathnet/issues"
-        ) %>% stringr::str_wrap(width = getOption("width"))
+        ) %>% stringr::str_wrap(width=getOption("width"))
     )
 }

@@ -15,7 +15,7 @@
 #'
 #' @seealso <https://github.com/hancockinformatics/pathnet>
 #'
-.truncNeatly <- function(x, l = 60) {
+.truncNeatly <- function(x, l=60) {
     map_chr(
         x,
         ~if (is.na(.x)) {
@@ -25,8 +25,8 @@
         } else {
             shortened <- .x %>%
                 as.character() %>%
-                str_sub(., start = 1, end = l) %>%
-                str_replace(., pattern = "\\s([^\\s]*)$", replacement = "...")
+                str_sub(., start=1, end=l) %>%
+                str_replace(., pattern="\\s([^\\s]*)$", replacement="...")
             return(shortened)
         }
     )
