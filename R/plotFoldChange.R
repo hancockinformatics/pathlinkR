@@ -43,15 +43,15 @@
 #'   in the order you want. Order will be ignored if `clusterColumns` is set
 #'   to TRUE.
 #' @param clusterRows Boolean (TRUE). Whether to cluster the rows (genes). May
-#'   need to change if `invert = TRUE`.
+#'   need to change if `invert=TRUE`.
 #' @param clusterColumns Boolean (FALSE). Whether to cluster the columns
 #'   (comparisons). Will override order of `colSplit` if set to TRUE.
 #' @param colAngle Angle of column text. Defaults to 90.
 #' @param colCenter Whether to center column text. Default is TRUE, should set
-#'   to FALSE if angled column name (e.g. `colAngle = 45`).
+#'   to FALSE if angled column name (e.g. `colAngle=45`).
 #' @param rowAngle angle of row text, defaults to 0.
 #' @param rowCenter whether to center column text. Default is FALSE, should set
-#'   to TRUE if vertical column name (e.g. `rowAngle = 90`).
+#'   to TRUE if vertical column name (e.g. `rowAngle=90`).
 #'
 #' @return A heatmap of fold changes for genes of interest
 #' @export
@@ -72,33 +72,33 @@
 #' @examples
 #' plotFoldChange(
 #'     deseqExampleList,
-#'     pathName = "Generation of second messenger molecules"
+#'     pathName="Generation of second messenger molecules"
 #' )
 #'
 plotFoldChange <- function(
         inputList,
-        pathName = NA,
-        pathId = NA,
-        manualTitle = NA,
-        titleSize = 14,
-        genesToPlot = NA,
-        geneFormat = "ensg",
-        pCutoff = 0.05,
-        fcCutoff = 1.5,
-        plotSignificantOnly = TRUE,
-        showStars = TRUE,
-        hideNonsigFC = TRUE,
-        vjust = 0.75,
-        rot = 0,
-        invert = FALSE,
-        log2FoldChange = FALSE,
-        colSplit = NA,
-        clusterRows = TRUE,
-        clusterColumns = FALSE,
-        colAngle = 90,
-        colCenter = TRUE,
-        rowAngle = 0,
-        rowCenter = FALSE
+        pathName=NA,
+        pathId=NA,
+        manualTitle=NA,
+        titleSize=14,
+        genesToPlot=NA,
+        geneFormat="ensg",
+        pCutoff=0.05,
+        fcCutoff=1.5,
+        plotSignificantOnly=TRUE,
+        showStars=TRUE,
+        hideNonsigFC=TRUE,
+        vjust=0.75,
+        rot=0,
+        invert=FALSE,
+        log2FoldChange=FALSE,
+        colSplit=NA,
+        clusterRows=TRUE,
+        clusterColumns=FALSE,
+        colAngle=90,
+        colCenter=TRUE,
+        rowAngle=0,
+        rowCenter=FALSE
 ) {
 
     ## If pathway name is provided
@@ -153,14 +153,14 @@ plotFoldChange <- function(
             filter(rownames(.) %in% genes, !is.na(log2FoldChange)) %>%
             rownames_to_column("ensemblGeneId") %>%
             select(ensemblGeneId, {{itemName}} := log2FoldChange)
-    }) %>% join_all(by = "ensemblGeneId", type = "full")
+    }) %>% join_all(by="ensemblGeneId", type="full")
 
     dfP <- imap(inputList, function(listItem, itemName) {
         listItem %>%
             filter(rownames(.) %in% genes, !is.na(padj)) %>%
             rownames_to_column("ensemblGeneId") %>%
             select(ensemblGeneId, {{itemName}} := padj)
-    }) %>% join_all(by = "ensemblGeneId", type = "full")
+    }) %>% join_all(by="ensemblGeneId", type="full")
 
     ## From all the data frames, get the genes that were significant in any of
     ## them
@@ -183,17 +183,17 @@ plotFoldChange <- function(
 
     ## Prepare the Heatmap matrices, and map the Ensembl IDs to HGNC symbols
     matFC <- dfFC %>%
-        left_join(mappingFile, by = "ensemblGeneId", multiple = "all") %>%
+        left_join(mappingFile, by="ensemblGeneId", multiple="all") %>%
         select(-c(ensemblGeneId, entrezGeneId)) %>%
-        column_to_rownames(var = "hgncSymbol") %>%
+        column_to_rownames(var="hgncSymbol") %>%
         as.matrix()
     matFC[is.na(matFC)] <- 0 ## Make any NAs into 0
 
 
     matP <- dfP %>%
-        left_join(mappingFile, by = "ensemblGeneId", multiple = "all") %>%
+        left_join(mappingFile, by="ensemblGeneId", multiple="all") %>%
         select(-c(ensemblGeneId, entrezGeneId)) %>%
-        column_to_rownames(var = "hgncSymbol") %>%
+        column_to_rownames(var="hgncSymbol") %>%
         as.matrix()
     matP[is.na(matP)] <- 1 ## Make any NAs into 1s
 
@@ -203,7 +203,7 @@ plotFoldChange <- function(
     }
 
     ## Set the limits for colours for the plotting heatmap
-    limit <- ceiling(max(abs(matFC), na.rm = TRUE))
+    limit <- ceiling(max(abs(matFC), na.rm=TRUE))
 
     ## If plotting real fold changes instead of log2
     if (!log2FoldChange) {
@@ -221,9 +221,9 @@ plotFoldChange <- function(
         labels <- range
     }
     parameters <- list(
-        at = range,
-        labels = labels,
-        title = foldChangeTitle
+        at=range,
+        labels=labels,
+        title=foldChangeTitle
     )
 
     ## If columns aren't being split
@@ -233,7 +233,7 @@ plotFoldChange <- function(
     } else {
         ## This orders the splitting into the order the data frames are in the
         ## list instead of alphabetically
-        colSplit <- factor(colSplit, levels = unique(colSplit))
+        colSplit <- factor(colSplit, levels=unique(colSplit))
         columnTitle <- "%s"
     }
     rowSplit <- rep(NA, nrow(matFC))
@@ -252,17 +252,17 @@ plotFoldChange <- function(
 
     draw(Heatmap(
         matFC,
-        cell_fun = function(j, i, x, y, w, h, fill) {
+        cell_fun=function(j, i, x, y, w, h, fill) {
             if (showStars) {
                 if (abs(matFC[i,j]) > log2(1.5)) {
                     if (matP[i, j] < 0.001) {
-                        grid.text("***", x, y, vjust = vjust, rot = rot)
+                        grid.text("***", x, y, vjust=vjust, rot=rot)
                     }
                     else if (matP[i, j] < 0.01) {
-                        grid.text("**", x, y, vjust = vjust, rot = rot)
+                        grid.text("**", x, y, vjust=vjust, rot=rot)
                     }
                     else if (matP[i, j] < 0.05) {
-                        grid.text("*", x, y, vjust = vjust, rot = rot)
+                        grid.text("*", x, y, vjust=vjust, rot=rot)
                     }
                 }
 
@@ -274,9 +274,9 @@ plotFoldChange <- function(
                             "***",
                             x,
                             y,
-                            vjust = vjust,
-                            rot = rot,
-                            gp = gpar(col = "grey50")
+                            vjust=vjust,
+                            rot=rot,
+                            gp=gpar(col="grey50")
                         )
                     }
                     else if (matP[i, j] < 0.01) {
@@ -284,9 +284,9 @@ plotFoldChange <- function(
                             "**",
                             x,
                             y,
-                            vjust = vjust,
-                            rot = rot,
-                            gp = gpar(col = "grey50")
+                            vjust=vjust,
+                            rot=rot,
+                            gp=gpar(col="grey50")
                         )
                     }
                     else if (matP[i, j] < 0.05) {
@@ -294,26 +294,26 @@ plotFoldChange <- function(
                             "*",
                             x,
                             y,
-                            vjust = vjust,
-                            rot = rot,
-                            gp = gpar(col = "grey50")
+                            vjust=vjust,
+                            rot=rot,
+                            gp=gpar(col="grey50")
                         )
                     }
                 }
             }
         },
-        column_title = columnTitle,
-        row_title = row_title,
-        heatmap_legend_param = parameters,
-        column_title_gp = gpar(fontsize = titleSize),
-        row_split = rowSplit,
-        column_split = colSplit,
-        cluster_columns = clusterColumns,
-        cluster_rows = clusterRows,
-        column_names_rot = colAngle,
-        column_names_centered = colCenter,
-        row_names_rot = rowAngle,
-        row_names_centered = rowCenter
+        column_title=columnTitle,
+        row_title=row_title,
+        heatmap_legend_param=parameters,
+        column_title_gp=gpar(fontsize=titleSize),
+        row_split=rowSplit,
+        column_split=colSplit,
+        cluster_columns=clusterColumns,
+        cluster_rows=clusterRows,
+        column_names_rot=colAngle,
+        column_names_centered=colCenter,
+        row_names_rot=rowAngle,
+        row_names_centered=rowCenter
 
-    ), column_title = plotTitle)
+    ), column_title=plotTitle)
 }

@@ -50,48 +50,48 @@
 #' @examples
 #' plotPathways(
 #'     sigoraExamples,
-#'     columns = 2
+#'     columns=2
 #' )
 #'
 plotPathways <- function(
         enrichedResults,
-        columns = 1,
-        specificTopPathways = "any",
-        specificPathways = "any",
-        nameWidth = 35,
-        nameRows = 1,
-        xAngle = "angled",
-        maxPVal = 50,
-        intercepts = NA,
-        includeGeneRatio = FALSE,
-        size = 5,
-        legendMultiply = 1,
-        showNumGenes = FALSE,
-        pathwayPosition = "right",
-        newGroupNames = NA
+        columns=1,
+        specificTopPathways="any",
+        specificPathways="any",
+        nameWidth=35,
+        nameRows=1,
+        xAngle="angled",
+        maxPVal=50,
+        intercepts=NA,
+        includeGeneRatio=FALSE,
+        size=5,
+        legendMultiply=1,
+        showNumGenes=FALSE,
+        pathwayPosition="right",
+        newGroupNames=NA
 ) {
 
     ## If new group names are to be used, add them in
     if (!is.na(newGroupNames[1])) {
         mapNames <- tibble(
-            comparison = unique(enrichedResults$comparison),
-            newNames = newGroupNames
+            comparison=unique(enrichedResults$comparison),
+            newNames=newGroupNames
         )
         enrichedResults <- left_join(
             enrichedResults,
             mapNames,
-            multiple = "all"
+            multiple="all"
         ) %>%
             select(!comparison) %>%
-            mutate(comparison = newNames) %>%
+            mutate(comparison=newNames) %>%
             select(!newNames)
     }
 
     ## Convert to -log10 p value and arbitrarily set to a max -log10 p value of
-    ## 50 (i.e. adj pval = 10^-50), which some enrichment results surpass,
+    ## 50 (i.e. adj pval=10^-50), which some enrichment results surpass,
     ## especially for Sigora.
     enrichedResults <- enrichedResults %>% mutate(
-        logMax = case_when(
+        logMax=case_when(
             -log10(pValueAdjusted) > maxPVal ~ maxPVal,
             -log10(pValueAdjusted) <= maxPVal ~ -log10(pValueAdjusted)
         )
@@ -101,29 +101,29 @@ plotPathways <- function(
     if (!"All" %in% enrichedResults$direction) {
         enrichedResults$direction <- factor(
             enrichedResults$direction,
-            levels = c("Up", "Down"))
+            levels=c("Up", "Down"))
     } else if (
         "All" %in% enrichedResults$direction &
         any(c("Up", "Down") %in% enrichedResults$direction)
     ) {
         enrichedResults$direction <- factor(
             enrichedResults$direction,
-            levels = c("Up", "Down", "All"))
+            levels=c("Up", "Down", "All"))
     }
 
     ## Order the comparisons by the order they were inputted (not alphabetical)
     enrichedResults$comparison <- factor(
         enrichedResults$comparison,
-        levels = unique(enrichedResults$comparison))
+        levels=unique(enrichedResults$comparison))
 
     ## Add in the number of genes for each comparison if indicated
     if (showNumGenes) {
         enrichedResults <- enrichedResults %>% mutate(
-            comparison = paste0(comparison, "\n(", totalGenes, ")")
+            comparison=paste0(comparison, "\n(", totalGenes, ")")
         )
         enrichedResults$comparison <- factor(
             enrichedResults$comparison,
-            levels = unique(enrichedResults$comparison)
+            levels=unique(enrichedResults$comparison)
         )
     }
 
@@ -146,10 +146,10 @@ plotPathways <- function(
     duplicates <- enrichedResultsGraph %>%
         group_by(pathwayName, comparison) %>%
         filter(n() > 1) %>%
-        mutate(uniqueId = paste0(pathwayName, comparison))
+        mutate(uniqueId=paste0(pathwayName, comparison))
 
     enrichedResultsGraph <- enrichedResultsGraph %>%
-        mutate(uniqueId = paste0(pathwayName, comparison))
+        mutate(uniqueId=paste0(pathwayName, comparison))
 
     enrichedResultsClean <- enrichedResultsGraph %>%
         filter(!uniqueId %in% duplicates$uniqueId)
@@ -167,7 +167,7 @@ plotPathways <- function(
         )
 
         duplicates_message <- duplicates %>%
-            mutate(new = paste0("\t", comparison, ": ", pathwayName)) %>%
+            mutate(new=paste0("\t", comparison, ": ", pathwayName)) %>%
             pull(new) %>%
             as.character() %>%
             str_remove_all("\n") %>%
@@ -175,7 +175,7 @@ plotPathways <- function(
 
         message(paste0(
             duplicates_message,
-            collapse = "\n"
+            collapse="\n"
         ))
 
         for (i in seq_len(nrow(duplicates))) {
@@ -211,7 +211,7 @@ plotPathways <- function(
         select(topPathways, pathwayName) %>%
         unique() %>%
         group_by(topPathways) %>%
-        summarise(pathways = n() + 1)
+        summarise(pathways=n() + 1)
 
     ## Arrange ascending
     numPathways <- numPathways %>% arrange(pathways)
@@ -237,11 +237,11 @@ plotPathways <- function(
             ## Now, add the name of the top pathway to one of the columns and
             ## increase the number of pathways
             columnSplitting <- columnSplitting %>% mutate(
-                pathways = case_when(
+                pathways=case_when(
                     topPathways == columnSmallest ~ pathways + add$pathways,
                     TRUE ~ pathways
                 ),
-                topPathways = case_when(
+                topPathways=case_when(
                     topPathways == columnSmallest ~ paste0(
                         topPathways, "," ,add$topPathways
                     ),
@@ -280,103 +280,103 @@ plotPathways <- function(
     for (n in seq_len(length(columnList))) {
         plot <-
             ggplot(
-                data = filter(
+                data=filter(
                     enrichedResultsClean,
                     topPathways %in% columnList[n][[1]]
                 ),
-                mapping = aes(
-                    x = comparison,
-                    y = pathwayName,
-                    fill = logMax,
-                    shape = direction
+                mapping=aes(
+                    x=comparison,
+                    y=pathwayName,
+                    fill=logMax,
+                    shape=direction
                 )
             ) +
 
             facet_col(
-                facets = ~topPathways,
-                scales = "free_y",
-                space = "free"
+                facets=~topPathways,
+                scales="free_y",
+                space="free"
             ) +
 
-            {if (includeGeneRatio) geom_point(aes(size = gene_ratio))} +
-            {if (!includeGeneRatio) geom_point(size = size)} +
+            {if (includeGeneRatio) geom_point(aes(size=gene_ratio))} +
+            {if (!includeGeneRatio) geom_point(size=size)} +
 
             geom_point(
-                data = filter(
+                data=filter(
                     enrichedResultsDupes,
                     topPathways %in% columnList[n][[1]]
                 ),
-                mapping = aes(x = comparison, y = pathwayName),
-                shape = 8,
-                size = 2,
-                colour = "white",
-                show.legend = FALSE
+                mapping=aes(x=comparison, y=pathwayName),
+                shape=8,
+                size=2,
+                colour="white",
+                show.legend=FALSE
             ) +
 
             ## Wrap and truncate pathway names if necessary
             scale_y_discrete(
-                labels = ~str_wrap(
+                labels=~str_wrap(
                     .truncNeatly(.x, name_trunc),
-                    width = nameWidth
+                    width=nameWidth
                 ),
-                position = pathwayPosition
+                position=pathwayPosition
             ) +
 
             ## Keeps comparisons even if they don"t enrich for any pathways
-            scale_x_discrete(drop = FALSE) +
+            scale_x_discrete(drop=FALSE) +
 
             scale_shape_manual(
-                values = c("Down" = 25 , "Up" = 24, "All" = 21),
-                name = "Regulation",
-                na.value = NA,
-                drop = FALSE # Keep both up/down if only one direction enriched
+                values=c("Down"=25 , "Up"=24, "All"=21),
+                name="Regulation",
+                na.value=NA,
+                drop=FALSE # Keep both up/down if only one direction enriched
             ) +
 
             scale_fill_continuous(
-                name = expression(P[adjusted]),
-                limits = c(0, 50),
-                breaks = c(10, 20, 30, 40, 50),
-                labels = c(
+                name=expression(P[adjusted]),
+                limits=c(0, 50),
+                breaks=c(10, 20, 30, 40, 50),
+                labels=c(
                     expression(10 ^ -10),
                     expression(10 ^ -20),
                     expression(10 ^ -30),
                     expression(10 ^ -40),
                     expression(10 ^ -50)
                 ),
-                low = "blue",
-                high = "red",
-                na.value = NA
+                low="blue",
+                high="red",
+                na.value=NA
             ) +
 
             ## Can also add lines to separate different groups
-            {if (!is.na(intercepts[1])) geom_vline(xintercept = intercepts)} +
-            labs(x = NULL, y = NULL) +
+            {if (!is.na(intercepts[1])) geom_vline(xintercept=intercepts)} +
+            labs(x=NULL, y=NULL) +
 
             theme_bw() +
             theme(
-                strip.text.x = element_text(
-                    size = 12, face = "bold", colour = "black"
+                strip.text.x=element_text(
+                    size=12, face="bold", colour="black"
                 ),
-                legend.text = element_text(size = 12 * legendMultiply),
-                legend.title = element_text(size = 13 * legendMultiply),
-                axis.text.y = element_text(
-                    face = "bold", colour = "black", size = 12
+                legend.text=element_text(size=12 * legendMultiply),
+                legend.title=element_text(size=13 * legendMultiply),
+                axis.text.y=element_text(
+                    face="bold", colour="black", size=12
                 ),
-                axis.text.x = element_text(
-                    face = "bold",
-                    colour = "black",
-                    size = 12,
-                    angle = angle,
-                    hjust = hjust,
-                    vjust = vjust
+                axis.text.x=element_text(
+                    face="bold",
+                    colour="black",
+                    size=12,
+                    angle=angle,
+                    hjust=hjust,
+                    vjust=vjust
                 )
             ) +
             guides(
-                shape = guide_legend(
-                    override.aes = list(size = 5 * legendMultiply)
+                shape=guide_legend(
+                    override.aes=list(size=5 * legendMultiply)
                 ),
-                size  = guide_legend(
-                    override.aes = list(shape = 24, fill = "black")
+                size =guide_legend(
+                    override.aes=list(shape=24, fill="black")
                 )
             )
         plotlist <- append(plotlist, list(plot))
@@ -384,11 +384,11 @@ plotPathways <- function(
 
     if (columns > 1) {
         plot <- ggarrange(
-            plotlist = plotlist,
-            ncol = columns,
-            common.legend = TRUE,
-            legend = "right",
-            align = "v"
+            plotlist=plotlist,
+            ncol=columns,
+            common.legend=TRUE,
+            legend="right",
+            align="v"
         )
         return(plot)
     } else {

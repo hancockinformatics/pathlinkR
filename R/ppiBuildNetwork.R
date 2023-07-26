@@ -48,28 +48,28 @@
 #'
 #' @examples
 #' ppiBuildNetwork(
-#'     deseqResults = deseqExampleList[[1]],
-#'     filterInput = TRUE,
-#'     order = "zero"
+#'     deseqResults=deseqExampleList[[1]],
+#'     filterInput=TRUE,
+#'     order="zero"
 #' )
 #'
 ppiBuildNetwork <- function(
         deseqResults,
-        filterInput = TRUE,
-        pCutoff = 0.05,
-        fcCutoff = 1.5,
-        order = "zero",
-        hubMeasure = "betweenness",
-        ppiData = innateDbExp
+        filterInput=TRUE,
+        pCutoff=0.05,
+        fcCutoff=1.5,
+        order="zero",
+        hubMeasure="betweenness",
+        ppiData=innateDbExp
 ) {
 
     stopifnot(is(deseqResults, "data.frame"))
-    stopifnot(grepl(pattern = "ENSG", x = rownames(deseqResults)[1]))
+    stopifnot(grepl(pattern="ENSG", x=rownames(deseqResults)[1]))
     stopifnot(all(c("padj", "log2FoldChange") %in% colnames(deseqResults)))
     stopifnot(order %in% c("zero", "first", "minSimple", "minSteiner"))
     stopifnot(hubMeasure %in% c("betweenness", "degree", "hubscore"))
     stopifnot(
-        "'ppiData' must have columns 'ensemblGeneA', 'ensemblGeneB'" = all(
+        "'ppiData' must have columns 'ensemblGeneA', 'ensemblGeneB'"=all(
             c("ensemblGeneA", "ensemblGeneB") %in% colnames(ppiData)
         )
     )
@@ -94,7 +94,7 @@ ppiBuildNetwork <- function(
 
     ## Check for and remove any duplicate IDs, warning the user when this occurs
     message("Cleaning the input data...")
-    dfClean <- distinct(df, gene, .keep_all = TRUE)
+    dfClean <- distinct(df, gene, .keep_all=TRUE)
     geneVector <- unique(dfClean[["gene"]])
 
     lostIds <- df[["gene"]][duplicated(df[["gene"]])]
@@ -109,15 +109,15 @@ ppiBuildNetwork <- function(
 
         if (numDups <= 10) {
             message(str_wrap(
-                paste(lostIds, collapse = ", "),
-                indent = 2,
-                exdent = 2
+                paste(lostIds, collapse=", "),
+                indent=2,
+                exdent=2
             ))
         } else {
             message(str_wrap(
-                paste0(paste(lostIds[seq_len(10)], collapse = ", "), "..."),
-                indent = 2,
-                exdent = 2
+                paste0(paste(lostIds[seq_len(10)], collapse=", "), "..."),
+                indent=2,
+                exdent=2
             ))
         }
     }
@@ -137,13 +137,13 @@ ppiBuildNetwork <- function(
 
     message("Creating the network...")
     networkInit <- edgeTable %>%
-        as_tbl_graph(directed = FALSE) %>%
+        as_tbl_graph(directed=FALSE) %>%
         ppiRemoveSubnetworks() %>%
         as_tbl_graph() %>%
         mutate(
-            degree = centrality_degree(),
-            betweenness = centrality_betweenness(),
-            seed = (name %in% geneVector)
+            degree=centrality_degree(),
+            betweenness=centrality_betweenness(),
+            seed=(name %in% geneVector)
         ) %>%
         select(-comp)
 
@@ -158,8 +158,8 @@ ppiBuildNetwork <- function(
                 !(betweenness == 0 & !seed)
             ) %>%
             mutate(
-                degree = centrality_degree(),
-                betweenness = centrality_betweenness()
+                degree=centrality_degree(),
+                betweenness=centrality_betweenness()
             )
 
     } else if (order == "minSteiner") {
@@ -171,17 +171,17 @@ ppiBuildNetwork <- function(
             intersect(geneVector)
 
         networkOut1 <- steinertree(
-            type      = "SP",
-            terminals = terminals,
-            graph     = networkInit,
-            color     = FALSE
+            type="SP",
+            terminals=terminals,
+            graph=networkInit,
+            color=FALSE
         ) %>%
             .[[1]] %>%
-            as_tbl_graph(directed = FALSE) %>%
+            as_tbl_graph(directed=FALSE) %>%
             select(-color) %>%
             mutate(
-                degree = centrality_degree(),
-                betweenness = centrality_betweenness()
+                degree=centrality_degree(),
+                betweenness=centrality_betweenness()
             )
 
     } else {
@@ -190,11 +190,11 @@ ppiBuildNetwork <- function(
 
     networkOut2 <-
         if (hubMeasure == "betweenness") {
-            networkOut1 %>% mutate(hubScoreBtw = betweenness)
+            networkOut1 %>% mutate(hubScoreBtw=betweenness)
         } else if (hubMeasure == "degree") {
-            networkOut1 %>% mutate(hubScoreDeg = degree)
+            networkOut1 %>% mutate(hubScoreDeg=degree)
         } else if (hubMeasure == "hubscore") {
-            networkOut1 %>% mutate(hubScoreHub = centrality_hub())
+            networkOut1 %>% mutate(hubScoreHub=centrality_hub())
         }
 
     if (nrow(as_tibble(networkOut2)) > 2000) {
@@ -207,16 +207,16 @@ ppiBuildNetwork <- function(
     message("Mapping input Ensembl IDs to HGNC symbols...")
     networkMapped <- left_join(
         networkOut2,
-        select(mappingFile, "name" = ensemblGeneId, hgncSymbol),
-        by = "name",
-        multiple = "all"
+        select(mappingFile, "name"=ensemblGeneId, hgncSymbol),
+        by="name",
+        multiple="all"
     )
 
     networkFinal <- left_join(
         networkMapped,
         dfClean,
-        by = c("name" = "gene"),
-        multiple = "all"
+        by=c("name"="gene"),
+        multiple="all"
     )
 
     attr(networkFinal, "order") <- order

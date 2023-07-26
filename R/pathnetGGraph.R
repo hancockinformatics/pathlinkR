@@ -46,41 +46,41 @@
 #'
 #' @examples
 #' startingPathways <- createFoundation(
-#'     mat = pathwayDistancesJaccard,
-#'     maxDistance = 0.8
+#'     mat=pathwayDistancesJaccard,
+#'     maxDistance=0.8
 #' )
 #'
 #' exPathnet <- createPathnet(
-#'     sigoraResult = dplyr::filter(
+#'     sigoraResult=dplyr::filter(
 #'         sigoraExamples,
 #'         comparison == "COVID Pos Over Time"
 #'     ),
-#'     foundation = startingPathways,
-#'     trim = TRUE,
-#'     trimOrder = 1
+#'     foundation=startingPathways,
+#'     trim=TRUE,
+#'     trimOrder=1
 #' )
 #'
 #' pathnetGGraph(
 #'     exPathnet,
-#'     labelProp = 0.1,
-#'     nodeLabelSize = 4,
-#'     nodeLabelOverlaps = 8,
-#'     segColour = "red"
+#'     labelProp=0.1,
+#'     nodeLabelSize=4,
+#'     nodeLabelOverlaps=8,
+#'     segColour="red"
 #' )
 #'
 pathnetGGraph <- function(
         network,
-        networkLayout = "nicely",
-        nodeSizeRange = c(4, 8),
-        edgeColour = "grey30",
-        edgeAlpha = 1,
-        edgeWidthRange = c(0.33, 3),
-        labelProp = 0.25,
-        nodeLabelSize = 5,
-        nodeLabelAlpha = 0.67,
-        nodeLabelOverlaps = 6,
-        segColour = "black",
-        themeBaseSize = 16
+        networkLayout="nicely",
+        nodeSizeRange=c(4, 8),
+        edgeColour="grey30",
+        edgeAlpha=1,
+        edgeWidthRange=c(0.33, 3),
+        labelProp=0.25,
+        nodeLabelSize=5,
+        nodeLabelAlpha=0.67,
+        nodeLabelOverlaps=6,
+        segColour="black",
+        themeBaseSize=16
 ) {
     ## Check column names for both nodes and edges
     stopifnot(all(
@@ -103,89 +103,89 @@ pathnetGGraph <- function(
 
     interactorsToLabel <- sample(
         interactorsAll,
-        size = (length(interactorsAll) * labelProp),
-        replace = FALSE
+        size=(length(interactorsAll) * labelProp),
+        replace=FALSE
     )
 
     networkToPlot <- network %>% mutate(
-        nodeFill = if_else(
+        nodeFill=if_else(
             !is.na(pValueAdjusted),
             groupedPathway,
             NA_character_
         ),
-        nodeLabel = case_when(
+        nodeLabel=case_when(
             !is.na(pValueAdjusted) ~ pathwayName1,
             pathwayName1 %in% interactorsToLabel ~ pathwayName1,
             TRUE ~ NA_character_
         ),
-        nodeLabel = map_chr(
+        nodeLabel=map_chr(
             nodeLabel,
-            ~.truncNeatly(.x, l = 40) %>% str_wrap(width = 20)
+            ~.truncNeatly(.x, l=40) %>% str_wrap(width=20)
         ),
-        pValueAdjusted = if_else(
+        pValueAdjusted=if_else(
             !is.na(pValueAdjusted),
             pValueAdjusted,
             1
         )
     )
 
-    ggraph(networkToPlot, layout = networkLayout) +
+    ggraph(networkToPlot, layout=networkLayout) +
         ## Edges
         geom_edge_link(
-            aes(edge_width = log10(similarity)),
-            colour = edgeColour,
-            alpha = edgeAlpha
+            aes(edge_width=log10(similarity)),
+            colour=edgeColour,
+            alpha=edgeAlpha
         ) +
-        scale_edge_width(range = edgeWidthRange, name = "Similarity") +
+        scale_edge_width(range=edgeWidthRange, name="Similarity") +
 
         ## Nodes
         geom_node_point(
             aes(
-                size = -log10(pValueAdjusted),
-                fill = nodeFill,
-                colour = groupedPathway
+                size=-log10(pValueAdjusted),
+                fill=nodeFill,
+                colour=groupedPathway
             ),
-            pch = 21,
-            stroke = 1.5
+            pch=21,
+            stroke=1.5
         ) +
         scale_size_continuous(
-            labels = scales::label_math(expr = 10^-~.x),
-            range = nodeSizeRange
+            labels=scales::label_math(expr=10^-~.x),
+            range=nodeSizeRange
         ) +
         scale_fill_manual(
-            values = groupedPathwayColours,
-            na.value = "white",
-            guide = NULL
+            values=groupedPathwayColours,
+            na.value="white",
+            guide=NULL
         ) +
-        scale_colour_manual(values = groupedPathwayColours) +
+        scale_colour_manual(values=groupedPathwayColours) +
 
         ## Node labels
         geom_node_label(
-            aes(label = nodeLabel),
-            repel = TRUE,
-            size = nodeLabelSize,
-            alpha = nodeLabelAlpha,
-            min.segment.length = 0,
-            segment.colour = segColour,
-            max.overlaps = nodeLabelOverlaps
+            aes(label=nodeLabel),
+            repel=TRUE,
+            size=nodeLabelSize,
+            alpha=nodeLabelAlpha,
+            min.segment.length=0,
+            segment.colour=segColour,
+            max.overlaps=nodeLabelOverlaps
         ) +
 
         ## Misc
         labs(
-            size = "Bonferroni\np-value",
-            colour = "Pathway type"
+            size="Bonferroni\np-value",
+            colour="Pathway type"
         ) +
-        theme_void(base_size = themeBaseSize) +
+        theme_void(base_size=themeBaseSize) +
         theme(
-            legend.text.align = 0,
-            plot.margin = unit(rep(5, 4), "mm")
+            legend.text.align=0,
+            plot.margin=unit(rep(5, 4), "mm")
         ) +
         guides(
-            colour = guide_legend(override.aes = list(size = 5, pch = 19)),
-            size = guide_legend(override.aes = list(
-                colour = "black",
-                fill = "white",
-                stroke = 0.5
+            colour=guide_legend(override.aes=list(size=5, pch=19)),
+            size=guide_legend(override.aes=list(
+                colour="black",
+                fill="white",
+                stroke=0.5
             ))
         )
 }

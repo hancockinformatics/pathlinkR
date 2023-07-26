@@ -38,61 +38,61 @@
 #'
 #' @examples
 #' startingPathways <- createFoundation(
-#'     mat = pathwayDistancesJaccard,
-#'     maxDistance = 0.8
+#'     mat=pathwayDistancesJaccard,
+#'     maxDistance=0.8
 #' )
 #'
 #' exPathnet <- createPathnet(
-#'     sigoraResult = dplyr::filter(
+#'     sigoraResult=dplyr::filter(
 #'         sigoraExamples,
 #'         comparison == "COVID Pos Over Time"
 #'     ),
-#'     foundation = startingPathways,
-#'     trim = TRUE,
-#'     trimOrder = 1
+#'     foundation=startingPathways,
+#'     trim=TRUE,
+#'     trimOrder=1
 #' )
 #'
 #' pathnetVisNetwork(exPathnet)
 #'
 pathnetVisNetwork <- function(
         network,
-        networkLayout = "layout_nicely",
-        edgeColour = "#848484",
-        edgeSizeRange = c(5, 20),
-        nodeSizeRange = c(20, 50),
-        nodeBorderWidth = 2.5,
-        labelNodes = TRUE,
-        nodeLabelSize = 60,
-        nodeLabelColour = "black",
-        highlighting = TRUE
+        networkLayout="layout_nicely",
+        edgeColour="#848484",
+        edgeSizeRange=c(5, 20),
+        nodeSizeRange=c(20, 50),
+        nodeBorderWidth=2.5,
+        labelNodes=TRUE,
+        nodeLabelSize=60,
+        nodeLabelColour="black",
+        highlighting=TRUE
 ) {
     visNetNodes <- network %>%
         as_tibble() %>%
         mutate(
-            id = row_number(),
-            value = if_else(
+            id=row_number(),
+            value=if_else(
                 is.na(pValueAdjusted),
                 1,
                 -log10(pValueAdjusted)
             ),
-            background = map_chr(
+            background=map_chr(
                 groupedPathway, ~groupedPathwayColours[[.x]]
             ),
-            background = if_else(
+            background=if_else(
                 !is.na(pValueAdjusted),
                 background,
                 "#ffffff"
             ),
-            border = map_chr(groupedPathway, ~groupedPathwayColours[[.x]]),
-            color = map2(
+            border=map_chr(groupedPathway, ~groupedPathwayColours[[.x]]),
+            color=map2(
                 background,
                 border,
-                ~list("background" = .x, "border" = .y)
+                ~list("background"=.x, "border"=.y)
             )
         ) %>%
         select(
             id,
-            "title" = pathwayName1,
+            "title"=pathwayName1,
             everything(),
             -any_of(c(
                 "background", "border", "direction", "pathwayName", "pValue"
@@ -102,7 +102,7 @@ pathnetVisNetwork <- function(
     if (labelNodes) {
         visNetNodes <- mutate(
             visNetNodes,
-            label = map_chr(
+            label=map_chr(
                 if_else(!is.na(pValueAdjusted), title, ""),
                 .truncNeatly,
                 30
@@ -113,49 +113,49 @@ pathnetVisNetwork <- function(
     visnetEdges <- network %>%
         activate("edges") %>%
         as_tibble() %>%
-        rename("value" = similarity) %>%
+        rename("value"=similarity) %>%
         distinct()
 
     legendDf <- groupedPathwayColours %>%
         enframe("label", "icon.color") %>%
-        mutate(shape = "dot", size = 15)
+        mutate(shape="dot", size=15)
 
-    out1 <- visNetwork(nodes = visNetNodes, edges = visnetEdges) %>%
-        visIgraphLayout(layout = networkLayout) %>%
+    out1 <- visNetwork(nodes=visNetNodes, edges=visnetEdges) %>%
+        visIgraphLayout(layout=networkLayout) %>%
         visEdges(
-            color = edgeColour,
-            scaling = list(
-                "min" = edgeSizeRange[1],
-                "max" = edgeSizeRange[2]
+            color=edgeColour,
+            scaling=list(
+                "min"=edgeSizeRange[1],
+                "max"=edgeSizeRange[2]
             )
         ) %>%
         visNodes(
-            borderWidth = nodeBorderWidth,
-            scaling = list(
-                "min" = nodeSizeRange[1],
-                "max" = nodeSizeRange[2]
+            borderWidth=nodeBorderWidth,
+            scaling=list(
+                "min"=nodeSizeRange[1],
+                "max"=nodeSizeRange[2]
             )
         ) %>%
         visOptions(
-            highlightNearest = highlighting,
-            selectedBy = list(
-                "variable" = "groupedPathway",
-                "style" = "width: 175px; height: 26px",
-                "main" = "Select pathway group"
+            highlightNearest=highlighting,
+            selectedBy=list(
+                "variable"="groupedPathway",
+                "style"="width: 175px; height: 26px",
+                "main"="Select pathway group"
             )
         ) %>%
         visLegend(
-            stepY = 75,
-            useGroups = FALSE,
-            position = "right",
-            main = "Grouped pathway",
-            addNodes = legendDf,
+            stepY=75,
+            useGroups=FALSE,
+            position="right",
+            main="Grouped pathway",
+            addNodes=legendDf,
         ) %>%
-        visExport(float = "right")
+        visExport(float="right")
 
     if (labelNodes) {
         out1 %>%
-            visNodes(font = paste0(
+            visNodes(font=paste0(
                 nodeLabelSize,
                 "px arial ",
                 nodeLabelColour

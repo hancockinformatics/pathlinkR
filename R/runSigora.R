@@ -20,8 +20,8 @@
 #'
 .runSigora <- function(
         enrichGenes,
-        gpsRepo = reaH,
-        pValFilter = NA
+        gpsRepo=reaH,
+        pValFilter=NA
 ) {
 
     stopifnot(
@@ -33,17 +33,17 @@
 
     stopifnot(
         "Your input vector doesn't look like Ensembl genes." = {
-            any(grepl(pattern = "^ENSG", enrichGenes))
+            any(grepl(pattern="^ENSG", enrichGenes))
         }
     )
 
-    ## Run SIGORA based on default settings (GPSrepo = reaH, level = 4)
+    ## Run SIGORA based on default settings (GPSrepo=reaH, level=4)
     invisible(capture.output(
         sigoraResult1 <- sigora(
-            GPSrepo = gpsRepo,
-            level = 4,
-            markers = TRUE,
-            queryList = enrichGenes
+            GPSrepo=gpsRepo,
+            level=4,
+            markers=TRUE,
+            queryList=enrichGenes
         )
     ))
 
@@ -61,14 +61,14 @@
     sigoraDetailedList1 <- sigoraResult1$detailed_results %>%
         as_tibble() %>%
         select(pathway, contains("gene")) %>%
-        split(x = ., f = .$pathway)
+        split(x=., f=.$pathway)
 
     sigoraDetailedList2 <- sigoraDetailedList1 %>% imap(
         ~tibble(
-            pathwy.id = .y,
-            EntrezGene.ID = unique(c(pull(.x, gene1), pull(.x, gene2)))
+            pathwy.id=.y,
+            EntrezGene.ID=unique(c(pull(.x, gene1), pull(.x, gene2)))
         ) %>%
-            left_join(idmap, by = "EntrezGene.ID", multiple = "all") %>%
+            left_join(idmap, by="EntrezGene.ID", multiple="all") %>%
             filter(Ensembl.Gene.ID %in% enrichGenes, Symbol != "^$") %>%
             select(pathwy.id, Symbol) %>%
             mutate(across(everything(), as.character)) %>%
@@ -77,23 +77,23 @@
     ) %>%
         bind_rows() %>%
         group_by(pathwy.id) %>%
-        summarize(genes = paste0(Symbol, collapse = ";")) %>%
-        mutate(numCandidateGenes = 1 + str_count(genes, ";")) %>%
+        summarize(genes=paste0(Symbol, collapse=";")) %>%
+        mutate(numCandidateGenes=1 + str_count(genes, ";")) %>%
         ungroup() %>%
-        mutate(geneRatio = numCandidateGenes / nGenes)
+        mutate(geneRatio=numCandidateGenes / nGenes)
 
     left_join(
         sigoraResult2,
         sigoraDetailedList2,
-        by = "pathwy.id",
-        multiple = "all"
+        by="pathwy.id",
+        multiple="all"
     ) %>%
-        mutate(numBgGenes = nGenes) %>%
+        mutate(numBgGenes=nGenes) %>%
         select(
-            "pathwayId" = pathwy.id,
-            "pathwayName" = description,
-            "pValue" = pvalues,
-            "pValueAdjusted" = Bonferroni,
+            "pathwayId"=pathwy.id,
+            "pathwayName"=description,
+            "pValue"=pvalues,
+            "pValueAdjusted"=Bonferroni,
             genes,
             numCandidateGenes,
             numBgGenes,

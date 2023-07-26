@@ -32,22 +32,22 @@
 #'
 #' @examples
 #' startingPathways <- createFoundation(
-#'     mat = pathwayDistancesJaccard,
-#'     maxDistance = 0.8
+#'     mat=pathwayDistancesJaccard,
+#'     maxDistance=0.8
 #' )
 #'
 #' createPathnet(
-#'     sigoraResult = sigoraExamples[grepl("Pos", sigoraExamples$comparison), ],
-#'     foundation = startingPathways,
-#'     trim = TRUE,
-#'     trimOrder = 1
+#'     sigoraResult=sigoraExamples[grepl("Pos", sigoraExamples$comparison), ],
+#'     foundation=startingPathways,
+#'     trim=TRUE,
+#'     trimOrder=1
 #' )
 #'
 createPathnet <- function(
         sigoraResult,
         foundation,
-        trim = TRUE,
-        trimOrder = 1
+        trim=TRUE,
+        trimOrder=1
 ) {
 
     ## Input checks
@@ -72,20 +72,20 @@ createPathnet <- function(
         distinct() %>%
         left_join(
             sigoraResult,
-            by = c("pathway1" = "pathwayId"),
-            multiple = "all"
+            by=c("pathway1" = "pathwayId"),
+            multiple="all"
         )
 
     startingEdges <- foundation %>%
-        mutate(similarity = 1 / distance) %>%
+        mutate(similarity=1 / distance) %>%
         select(pathway1, pathway2, similarity, distance)
 
     pathwaysAsNetwork <- tbl_graph(
-        nodes = startingNodes,
-        edges = startingEdges,
-        directed = FALSE
+        nodes=startingNodes,
+        edges=startingEdges,
+        directed=FALSE
     ) %>%
-        mutate(rn = row_number())
+        mutate(rn=row_number())
 
     pathwaysAsNetwork2 <- if (trim) {
         x1 <- pathwaysAsNetwork %>%
@@ -93,9 +93,9 @@ createPathnet <- function(
             pull(rn)
 
         validNodes <- map(x1, ~neighborhood(
-            graph = as.igraph(pathwaysAsNetwork),
-            order = trimOrder,
-            nodes = .x
+            graph=as.igraph(pathwaysAsNetwork),
+            order=trimOrder,
+            nodes=.x
         )) %>%
             unlist() %>%
             unique()
@@ -114,12 +114,12 @@ createPathnet <- function(
 
     pathwaysAsNetwork4 <- pathwaysAsNetwork3 %>%
         left_join(
-            y  = select(
+            y =select(
                 topPathwaysMore, pathwayId,
                 pathwayName, groupedPathway
             ),
-            by = c("pathway1" = "pathwayId"),
-            multiple = "all"
+            by=c("pathway1" = "pathwayId"),
+            multiple="all"
         ) %>%
         select(
             pathway1,

@@ -30,16 +30,16 @@
 #'
 #' @examples
 #' getPathwayDistances(
-#'     pathwayData = dplyr::slice_head(
+#'     pathwayData=dplyr::slice_head(
 #'         dplyr::arrange(sigoraDatabase, pathwayId),
-#'         prop = 0.25
+#'         prop=0.25
 #'     ),
-#'     distMethod = "jaccard"
+#'     distMethod="jaccard"
 #' )
 #'
 getPathwayDistances <- function(
-        pathwayData = sigoraDatabase,
-        distMethod = "jaccard"
+        pathwayData=sigoraDatabase,
+        distMethod="jaccard"
 ) {
 
     ## Input checks
@@ -74,11 +74,11 @@ getPathwayDistances <- function(
     identityTable <- pathwayData %>%
         select(all_of(c(geneIdCol, pathwayIdCol))) %>%
         distinct() %>%
-        mutate(present = 1) %>%
+        mutate(present=1) %>%
         pivot_wider(
-            id_cols     = all_of(pathwayIdCol),
-            names_from  = all_of(geneIdCol),
-            values_from = "present"
+            id_cols=all_of(pathwayIdCol),
+            names_from =all_of(geneIdCol),
+            values_from="present"
         ) %>%
         replace(is.na(.), 0) %>%
         column_to_rownames(pathwayIdCol) %>%
@@ -92,9 +92,9 @@ getPathwayDistances <- function(
 
     distanceMatrix <- as.matrix(vegdist(
         identityTable,
-        method = "jaccard",
-        binary = TRUE,
-        diag = TRUE
+        method="jaccard",
+        binary=TRUE,
+        diag=TRUE
     ))
 
     message("Done!\n")

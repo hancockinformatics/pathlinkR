@@ -40,7 +40,7 @@
 #' @param labelColour Colour of node labels, defaults to "black"
 #' @param hubColour Colour of node labels for hubs. The top 2% of nodes
 #'   (based on calculated hub score) are highlighted with this colour, if
-#'   `label = TRUE`.
+#'   `label=TRUE`.
 #' @param labelFace Font face for node labels, defaults to "bold"
 #' @param labelPadding Padding around the label, defaults to 0.25 lines.
 #' @param minSegLength Minimum length of lines to be drawn from labels to
@@ -85,46 +85,46 @@
 #'
 #' @examples
 #' exNetwork <- ppiBuildNetwork(
-#'     deseqResults = deseqExampleList[[1]],
-#'     filterInput = TRUE,
-#'     order = "zero"
+#'     deseqResults=deseqExampleList[[1]],
+#'     filterInput=TRUE,
+#'     order="zero"
 #' )
 #'
 #' ppiPlotNetwork(
 #'     exNetwork,
-#'     fillColumn = log2FoldChange,
-#'     fillType = "foldChange",
-#'     layout = "lgl",
-#'     label = TRUE,
-#'     labelColumn = hgncSymbol,
-#'     labelFilter = 5,
-#'     legend = TRUE
+#'     fillColumn=log2FoldChange,
+#'     fillType="foldChange",
+#'     layout="lgl",
+#'     label=TRUE,
+#'     labelColumn=hgncSymbol,
+#'     labelFilter=5,
+#'     legend=TRUE
 #' )
 #'
 ppiPlotNetwork <- function(
         network,
         fillColumn,
         fillType,
-        catFillColours    = "Set1",
-        layout            = "kk",
-        legend            = FALSE,
-        fontfamily        = "Helvetica",
-        edgeColour        = "grey40",
-        edgeAlpha         = 0.5,
-        edgeWidth         = 0.5,
-        nodeSize          = c(3, 9),
-        nodeColour        = "grey30",
-        intColour         = "grey70",
-        foldChangeColours = c("firebrick3", "#188119"),
-        label             = FALSE,
+        catFillColours="Set1",
+        layout="kk",
+        legend=FALSE,
+        fontfamily="Helvetica",
+        edgeColour="grey40",
+        edgeAlpha=0.5,
+        edgeWidth=0.5,
+        nodeSize=c(3, 9),
+        nodeColour="grey30",
+        intColour="grey70",
+        foldChangeColours=c("firebrick3", "#188119"),
+        label=FALSE,
         labelColumn,
-        labelFilter       = 0,
-        labelSize         = 5,
-        labelColour       = "black",
-        hubColour         = "blue2",
-        labelFace         = "bold",
-        labelPadding      = 0.25,
-        minSegLength      = 0.25,
+        labelFilter=0,
+        labelSize=5,
+        labelColour="black",
+        hubColour="blue2",
+        labelFace="bold",
+        labelPadding=0.25,
+        minSegLength=0.25,
         ...
 ) {
 
@@ -135,7 +135,7 @@ ppiPlotNetwork <- function(
         stopifnot(is.numeric(pull(network, {{fillColumn}})))
 
         network <- network %>% mutate(
-            newFillCol = case_when(
+            newFillCol=case_when(
                 {{fillColumn}} < 0 ~ "Down",
                 {{fillColumn}} > 0 ~ "Up",
                 TRUE ~ NA_character_
@@ -143,56 +143,56 @@ ppiPlotNetwork <- function(
         )
 
         networkFillGeom <- scale_fill_manual(
-            values   = c(
-                "Up" = foldChangeColours[1],
-                "Down" = foldChangeColours[2]
+            values  =c(
+                "Up"=foldChangeColours[1],
+                "Down"=foldChangeColours[2]
             ),
-            na.value = intColour
+            na.value=intColour
         )
 
         networkFillGuide <- guides(
-            fill = guide_legend(
-                title = "Direction",
-                override.aes = list(size = 5)
+            fill=guide_legend(
+                title="Direction",
+                override.aes=list(size=5)
             )
         )
 
     } else if (fillType == "twoSided") {
 
-        network <- mutate(network, newFillCol = {{fillColumn}})
+        network <- mutate(network, newFillCol={{fillColumn}})
         networkFillGeom <- scale_fill_gradient2(
-            low  = "#313695",
-            mid  = "white",
-            high = "#a50026",
-            midpoint = 0,
-            na.value = intColour,
-            guide    = ifelse(legend, "colourbar", "none")
+            low="#313695",
+            mid="white",
+            high="#a50026",
+            midpoint=0,
+            na.value=intColour,
+            guide=ifelse(legend, "colourbar", "none")
         )
         networkFillGuide <- NULL
 
     } else if (fillType == "oneSided") {
 
-        network <- mutate(network, newFillCol = {{fillColumn}})
+        network <- mutate(network, newFillCol={{fillColumn}})
         networkFillGeom <- scale_fill_viridis_c(
-            option = "plasma", begin = 0.2
+            option="plasma", begin=0.2
         )
         networkFillGuide <- NULL
 
     } else if (fillType == "categorical") {
 
-        network <- mutate(network, newFillCol = {{fillColumn}})
+        network <- mutate(network, newFillCol={{fillColumn}})
 
         if (all(catFillColours == "Set1")) {
             networkFillGeom <- scale_fill_brewer(
-                palette  = "Set1",
-                na.value = intColour,
-                guide    = ifelse(legend, "legend", "none")
+                palette ="Set1",
+                na.value=intColour,
+                guide   =ifelse(legend, "legend", "none")
             )
         } else {
-            networkFillGeom <- scale_fill_manual(values = catFillColours)
+            networkFillGeom <- scale_fill_manual(values=catFillColours)
         }
         networkFillGuide <-
-            guides(fill = guide_legend(override.aes = list(size = 5)))
+            guides(fill=guide_legend(override.aes=list(size=5)))
 
     } else {
         stop(
@@ -212,85 +212,85 @@ ppiPlotNetwork <- function(
     }
 
     ## Set a plain white background
-    set_graph_style(foreground = "white")
+    set_graph_style(foreground="white")
 
     ## Theme tweaks for all plot types
     themeTweaks <- theme(
-        text         = element_text(family = fontfamily),
-        plot.margin  = unit(rep(0, 4), "cm"),
-        legend.title = element_text(size = 16),
-        legend.text  = element_text(size = 14),
+        text=element_text(family=fontfamily),
+        plot.margin=unit(rep(0, 4), "cm"),
+        legend.title=element_text(size=16),
+        legend.text=element_text(size=14),
         ...
     )
 
     if (!label) {
-        ggraph(network, layout = layoutObject) +
+        ggraph(network, layout=layoutObject) +
             geom_edge_link(
-                show.legend = FALSE,
-                edge_alpha = edgeAlpha,
-                edge_colour = edgeColour,
-                edge_width = edgeWidth
+                show.legend=FALSE,
+                edge_alpha=edgeAlpha,
+                edge_colour=edgeColour,
+                edge_width=edgeWidth
             ) +
             geom_node_point(
-                aes(size = degree, fill = newFillCol),
-                pch = 21,
-                colour = nodeColour
+                aes(size=degree, fill=newFillCol),
+                pch=21,
+                colour=nodeColour
             ) +
             networkFillGeom +
-            scale_size_continuous(range = nodeSize, guide = "none") +
-            labs(fill = NULL) +
+            scale_size_continuous(range=nodeSize, guide="none") +
+            labs(fill=NULL) +
             themeTweaks +
             networkFillGuide
 
     } else {
 
         hubNodes <- as_tibble(network) %>%
-            rename("hubScore" = starts_with("hubScore")) %>%
+            rename("hubScore"=starts_with("hubScore")) %>%
             arrange(desc(hubScore)) %>%
-            slice_head(n = 3 + ceiling(nrow(as_tibble(network)) * 0.01)) %>%
+            slice_head(n=3 + ceiling(nrow(as_tibble(network)) * 0.01)) %>%
             pull(name)
 
         networkLabeled <- network %>% mutate(
-            nodeLabel = case_when(
+            nodeLabel=case_when(
                 degree > labelFilter ~ {{labelColumn}},
                 TRUE ~ NA_character_
             ),
-            isHub = case_when(
+            isHub=case_when(
                 name %in% hubNodes ~ "y",
                 TRUE ~ "n"
             )
         )
 
-        ggraph(networkLabeled, layout = layoutObject) +
+        ggraph(networkLabeled, layout=layoutObject) +
             geom_edge_link(
-                show.legend = FALSE,
-                edge_alpha = edgeAlpha,
-                edge_colour = edgeColour,
-                edge_width = edgeWidth
+                show.legend=FALSE,
+                edge_alpha=edgeAlpha,
+                edge_colour=edgeColour,
+                edge_width=edgeWidth
             ) +
             geom_node_point(
-                aes(size = degree, fill = newFillCol),
-                pch = 21,
-                colour = nodeColour
+                aes(size=degree, fill=newFillCol),
+                pch=21,
+                colour=nodeColour
             ) +
             networkFillGeom +
-            scale_size_continuous(range = nodeSize, guide = "none") +
-            labs(fill = NULL) +
+            scale_size_continuous(range=nodeSize, guide="none") +
+            labs(fill=NULL) +
             themeTweaks +
             networkFillGuide +
             geom_node_text(
-                aes(label = nodeLabel, colour = isHub),
-                size          = labelSize,
-                repel         = TRUE,
-                family        = fontfamily,
-                fontface      = labelFace,
-                check_overlap = TRUE,
-                show.legend   = FALSE,
-                box.padding   = labelPadding,
-                min.segment.length = minSegLength
+                aes(label=nodeLabel, colour=isHub),
+                size=labelSize,
+                repel=TRUE,
+                family=fontfamily,
+                fontface=labelFace,
+                check_overlap=TRUE,
+                show.legend=FALSE,
+                box.padding=labelPadding,
+                min.segment.length=minSegLength
             ) +
             scale_colour_manual(
-                values = c("y" = hubColour, "n" = labelColour)
+                values=c("y"=hubColour, "n"=labelColour)
             )
     }
 }
