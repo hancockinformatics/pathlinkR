@@ -40,7 +40,8 @@
 #'
 #' @import dplyr
 #' @import ggplot2
-#' @import ggrepel
+#' @import stringr
+#' @importFrom ggrepel geom_text_repel
 #'
 #' @description Creates a volcano plot of genes output from `DESeq2::results()`,
 #'   with various options for tweaking the appearance. Ensembl gene IDs should
@@ -285,8 +286,8 @@ eruption <- function(
         ) +
 
         ## Set axes
-        {if(!is.na(yaxis[1])) ylim(yaxis)} +
-        {if(!is.na(xaxis[1])) xlim(xaxis)} +
+        {if (!is.na(yaxis[1])) ylim(yaxis)} +
+        {if (!is.na(xaxis[1])) xlim(xaxis)} +
 
         ## Add in labels to the genes
         geom_text_repel(
@@ -304,7 +305,7 @@ eruption <- function(
 
         ## Add in informative subtitles for number of up and down-regulated
         ## genes, the number of genes in "selectGenes," and a title if provided
-        {if(!is.na(title)) labs(title = title)} +
+        {if (!is.na(title)) labs(title = title)} +
 
         ## If there are no "selectGenes"
         {

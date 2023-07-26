@@ -208,7 +208,7 @@ plotPathways <- function(
     ## How many pathways per top pathway? Add 1 to account for the extra space
     ## the facet takes up.
     numPathways <- enrichedResultsClean %>%
-        dplyr::select(topPathways, pathwayName) %>%
+        select(topPathways, pathwayName) %>%
         unique() %>%
         group_by(topPathways) %>%
         summarise(pathways = n() + 1)

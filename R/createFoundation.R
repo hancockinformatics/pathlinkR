@@ -12,8 +12,9 @@
 #' @export
 #'
 #' @import dplyr
-#' @import tibble
+#' @import stringr
 #' @import tidyr
+#' @importFrom tibble rownames_to_column
 #'
 #' @description From a n by n distance matrix, generate a tibble of pathway
 #'   interactions to use in constructing a pathway network. The cutoff can be

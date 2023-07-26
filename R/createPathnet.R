@@ -14,10 +14,10 @@
 #' @export
 #'
 #' @import dplyr
+#' @import igraph
+#' @import purrr
 #' @import stringr
-#' @importFrom igraph neighborhood as.igraph
-#' @importFrom tidygraph tbl_graph activate
-#' @importFrom purrr map map_chr
+#' @import tidygraph
 #'
 #' @description Creates a tidygraph network object from the pathway information,
 #'   ready to be visualized with `pathnetGGraph` or `pathnetVisNetwork`.

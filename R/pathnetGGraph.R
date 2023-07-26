@@ -29,6 +29,8 @@
 #' @import ggplot2
 #' @import ggraph
 #' @import dplyr
+#' @import stringr
+#' @import tidygraph
 #'
 #' @description Plots the network object generated from `createPathnet`
 #'
@@ -91,7 +93,7 @@ pathnetGGraph <- function(
 
     stopifnot(all(
         "similarity" %in% colnames(
-            as_tibble(tidygraph::activate(network, "edges"))
+            as_tibble(activate(network, "edges"))
         )
     ))
 

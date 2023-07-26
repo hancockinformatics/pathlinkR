@@ -7,8 +7,9 @@
 #' @return Data frame of results from Sigora
 #'
 #' @import dplyr
-#' @import sigora
-#' @importFrom purrr map imap
+#' @import purrr
+#' @import stringr
+#' @importFrom sigora sigora
 #'
 #' @description Internal wrapper function to run Sigora and return the results
 #'   with desired columns

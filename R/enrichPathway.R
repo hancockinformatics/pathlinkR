@@ -30,7 +30,7 @@
 #' @export
 #'
 #' @import dplyr
-#' @importFrom purrr possibly imap_dfr
+#' @import purrr
 #' @importFrom clusterProfiler enricher
 #'
 #' @description This function provides a simple and consistent interface to

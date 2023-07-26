@@ -36,7 +36,7 @@
 #'
 ppiCleanNetwork <- function(network) {
 
-    stopifnot(is(tidygraph::as_tbl_graph(network), "tbl_graph"))
+    stopifnot(is(as_tbl_graph(network), "tbl_graph"))
 
     network %>%
         mutate(

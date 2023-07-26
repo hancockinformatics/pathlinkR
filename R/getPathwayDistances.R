@@ -13,10 +13,11 @@
 #' @export
 #'
 #' @import dplyr
+#' @import purrr
 #' @import stringr
-#' @import tibble
 #' @import tidyr
-#' @importFrom purrr map
+#' @importFrom tibble column_to_rownames
+#' @importFrom vegan vegdist
 #'
 #' @description Given a data frame of pathways and their member genes, calculate
 #'   the pairwise distances using a constructed identity matrix. `pathnet`
@@ -89,7 +90,7 @@ getPathwayDistances <- function(
         message("Running distance calculations...")
     }
 
-    distanceMatrix <- as.matrix(vegan::vegdist(
+    distanceMatrix <- as.matrix(vegdist(
         identityTable,
         method = "jaccard",
         binary = TRUE,
