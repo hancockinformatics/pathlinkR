@@ -1,9 +1,11 @@
-set.seed(1)
-exPlotFoldChange <- plotFoldChange(
-    deseqExampleList,
-    pathName = "Generation of second messenger molecules"
-)
-
 test_that("fold change heatmaps are working", {
-    vdiffr::expect_doppelganger("plotFoldChangeExample", exPlotFoldChange)
+    set.seed(1)
+
+    vdiffr::expect_doppelganger(
+        "plotFoldChangeExample",
+        plotFoldChange(
+            deseqExampleList,
+            pathName = "Generation of second messenger molecules"
+        )
+    )
 })
