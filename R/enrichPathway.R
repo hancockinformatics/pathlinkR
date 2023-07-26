@@ -18,7 +18,7 @@
 #'   `1` to return the unfiltered results, or any number less than 1 for a
 #'   custom p-value cutoff. If `default`, the significance cutoff for Sigora
 #'   is 0.001, and for ReactomePA or Hallmark is 0.05.
-#' @param gpsRepo Only applies to `analysis = "sigora"`. Gene Pair Signature
+#' @param gpsRepo Only applies to `analysis="sigora"`. Gene Pair Signature
 #'   object for Sigora to use to test for enriched pathways. We recommend using
 #'   the one which ships with Sigora, which is already loaded as "reaH".
 #' @param geneUniverse Only applies when `analysis` is "reactomepa" or
@@ -48,23 +48,23 @@
 #'
 #' @examples
 #' enrichPathway(
-#'     inputList = deseqExampleList[1],
-#'     filterInput = TRUE,
-#'     split = TRUE,
-#'     analysis = "reactomepa",
-#'     filterResults = "default",
+#'     inputList=deseqExampleList[1],
+#'     filterInput=TRUE,
+#'     split=TRUE,
+#'     analysis="reactomepa",
+#'     filterResults="default",
 #' )
 #'
 enrichPathway <- function(
         inputList,
-        filterInput = TRUE,
-        pCutoff = 0.05,
-        fcCutoff = 1.5,
-        split = TRUE,
-        analysis = "sigora",
-        filterResults = "default",
-        gpsRepo = reaH,
-        geneUniverse = NULL
+        filterInput=TRUE,
+        pCutoff=0.05,
+        fcCutoff=1.5,
+        split=TRUE,
+        analysis="sigora",
+        filterResults="default",
+        gpsRepo=reaH,
+        geneUniverse=NULL
 ) {
 
     ## Check inputs
@@ -115,8 +115,8 @@ enrichPathway <- function(
         ## Turn the input into a list of gene IDs, split by direction or not
         if (split) {
             preppedGenes <- list(
-                "Up"   = rownames(filter(deseqResults, log2FoldChange > 0)),
-                "Down" = rownames(filter(deseqResults, log2FoldChange < 0))
+                "Up"=rownames(filter(deseqResults, log2FoldChange > 0)),
+                "Down"=rownames(filter(deseqResults, log2FoldChange < 0))
             )
             message(
                 "\tDEGs used: ",
@@ -124,7 +124,7 @@ enrichPathway <- function(
                 length(preppedGenes$Down), " Down..."
             )
         } else {
-            preppedGenes <- list("All" = rownames(deseqResults))
+            preppedGenes <- list("All"=rownames(deseqResults))
             message("\tDEGs used: ", length(preppedGenes$All), "...")
         }
 
@@ -135,13 +135,13 @@ enrichPathway <- function(
             runSigoraSafely <- possibly(.runSigora)
 
             resultFinal <- imap_dfr(
-                .x  = preppedGenes,
-                .id = "direction",
+                .x =preppedGenes,
+                .id="direction",
                 function(y, direction) {
                     runSigoraSafely(
-                        enrichGenes = y,
-                        gpsRepo = gpsRepo,
-                        pValFilter = ifelse(
+                        enrichGenes=y,
+                        gpsRepo=gpsRepo,
+                        pValFilter=ifelse(
                             filterResults == "default",
                             0.001,
                             filterResults
@@ -169,8 +169,8 @@ enrichPathway <- function(
                 message("\tRunning enrichment using ReactomePA")
 
                 rpaHallResult <- imap_dfr(
-                    .x  = preppedGenes,
-                    .id = "direction",
+                    .x =preppedGenes,
+                    .id="direction",
                     function(y, direction) {
 
                         genesEntrez <- idmap %>%
@@ -180,20 +180,20 @@ enrichPathway <- function(
 
                         enricher(
                             genesEntrez,
-                            TERM2GENE = select(
+                            TERM2GENE=select(
                                 reactomeDatabase,
                                 pathwayId,
                                 entrezGeneId
                             ),
-                            TERM2NAME = select(
+                            TERM2NAME=select(
                                 reactomeDatabase,
                                 pathwayId,
                                 pathwayName
                             ),
-                            universe = geneUniverse,
-                            minGSSize = 10,
-                            maxGSSize = 500,
-                            pvalueCutoff = ifelse(
+                            universe=geneUniverse,
+                            minGSSize=10,
+                            maxGSSize=500,
+                            pvalueCutoff=ifelse(
                                 filterResults == "default",
                                 0.05,
                                 filterResults
@@ -201,18 +201,18 @@ enrichPathway <- function(
                         ) %>% as_tibble()
                     }
                 ) %>%
-                    mutate(geneID = as.character(geneID)) %>%
-                    separate_longer_delim(geneID, delim = "/") %>%
+                    mutate(geneID=as.character(geneID)) %>%
+                    separate_longer_delim(geneID, delim="/") %>%
                     left_join(
                         mappingFile,
-                        by = c("geneID" = "entrezGeneId"),
-                        multiple = "all"
+                        by=c("geneID" = "entrezGeneId"),
+                        multiple="all"
                     ) %>%
                     select(
                         -any_of(c("geneID", "entrezGeneId", "ensemblGeneId"))
                     ) %>%
                     group_by(ID) %>%
-                    mutate(genes = paste(hgncSymbol, collapse = ";")) %>%
+                    mutate(genes=paste(hgncSymbol, collapse=";")) %>%
                     ungroup() %>%
                     select(-hgncSymbol) %>%
                     distinct()
@@ -223,15 +223,15 @@ enrichPathway <- function(
                 message("\tRunning enrichment using Hallmark...")
 
                 rpaHallResult <- imap_dfr(
-                    .x  = preppedGenes,
-                    .id = "direction",
+                    .x =preppedGenes,
+                    .id="direction",
                     function(y, direction) {
 
                         enricher(
                             y,
-                            TERM2GENE = mSigDbTermToGene,
-                            universe = geneUniverse,
-                            pvalueCutoff = ifelse(
+                            TERM2GENE=mSigDbTermToGene,
+                            universe=geneUniverse,
+                            pvalueCutoff=ifelse(
                                 filterResults == "default",
                                 0.05,
                                 filterResults
@@ -239,17 +239,17 @@ enrichPathway <- function(
                         ) %>% as_tibble()
                     }
                 ) %>%
-                    separate_longer_delim(geneID, delim = "/") %>%
+                    separate_longer_delim(geneID, delim="/") %>%
                     left_join(
                         mappingFile,
-                        by = c("geneID" = "ensemblGeneId"),
-                        multiple = "all"
+                        by=c("geneID" = "ensemblGeneId"),
+                        multiple="all"
                     ) %>%
                     select(
                         -any_of(c("geneID", "entrezGeneId", "ensemblGeneId"))
                     ) %>%
                     group_by(ID) %>%
-                    mutate(genes = paste(hgncSymbol, collapse = ";")) %>%
+                    mutate(genes=paste(hgncSymbol, collapse=";")) %>%
                     ungroup() %>%
                     select(-hgncSymbol) %>%
                     distinct()
@@ -258,21 +258,21 @@ enrichPathway <- function(
             ## ReactomePA or Hallmark
             resultFinal <- rpaHallResult %>%
                 separate_wider_delim(
-                    cols = GeneRatio,
-                    delim = "/",
-                    names = c("numCandidateGenes", "numBgGenes")
+                    cols=GeneRatio,
+                    delim="/",
+                    names=c("numCandidateGenes", "numBgGenes")
                 ) %>%
                 mutate(
                     across(c(numCandidateGenes, numBgGenes), as.numeric),
-                    geneRatio = numCandidateGenes / numBgGenes,
-                    totalGenes = nrow(deseqResults)
+                    geneRatio=numCandidateGenes / numBgGenes,
+                    totalGenes=nrow(deseqResults)
                 ) %>%
                 select(
                     direction,
-                    "pathwayId" = ID,
-                    "pathwayName" = Description,
-                    "pValue" = pvalue,
-                    "pValueAdjusted" = p.adjust,
+                    "pathwayId"=ID,
+                    "pathwayName"=Description,
+                    "pValue"=pvalue,
+                    "pValueAdjusted"=p.adjust,
                     genes,
                     numCandidateGenes,
                     numBgGenes,
@@ -290,12 +290,12 @@ enrichPathway <- function(
     })
 
     results_all_comparisons <- resultList %>%
-        bind_rows(.id = "comparison") %>%
+        bind_rows(.id="comparison") %>%
         left_join(
             .,
             select(topPathwaysMore, pathwayId, topPathways),
-            by = "pathwayId",
-            multiple = "all"
+            by="pathwayId",
+            multiple="all"
         ) %>%
         as_tibble()
 
