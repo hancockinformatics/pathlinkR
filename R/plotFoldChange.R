@@ -56,8 +56,10 @@
 #' @return A heatmap of fold changes for genes of interest
 #' @export
 #'
-#' @import ComplexHeatmap
 #' @import dplyr
+#' @importFrom ComplexHeatmap draw Heatmap
+#' @importFrom grid grid.text gpar
+#' @importFrom plyr join_all
 #'
 #' @description Creates a heatmap of fold changes values for results from the
 #'   `DESeq2::results()` function, with various parameters to tweak the
@@ -121,7 +123,7 @@ plotFoldChange <- function(
     }
 
     ## If a title is provided manually, overwrite
-    if(!is.na(manualTitle)){
+    if (!is.na(manualTitle)) {
         plotTitle <- manualTitle
     }
 
@@ -151,14 +153,14 @@ plotFoldChange <- function(
             filter(rownames(.) %in% genes, !is.na(log2FoldChange)) %>%
             rownames_to_column("ensemblGeneId") %>%
             select(ensemblGeneId, {{itemName}} := log2FoldChange)
-    }) %>% plyr::join_all(by = "ensemblGeneId", type = "full")
+    }) %>% join_all(by = "ensemblGeneId", type = "full")
 
     dfP <- imap(inputList, function(listItem, itemName) {
         listItem %>%
             filter(rownames(.) %in% genes, !is.na(padj)) %>%
             rownames_to_column("ensemblGeneId") %>%
             select(ensemblGeneId, {{itemName}} := padj)
-    }) %>% plyr::join_all(by = "ensemblGeneId", type = "full")
+    }) %>% join_all(by = "ensemblGeneId", type = "full")
 
     ## From all the data frames, get the genes that were significant in any of
     ## them
@@ -204,7 +206,7 @@ plotFoldChange <- function(
     limit <- ceiling(max(abs(matFC), na.rm = TRUE))
 
     ## If plotting real fold changes instead of log2
-    if(!log2FoldChange){
+    if (!log2FoldChange) {
         if ((limit %% 2) == 0) {
             range <- c(-limit, -limit / 2, 0, limit / 2, limit)
         } else {
@@ -254,13 +256,13 @@ plotFoldChange <- function(
             if (showStars) {
                 if (abs(matFC[i,j]) > log2(1.5)) {
                     if (matP[i, j] < 0.001) {
-                        grid::grid.text("***", x, y, vjust = vjust, rot = rot)
+                        grid.text("***", x, y, vjust = vjust, rot = rot)
                     }
                     else if (matP[i, j] < 0.01) {
-                        grid::grid.text("**", x, y, vjust = vjust, rot = rot)
+                        grid.text("**", x, y, vjust = vjust, rot = rot)
                     }
                     else if (matP[i, j] < 0.05) {
-                        grid::grid.text("*", x, y, vjust = vjust, rot = rot)
+                        grid.text("*", x, y, vjust = vjust, rot = rot)
                     }
                 }
 
@@ -268,33 +270,33 @@ plotFoldChange <- function(
                 ## fcCutoff
                 if (abs(matFC[i,j]) < log2(1.5) & !hideNonsigFC) {
                     if (matP[i, j] < 0.001) {
-                        grid::grid.text(
+                        grid.text(
                             "***",
                             x,
                             y,
                             vjust = vjust,
                             rot = rot,
-                            gp = grid::gpar(col = "grey50")
+                            gp = gpar(col = "grey50")
                         )
                     }
                     else if (matP[i, j] < 0.01) {
-                        grid::grid.text(
+                        grid.text(
                             "**",
                             x,
                             y,
                             vjust = vjust,
                             rot = rot,
-                            gp = grid::gpar(col = "grey50")
+                            gp = gpar(col = "grey50")
                         )
                     }
                     else if (matP[i, j] < 0.05) {
-                        grid::grid.text(
+                        grid.text(
                             "*",
                             x,
                             y,
                             vjust = vjust,
                             rot = rot,
-                            gp = grid::gpar(col = "grey50")
+                            gp = gpar(col = "grey50")
                         )
                     }
                 }
@@ -303,7 +305,7 @@ plotFoldChange <- function(
         column_title = columnTitle,
         row_title = row_title,
         heatmap_legend_param = parameters,
-        column_title_gp = grid::gpar(fontsize = titleSize),
+        column_title_gp = gpar(fontsize = titleSize),
         row_split = rowSplit,
         column_split = colSplit,
         cluster_columns = clusterColumns,

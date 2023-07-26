@@ -4,7 +4,8 @@
 #'
 #' @return Largest subnetwork from the input network list as an igraph object
 #'
-#' @importFrom igraph components induced_subgraph
+#' @import igraph
+#' @importFrom tibble enframe
 #'
 #' @seealso <https://github.com/hancockinformatics/pathnet/>
 #'
@@ -13,7 +14,7 @@ ppiRemoveSubnetworks <- function(network) {
 
     maxSubnetId <- igraph::V(network)$comp %>%
         table() %>%
-        tibble::enframe() %>%
+        enframe() %>%
         arrange(desc(value)) %>%
         .[[1, 1]] %>%
         as.numeric()

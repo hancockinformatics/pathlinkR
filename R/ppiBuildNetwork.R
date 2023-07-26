@@ -26,7 +26,9 @@
 #' @export
 #'
 #' @import dplyr
+#' @import stringr
 #' @import tidygraph
+#' @importFrom SteinerNet steinertree
 #'
 #' @details The "minSteiner" method is implemented with the `SteinerNet`
 #'   package.
@@ -106,13 +108,13 @@ ppiBuildNetwork <- function(
         )
 
         if (numDups <= 10) {
-            message(stringr::str_wrap(
+            message(str_wrap(
                 paste(lostIds, collapse = ", "),
                 indent = 2,
                 exdent = 2
             ))
         } else {
-            message(stringr::str_wrap(
+            message(str_wrap(
                 paste0(paste(lostIds[seq_len(10)], collapse = ", "), "..."),
                 indent = 2,
                 exdent = 2
@@ -168,7 +170,7 @@ ppiBuildNetwork <- function(
             pull(name) %>%
             intersect(geneVector)
 
-        networkOut1 <- SteinerNet::steinertree(
+        networkOut1 <- steinertree(
             type      = "SP",
             terminals = terminals,
             graph     = networkInit,
