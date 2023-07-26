@@ -1,25 +1,23 @@
-startingPathways <- createFoundation(
-    mat = pathwayDistancesJaccard,
-    maxDistance = 0.8
-)
+test_that("pathVisNetwork returns the right plot", {
+    set.seed(1)
 
-exPathnet <- createPathnet(
-    sigoraResult = dplyr::filter(
-        sigoraExamples,
-        comparison == "COVID Pos Over Time"
-    ),
-    foundation = startingPathways,
-    trim = TRUE,
-    trimOrder = 1
-)
+    startingPathways <- createFoundation(
+        mat = pathwayDistancesJaccard,
+        maxDistance = 0.8
+    )
 
-set.seed(1)
+    exPathnet <- createPathnet(
+        sigoraResult = dplyr::filter(
+            sigoraExamples,
+            comparison == "COVID Pos Over Time"
+        ),
+        foundation = startingPathways,
+        trim = TRUE,
+        trimOrder = 1
+    )
 
-exPathnetVisNetwork <- pathnetVisNetwork(exPathnet)
-
-test_that("multiplication works", {
     vdiffr::expect_doppelganger(
         "pathnetVisNetworkExample",
-        exPathnetVisNetwork
+        pathnetVisNetwork(exPathnet)
     )
 })
