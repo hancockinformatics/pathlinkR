@@ -14,20 +14,20 @@
 #'
 #' @examples
 #' tj1 <- jsonlite::read_json(
-#'     system.file("extdata/networkAnalystExample.json", package = "pathnet"),
-#'     simplifyVector = TRUE
+#'     system.file("extdata/networkAnalystExample.json", package="pathnet"),
+#'     simplifyVector=TRUE
 #' )
 #'
 #' tj2 <- igraph::graph_from_data_frame(
-#'     d = dplyr::select(tj1$edges, source, target),
-#'     directed = FALSE,
-#'     vertices = dplyr::select(
+#'     d=dplyr::select(tj1$edges, source, target),
+#'     directed=FALSE,
+#'     vertices=dplyr::select(
 #'         tj1$nodes,
 #'         id,
 #'         label,
 #'         x,
 #'         y,
-#'         "types" = molType,
+#'         "types"=molType,
 #'         expr
 #'     )
 #' )
@@ -40,10 +40,10 @@ ppiCleanNetwork <- function(network) {
 
     network %>%
         mutate(
-            degree = centrality_degree(),
-            betweenness = centrality_betweenness(),
-            seed = if_else(types == "Seed", TRUE, FALSE),
-            hubScoreBtw = centrality_betweenness()
+            degree=centrality_degree(),
+            betweenness=centrality_betweenness(),
+            seed=if_else(types == "Seed", TRUE, FALSE),
+            hubScoreBtw=centrality_betweenness()
         ) %>%
         select(
             name,
@@ -51,7 +51,7 @@ ppiCleanNetwork <- function(network) {
             betweenness,
             seed,
             hubScoreBtw,
-            "geneName" = label,
+            "geneName"=label,
             everything()
         ) %>%
         ppiRemoveSubnetworks() %>%
