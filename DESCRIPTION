@@ -1,7 +1,7 @@
 Package: pathnet
 Type: Package
 Title: Analyze and interpret RNA-Seq results
-Version: 0.99.193
+Version: 0.99.194
 Authors@R: c(
     person("Travis", "Blimkie", , "travis.m.blimkie@gmail.com", role = c("cre"), comment = c(ORCID = "0000-0001-8778-8627")),
     person("Andy", "An", , "andy@hancocklab.com", role = c("aut"))
@@ -17,7 +17,7 @@ biocViews: GeneSetEnrichment, Network, Pathways, Reactome, RNASeq,
     NetworkEnrichment
 BiocType: Software
 BugReports: https://github.com/hancockinformatics/pathnet
-License: GPL-3
+License: GPL-3 + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
