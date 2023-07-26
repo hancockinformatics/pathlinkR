@@ -23,10 +23,10 @@
 #' @export
 #'
 #' @import dplyr
+#' @import igraph
+#' @import purrr
+#' @import tidygraph
 #' @import visNetwork
-#' @importFrom igraph as.igraph
-#' @importFrom purrr map_chr map2
-#' @importFrom tidygraph activate
 #'
 #' @description Creates a pathway network using the visNetwork library, which
 #'   allows for various forms of interactivity such as including text when

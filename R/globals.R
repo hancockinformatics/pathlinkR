@@ -52,6 +52,7 @@ utils::globalVariables(c(
     "mSigDbTermToGene",
     "name",
     "negLogP",
+    "new",
     "newFillCol",
     "newNames",
     "nodeFill",
