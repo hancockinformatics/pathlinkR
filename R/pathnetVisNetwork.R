@@ -23,7 +23,6 @@
 #' @export
 #'
 #' @import dplyr
-#' @import igraph
 #' @import purrr
 #' @import tidygraph
 #' @import visNetwork

@@ -4,7 +4,7 @@
 #'
 #' @return Largest subnetwork from the input network list as an igraph object
 #'
-#' @import igraph
+#' @importFrom igraph V components induced_subgraph
 #' @importFrom tibble enframe
 #'
 #' @seealso <https://github.com/hancockinformatics/pathnet/>
