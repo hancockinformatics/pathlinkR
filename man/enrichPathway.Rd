@@ -2,7 +2,7 @@
 % Please edit documentation in R/enrichPathway.R
 \name{enrichPathway}
 \alias{enrichPathway}
-\title{Test lists of genes for enriched pathways}
+\title{Test significant DE genes from DESeq2 for enriched pathways}
 \usage{
 enrichPathway(
   inputList,
@@ -17,34 +17,37 @@ enrichPathway(
 )
 }
 \arguments{
-\item{inputList}{list of data frames of DESeq2 results. The list names
-are used as the comparison for each dataframe (e.g. COVID vs Healthy). Data
-frames must have Ensembl gene IDs as the rownames.}
+\item{inputList}{A list of data frames, each the output of
+\code{DESeq2::results()}. The list names are used as the comparison for each
+dataframe (e.g. "COVID vs Healthy"). Each data frame must have Ensembl gene
+IDs as the rownames.}
 
-\item{filterInput}{If providing list of data frames containing the
-unfiltered output from \code{DESeq2::results()}, set this to TRUE to filter for
-DE genes using the thresholds set by the \code{pCutoff} and \code{fcCutoff}
-arguments. When FALSE it's assumed your passing the filtered
-results into \code{inputList} and no more filtering will be done.}
+\item{filterInput}{When providing list of data frames containing the
+unfiltered output from \code{DESeq2::results()} (default format), set this to
+\code{TRUE} to filter for significant genes using the thresholds set by the
+\code{pCutoff} and \code{fcCutoff}. When this argument is \code{FALSE} it's assumed your
+passing a pre-filtered data frame to \code{inputList}, and no more filtering
+will be done.}
 
-\item{pCutoff}{Adjusted p value cutoff, defaults to 0.05.}
+\item{pCutoff}{Adjusted p value cutoff, defaults to <0.05}
 
-\item{fcCutoff}{Minimum absolute fold change, defaults to 1.5.}
+\item{fcCutoff}{Minimum absolute fold change, defaults to >1.5}
 
-\item{split}{Boolean (TRUE); Split into up and down-regulated DEGs using the
-column "log2FoldChange", and do enrichment separately}
+\item{split}{Boolean (TRUE); Split into up and down-regulated DE genes using
+the requisite column "log2FoldChange", and do enrichment independently.
+Results are combined at the end, with an added "direction" column.}
 
 \item{analysis}{Default is "sigora", but can also be "reactomepa" or
 "hallmark"}
 
-\item{filterResults}{Should the output be filtered for significance? Use
-\code{1} to return the unfiltered results, or any number less than 1 for a
-custom p-value cutoff. If \code{default}, the significance cutoff for Sigora
-is 0.001, and for ReactomePA or Hallmark is 0.05.}
+\item{filterResults}{Should the output be filtered for significance? Use \code{1}
+to return the unfiltered results, or any number less than 1 for a custom
+p-value cutoff. If left as \code{default}, the significance cutoff for Sigora is
+0.001, or 0.05 for ReactomePA and Hallmark.}
 
-\item{gpsRepo}{Only applies to \code{analysis = "sigora"}. Gene Pair Signature
+\item{gpsRepo}{Only applies to \code{analysis="sigora"}. Gene Pair Signature
 object for Sigora to use to test for enriched pathways. We recommend using
-the one which ships with Sigora, which is already loaded as "reaH".}
+the one which ships with Sigora, which is provided as "reaH".}
 
 \item{geneUniverse}{Only applies when \code{analysis} is "reactomepa" or
 "hallmark". The set of background genes to use when testing with ReactomePA
@@ -57,25 +60,29 @@ A data frame of pathway enrichment results for all input comparisons
 \description{
 This function provides a simple and consistent interface to
 three different pathway enrichment tools: Sigora and ReactomePA (which both
-test for Reactome pathways), and MSigDB Hallmark gene set enrichment. The
-input must be a named list of data frames, which can be pre-filtered or
-"raw", in which case the function can filter using user-defined cutoffs.
-Column names are expected to comply with those output by
-\code{DESeq2::results()} function, namely: padj and log2FoldChange. Rownames are
-assumed to contain the input genes to be tested.
+test for Reactome pathways), and MSigDB Hallmark gene set enrichment.
+}
+\details{
+The input must be a named list of data frames, which can be
+pre-filtered or unfiltered. In the latter case, the function can filter
+with user-defined cutoffs. Column names are expected to comply with those
+output by \code{DESeq2::results()} function, namely: padj and log2FoldChange.
+Rownames are assumed to contain the input Ensembl genes to be tested.
 }
 \examples{
 enrichPathway(
-    inputList = deseqExampleList[1],
-    filterInput = TRUE,
-    split = TRUE,
-    analysis = "reactomepa",
-    filterResults = "default",
+    inputList=deseqExampleList[1],
+    filterInput=TRUE,
+    split=TRUE,
+    analysis="reactomepa",
+    filterResults="default",
 )
 
 }
 \references{
-None.
+Sigora: \url{https://cran.r-project.org/package=sigora}
+ReactomePA: \url{https://www.bioconductor.org/packages/ReactomePA/}
+MSigDB/Hallmark: \url{https://www.gsea-msigdb.org/gsea/msigdb/collections.jsp}
 }
 \seealso{
 \url{https://github.com/hancockinformatics/pathnet}

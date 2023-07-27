@@ -2,15 +2,16 @@
 % Please edit documentation in R/getPathwayDistances.R
 \name{getPathwayDistances}
 \alias{getPathwayDistances}
-\title{Calculate pairwise distances of a set of pathways}
+\title{Calculate pairwise distances from a table of pathways and genes}
 \usage{
 getPathwayDistances(pathwayData = sigoraDatabase, distMethod = "jaccard")
 }
 \arguments{
-\item{pathwayData}{Three column-data frame of pathways and their constituent
-genes. Defaults to the provided \code{sigoraDatabase} object. Must contain
-Ensembl gene IDs in the first column, pathway IDs in the second, and
-pathway descriptions in the third.}
+\item{pathwayData}{Three column data frame of pathways and their constituent
+genes. Defaults to the provided \code{sigoraDatabase} object, but can be any set
+of Reactome pathways. Must contain Ensembl gene IDs in the first column,
+human Reactome pathway IDs in the second, and pathway descriptions in the
+third.}
 
 \item{distMethod}{Character; method used to determine pairwise pathway
 distances. Can be any option supported by \code{vegan::vegdist()}.}
@@ -21,17 +22,22 @@ overlap of their constituent genes.
 }
 \description{
 Given a data frame of pathways and their member genes, calculate
-the pairwise distances using a constructed identity matrix. \code{pathnet}
-includes an example distance object (\code{pathwayDistancesJaccard}), created
-using the included "sigoraDatabase" object and Jaccard distance measure.
+the pairwise distances using a constructed identity matrix. Zero means two
+pathways are identical, while one means two pathways share no genes in
+common.
+
+\code{pathnet} includes an example distance object (\code{pathwayDistancesJaccard}),
+created using the included "sigoraDatabase" object and the Jaccard
+distance measure.
 }
 \examples{
+# Here we'll use a subset of pathways to save time
 getPathwayDistances(
-    pathwayData = dplyr::slice_head(
+    pathwayData=dplyr::slice_head(
         dplyr::arrange(sigoraDatabase, pathwayId),
-        prop = 0.25
+        prop=0.25
     ),
-    distMethod = "jaccard"
+    distMethod="jaccard"
 )
 
 }

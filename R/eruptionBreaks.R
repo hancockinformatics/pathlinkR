@@ -8,6 +8,9 @@
 #'
 #' @import ggplot2
 #'
+#' @description Internal function which is used to create even breaks for
+#'   volcano plots produced by `eruption`.
+#'
 #' @references None.
 #'
 #' @seealso <https://github.com/hancockinformatics/pathnet>

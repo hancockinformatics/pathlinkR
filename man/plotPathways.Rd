@@ -9,6 +9,7 @@ plotPathways(
   columns = 1,
   specificTopPathways = "any",
   specificPathways = "any",
+  colourValues = c("blue", "red"),
   nameWidth = 35,
   nameRows = 1,
   xAngle = "angled",
@@ -23,15 +24,21 @@ plotPathways(
 )
 }
 \arguments{
-\item{enrichedResults}{Tibble of results from the function \code{enrichPathway}}
+\item{enrichedResults}{Data frame of results from the function
+\code{enrichPathway}}
 
-\item{columns}{Number of columns to split the pathways across, especially if
-there are many pathways. Can specify up to 3 columns, with a default of 1.}
+\item{columns}{Number of columns to split the pathways across, particularly
+relevant if there are many significant pathways. Can specify up to 3
+columns, with a default of 1.}
 
 \item{specificTopPathways}{Only plot pathways from a specific vector of
-"topPathways". Defaults to "any" which includes all pathway results.}
+"topPathways". Defaults to "any" which includes all pathway results, or see
+\code{unique(enrichedResults$topPathways)} (i.e. the input) for possible values.}
 
 \item{specificPathways}{Only plot specific pathways. Defaults to "any".}
+
+\item{colourValues}{Length-two character vector of colours to use for the
+scale. Defaults to \code{c("blue", "red")}.}
 
 \item{nameWidth}{How many characters to show for pathway name before
 truncating? Defaults to 35.}
@@ -70,15 +77,14 @@ different names. Input a vector in the order as they appear.}
 A ggplot object
 }
 \description{
-Creates a plot to visualize and compare Reactome pathway
-enrichment results from multiple DE comparisons. Can split input genes into
-up- and down-regulated based on fold change, and automatically assigned
-each pathway into an informative top-level category.
+Creates a plot to visualize and compare pathway enrichment
+results from multiple DE comparisons. Can automatically assign each
+pathway into an informative top-level category.
 }
 \examples{
 plotPathways(
     sigoraExamples,
-    columns = 2
+    columns=2
 )
 
 }
