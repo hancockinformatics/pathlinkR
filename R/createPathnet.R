@@ -1,12 +1,12 @@
-#' Create a pathway network from enrichment results and a pathway
+#' Create a pathway network from enrichment results and a pathway interaction
 #'   foundation
 #'
-#' @param sigoraResult Data frame of results from Sigora. Must contain the
-#'   columns "pathwayId" and "pValueAdjusted".
-#' @param foundation List of pathway pairs to use in constructing a network,
-#'   output from `createFoundation`.
-#' @param trim Remove subgraphs which don't contain any enriched pathways
-#'   (default is `TRUE`).
+#' @param sigoraResult Data frame of results from Sigora. Must minimally contain
+#'   the columns "pathwayId" and "pValueAdjusted".
+#' @param foundation List of pathway pairs to use in constructing a network.
+#'   Typically this will be the output from `createFoundation`.
+#' @param trim Remove independent subgraphs which don't contain any enriched
+#'   pathways (default is `TRUE`).
 #' @param trimOrder Order to use when removing subgraphs; Higher values will
 #'   keep more non-enriched pathway nodes. Defaults to `1`.
 #'
@@ -19,12 +19,15 @@
 #' @import tidygraph
 #' @importFrom igraph neighborhood as.igraph
 #'
-#' @description Creates a tidygraph network object from the pathway information,
-#'   ready to be visualized with `pathnetGGraph` or `pathnetVisNetwork`.
+#' @description Creates a tidygraph network object from the provided pathway
+#'   information, ready to be visualized with `pathnetGGraph` or
+#'   `pathnetVisNetwork`.
 #'
 #' @details With the "trim" option enabled, nodes (pathways) and subgraphs which
 #'   are not sufficiently connected to enriched pathways will be removed. How
-#'   aggressively this is done can be controlled via the `trimOrder` argument.
+#'   aggressively this is done can be controlled via the `trimOrder` argument,
+#'   and the optimal value will depend on the number of enriched pathways and
+#'   the number of interacting pathways (i.e. number of rows in "foundation").
 #'
 #' @references None.
 #'

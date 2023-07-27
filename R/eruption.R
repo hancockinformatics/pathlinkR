@@ -1,37 +1,37 @@
-#' Create a volcano plot from a DESeq2 results object
+#' Create a volcano plot from an unfiltered DESeq2 results object
 #'
 #' @param deseqResults Data frame of DESeq2 results, with Ensembl gene IDs as
-#'   rownames
+#'   rownames, i.e. out from `DESeq2::results()`.
 #' @param pCutoff Adjusted p value cutoff, defaults to <0.05
-#' @param fcCutoff Absolute fold change cutoff, defaults to an absolute value
-#'   of >1.5
-#' @param baseColour Colour of points for significant DE genes ("steelblue4")
-#' @param nonsigColour Colour of non-DE genes ("lightgrey")
+#' @param fcCutoff Absolute fold change cutoff, defaults to >1.5
+#' @param baseColour Colour of points for all significant DE genes
+#'   ("steelblue4")
+#' @param nonsigColour Colour of non-significant DE genes ("lightgrey")
 #' @param alpha Transparency of the points (0.5)
 #' @param pointSize Size of the points (1)
 #' @param title Title of the plot
-#' @param nonlog2 Show non-log2 fold change instead of log2 fold change (FALSE)
+#' @param nonlog2 Show non-log2 fold changes instead of log2 fold change (FALSE)
 #' @param xaxis Length-two numeric vector to manually specify limits of the
 #'   x-axis in log2 fold change; defaults to NA which lets ggplot2 determine the
 #'   best values.
 #' @param yaxis Length-two numeric vector to manually specify limits of the
-#'   y-axis (in -log10); defaults to NA which lets ggplot2 determine the best
+#'   y-axis (in -log10). Defaults to NA which lets ggplot2 determine the best
 #'   values.
-#' @param selectGenes Vector of genes to emphasize by colouring differently
-#'   (e.g. genes of interest); should be Ensembl IDs.
-#' @param selectColour Colour for the `selectGenes`
-#' @param selectName Optional name to call the `selectGenes` (e.g. Unique,
-#'   Shared, Immune Related, etc.)
-#' @param label When set to "auto" (default), label the top n up- and
-#'   down-regulated DE genes. When set to "select", label top n up- and
-#'   down-regulated genes provided in `selectGenes`. When set to "manual" label
-#'   a custom selection of genes provided in `manualGenes`
-#' @param manualGenes If `label="manual"`, these are the genes to
+#' @param highlightGenes Vector of genes to emphasize by colouring differently
+#'   (e.g. genes of interest). Must be Ensembl IDs.
+#' @param highlightColour Colour for the genes specified in `highlightGenes`
+#' @param highlightName Optional name to call the `highlightGenes` (e.g.
+#'   Unique, Shared, Immune related, etc.)
+#' @param label When set to "auto" (default), label the top `n` up- and
+#'   down-regulated DE genes. When set to "highlight", label top `n` up- and
+#'   down-regulated genes provided in `highlightGenes`. When set to "manual"
+#'   label a custom selection of genes provided in `manualGenes`.
+#' @param n number of top up- and down-regulated genes to label. Applies when
+#'   `label` is set to "auto" or "highlight".
+#' @param manualGenes If `label="manual"`, these are the genes to be
 #'   specifically label. Can be HGNC symbols or Ensembl gene IDs.
-#' @param removeUnannotated Boolean: Remove genes without annotations (no HGNC
-#'   symbol). Defaults to TRUE.
-#' @param n number of top up- and down-regulated genes to label, applies when
-#'   `label` is set to "auto" or "select".
+#' @param removeUnannotated Boolean (TRUE): Remove genes without annotations
+#'   (no HGNC symbol).
 #' @param labelSize Size of font for labels
 #' @param pad Padding of labels; adjust this if the labels overlap
 #'
@@ -46,6 +46,14 @@
 #' @description Creates a volcano plot of genes output from `DESeq2::results()`,
 #'   with various options for tweaking the appearance. Ensembl gene IDs should
 #'   be the rownames of the input data frame.
+#'
+#'   The argument `highlightGenes` can be used to draw attention to a specific
+#'   set of genes, e.g. those from a pathway of interest. Setting the argument
+#'   `label="highlight"` will also mean those same genes (at least some of them)
+#'   will be given labels, further emphasizing them in the volcano plot.
+#'
+#'   Since this function returns a ggplot object, further custom changes could
+#'   be applied using the standard ggplot2 functions.
 #'
 #' @references None.
 #'
@@ -66,13 +74,13 @@ eruption <- function(
         nonlog2=FALSE,
         xaxis=NA,
         yaxis=NA,
-        selectGenes=c(),
-        selectColour="red",
-        selectName="Selected",
+        highlightGenes=c(),
+        highlightColour="red",
+        highlightName="Selected",
         label="auto",
+        n=10,
         manualGenes=c(),
         removeUnannotated=TRUE,
-        n=10,
         labelSize=3.5,
         pad=1.4
 ) {
@@ -112,7 +120,7 @@ eruption <- function(
             padj < pCutoff & abs(log2FoldChange) > log2(fcCutoff) ~ "SIG",
             TRUE ~ "NS"
         ),
-        inList=case_when(ensemblGeneId %in% selectGenes ~ "Y", TRUE ~ "N"),
+        inList=case_when(ensemblGeneId %in% highlightGenes ~ "Y", TRUE ~ "N"),
         negLogP=-log10(padj)
     )
 
@@ -131,8 +139,8 @@ eruption <- function(
         )
     }
 
-    ## Make sure selectGenes, if used, are in the data frame
-    selectGenes <- selectGenes[selectGenes %in% res$ensemblGeneId]
+    ## Make sure highlightGenes, if used, are in the data frame
+    highlightGenes <- highlightGenes[highlightGenes %in% res$ensemblGeneId]
 
     ## Identify top up- and down-regulated genes, and output them for the user
     upDf <- res %>%
@@ -151,17 +159,17 @@ eruption <- function(
         numGenes[1], " up-regulated."
     )
 
-    if (length(selectGenes) > 0) {
+    if (length(highlightGenes) > 0) {
         message(
             "An additional ",
-            length(selectGenes),
+            length(highlightGenes),
             " genes will be highlighted."
         )
     }
 
     ## Select the genes to label. You can specify if you want to only label
     ## annotated genes (default), i.e. those that have a gene name. This is for
-    ## "auto" and "select" labeling, i.e. it does not apply to manual labeling
+    ## "auto" and "highlight" labeling, i.e. it does not apply to manual labeling
     ## (e.g. if you want to manually label an unannotated gene).
     if (removeUnannotated) {
         possibleLabels <- res %>%
@@ -179,14 +187,14 @@ eruption <- function(
             arrange(desc(log2FoldChange ^ 2 * log10(padj) ^ 2)) %>%
             filter(geneName %in% possibleLabels) %>%
             head(n) %>%
-            dplyr::select(geneName) %>%
+            select(geneName) %>%
             unlist()
 
         downGenes <- downDf %>%
             arrange(desc(log2FoldChange ^ 2 * log10(padj) ^ 2)) %>%
             filter(geneName %in% possibleLabels) %>%
             head(n) %>%
-            dplyr::select(geneName) %>%
+            select(geneName) %>%
             unlist()
 
         ## Record which genes to label
@@ -195,21 +203,21 @@ eruption <- function(
         )
     }
 
-    ## Selective labeling ("select"): label the top n up/down genes that are in
-    ## `selectGenes`
-    if (label == "select") {
+    ## Selective labeling ("highlight"): label the top n up/down genes that are in
+    ## `highlightGenes`
+    if (label == "highlight") {
         upGenes <- upDf %>%
             filter(inList == "Y", geneName %in% possibleLabels) %>%
             arrange(desc(log2FoldChange ^ 2 * log10(padj) ^ 2)) %>%
             head(n) %>%
-            dplyr::select(geneName) %>%
+            select(geneName) %>%
             unlist()
 
         downGenes <- downDf %>%
             filter(inList == "Y", geneName %in% possibleLabels) %>%
             arrange(desc(log2FoldChange ^ 2 * log10(padj) ^ 2)) %>%
             head(n) %>%
-            dplyr::select(geneName) %>%
+            select(geneName) %>%
             unlist()
 
         res <- res %>% mutate(
@@ -237,9 +245,9 @@ eruption <- function(
             colour=nonsigColour
         ) +
 
-        ## Plot the significant genes and genes of interest ("selectGenes"),
-        ## with those in `selectGenes` plotted on top of those not in
-        ## `selectGenes` for added emphasis.
+        ## Plot the significant genes and genes of interest ("highlightGenes"),
+        ## with those in `highlightGenes` plotted on top of those not in
+        ## `highlightGenes` for added emphasis.
         geom_point(
             data=filter(res, significant == "SIG", inList == "N"),
             mapping=aes(x=log2FoldChange, y=negLogP),
@@ -253,7 +261,7 @@ eruption <- function(
             mapping=aes(x=log2FoldChange, y=negLogP),
             size=pointSize,
             alpha=alpha,
-            colour=selectColour
+            colour=highlightColour
         ) +
 
         ## Add cutoff lines
@@ -304,24 +312,24 @@ eruption <- function(
         ) +
 
         ## Add in informative subtitles for number of up and down-regulated
-        ## genes, the number of genes in "selectGenes," and a title if provided
+        ## genes, the number of genes in "highlightGenes," and a title if provided
         {if (!is.na(title)) labs(title=title)} +
 
-        ## If there are no "selectGenes"
+        ## If there are no "highlightGenes"
         {
-            if (length(selectGenes) == 0)
+            if (length(highlightGenes) == 0)
                 labs(subtitle=paste0(
                     "Down: ", numGenes[2], ", Up: ", numGenes[1]
                 ))
         } +
 
-        ## If "selectGenes" was given
+        ## If "highlightGenes" was given
         {
-            if (length(selectGenes) != 0)
+            if (length(highlightGenes) != 0)
                 labs(subtitle=paste0(
                     "Down: ", numGenes[2],
                     ", Up: ", numGenes[1], ", ",
-                    selectName, ": ", length(selectGenes)
+                    highlightName, ": ", length(highlightGenes)
                 ))
         }
 

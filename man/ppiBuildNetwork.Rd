@@ -36,8 +36,7 @@ of >1.5}
 determining which nodes to highlight as hubs when plotting the network.
 Options include "betweenness" (default), "degree", and "hubscore". These
 represent network statistics calculated by their respective
-\code{tidygraph::centrality_x}, functions, specifically \code{degree},
-\code{betweenness}, and \code{hubscore}.}
+\code{tidygraph::centrality_x}, functions.}
 
 \item{ppiData}{Data frame of PPI data; must contain rows of interactions as
 pairs of Ensembl gene IDs, with columns named "ensemblGeneA" and
@@ -47,24 +46,25 @@ pairs of Ensembl gene IDs, with columns named "ensemblGeneA" and
 \code{tidygraph} object for plotting or further analysis
 }
 \description{
-Construct a PPI network from input genes and InnateDB's database
+Creates a protein-protein interaction (PPI) network using
+data from InnateDB, with options for network order, and filterin input.
 }
 \details{
 The "minSteiner" method is implemented with the \code{SteinerNet}
 package.
 
 The "hubMeasure" argument determines how \code{ppiBuildNetwork} assesses
-connectedness of nodes in the network, which will be used to highlight nodes
-when visualizing with \code{ppiPlotNetwork}. The options are "degree",
-"betweenness", or "hubscore". This last option uses the igraph implementation
-of the Kleinburg hub centrality score - details on this method can be found
-at \code{?igraph::hub_score}.
+connectedness of nodes in the network, which will be used to highlight
+nodes when visualizing with \code{ppiPlotNetwork}. The options are "degree",
+"betweenness", or "hubscore". This last option uses the igraph
+implementation of the Kleinburg hub centrality score - details on this
+method can be found at \code{?igraph::hub_score}.
 }
 \examples{
 ppiBuildNetwork(
-    deseqResults = deseqExampleList[[1]],
-    filterInput = TRUE,
-    order = "zero"
+    deseqResults=deseqExampleList[[1]],
+    filterInput=TRUE,
+    order="zero"
 )
 
 }

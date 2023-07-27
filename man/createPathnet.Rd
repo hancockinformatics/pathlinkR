@@ -2,20 +2,20 @@
 % Please edit documentation in R/createPathnet.R
 \name{createPathnet}
 \alias{createPathnet}
-\title{Create a pathway network from enrichment results and a pathway
+\title{Create a pathway network from enrichment results and a pathway interaction
 foundation}
 \usage{
 createPathnet(sigoraResult, foundation, trim = TRUE, trimOrder = 1)
 }
 \arguments{
-\item{sigoraResult}{Data frame of results from Sigora. Must contain the
-columns "pathwayId" and "pValueAdjusted".}
+\item{sigoraResult}{Data frame of results from Sigora. Must minimally contain
+the columns "pathwayId" and "pValueAdjusted".}
 
-\item{foundation}{List of pathway pairs to use in constructing a network,
-output from \code{createFoundation}.}
+\item{foundation}{List of pathway pairs to use in constructing a network.
+Typically this will be the output from \code{createFoundation}.}
 
-\item{trim}{Remove subgraphs which don't contain any enriched pathways
-(default is \code{TRUE}).}
+\item{trim}{Remove independent subgraphs which don't contain any enriched
+pathways (default is \code{TRUE}).}
 
 \item{trimOrder}{Order to use when removing subgraphs; Higher values will
 keep more non-enriched pathway nodes. Defaults to \code{1}.}
@@ -24,25 +24,28 @@ keep more non-enriched pathway nodes. Defaults to \code{1}.}
 A pathway network as a tidygraph object
 }
 \description{
-Creates a tidygraph network object from the pathway information,
-ready to be visualized with \code{pathnetGGraph} or \code{pathnetVisNetwork}.
+Creates a tidygraph network object from the provided pathway
+information, ready to be visualized with \code{pathnetGGraph} or
+\code{pathnetVisNetwork}.
 }
 \details{
 With the "trim" option enabled, nodes (pathways) and subgraphs which
 are not sufficiently connected to enriched pathways will be removed. How
-aggressively this is done can be controlled via the \code{trimOrder} argument.
+aggressively this is done can be controlled via the \code{trimOrder} argument,
+and the optimal value will depend on the number of enriched pathways and
+the number of interacting pathways (i.e. number of rows in "foundation").
 }
 \examples{
 startingPathways <- createFoundation(
-    mat = pathwayDistancesJaccard,
-    maxDistance = 0.8
+    mat=pathwayDistancesJaccard,
+    maxDistance=0.8
 )
 
 createPathnet(
-    sigoraResult = sigoraExamples[grepl("Pos", sigoraExamples$comparison), ],
-    foundation = startingPathways,
-    trim = TRUE,
-    trimOrder = 1
+    sigoraResult=sigoraExamples[grepl("Pos", sigoraExamples$comparison), ],
+    foundation=startingPathways,
+    trim=TRUE,
+    trimOrder=1
 )
 
 }
