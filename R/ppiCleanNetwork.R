@@ -10,6 +10,13 @@
 #' @import dplyr
 #' @import tidygraph
 #'
+#' @description Takes network file (GraphML or JSON) and process it into a
+#'   tidygraph object, adding network statistics along the way.
+#'
+#' @details This function was designed so that networks created by other
+#'   packages or websites (e.g. <https://networkanalyst.ca>) could be imported
+#'   and visualized with `ppiPlotNetwork`.
+#'
 #' @seealso <https://github.com/hancockinformatics/pathnet/>
 #'
 #' @examples

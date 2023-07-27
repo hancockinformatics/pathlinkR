@@ -2,7 +2,7 @@
 % Please edit documentation in R/pathnetGGraph.R
 \name{pathnetGGraph}
 \alias{pathnetGGraph}
-\title{Visualize enriched Reactome pathways as a network}
+\title{Visualize enriched Reactome pathways as a static network}
 \usage{
 pathnetGGraph(
   network,
@@ -20,8 +20,7 @@ pathnetGGraph(
 )
 }
 \arguments{
-\item{network}{Tidygraph network object, output from \code{createPathnet}. See
-Details for specific requirements.}
+\item{network}{Tidygraph network object, output from \code{createPathnet}.}
 
 \item{networkLayout}{Desired layout for the network visualization. Defaults
 to "nicely", but supports any method found in \code{?layout_tbl_graph_igraph}}
@@ -58,7 +57,9 @@ to \code{16}.}
 An object of class "gg"
 }
 \description{
-Plots the network object generated from \code{createPathnet}
+Plots the network object generated from \code{createPathnet},
+creating a visual representation of pathway similarity/interactions based
+on overlapping genes.
 }
 \details{
 A note regarding node labels: The function tries to prioritize
@@ -69,26 +70,26 @@ get the desired effect.
 }
 \examples{
 startingPathways <- createFoundation(
-    mat = pathwayDistancesJaccard,
-    maxDistance = 0.8
+    mat=pathwayDistancesJaccard,
+    maxDistance=0.8
 )
 
 exPathnet <- createPathnet(
-    sigoraResult = dplyr::filter(
+    sigoraResult=dplyr::filter(
         sigoraExamples,
         comparison == "COVID Pos Over Time"
     ),
-    foundation = startingPathways,
-    trim = TRUE,
-    trimOrder = 1
+    foundation=startingPathways,
+    trim=TRUE,
+    trimOrder=1
 )
 
 pathnetGGraph(
     exPathnet,
-    labelProp = 0.1,
-    nodeLabelSize = 4,
-    nodeLabelOverlaps = 8,
-    segColour = "red"
+    labelProp=0.1,
+    nodeLabelSize=4,
+    nodeLabelOverlaps=8,
+    segColour="red"
 )
 
 }

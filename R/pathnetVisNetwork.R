@@ -2,7 +2,7 @@
 #'
 #' @param network Tidygraph network object as output by `createPathnet`
 #' @param networkLayout Desired layout for the network visualization. Defaults
-#'   to "layout_nicely", should support most igraph layouts. See
+#'   to "layout_nicely", and should support most igraph layouts. See
 #'   `?visIgraphLayout()` for more details.
 #' @param edgeColour Colour of network edges; defaults to "#848484".
 #' @param edgeSizeRange Edge width is mapped to the similarity measure (one over
@@ -27,10 +27,15 @@
 #' @import tidygraph
 #' @import visNetwork
 #'
-#' @description Creates a pathway network using the visNetwork library, which
-#'   allows for various forms of interactivity such as including text when
-#'   hovering over nodes, node selection and dragging (including multiple
-#'   selections).
+#' @description Plots the network object generated from `createPathnet`,
+#'   creating a visual and interactive representation of similarities/
+#'   interactions between pathways using their overlapping genes.
+#'
+#' @details  This function makes use of the visNetwork library, which allows for
+#'   various forms of interactivity, such as including text when hovering over
+#'   nodes, node selection and dragging (including multiple selections), and
+#'   highlighting nodes belonging to a larger group (e.g. top-level Reactome
+#'   category).
 #'
 #' @references <https://datastorm-open.github.io/visNetwork/>
 #'

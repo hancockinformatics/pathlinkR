@@ -1,6 +1,6 @@
 #' Plot an undirected PPI network using ggraph
 #'
-#' @param network `tidygraph` object, output from `ppiBuildNetwork`
+#' @param network A `tidygraph` object, output from `ppiBuildNetwork`
 #' @param fillColumn Tidy-select column for mapping node colour. Designed to
 #'   handle continuous numeric mappings (either positive/negative only, or
 #'   both), and categorical mappings, plus a special case for displaying fold
@@ -20,7 +20,7 @@
 #' @param edgeColour Edge colour, defaults to "grey40"
 #' @param edgeAlpha Transparency of edges, defaults to 0.5
 #' @param edgeWidth Thickness of edges connecting nodes. Defaults to 0.5
-#' @param nodeSize Numeric vector of length two, specifying size range of node
+#' @param nodeSize Length-two numeric vector, specifying size range of node
 #'   sizes (maps to node degree). Default is `c(3, 9)`.
 #' @param nodeColour Colour (stroke or outline) of all nodes in the network.
 #'   Defaults to "grey30".
@@ -56,6 +56,10 @@
 #' @import ggplot2
 #' @import ggraph
 #' @import dplyr
+#'
+#' @description Visualize a protein-protein interaction (PPI) network using
+#'   `ggraph` functions, output from `ppiBuildNetwork`.
+#'
 #'
 #' @details Any layout supported by ggraph can be specified here - see
 #'   `?layout_tbl_graph_igraph` for a list of options. Or you can supply a data

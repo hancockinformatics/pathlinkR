@@ -32,7 +32,7 @@ ppiPlotNetwork(
 )
 }
 \arguments{
-\item{network}{\code{tidygraph} object, output from \code{ppiBuildNetwork}}
+\item{network}{A \code{tidygraph} object, output from \code{ppiBuildNetwork}}
 
 \item{fillColumn}{Tidy-select column for mapping node colour. Designed to
 handle continuous numeric mappings (either positive/negative only, or
@@ -62,7 +62,7 @@ node (order matters!).}
 
 \item{edgeWidth}{Thickness of edges connecting nodes. Defaults to 0.5}
 
-\item{nodeSize}{Numeric vector of length two, specifying size range of node
+\item{nodeSize}{Length-two numeric vector, specifying size range of node
 sizes (maps to node degree). Default is \code{c(3, 9)}.}
 
 \item{nodeColour}{Colour (stroke or outline) of all nodes in the network.
@@ -91,7 +91,7 @@ node labels, to prevent the network from being too crowded.}
 
 \item{hubColour}{Colour of node labels for hubs. The top 2\% of nodes
 (based on calculated hub score) are highlighted with this colour, if
-\code{label = TRUE}.}
+\code{label=TRUE}.}
 
 \item{labelFace}{Font face for node labels, defaults to "bold"}
 
@@ -108,7 +108,8 @@ value.}
 An object of class "gg"
 }
 \description{
-Plot an undirected PPI network using ggraph
+Visualize a protein-protein interaction (PPI) network using
+\code{ggraph} functions, output from \code{ppiBuildNetwork}.
 }
 \details{
 Any layout supported by ggraph can be specified here - see
@@ -135,20 +136,20 @@ the respective functions from the \code{tidygraph} package.
 }
 \examples{
 exNetwork <- ppiBuildNetwork(
-    deseqResults = deseqExampleList[[1]],
-    filterInput = TRUE,
-    order = "zero"
+    deseqResults=deseqExampleList[[1]],
+    filterInput=TRUE,
+    order="zero"
 )
 
 ppiPlotNetwork(
     exNetwork,
-    fillColumn = log2FoldChange,
-    fillType = "foldChange",
-    layout = "lgl",
-    label = TRUE,
-    labelColumn = hgncSymbol,
-    labelFilter = 5,
-    legend = TRUE
+    fillColumn=log2FoldChange,
+    fillType="foldChange",
+    layout="lgl",
+    label=TRUE,
+    labelColumn=hgncSymbol,
+    labelFilter=5,
+    legend=TRUE
 )
 
 }
