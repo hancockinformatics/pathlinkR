@@ -15,7 +15,8 @@ best values.}
 ggplot scale object
 }
 \description{
-INTERNAL Create manual breaks/labels for volcano plots
+Internal function which is used to create even breaks for
+volcano plots produced by \code{eruption}.
 }
 \references{
 None.

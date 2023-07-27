@@ -1,15 +1,15 @@
-#' Calculate pairwise distances of a set of pathways
+#' Calculate pairwise distances from a table of pathways and genes
 #'
-#' @param pathwayData Three column-data frame of pathways and their constituent
-#'   genes. Defaults to the provided `sigoraDatabase` object. Must contain
-#'   Ensembl gene IDs in the first column, pathway IDs in the second, and
-#'   pathway descriptions in the third.
+#' @param pathwayData Three column data frame of pathways and their constituent
+#'   genes. Defaults to the provided `sigoraDatabase` object, but can be any set
+#'   of Reactome pathways. Must contain Ensembl gene IDs in the first column,
+#'   human Reactome pathway IDs in the second, and pathway descriptions in the
+#'   third.
 #' @param distMethod Character; method used to determine pairwise pathway
 #'   distances. Can be any option supported by `vegan::vegdist()`.
 #'
 #' @return Matrix of the pairwise pathway distances (dissimilarity) based on
 #'   overlap of their constituent genes.
-#'
 #' @export
 #'
 #' @import dplyr
@@ -20,15 +20,20 @@
 #' @importFrom vegan vegdist
 #'
 #' @description Given a data frame of pathways and their member genes, calculate
-#'   the pairwise distances using a constructed identity matrix. `pathnet`
-#'   includes an example distance object (`pathwayDistancesJaccard`), created
-#'   using the included "sigoraDatabase" object and Jaccard distance measure.
+#'   the pairwise distances using a constructed identity matrix. Zero means two
+#'   pathways are identical, while one means two pathways share no genes in
+#'   common.
+#'
+#'   `pathnet` includes an example distance object (`pathwayDistancesJaccard`),
+#'   created using the included "sigoraDatabase" object and the Jaccard
+#'   distance measure.
 #'
 #' @references None.
 #'
 #' @seealso <https://github.com/hancockinformatics/pathnet>
 #'
 #' @examples
+#' # Here we'll use a subset of pathways to save time
 #' getPathwayDistances(
 #'     pathwayData=dplyr::slice_head(
 #'         dplyr::arrange(sigoraDatabase, pathwayId),

@@ -1,57 +1,58 @@
 #' Create a heatmap of fold changes to visualize DESeq2 results
 #'
-#' @param inputList List of data frames of DESeq2 results. The list names are
-#'   used as the comparison name for each dataframe (e.g. COVID vs Healthy).
-#'   Data frames should have Ensembl gene IDs as rownames.
+#' @param inputList List of data frames, each the output from
+#'   `DESeq2::results()`. The list names are used as the comparison name for
+#'   each dataframe (e.g. "COVID vs Healthy"). Data frames should have Ensembl
+#'   gene IDs as rownames.
 #' @param pathName The name of a Reactome pathway to pull genes from, also used
-#'   for the plot title
+#'   for the plot title. Alternative to `pathID`.
 #' @param pathId ID of a Reactome pathway to pull genes from. Alternative to
 #'   `pathName`.
 #' @param manualTitle Provide your own title, and override the use of a pathway
-#'   name
-#' @param titleSize Font size for title
-#' @param genesToPlot Provide a vector of genes you want to plot instead of
-#'   pulling the genes from a pathway
-#' @param geneFormat Default is Ensembl gene IDs ("ensg"), can also input a
-#'   vector of HGNC symbols ("hgnc")
-#' @param pCutoff P value cutoff, default is p<0.05
-#' @param fcCutoff Absolute fold change cutoff, default is FC>1.5
+#'   nameas the title.
+#' @param titleSize Font size for the title.
+#' @param genesToPlot Vector of Ensembl gene IDs you want to plot, instead of
+#'   pulling the genes from a pathway. I.e. this option and pathName/pathID are
+#'   mutually exclusive.
+#' @param geneFormat Type of genes given in `genesToPlot`. Default is Ensembl
+#'   gene IDs ("ensg"), but can also input a vector of HGNC symbols ("hgnc").
+#' @param pCutoff P value cutoff, default is <0.05
+#' @param fcCutoff Absolute fold change cutoff, default is >1.5
 #' @param plotSignificantOnly Boolean (TRUE). Only plot genes that are
 #'   differentially expressed (i.e. they pass `pCutoff` and `fcCutoff`) in
-#'   any comparison.
+#'   any comparison from the provided list of data frames.
 #' @param showStars Boolean (TRUE) show significance stars on the heatmap
-#' @param hideNonsigFC Boolean (TRUE) If a gene is significant in one
+#' @param hideNonsigFC Boolean (TRUE). If a gene is significant in one
 #'   comparison but not in another, this will set the colour of the non-
 #'   significant gene as grey to visually emphasize the significant genes. If
-#'   set to FALSE, it will set the colour to the fold change, and if the p
+#'   set to FALSE, it will be set the colour to the fold change, and if the p
 #'   value passes `pCutoff`, it will also display the p value (the asterisks
 #'   will be grey instead of black).
 #' @param vjust Adjustment of the position of the significance stars. Default
 #'   is 0.75. May need to adjust if there are many genes.
 #' @param rot Rotation of the position of the significance stars. Default is 0.
-#' @param invert Boolean (FALSE). The default plots genes as rows and
-#'   comparisons as columns, so setting this to TRUE will place genes as columns
+#' @param invert Boolean (FALSE). The default setting plots genes as rows and
+#'   comparisons as columns. Setting this to `TRUE` will place genes as columns
 #'   and comparisons as rows.
 #' @param log2FoldChange Boolean (FALSE). Default plots the fold changes in the
-#'   legend as the true fold change, set to TRUE if you want log2 fold change.
-#' @param colSplit Split each condition into groups for better visualization. To
-#'   do so, create a vector where each item of the vector corresponds to which
-#'   group the dataframe belongs to in `inputList`. E.g. ('Positive',
-#'   'Positive', "Negative", "Negative", "Time", "Time"). The order of these
-#'   groups is set in the order they appear; if you want to change the order,
-#'   change the order of data frames in `inputList` and write `colSplit`
-#'   in the order you want. Order will be ignored if `clusterColumns` is set
-#'   to TRUE.
+#'   legend as the true fold change. Set to TRUE if you want log2 fold change.
+#' @param colSplit A vector, with the same length as `inputList`, which assigns
+#'   each data frame in `inputList` to a group, and splits the heatmap on these
+#'   larger groupings. The order of groups in the heatmap will be carried over,
+#'   so one can alter the order of `inputList` and `colSplit` to affect the
+#'   heatmap. This argument will be ignored if `clusterColumns` is set to TRUE.
+#'   See Details for more information.
 #' @param clusterRows Boolean (TRUE). Whether to cluster the rows (genes). May
 #'   need to change if `invert=TRUE`.
 #' @param clusterColumns Boolean (FALSE). Whether to cluster the columns
-#'   (comparisons). Will override order of `colSplit` if set to TRUE.
+#'   (comparisons). Will override order of `colSplit` if set to TRUE. May need
+#'   to change if `invert=TRUE`.
 #' @param colAngle Angle of column text. Defaults to 90.
-#' @param colCenter Whether to center column text. Default is TRUE, should set
-#'   to FALSE if angled column name (e.g. `colAngle=45`).
-#' @param rowAngle angle of row text, defaults to 0.
-#' @param rowCenter whether to center column text. Default is FALSE, should set
-#'   to TRUE if vertical column name (e.g. `rowAngle=90`).
+#' @param colCenter Whether to center column text. Default is TRUE, but it
+#'   should be set to FALSE if the column name is angled (e.g. `colAngle=45`).
+#' @param rowAngle Angle of row text, defaults to 0.
+#' @param rowCenter Whether to center column text. The default is FALSE, but it
+#'   should be set to TRUE if vertical column name (e.g. `rowAngle=90`).
 #'
 #' @return A heatmap of fold changes for genes of interest
 #' @export
@@ -64,6 +65,15 @@
 #' @description Creates a heatmap of fold changes values for results from the
 #'   `DESeq2::results()` function, with various parameters to tweak the
 #'   appearance.
+#'
+#' @details The `colSplit` argument can be used to define larger groups
+#'   represented in `inputList`. For example, consider an experiment comparing
+#'   two different treatments to an untreated control, in both wild type and
+#'   mutant cells. This would give the following comparisons:
+#'   "wildtype_treatment1_vs_untreated", "wildtype_treatment2_vs_untreated",
+#'   "mutant_treatment1_vs_untreated", and "mutant_treatment2_vs_untreated". One
+#'   could then specify `colSplit` as   `c("Wild type", "Wild type", "Mutant",
+#'   "Mutant")` to make the wild type and mutant results more visually distinct.
 #'
 #' @references <https://bioconductor.org/packages/ComplexHeatmap/>
 #'

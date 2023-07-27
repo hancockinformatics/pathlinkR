@@ -1,7 +1,6 @@
-#' Visualize enriched Reactome pathways as a network
+#' Visualize enriched Reactome pathways as a static network
 #'
-#' @param network Tidygraph network object, output from `createPathnet`. See
-#'   Details for specific requirements.
+#' @param network Tidygraph network object, output from `createPathnet`.
 #' @param networkLayout Desired layout for the network visualization. Defaults
 #'   to "nicely", but supports any method found in `?layout_tbl_graph_igraph`
 #' @param edgeColour Colour of network edges; defaults to "grey30".
@@ -32,7 +31,9 @@
 #' @import stringr
 #' @import tidygraph
 #'
-#' @description Plots the network object generated from `createPathnet`
+#' @description Plots the network object generated from `createPathnet`,
+#'   creating a visual representation of pathway similarity/interactions based
+#'   on overlapping genes.
 #'
 #' @details A note regarding node labels: The function tries to prioritize
 #'   labeling enriched pathways (filled nodes), with the `labelProp` argument

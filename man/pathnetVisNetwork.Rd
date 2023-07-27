@@ -21,7 +21,7 @@ pathnetVisNetwork(
 \item{network}{Tidygraph network object as output by \code{createPathnet}}
 
 \item{networkLayout}{Desired layout for the network visualization. Defaults
-to "layout_nicely", should support most igraph layouts. See
+to "layout_nicely", and should support most igraph layouts. See
 \code{?visIgraphLayout()} for more details.}
 
 \item{edgeColour}{Colour of network edges; defaults to "#848484".}
@@ -50,25 +50,31 @@ nodes be highlighted (other nodes are dimmed)? Defaults to TRUE.}
 Interactive visNetwork plot
 }
 \description{
-Creates a pathway network using the visNetwork library, which
-allows for various forms of interactivity such as including text when
-hovering over nodes, node selection and dragging (including multiple
-selections).
+Plots the network object generated from \code{createPathnet},
+creating a visual and interactive representation of similarities/
+interactions between pathways using their overlapping genes.
+}
+\details{
+This function makes use of the visNetwork library, which allows for
+various forms of interactivity, such as including text when hovering over
+nodes, node selection and dragging (including multiple selections), and
+highlighting nodes belonging to a larger group (e.g. top-level Reactome
+category).
 }
 \examples{
 startingPathways <- createFoundation(
-    mat = pathwayDistancesJaccard,
-    maxDistance = 0.8
+    mat=pathwayDistancesJaccard,
+    maxDistance=0.8
 )
 
 exPathnet <- createPathnet(
-    sigoraResult = dplyr::filter(
+    sigoraResult=dplyr::filter(
         sigoraExamples,
         comparison == "COVID Pos Over Time"
     ),
-    foundation = startingPathways,
-    trim = TRUE,
-    trimOrder = 1
+    foundation=startingPathways,
+    trim=TRUE,
+    trimOrder=1
 )
 
 pathnetVisNetwork(exPathnet)

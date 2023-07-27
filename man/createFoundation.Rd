@@ -2,34 +2,39 @@
 % Please edit documentation in R/createFoundation.R
 \name{createFoundation}
 \alias{createFoundation}
-\title{Create the foundation for pathway networks}
+\title{Create the foundation for pathway networks using pathway distances}
 \usage{
 createFoundation(mat, maxDistance = NA, propToKeep = NA)
 }
 \arguments{
-\item{mat}{Matrix of distances between pathways (i.e. 0 means two pathways
-are identical). Should match output from \code{getPathwayDistances}}
+\item{mat}{Matrix of distances between pathways, i.e. 0 means two pathways
+are identical. Should match the output from \code{getPathwayDistances}.}
 
-\item{maxDistance}{Distance cutoff (less than or equal) used to determine if
-two pathways should share an edge. Pairs with a distance of 0 are always
-removed. One of \code{maxDistance} or \code{propToKeep} must be provided.}
+\item{maxDistance}{Numeric distance cutoff (less than or equal) used to
+determine if two pathways should share an edge. Pathway pairs with a
+distance of 0 are always removed. One of \code{maxDistance} or \code{propToKeep} must
+be provided.}
 
-\item{propToKeep}{Top proportion of pathway pairs to keep as edges. One of
-\code{maxDistance} or \code{propToKeep} must be provided.}
+\item{propToKeep}{Top proportion of pathway pairs to keep as edges, ranked
+based distance. One of \code{maxDistance} or \code{propToKeep} must be provided.}
 }
 \value{
 A tibble of interacting pathway pairs
 }
 \description{
-From a n by n distance matrix, generate a tibble of pathway
-interactions to use in constructing a pathway network. The cutoff can be
+From a "n by n" distance matrix, generate a table of interacting
+pathways to use in constructing a pathway network. The cutoff can be
 adjusted to have more or fewer edges in the final network, depending on the
-number of pathways involved.
+number of pathways involved, i.e. the number of enriched pathways you're
+trying to visualize.
+
+The desired cutoff will also vary based on the distance measure used, so
+some trial-and-error may be needed to find an appropriate value.
 }
 \examples{
 startingPathways <- createFoundation(
-    mat = pathwayDistancesJaccard,
-    maxDistance = 0.8
+    mat=pathwayDistancesJaccard,
+    maxDistance=0.8
 )
 
 }

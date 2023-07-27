@@ -1,11 +1,16 @@
 #' Plot Reactome pathway enrichment results
 #'
-#' @param enrichedResults Tibble of results from the function `enrichPathway`
-#' @param columns Number of columns to split the pathways across, especially if
-#'   there are many pathways. Can specify up to 3 columns, with a default of 1.
+#' @param enrichedResults Data frame of results from the function
+#'   `enrichPathway`
+#' @param columns Number of columns to split the pathways across, particularly
+#'   relevant if there are many significant pathways. Can specify up to 3
+#'   columns, with a default of 1.
 #' @param specificTopPathways Only plot pathways from a specific vector of
-#'   "topPathways". Defaults to "any" which includes all pathway results.
+#'   "topPathways". Defaults to "any" which includes all pathway results, or see
+#'   `unique(enrichedResults$topPathways)` (i.e. the input) for possible values.
 #' @param specificPathways Only plot specific pathways. Defaults to "any".
+#' @param colourValues Length-two character vector of colours to use for the
+#'   scale. Defaults to `c("blue", "red")`.
 #' @param nameWidth How many characters to show for pathway name before
 #'   truncating? Defaults to 35.
 #' @param nameRows How much to rows to wrap across for the pathway name?
@@ -38,10 +43,9 @@
 #' @importFrom ggforce facet_col
 #' @importFrom ggpubr ggarrange
 #'
-#' @description Creates a plot to visualize and compare Reactome pathway
-#'   enrichment results from multiple DE comparisons. Can split input genes into
-#'   up- and down-regulated based on fold change, and automatically assigned
-#'   each pathway into an informative top-level category.
+#' @description Creates a plot to visualize and compare pathway enrichment
+#'   results from multiple DE comparisons. Can automatically assign each
+#'   pathway into an informative top-level category.
 #'
 #' @references None.
 #'
@@ -58,6 +62,7 @@ plotPathways <- function(
         columns=1,
         specificTopPathways="any",
         specificPathways="any",
+        colourValues=c("blue", "red"),
         nameWidth=35,
         nameRows=1,
         xAngle="angled",
@@ -343,8 +348,8 @@ plotPathways <- function(
                     expression(10 ^ -40),
                     expression(10 ^ -50)
                 ),
-                low="blue",
-                high="red",
+                low=colourValues[1],
+                high=colourValues[2],
                 na.value=NA
             ) +
 

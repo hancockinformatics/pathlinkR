@@ -16,8 +16,7 @@
 #'   determining which nodes to highlight as hubs when plotting the network.
 #'   Options include "betweenness" (default), "degree", and "hubscore". These
 #'   represent network statistics calculated by their respective
-#'   `tidygraph::centrality_x`, functions, specifically `degree`,
-#'    `betweenness`, and `hubscore`.
+#'   `tidygraph::centrality_x`, functions.
 #' @param ppiData Data frame of PPI data; must contain rows of interactions as
 #'   pairs of Ensembl gene IDs, with columns named "ensemblGeneA" and
 #'   "ensemblGeneB". Defaults to pre-packaged InnateDB PPI data.
@@ -30,15 +29,18 @@
 #' @import tidygraph
 #' @importFrom SteinerNet steinertree
 #'
+#' @description Creates a protein-protein interaction (PPI) network using
+#'   data from InnateDB, with options for network order, and filterin input.
+#'
 #' @details The "minSteiner" method is implemented with the `SteinerNet`
 #'   package.
 #'
-#' The "hubMeasure" argument determines how `ppiBuildNetwork` assesses
-#' connectedness of nodes in the network, which will be used to highlight nodes
-#' when visualizing with `ppiPlotNetwork`. The options are "degree",
-#' "betweenness", or "hubscore". This last option uses the igraph implementation
-#' of the Kleinburg hub centrality score - details on this method can be found
-#' at `?igraph::hub_score`.
+#'   The "hubMeasure" argument determines how `ppiBuildNetwork` assesses
+#'   connectedness of nodes in the network, which will be used to highlight
+#'   nodes when visualizing with `ppiPlotNetwork`. The options are "degree",
+#'   "betweenness", or "hubscore". This last option uses the igraph
+#'   implementation of the Kleinburg hub centrality score - details on this
+#'   method can be found at `?igraph::hub_score`.
 #'
 #' @references See
 #'   <https://cran.r-project.org/web/packages/SteinerNet/index.html> for details

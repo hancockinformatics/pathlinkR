@@ -31,41 +31,43 @@ plotFoldChange(
 )
 }
 \arguments{
-\item{inputList}{List of data frames of DESeq2 results. The list names are
-used as the comparison name for each dataframe (e.g. COVID vs Healthy).
-Data frames should have Ensembl gene IDs as rownames.}
+\item{inputList}{List of data frames, each the output from
+\code{DESeq2::results()}. The list names are used as the comparison name for
+each dataframe (e.g. "COVID vs Healthy"). Data frames should have Ensembl
+gene IDs as rownames.}
 
 \item{pathName}{The name of a Reactome pathway to pull genes from, also used
-for the plot title}
+for the plot title. Alternative to \code{pathID}.}
 
 \item{pathId}{ID of a Reactome pathway to pull genes from. Alternative to
 \code{pathName}.}
 
 \item{manualTitle}{Provide your own title, and override the use of a pathway
-name}
+nameas the title.}
 
-\item{titleSize}{Font size for title}
+\item{titleSize}{Font size for the title.}
 
-\item{genesToPlot}{Provide a vector of genes you want to plot instead of
-pulling the genes from a pathway}
+\item{genesToPlot}{Vector of Ensembl gene IDs you want to plot, instead of
+pulling the genes from a pathway. I.e. this option and pathName/pathID are
+mutually exclusive.}
 
-\item{geneFormat}{Default is Ensembl gene IDs ("ensg"), can also input a
-vector of HGNC symbols ("hgnc")}
+\item{geneFormat}{Type of genes given in \code{genesToPlot}. Default is Ensembl
+gene IDs ("ensg"), but can also input a vector of HGNC symbols ("hgnc").}
 
-\item{pCutoff}{P value cutoff, default is p<0.05}
+\item{pCutoff}{P value cutoff, default is <0.05}
 
-\item{fcCutoff}{Absolute fold change cutoff, default is FC>1.5}
+\item{fcCutoff}{Absolute fold change cutoff, default is >1.5}
 
 \item{plotSignificantOnly}{Boolean (TRUE). Only plot genes that are
 differentially expressed (i.e. they pass \code{pCutoff} and \code{fcCutoff}) in
-any comparison.}
+any comparison from the provided list of data frames.}
 
 \item{showStars}{Boolean (TRUE) show significance stars on the heatmap}
 
-\item{hideNonsigFC}{Boolean (TRUE) If a gene is significant in one
+\item{hideNonsigFC}{Boolean (TRUE). If a gene is significant in one
 comparison but not in another, this will set the colour of the non-
 significant gene as grey to visually emphasize the significant genes. If
-set to FALSE, it will set the colour to the fold change, and if the p
+set to FALSE, it will be set the colour to the fold change, and if the p
 value passes \code{pCutoff}, it will also display the p value (the asterisks
 will be grey instead of black).}
 
@@ -74,37 +76,36 @@ is 0.75. May need to adjust if there are many genes.}
 
 \item{rot}{Rotation of the position of the significance stars. Default is 0.}
 
-\item{invert}{Boolean (FALSE). The default plots genes as rows and
-comparisons as columns, so setting this to TRUE will place genes as columns
+\item{invert}{Boolean (FALSE). The default setting plots genes as rows and
+comparisons as columns. Setting this to \code{TRUE} will place genes as columns
 and comparisons as rows.}
 
 \item{log2FoldChange}{Boolean (FALSE). Default plots the fold changes in the
-legend as the true fold change, set to TRUE if you want log2 fold change.}
+legend as the true fold change. Set to TRUE if you want log2 fold change.}
 
-\item{colSplit}{Split each condition into groups for better visualization. To
-do so, create a vector where each item of the vector corresponds to which
-group the dataframe belongs to in \code{inputList}. E.g. ('Positive',
-'Positive', "Negative", "Negative", "Time", "Time"). The order of these
-groups is set in the order they appear; if you want to change the order,
-change the order of data frames in \code{inputList} and write \code{colSplit}
-in the order you want. Order will be ignored if \code{clusterColumns} is set
-to TRUE.}
+\item{colSplit}{A vector, with the same length as \code{inputList}, which assigns
+each data frame in \code{inputList} to a group, and splits the heatmap on these
+larger groupings. The order of groups in the heatmap will be carried over,
+so one can alter the order of \code{inputList} and \code{colSplit} to affect the
+heatmap. This argument will be ignored if \code{clusterColumns} is set to TRUE.
+See Details for more information.}
 
 \item{clusterRows}{Boolean (TRUE). Whether to cluster the rows (genes). May
-need to change if \code{invert = TRUE}.}
+need to change if \code{invert=TRUE}.}
 
 \item{clusterColumns}{Boolean (FALSE). Whether to cluster the columns
-(comparisons). Will override order of \code{colSplit} if set to TRUE.}
+(comparisons). Will override order of \code{colSplit} if set to TRUE. May need
+to change if \code{invert=TRUE}.}
 
 \item{colAngle}{Angle of column text. Defaults to 90.}
 
-\item{colCenter}{Whether to center column text. Default is TRUE, should set
-to FALSE if angled column name (e.g. \code{colAngle = 45}).}
+\item{colCenter}{Whether to center column text. Default is TRUE, but it
+should be set to FALSE if the column name is angled (e.g. \code{colAngle=45}).}
 
-\item{rowAngle}{angle of row text, defaults to 0.}
+\item{rowAngle}{Angle of row text, defaults to 0.}
 
-\item{rowCenter}{whether to center column text. Default is FALSE, should set
-to TRUE if vertical column name (e.g. \code{rowAngle = 90}).}
+\item{rowCenter}{Whether to center column text. The default is FALSE, but it
+should be set to TRUE if vertical column name (e.g. \code{rowAngle=90}).}
 }
 \value{
 A heatmap of fold changes for genes of interest
@@ -114,10 +115,19 @@ Creates a heatmap of fold changes values for results from the
 \code{DESeq2::results()} function, with various parameters to tweak the
 appearance.
 }
+\details{
+The \code{colSplit} argument can be used to define larger groups
+represented in \code{inputList}. For example, consider an experiment comparing
+two different treatments to an untreated control, in both wild type and
+mutant cells. This would give the following comparisons:
+"wildtype_treatment1_vs_untreated", "wildtype_treatment2_vs_untreated",
+"mutant_treatment1_vs_untreated", and "mutant_treatment2_vs_untreated". One
+could then specify \code{colSplit} as   \code{c("Wild type", "Wild type", "Mutant", "Mutant")} to make the wild type and mutant results more visually distinct.
+}
 \examples{
 plotFoldChange(
     deseqExampleList,
-    pathName = "Generation of second messenger molecules"
+    pathName="Generation of second messenger molecules"
 )
 
 }

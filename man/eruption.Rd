@@ -2,7 +2,7 @@
 % Please edit documentation in R/eruption.R
 \name{eruption}
 \alias{eruption}
-\title{Create a volcano plot from a DESeq2 results object}
+\title{Create a volcano plot from an unfiltered DESeq2 results object}
 \usage{
 eruption(
   deseqResults,
@@ -16,29 +16,29 @@ eruption(
   nonlog2 = FALSE,
   xaxis = NA,
   yaxis = NA,
-  selectGenes = c(),
-  selectColour = "red",
-  selectName = "Selected",
+  highlightGenes = c(),
+  highlightColour = "red",
+  highlightName = "Selected",
   label = "auto",
+  n = 10,
   manualGenes = c(),
   removeUnannotated = TRUE,
-  n = 10,
   labelSize = 3.5,
   pad = 1.4
 )
 }
 \arguments{
 \item{deseqResults}{Data frame of DESeq2 results, with Ensembl gene IDs as
-rownames}
+rownames, i.e. out from \code{DESeq2::results()}.}
 
 \item{pCutoff}{Adjusted p value cutoff, defaults to <0.05}
 
-\item{fcCutoff}{Absolute fold change cutoff, defaults to an absolute value
-of >1.5}
+\item{fcCutoff}{Absolute fold change cutoff, defaults to >1.5}
 
-\item{baseColour}{Colour of points for significant DE genes ("steelblue4")}
+\item{baseColour}{Colour of points for all significant DE genes
+("steelblue4")}
 
-\item{nonsigColour}{Colour of non-DE genes ("lightgrey")}
+\item{nonsigColour}{Colour of non-significant DE genes ("lightgrey")}
 
 \item{alpha}{Transparency of the points (0.5)}
 
@@ -46,37 +46,37 @@ of >1.5}
 
 \item{title}{Title of the plot}
 
-\item{nonlog2}{Show non-log2 fold change instead of log2 fold change (FALSE)}
+\item{nonlog2}{Show non-log2 fold changes instead of log2 fold change (FALSE)}
 
 \item{xaxis}{Length-two numeric vector to manually specify limits of the
 x-axis in log2 fold change; defaults to NA which lets ggplot2 determine the
 best values.}
 
 \item{yaxis}{Length-two numeric vector to manually specify limits of the
-y-axis (in -log10); defaults to NA which lets ggplot2 determine the best
+y-axis (in -log10). Defaults to NA which lets ggplot2 determine the best
 values.}
 
-\item{selectGenes}{Vector of genes to emphasize by colouring differently
-(e.g. genes of interest); should be Ensembl IDs.}
+\item{highlightGenes}{Vector of genes to emphasize by colouring differently
+(e.g. genes of interest). Must be Ensembl IDs.}
 
-\item{selectColour}{Colour for the \code{selectGenes}}
+\item{highlightColour}{Colour for the genes specified in \code{highlightGenes}}
 
-\item{selectName}{Optional name to call the \code{selectGenes} (e.g. Unique,
-Shared, Immune Related, etc.)}
+\item{highlightName}{Optional name to call the \code{highlightGenes} (e.g.
+Unique, Shared, Immune related, etc.)}
 
-\item{label}{When set to "auto" (default), label the top n up- and
-down-regulated DE genes. When set to "select", label top n up- and
-down-regulated genes provided in \code{selectGenes}. When set to "manual" label
-a custom selection of genes provided in \code{manualGenes}}
+\item{label}{When set to "auto" (default), label the top \code{n} up- and
+down-regulated DE genes. When set to "highlight", label top \code{n} up- and
+down-regulated genes provided in \code{highlightGenes}. When set to "manual"
+label a custom selection of genes provided in \code{manualGenes}.}
 
-\item{manualGenes}{If \code{label = "manual"}, these are the genes to
+\item{n}{number of top up- and down-regulated genes to label. Applies when
+\code{label} is set to "auto" or "highlight".}
+
+\item{manualGenes}{If \code{label="manual"}, these are the genes to be
 specifically label. Can be HGNC symbols or Ensembl gene IDs.}
 
-\item{removeUnannotated}{Boolean: Remove genes without annotations (no HGNC
-symbol). Defaults to TRUE.}
-
-\item{n}{number of top up- and down-regulated genes to label, applies when
-\code{label} is set to "auto" or "select".}
+\item{removeUnannotated}{Boolean (TRUE): Remove genes without annotations
+(no HGNC symbol).}
 
 \item{labelSize}{Size of font for labels}
 
@@ -89,9 +89,17 @@ Volcano plot as a ggplot object
 Creates a volcano plot of genes output from \code{DESeq2::results()},
 with various options for tweaking the appearance. Ensembl gene IDs should
 be the rownames of the input data frame.
+
+The argument \code{highlightGenes} can be used to draw attention to a specific
+set of genes, e.g. those from a pathway of interest. Setting the argument
+\code{label="highlight"} will also mean those same genes (at least some of them)
+will be given labels, further emphasizing them in the volcano plot.
+
+Since this function returns a ggplot object, further custom changes could
+be applied using the standard ggplot2 functions.
 }
 \examples{
-eruption(deseqResults = deseqExampleList[[1]])
+eruption(deseqResults=deseqExampleList[[1]])
 
 }
 \references{

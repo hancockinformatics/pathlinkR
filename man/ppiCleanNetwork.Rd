@@ -14,24 +14,30 @@ ppiCleanNetwork(network)
 functions such as \code{ppiPlotNetwork}
 }
 \description{
-Clean GraphML or JSON input
+Takes network file (GraphML or JSON) and process it into a
+tidygraph object, adding network statistics along the way.
+}
+\details{
+This function was designed so that networks created by other
+packages or websites (e.g. \url{https://networkanalyst.ca}) could be imported
+and visualized with \code{ppiPlotNetwork}.
 }
 \examples{
 tj1 <- jsonlite::read_json(
-    system.file("extdata/networkAnalystExample.json", package = "pathnet"),
-    simplifyVector = TRUE
+    system.file("extdata/networkAnalystExample.json", package="pathnet"),
+    simplifyVector=TRUE
 )
 
 tj2 <- igraph::graph_from_data_frame(
-    d = dplyr::select(tj1$edges, source, target),
-    directed = FALSE,
-    vertices = dplyr::select(
+    d=dplyr::select(tj1$edges, source, target),
+    directed=FALSE,
+    vertices=dplyr::select(
         tj1$nodes,
         id,
         label,
         x,
         y,
-        "types" = molType,
+        "types"=molType,
         expr
     )
 )
