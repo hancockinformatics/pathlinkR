@@ -364,9 +364,7 @@ plotPathways <- function(
                 ),
                 legend.text=element_text(size=12 * legendMultiply),
                 legend.title=element_text(size=13 * legendMultiply),
-                axis.text.y=element_text(
-                    face="bold", colour="black", size=12
-                ),
+                axis.text.y=element_text(colour="black", size=12),
                 axis.text.x=element_text(
                     face="bold",
                     colour="black",

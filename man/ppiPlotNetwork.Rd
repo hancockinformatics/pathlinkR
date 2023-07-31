@@ -6,12 +6,12 @@
 \usage{
 ppiPlotNetwork(
   network,
+  title = NA,
   fillColumn,
   fillType,
   catFillColours = "Set1",
   layout = "kk",
   legend = FALSE,
-  fontfamily = "Helvetica",
   edgeColour = "grey40",
   edgeAlpha = 0.5,
   edgeWidth = 0.5,
@@ -27,12 +27,13 @@ ppiPlotNetwork(
   hubColour = "blue2",
   labelFace = "bold",
   labelPadding = 0.25,
-  minSegLength = 0.25,
-  ...
+  minSegLength = 0.25
 )
 }
 \arguments{
 \item{network}{A \code{tidygraph} object, output from \code{ppiBuildNetwork}}
+
+\item{title}{Optional title for the plot (NA)}
 
 \item{fillColumn}{Tidy-select column for mapping node colour. Designed to
 handle continuous numeric mappings (either positive/negative only, or
@@ -52,9 +53,6 @@ passed as the "values" argument in \code{scale_fill_manual()}.}
 node (order matters!).}
 
 \item{legend}{Should a legend be included? Defaults to FALSE.}
-
-\item{fontfamily}{Font to use for labels and legend (if present). Defaults to
-"Helvetica".}
 
 \item{edgeColour}{Edge colour, defaults to "grey40"}
 
@@ -100,9 +98,6 @@ node labels, to prevent the network from being too crowded.}
 \item{minSegLength}{Minimum length of lines to be drawn from labels to
 points. The default specified here is 0.25, half of the normal default
 value.}
-
-\item{...}{Further parameters can be passed on to \code{ggplot2::theme()}, e.g.
-\code{legend.position}}
 }
 \value{
 An object of class "gg"
@@ -142,7 +137,8 @@ exNetwork <- ppiBuildNetwork(
 )
 
 ppiPlotNetwork(
-    exNetwork,
+    network=exNetwork,
+    title="COVID positive over time",
     fillColumn=log2FoldChange,
     fillType="foldChange",
     layout="lgl",

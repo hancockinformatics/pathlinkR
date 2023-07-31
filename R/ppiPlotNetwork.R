@@ -1,6 +1,7 @@
 #' Plot an undirected PPI network using ggraph
 #'
 #' @param network A `tidygraph` object, output from `ppiBuildNetwork`
+#' @param title Optional title for the plot (NA)
 #' @param fillColumn Tidy-select column for mapping node colour. Designed to
 #'   handle continuous numeric mappings (either positive/negative only, or
 #'   both), and categorical mappings, plus a special case for displaying fold
@@ -15,8 +16,6 @@
 #'   `ggraph`/`igraph`, or a data frame of x and y coordinates for each
 #'   node (order matters!).
 #' @param legend Should a legend be included? Defaults to FALSE.
-#' @param fontfamily Font to use for labels and legend (if present). Defaults to
-#'   "Helvetica".
 #' @param edgeColour Edge colour, defaults to "grey40"
 #' @param edgeAlpha Transparency of edges, defaults to 0.5
 #' @param edgeWidth Thickness of edges connecting nodes. Defaults to 0.5
@@ -46,8 +45,6 @@
 #' @param minSegLength Minimum length of lines to be drawn from labels to
 #'   points. The default specified here is 0.25, half of the normal default
 #'   value.
-#' @param ... Further parameters can be passed on to `ggplot2::theme()`, e.g.
-#'   `legend.position`
 #'
 #' @return An object of class "gg"
 #'
@@ -95,7 +92,8 @@
 #' )
 #'
 #' ppiPlotNetwork(
-#'     exNetwork,
+#'     network=exNetwork,
+#'     title="COVID positive over time",
 #'     fillColumn=log2FoldChange,
 #'     fillType="foldChange",
 #'     layout="lgl",
@@ -107,12 +105,12 @@
 #'
 ppiPlotNetwork <- function(
         network,
+        title=NA,
         fillColumn,
         fillType,
         catFillColours="Set1",
         layout="kk",
         legend=FALSE,
-        fontfamily="Helvetica",
         edgeColour="grey40",
         edgeAlpha=0.5,
         edgeWidth=0.5,
@@ -128,8 +126,7 @@ ppiPlotNetwork <- function(
         hubColour="blue2",
         labelFace="bold",
         labelPadding=0.25,
-        minSegLength=0.25,
-        ...
+        minSegLength=0.25
 ) {
 
     stopifnot(is(network, "tbl_graph"))
@@ -147,7 +144,7 @@ ppiPlotNetwork <- function(
         )
 
         networkFillGeom <- scale_fill_manual(
-            values  =c(
+            values=c(
                 "Up"=foldChangeColours[1],
                 "Down"=foldChangeColours[2]
             ),
@@ -216,15 +213,13 @@ ppiPlotNetwork <- function(
     }
 
     ## Set a plain white background
-    set_graph_style(foreground="white")
+    set_graph_style(foreground="white", family="sans")
 
     ## Theme tweaks for all plot types
     themeTweaks <- theme(
-        text=element_text(family=fontfamily),
-        plot.margin=unit(rep(0, 4), "cm"),
+        plot.margin=unit(c(0.5, 0, 0, 0.5), "cm"),
         legend.title=element_text(size=16),
-        legend.text=element_text(size=14),
-        ...
+        legend.text=element_text(size=14)
     )
 
     if (!label) {
@@ -243,6 +238,7 @@ ppiPlotNetwork <- function(
             networkFillGeom +
             scale_size_continuous(range=nodeSize, guide="none") +
             labs(fill=NULL) +
+            { if (!is.na(title)) labs(title=title) } +
             themeTweaks +
             networkFillGuide
 
@@ -280,13 +276,13 @@ ppiPlotNetwork <- function(
             networkFillGeom +
             scale_size_continuous(range=nodeSize, guide="none") +
             labs(fill=NULL) +
+            { if (!is.na(title)) labs(title=title) } +
             themeTweaks +
             networkFillGuide +
             geom_node_text(
                 aes(label=nodeLabel, colour=isHub),
                 size=labelSize,
                 repel=TRUE,
-                family=fontfamily,
                 fontface=labelFace,
                 check_overlap=TRUE,
                 show.legend=FALSE,
