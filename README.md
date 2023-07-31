@@ -45,7 +45,7 @@ See the vignette for an example workflow including each of the included
 functions, and more details on the included methods and how they may be used.
     
 ## Contributors
-'pathnet` was created and developed by Andy An & Travis Blimkie at the CMDR REW
+`pathnet` was created and developed by Andy An & Travis Blimkie at the CMDR REW
 Hancock Lab.
 
 ## Versioning
