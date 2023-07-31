@@ -279,7 +279,7 @@ eruption <- function(
         ## Set to a clean theme, and make the labels easier to read
         theme_bw() +
         theme(
-            plot.title=element_text(face="bold", size=16),
+            plot.title=element_text(face="bold", size=18),
             plot.subtitle=element_text(size=14),
             plot.background=element_blank(),
             axis.text=element_text(colour="black", size=11),
