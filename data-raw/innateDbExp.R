@@ -16,12 +16,12 @@ innatedbFiltered <- innatedbInit %>% filter(
 
 innatedbTrimmed <- innatedbFiltered %>%
   select(
-    "ensemblGeneA" = alt_identifier_A,
-    "ensemblGeneB" = alt_identifier_B
+    "ensemblGeneA"=alt_identifier_A,
+    "ensemblGeneB"=alt_identifier_B
   ) %>%
   mutate(across(
     everything(),
-    ~stringr::str_remove(.x, pattern = "ensembl\\:")
+    ~stringr::str_remove(.x, pattern="ensembl\\:")
   )) %>%
   distinct(ensemblGeneA, ensemblGeneB)
 
@@ -36,8 +36,8 @@ innatedbNoDups <- innatedbTrimmed[
 # Get gene mapping from biomaRt -------------------------------------------
 
 biomartMapping <- getBM(
-  mart = useMart("ensembl", dataset = "hsapiens_gene_ensembl"),
-  attributes = c("ensembl_gene_id", "hgnc_symbol")
+  mart=useMart("ensembl", dataset="hsapiens_gene_ensembl"),
+  attributes=c("ensembl_gene_id", "hgnc_symbol")
 )
 
 
@@ -46,14 +46,14 @@ biomartMapping <- getBM(
 innatedbMapped <- innatedbNoDups %>%
   left_join(
     biomartMapping,
-    by = c("ensemblGeneA" = "ensembl_gene_id"),
-    multiple = "all"
+    by=c("ensemblGeneA" = "ensembl_gene_id"),
+    multiple="all"
   ) %>%
   rename("hgncSymbolA" = hgnc_symbol) %>%
   left_join(
     biomartMapping,
-    by = c("ensemblGeneB" = "ensembl_gene_id"),
-    multiple = "all"
+    by=c("ensemblGeneB" = "ensembl_gene_id"),
+    multiple="all"
   ) %>%
   rename("hgncSymbolB" = hgnc_symbol) %>%
   relocate(ends_with("A"))
@@ -72,4 +72,4 @@ innateDbExp <- innatedbMapped %>%
 
 # Save the data -----------------------------------------------------------
 
-usethis::use_data(innateDbExp, overwrite = TRUE)
+usethis::use_data(innateDbExp, overwrite=TRUE)

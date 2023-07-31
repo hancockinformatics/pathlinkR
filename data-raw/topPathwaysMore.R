@@ -1,13 +1,9 @@
-# Get top pathways for Reactome and Hallmark
-# Temporary script, remove later???
-
-
 # Load packages -----------------------------------------------------------
 
 library(msigdbr)
 library(sigora)
 library(tidyverse)
-data("idmap", "reaH", package = "sigora")
+data("idmap", "reaH", package="sigora")
 
 
 # Reactome databases --------------------------------------------------------
@@ -18,7 +14,7 @@ data("idmap", "reaH", package = "sigora")
 reactomeDb <-
     read_tsv(
         "https://reactome.org/download/current/ReactomePathwaysRelation.txt",
-        col_names = c("parent", "child")
+        col_names=c("parent", "child")
     ) %>%
     filter(grepl("HSA", parent))
 
@@ -26,11 +22,11 @@ reactomeDb <-
 reactomeNames <-
     read_tsv(
         "https://reactome.org/download/current/ReactomePathways.txt",
-        col_names = c("pathwayId", "pathwayName", "species")
+        col_names=c("pathwayId", "pathwayName", "species")
     ) %>%
     filter(species == "Homo sapiens") %>%
     mutate(
-        pathwayName = str_replace(
+        pathwayName=str_replace(
             pathwayName,
             "Biosynthesis of electrophilic ω-3 PUFA oxo-derivatives",
             "Biosynthesis of electrophilic omega-3 PUFA oxo-derivatives"
@@ -41,7 +37,7 @@ reactomeNames <-
 reactomeTop <- read_tsv(
     "https://reactome.org/download/current/Complex_2_Pathway_human.txt"
 ) %>%
-    select("pathwayId" = pathway, "topPathway" = top_level_pathway) %>%
+    select("pathwayId"=pathway, "topPathway"=top_level_pathway) %>%
     distinct()
 
 
@@ -50,13 +46,13 @@ reactomeTop <- read_tsv(
 reactomeLevels <- full_join(
     reactomeNames,
     reactomeTop,
-    multiple = "all"
+    multiple="all"
 ) %>%
     left_join(
         select(
             reactomeNames,
-            "topPathway" = pathwayId,
-            "topPathwayName" = pathwayName
+            "topPathway"=pathwayId,
+            "topPathwayName"=pathwayName
         )
     )
 
@@ -93,7 +89,7 @@ for (originalId in reactomeMissing$pathwayId) {
         # Reverse it so the top pathway is first
         order <- rev(order)
         topPath <- order[1]
-        order <- paste(order, collapse = "; ")
+        order <- paste(order, collapse="; ")
 
         # Add it to the data frame
         reactomeHierarchy <- reactomeHierarchy %>%
@@ -110,18 +106,18 @@ reactomeHierarchyDf <- reactomeHierarchy %>%
     as_tibble() %>%
     remove_rownames() %>%
     rename(
-        "pathwayId" = V1,
-        "pathwayName" = V2,
-        "topPathwayName" = V3,
-        "hierarchy"= V4
+        "pathwayId"=V1,
+        "pathwayName"=V2,
+        "topPathwayName"=V3,
+        "hierarchy"=V4
     )
 
 reactomeHierarchyDf <- left_join(
     reactomeHierarchyDf,
     select(
         reactomeNames,
-        "topPathway" = pathwayId,
-        "topPathwayName" = pathwayName
+        "topPathway"=pathwayId,
+        "topPathwayName"=pathwayName
     )
 )
 
@@ -142,7 +138,7 @@ reactomeDupe <- plyr::rbind.fill(
 # Six pathways from Sigora are outdated, but need to manually add them in for
 # sigora to map properly
 sigoraPathways <- as_tibble(reaH$pathwaydescriptions) %>%
-    rename("pathwayId" = 1, "pathwayName" = 2)
+    rename("pathwayId"=1, "pathwayName"=2)
 
 inSigora <-
     sigoraPathways[!sigoraPathways$pathwayId %in% reactomeNames$pathwayId, ]
@@ -197,8 +193,8 @@ all(sigoraPathways$pathwayId %in% reactomeAllAnnotated$pathwayId)
 # Lastly, shrink top pathway names that are too long
 reactomeAllAnnotated <- reactomeAllAnnotated %>%
     mutate(
-        topPathwayNameOriginal = topPathwayName,
-        topPathwayName = case_when(
+        topPathwayNameOriginal=topPathwayName,
+        topPathwayName=case_when(
             topPathwayName == "Gene expression (Transcription)" ~ "Gene expression",
             topPathwayName == "Transport of small molecules" ~ "Transport small molecules",
             topPathwayName == "Extracellular matrix organization" ~ "ECM organization",
@@ -212,7 +208,7 @@ reactomeAllAnnotated <- reactomeAllAnnotated %>%
 # |- Add groupedTopPathways for pathway networks ---------------------------
 
 reactomeAllGrouped <- reactomeAllAnnotated %>% mutate(
-    groupedPathway = case_when(
+    groupedPathway=case_when(
         topPathwayName %in% c(
             "Autophagy",
             "ECM organization",
@@ -257,19 +253,19 @@ reactomeAllGrouped <- reactomeAllAnnotated %>% mutate(
 
 # mSigDB Hallmark gene sets -----------------------------------------------
 
-hallmark1 <- msigdbr(category = "H")
+hallmark1 <- msigdbr(category="H")
 
 hallmark2 <- hallmark1 %>%
     select(gs_name, ensembl_gene) %>%
     mutate(
-        gs_name = str_remove(gs_name, "^HALLMARK_"),
-        gs_name = str_replace_all(gs_name, "_", " ")
+        gs_name=str_remove(gs_name, "^HALLMARK_"),
+        gs_name=str_replace_all(gs_name, "_", " ")
     )
 
 # Annotate the gene sets to their top gene set
 hallmarkCategories <- list(
-    cellComp = c("APICAL SURFACE", "APICAL JUNCTION", "PEROXISOME"),
-    development = c(
+    cellComp=c("APICAL SURFACE", "APICAL JUNCTION", "PEROXISOME"),
+    development=c(
         "MYOGENESIS",
         "ANGIOGENESIS",
         "SPERMATOGENESIS",
@@ -277,8 +273,8 @@ hallmarkCategories <- list(
         "EPITHELIAL MESENCHYMAL TRANSITION",
         "PANCREAS BETA CELLS"
     ),
-    dnaDamage = c("DNA REPAIR", "UV RESPONSE DN", "UV RESPONSE UP"),
-    immune = c(
+    dnaDamage=c("DNA REPAIR", "UV RESPONSE DN", "UV RESPONSE UP"),
+    immune=c(
         "ALLOGRAFT REJECTION",
         "COMPLEMENT",
         "COAGULATION",
@@ -286,7 +282,7 @@ hallmarkCategories <- list(
         "INTERFERON ALPHA RESPONSE",
         "INTERFERON GAMMA RESPONSE"
     ),
-    metabolism = c(
+    metabolism=c(
         "BILE ACID METABOLISM",
         "CHOLESTEROL HOMEOSTASIS",
         "GLYCOLYSIS",
@@ -295,14 +291,14 @@ hallmarkCategories <- list(
         "HEME METABOLISM",
         "OXIDATIVE PHOSPHORYLATION"
     ),
-    stress = c(
+    stress=c(
         "HYPOXIA",
         "APOPTOSIS",
         "UNFOLDED PROTEIN RESPONSE",
         "PROTEIN SECRETION",
         "REACTIVE OXYGEN SPECIES PATHWAY"
     ),
-    proliferation = c(
+    proliferation=c(
         "E2F TARGETS",
         "G2M CHECKPOINT",
         "MITOTIC SPINDLE",
@@ -310,7 +306,7 @@ hallmarkCategories <- list(
         "MYC TARGETS V1",
         "MYC TARGETS V2"
     ),
-    signaling = c(
+    signaling=c(
         "ANDROGEN RESPONSE",
         "ESTROGEN RESPONSE EARLY",
         "ESTROGEN RESPONSE LATE",
@@ -329,7 +325,7 @@ hallmarkCategories <- list(
 )
 
 hallmarkAnnotated <- hallmark2 %>% mutate(
-    topPathways = case_when(
+    topPathways=case_when(
         gs_name %in% hallmarkCategories$cellComp ~ "Cellular",
         gs_name %in% hallmarkCategories$development ~ "Development",
         gs_name %in% hallmarkCategories$dnaDamage ~ "DNA Damage",
@@ -343,14 +339,14 @@ hallmarkAnnotated <- hallmark2 %>% mutate(
 
 hallmarkDb <- hallmarkAnnotated %>%
     select(
-        "pathwayId" = gs_name,
+        "pathwayId"=gs_name,
         topPathways,
-        "pathwayName" = gs_name,
-        "ensemblGeneId" = ensembl_gene,
+        "pathwayName"=gs_name,
+        "ensemblGeneId"=ensembl_gene,
     ) %>%
     mutate(
-        groupedPathway = NA,
-        topPathwaysOriginal = NA
+        groupedPathway=NA,
+        topPathwaysOriginal=NA
     )
 
 
@@ -366,13 +362,13 @@ topPathwaysMore <- rbind(
     select(
         reactomeAllGrouped,
         pathwayId,
-        "topPathways" = topPathwayName,
+        "topPathways"=topPathwayName,
         pathwayName,
         groupedPathway,
-        "topPathwaysOriginal" = topPathwayNameOriginal
+        "topPathwaysOriginal"=topPathwayNameOriginal
     ),
     hallmarkDb %>% select(-ensemblGeneId) %>% distinct()
 ) %>%
     as_tibble()
 
-usethis::use_data(topPathwaysMore, overwrite = TRUE, compress = "bzip2")
+usethis::use_data(topPathwaysMore, overwrite=TRUE, compress="bzip2")
