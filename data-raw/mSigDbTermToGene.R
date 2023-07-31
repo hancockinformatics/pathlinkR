@@ -7,8 +7,8 @@ library(tidyverse)
 # Top term information ----------------------------------------------------
 
 topTerms <- list(
-    cellComp = c("APICAL SURFACE", "APICAL JUNCTION", "PEROXISOME"),
-    development = c(
+    cellComp=c("APICAL SURFACE", "APICAL JUNCTION", "PEROXISOME"),
+    development=c(
         "MYOGENESIS",
         "ANGIOGENESIS",
         "SPERMATOGENESIS",
@@ -16,8 +16,8 @@ topTerms <- list(
         "EPITHELIAL MESENCHYMAL TRANSITION",
         "PANCREAS BETA CELLS"
     ),
-    dnaDamage = c("DNA REPAIR", "UV RESPONSE DN", "UV RESPONSE UP"),
-    immune = c(
+    dnaDamage=c("DNA REPAIR", "UV RESPONSE DN", "UV RESPONSE UP"),
+    immune=c(
         "ALLOGRAFT REJECTION",
         "COMPLEMENT",
         "COAGULATION",
@@ -25,7 +25,7 @@ topTerms <- list(
         "INTERFERON ALPHA RESPONSE",
         "INTERFERON GAMMA RESPONSE"
     ),
-    metabolism = c(
+    metabolism=c(
         "BILE ACID METABOLISM",
         "CHOLESTEROL HOMEOSTASIS",
         "GLYCOLYSIS",
@@ -34,14 +34,14 @@ topTerms <- list(
         "HEME METABOLISM",
         "OXIDATIVE PHOSPHORYLATION"
     ),
-    stress = c(
+    stress=c(
         "HYPOXIA",
         "APOPTOSIS",
         "UNFOLDED PROTEIN RESPONSE",
         "PROTEIN SECRETION",
         "REACTIVE OXYGEN SPECIES PATHWAY"
     ),
-    proliferation = c(
+    proliferation=c(
         "E2F TARGETS",
         "G2M CHECKPOINT",
         "MITOTIC SPINDLE",
@@ -49,7 +49,7 @@ topTerms <- list(
         "MYC TARGETS V1",
         "MYC TARGETS V2"
     ),
-    signaling = c(
+    signaling=c(
         "ANDROGEN RESPONSE",
         "ESTROGEN RESPONSE EARLY",
         "ESTROGEN RESPONSE LATE",
@@ -72,18 +72,18 @@ topTerms <- list(
 
 # Get Hallmark info -------------------------------------------------------
 
-hallmark <- msigdbr(category = "H") %>%
-    select(gs_name, "ensemblGeneId" = ensembl_gene) %>%
+hallmark <- msigdbr(category="H") %>%
+    select(gs_name, "ensemblGeneId"=ensembl_gene) %>%
     mutate(
-        pathwayId = str_replace_all(gs_name, c("HALLMARK_" = "", "_" = " ")),
-        pathwayName = pathwayId,
-        groupedPathway = NA_character_,
-        topPathwaysOriginal = NA_character_
+        pathwayId=str_replace_all(gs_name, c("HALLMARK_" = "", "_" = " ")),
+        pathwayName=pathwayId,
+        groupedPathway=NA_character_,
+        topPathwaysOriginal=NA_character_
     )
 
 
 mSigDbTermToGene <- hallmark %>%
-    left_join(topTerms, multiple = "all") %>%
+    left_join(topTerms, multiple="all") %>%
     relocate(
         pathwayId,
         topPathway,
@@ -97,4 +97,4 @@ mSigDbTermToGene <- hallmark %>%
 
 # Save the data -----------------------------------------------------------
 
-usethis::use_data(mSigDbTermToGene, overwrite = TRUE)
+usethis::use_data(mSigDbTermToGene, overwrite=TRUE)
