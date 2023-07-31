@@ -17,7 +17,7 @@ reactomeNames <- as.list(reactomePATHID2NAME) %>%
     enframe("pathwayId", "pathwayName") %>%
     filter(str_detect(pathwayId, "^R-HSA")) %>%
     unnest(pathwayName) %>%
-    mutate(pathwayName = str_remove(pathwayName, "Homo sapiens: "))
+    mutate(pathwayName=str_remove(pathwayName, "Homo sapiens: "))
 
 
 # Map pathway IDs to pathway names ----------------------------------------
@@ -25,8 +25,8 @@ reactomeNames <- as.list(reactomePATHID2NAME) %>%
 reactomeDb <- left_join(
     reactomeIds,
     reactomeNames,
-    by = "pathwayId",
-    multiple = "all"
+    by="pathwayId",
+    multiple="all"
 )
 
 
@@ -34,9 +34,9 @@ reactomeDb <- left_join(
 
 # Some are genes from other organisms (e.g. microbes for Immune System)
 reactomeDatabase <- reactomeDb %>%
-    filter(entrezGeneId %in% keys(org.Hs.eg.db, keytype = "ENTREZID"))
+    filter(entrezGeneId %in% keys(org.Hs.eg.db, keytype="ENTREZID"))
 
 
 # Save the data -----------------------------------------------------------
 
-usethis::use_data(reactomeDatabase, overwrite = TRUE)
+usethis::use_data(reactomeDatabase, overwrite=TRUE)
