@@ -65,7 +65,7 @@ deseqExample <- deseqExampleList[[1]]
 head(deseqExample)
 
 ## Generate a volcano plot using this first dataframe
-eruption(deseqExample)
+eruption(deseqExample, title=names(deseqExampleList)[1])
 ```
 
 There are multiple options available for customizing this volcano plot. You can
@@ -90,13 +90,13 @@ ifnGenes <- sigoraDatabase %>%
 ## - Label only the top 5 up and down-regulated genes
 ## - These top genes should be only from the interferon gene list
 eruption(
-    deseqResults = deseqExample,
-    title        = names(deseqExampleList)[1],
-    selectGenes  = ifnGenes, 
-    selectName   = "Interferon genes", 
-    nonlog2      = TRUE, 
-    n            = 5, 
-    label        = "select" 
+    deseqResults=deseqExample,
+    title=names(deseqExampleList)[1],
+    highlightGenes=ifnGenes, 
+    highlightName="Interferon genes (red)", 
+    nonlog2=TRUE, 
+    n=5, 
+    label="highlight" 
 )
 ```
 
@@ -121,23 +121,24 @@ two main functions used to accomplish this are `ppiBuildNetwork` and
 ## Construct a zero order network, i.e. it will only contain the input genes, 
 ## no interactors
 exNetwork <- ppiBuildNetwork(
-    deseqResults = deseqExampleList[[1]],
-    filterInput = TRUE,
-    order = "zero"
+    deseqResults=deseqExampleList[[1]],
+    filterInput=TRUE,
+    order="zero"
 )
 
 ## Plot the PPI network, colouring the nodes based on their log2 fold change
 ## values. Many options are available to customize the final plot; see
 ## `?ppiPlotNetwork` for all the details.
 ppiPlotNetwork(
-    exNetwork,
-    fillColumn = log2FoldChange,
-    fillType = "foldChange",
-    layout = "nicely",
-    label = TRUE,
-    labelColumn = hgncSymbol,
-    labelFilter = 5,
-    legend = TRUE
+    network=exNetwork,
+    title=names(deseqExampleList)[1],
+    fillColumn=log2FoldChange,
+    fillType="foldChange",
+    layout="kk",
+    label=TRUE,
+    labelColumn=hgncSymbol,
+    labelFilter=5,
+    legend=TRUE
 )
 ```
 
@@ -176,8 +177,8 @@ comparison that resulted in the DESeq2 results.
 ## Perform enrichment with Sigora (default). We also need to specify the
 ## gene-pair signature repository (more in the Supplemental section).
 enrichedResultsSigora <- enrichPathway(
-    inputList = deseqExampleList,
-    gpsRepo = reaH
+    inputList=deseqExampleList,
+    gpsRepo=reaH
 )
 ```
 
@@ -188,9 +189,9 @@ enrichedResultsSigora <- sigoraExamples
 ```{r sigora_enrichment_no_split, eval=FALSE}
 ## Enrichment without splitting by fold change direction
 enrichedResultsSigoraNoSplit <- enrichPathway(
-    inputList = deseqExampleList,
-    gpsRepo = reaH, 
-    split = FALSE
+    inputList= eseqExampleList,
+    gpsRepo=reaH, 
+    split=FALSE
 )
 ```
 
@@ -200,8 +201,8 @@ ReactomePA (Yu et al. 2016).
 ```{r reactomepa_enrichment}
 ## Perform enrichment with ReactomePA
 enrichedResultsRpa <- enrichPathway(
-    inputList = deseqExampleList,
-    analysis = "reactomepa"
+    inputList=deseqExampleList,
+    analysis="reactomepa"
 )
 ```
 
@@ -213,8 +214,8 @@ This database provides a more high-level summary of key biological processes
 compared to the more granular Reactome pathways.
 ```{r hallmark_enrichment}
 enrichedResultsHm <- enrichPathway(
-    inputList = deseqExampleList,
-    analysis = "hallmark"
+    inputList=deseqExampleList,
+    analysis="hallmark"
 )
 ```
 
@@ -237,7 +238,7 @@ you can specify which pathways or top pathway groups to pull out to visualize.
 
 ```{r plot_pathways_I, fig.width=12, fig.height=10}
 ## Plot the Sigora results in two columns
-plotPathways(enrichedResultsSigora, columns = 2)
+plotPathways(enrichedResultsSigora, columns=2)
 ```
 
 ```{r plot_pathways_II, fig.width=8, fig.height=8}
@@ -249,11 +250,11 @@ plotPathways(enrichedResultsSigora, columns = 2)
 ## - Increase the truncation cutoff value for more words
 plotPathways(
     enrichedResultsSigora, 
-    specificTopPathways = "Immune System",
-    newGroupNames = c("Pos", "Neg"), 
-    showNumGenes = TRUE,
-    xAngle = "horizontal",
-    nameWidth = 50
+    specificTopPathways="Immune System",
+    newGroupNames=c("COVID\nPositive", "COVID\nNegative"), 
+    showNumGenes=TRUE,
+    xAngle="horizontal",
+    nameWidth=50
 )
 ```
 
@@ -280,27 +281,27 @@ Jaccard distance, but there is support for multiple distance measures to be
 used.
 ```{r pathway_network_I, fig.width=12, fig.height=10, warning=FALSE}
 startingPathways <- createFoundation(
-    mat = pathwayDistancesJaccard,
-    maxDistance = 0.8
+    mat=pathwayDistancesJaccard,
+    maxDistance=0.8
 )
 
 exPathwayNetworkInput <- sigoraExamples %>% 
     filter(comparison == "COVID Pos Over Time")
 
 myPathwayNetwork <- createPathnet(
-    sigoraResult = exPathwayNetworkInput,
-    foundation = startingPathways,
-    trim = TRUE,
-    trimOrder = 1
+    sigoraResult=exPathwayNetworkInput,
+    foundation=startingPathways,
+    trim=TRUE,
+    trimOrder=1
 )
 
 ## Static plot with ggraph
 pathnetGGraph(
     myPathwayNetwork,
-    labelProp = 0.1,
-    nodeLabelSize = 4,
-    nodeLabelOverlaps = 8,
-    segColour = "red"
+    labelProp=0.1,
+    nodeLabelSize=4,
+    nodeLabelOverlaps=8,
+    segColour="red"
 )
 ```
 
@@ -314,34 +315,34 @@ pathnetVisNetwork(myPathwayNetwork)
 candidateData <- sigoraExamples %>%
     filter(comparison == "COVID Pos Over Time") %>% 
     select(pathwayId, genes) %>%
-    tidyr::separate_rows(genes, sep = ";") %>%
+    tidyr::separate_rows(genes, sep=";") %>%
     left_join(
         sigoraDatabase,
-        by = c("pathwayId", "genes" = "hgncSymbol"),
-        multiple = "all"
+        by=c("pathwayId", "genes" = "hgncSymbol"),
+        multiple="all"
     ) %>%
-    relocate(pathwayId, ensemblGeneId, "hgncSymbol" = genes, pathwayName) %>%
+    relocate(pathwayId, ensemblGeneId, "hgncSymbol"=genes, pathwayName) %>%
     distinct()
 
 ## Now that we have a smaller table in the same format as sigora_database, we
 ## can construct our own matrix of pathway distances
 candidateDistData <- getPathwayDistances(
-    pathwayData = candidateData,
-    distMethod = "jaccard"
+    pathwayData=candidateData,
+    distMethod="jaccard"
 )
 
 candidateStartingPathways <- createFoundation(
-    mat = candidateDistData,
-    maxDistance = 0.9
+    mat=candidateDistData,
+    maxDistance=0.9
 )
 
 candidatesAsNetwork <- createPathnet(
-    sigoraResult = filter(
+    sigoraResult=filter(
         sigoraExamples, 
         comparison == "COVID Pos Over Time"
     ),
-    foundation = candidateStartingPathways,
-    trim = FALSE
+    foundation=candidateStartingPathways,
+    trim=FALSE
 )
 
 pathnetVisNetwork(candidatesAsNetwork)
@@ -355,9 +356,9 @@ list of DESeq2 data frames.
 ```{r plot_fold_changes_I, fig.height=10}
 plotFoldChange(
     deseqExampleList,
-    pathName = "Interferon alpha/beta signaling",
-    colSplit = c("Positive", "Negative"),
-    clusterColumns = FALSE
+    pathName="Interferon alpha/beta signaling",
+    colSplit=c("Positive", "Negative"),
+    clusterColumns=FALSE
 )
 ```
 
@@ -370,15 +371,15 @@ deseqExampleListRenamed <- purrr::set_names(
 
 plotFoldChange(
     deseqExampleListRenamed,
-    manualTitle = "Genes I like",
-    genesToPlot = c("CD4", "CD8A","CD8B", "CD28", "ZAP70"),
-    geneFormat = "hgnc",
-    colSplit = c("Pos", "Neg"),
-    log2FoldChange = TRUE,
-    colAngle = 45,
-    clusterRows = FALSE,
-    clusterColumns = TRUE,
-    invert = TRUE
+    manualTitle="Signature genes",
+    genesToPlot=c("CD4", "CD8A","CD8B", "CD28", "ZAP70"),
+    geneFormat="hgnc",
+    colSplit=c("Pos", "Neg"),
+    log2FoldChange=TRUE,
+    colAngle=45,
+    clusterRows=FALSE,
+    clusterColumns=TRUE,
+    invert=TRUE
 )
 ```
 
@@ -400,7 +401,7 @@ significant. Therefore, the cutoff threshold for significance is more stringent
 (p-value < 0.001) and a more conservative adjustment method (Bonferroni) is
 used. For regular over-representation analysis, a less conservative adjustment
 method (Benjamini-Hochberg) is used with adjusted p-value <0.05. These are
-automatically set with `filterResults = "default"`. You can adjust these
+automatically set with `filterResults="default"`. You can adjust these
 cut-offs by setting `filterResults` to different values between 0 and 1, or `1`
 if you want all the pathways (this may be useful for comparing which enriched
 genes appear in which comparisons, even if the enrichment is not significant).
