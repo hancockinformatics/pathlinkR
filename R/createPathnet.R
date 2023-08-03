@@ -1,8 +1,8 @@
 #' Create a pathway network from enrichment results and a pathway interaction
-#'   foundation
+#' foundation
 #'
-#' @param enrichPathwayResult Data frame of results from Sigora. Must minimally contain
-#'   the columns "pathwayId" and "pValueAdjusted".
+#' @param enrichPathwayResult Data frame of results from Sigora. Must
+#'   minimally contain the columns "pathwayId" and "pValueAdjusted".
 #' @param foundation List of pathway pairs to use in constructing a network.
 #'   Typically this will be the output from `createFoundation`.
 #' @param trim Remove independent subgraphs which don't contain any enriched

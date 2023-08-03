@@ -169,8 +169,8 @@ eruption <- function(
 
     ## Select the genes to label. You can specify if you want to only label
     ## annotated genes (default), i.e. those that have a gene name. This is for
-    ## "auto" and "highlight" labeling, i.e. it does not apply to manual labeling
-    ## (e.g. if you want to manually label an unannotated gene).
+    ## "auto" and "highlight" labeling, i.e. it does not apply to manual
+    ## labeling (e.g. if you want to manually label an unannotated gene).
     if (removeUnannotated) {
         possibleLabels <- res %>%
             filter(!grepl("ENSG", geneName)) %>%
@@ -203,8 +203,8 @@ eruption <- function(
         )
     }
 
-    ## Selective labeling ("highlight"): label the top n up/down genes that are in
-    ## `highlightGenes`
+    ## Selective labeling ("highlight"): label the top n up/down genes that are
+    ## in `highlightGenes`
     if (label == "highlight") {
         upGenes <- upDf %>%
             filter(inList == "Y", geneName %in% possibleLabels) %>%
@@ -312,7 +312,8 @@ eruption <- function(
         ) +
 
         ## Add in informative subtitles for number of up and down-regulated
-        ## genes, the number of genes in "highlightGenes," and a title if provided
+        ## genes, the number of genes in "highlightGenes," and a title if
+        ## provided
         {if (!is.na(title)) labs(title=title)} +
 
         ## If there are no "highlightGenes"

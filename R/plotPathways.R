@@ -7,7 +7,8 @@
 #'   columns, with a default of 1.
 #' @param specificTopPathways Only plot pathways from a specific vector of
 #'   "topPathways". Defaults to "any" which includes all pathway results, or see
-#'   `unique(enrichedResults$topPathways)` (i.e. the input) for possible values.
+#'   `unique(enrichedResults$topPathways)` (i.e. the input)
+#'   for possible values.
 #' @param specificPathways Only plot specific pathways. Defaults to "any".
 #' @param colourValues Length-two character vector of colours to use for the
 #'   scale. Defaults to `c("blue", "red")`.

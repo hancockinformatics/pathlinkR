@@ -179,8 +179,8 @@ dataframe(s) in the list should indicate the comparison that was made in the
 DESeq2 results, as it will be used to identify the results.
 ```{r sigora_enrichment, eval=FALSE}
 ## Perform enrichment with sigora (default). We also need to specify the
-## gene-pair signature repository (more in the Supplemental section), but we can 
-## simply use the one that comes with `sigora`.
+## gene-pair signature repository (more in the Supplemental section), but we 
+## can simply use the one that comes with `sigora`.
 enrichedResultsSigora <- enrichPathway(
     inputList=deseqExampleList,
     gpsRepo=reaH
@@ -213,13 +213,12 @@ enrichedResultsRpa <- enrichPathway(
 ```
 
 In addition to the Reactome database, we also provide over-representation
-analysis using the 
-[Hallmark gene sets](https://www.gsea-msigdb.org/gsea/msigdb/human/collections.jsp) 
-from the Molecular Signatures Database (MSigDb). These are 50 gene sets that
-represent "specific, well-defined biological states or processes with coherent
-expression" (Liberzon et al. 2015). This database provides a more high-level
-summary of key biological processes compared to the more granular Reactome
-pathways.
+analysis using the [Hallmark gene
+sets](https://www.gsea-msigdb.org/gsea/msigdb/human/collections.jsp) from the
+Molecular Signatures Database (MSigDb). These are 50 gene sets that represent
+"specific, well-defined biological states or processes with coherent expression"
+(Liberzon et al. 2015). This database provides a more high-level summary of key
+biological processes compared to the more granular Reactome pathways.
 ```{r hallmark_enrichment}
 enrichedResultsHm <- enrichPathway(
     inputList=deseqExampleList,
