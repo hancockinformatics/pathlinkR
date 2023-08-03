@@ -1,3 +1,30 @@
+test_that("Sigora enrichment works as expected", {
+    testResultReactomepa <- enrichPathway(
+        inputList = deseqExampleList,
+        analysis = "sigora"
+    )
+
+    expect_equal(dim(testResultReactomepa), c(66, 12))
+
+    expect_setequal(
+        colnames(testResultReactomepa),
+        c(
+            "comparison",
+            "direction",
+            "pathwayId",
+            "pathwayName",
+            "pValue",
+            "pValueAdjusted",
+            "genes",
+            "numCandidateGenes",
+            "numBgGenes",
+            "geneRatio",
+            "totalGenes",
+            "topPathways"
+        )
+    )
+})
+
 test_that("ReactomePA enrichment works as expected", {
     testResultReactomepa <- enrichPathway(
         inputList = deseqExampleList,
@@ -25,7 +52,7 @@ test_that("ReactomePA enrichment works as expected", {
     )
 })
 
-test_that("we have the right columns for each method", {
+test_that("Hallmark enrichment works as expected", {
     testResultHallmark <- enrichPathway(
         inputList = deseqExampleList,
         analysis = "hallmark",
