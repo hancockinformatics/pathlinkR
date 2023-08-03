@@ -7,9 +7,9 @@
 #' @param filterInput When providing list of data frames containing the
 #'   unfiltered output from `DESeq2::results()` (default format), set this to
 #'   `TRUE` to filter for significant genes using the thresholds set by the
-#'   `pCutoff` and `fcCutoff`. When this argument is `FALSE` it's assumed your
-#'   passing a pre-filtered data frame to `inputList`, and no more filtering
-#'   will be done.
+#'   `pCutoff` and `fcCutoff`. When this argument is `FALSE` it's
+#'   assumed your passing a pre-filtered data frame to `inputList`, and no
+#'   more filtering will be done.
 #' @param pCutoff Adjusted p value cutoff, defaults to <0.05
 #' @param fcCutoff Minimum absolute fold change, defaults to >1.5
 #' @param split Boolean (TRUE); Split into up and down-regulated DE genes using

@@ -4,10 +4,11 @@
 #'   are identical. Should match the output from `getPathwayDistances`.
 #' @param maxDistance Numeric distance cutoff (less than or equal) used to
 #'   determine if two pathways should share an edge. Pathway pairs with a
-#'   distance of 0 are always removed. One of `maxDistance` or `propToKeep` must
-#'   be provided.
+#'   distance of 0 are always removed. One of `maxDistance` or
+#'   `propToKeep` must be provided.
 #' @param propToKeep Top proportion of pathway pairs to keep as edges, ranked
-#'   based distance. One of `maxDistance` or `propToKeep` must be provided.
+#'   based distance. One of `maxDistance` or `propToKeep` must be
+#'   provided.
 #'
 #' @return A tibble of interacting pathway pairs
 #' @export
