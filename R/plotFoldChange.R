@@ -36,12 +36,12 @@
 #'   and comparisons as rows.
 #' @param log2FoldChange Boolean (FALSE). Default plots the fold changes in the
 #'   legend as the true fold change. Set to TRUE if you want log2 fold change.
-#' @param colSplit A vector, with the same length as `inputList`, which assigns
-#'   each data frame in `inputList` to a group, and splits the heatmap on these
-#'   larger groupings. The order of groups in the heatmap will be carried over,
-#'   so one can alter the order of `inputList` and `colSplit` to affect the
-#'   heatmap. This argument will be ignored if `clusterColumns` is set to TRUE.
-#'   See Details for more information.
+#' @param colSplit A vector, with the same length as `inputList`, which
+#'   assigns each data frame in `inputList` to a group, and splits the heatmap
+#'   on these larger groupings. The order of groups in the heatmap will be
+#'   carried over, so one can alter the order of `inputList` and
+#'   `colSplit` to affect the heatmap. This argument will be ignored if
+#'   `clusterColumns` is set to TRUE. See Details for more information.
 #' @param clusterRows Boolean (TRUE). Whether to cluster the rows (genes). May
 #'   need to change if `invert=TRUE`.
 #' @param clusterColumns Boolean (FALSE). Whether to cluster the columns
