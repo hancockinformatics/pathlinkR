@@ -5,10 +5,10 @@
 \title{Create a pathway network from enrichment results and a pathway interaction
 foundation}
 \usage{
-createPathnet(sigoraResult, foundation, trim = TRUE, trimOrder = 1)
+createPathnet(enrichPathwayResult, foundation, trim = TRUE, trimOrder = 1)
 }
 \arguments{
-\item{sigoraResult}{Data frame of results from Sigora. Must minimally contain
+\item{enrichPathwayResult}{Data frame of results from Sigora. Must minimally contain
 the columns "pathwayId" and "pValueAdjusted".}
 
 \item{foundation}{List of pathway pairs to use in constructing a network.
@@ -42,7 +42,9 @@ startingPathways <- createFoundation(
 )
 
 createPathnet(
-    sigoraResult=sigoraExamples[grepl("Pos", sigoraExamples$comparison), ],
+    enrichPathwayResult=sigoraExamples[
+        grepl("Pos", sigoraExamples$comparison),
+    ],
     foundation=startingPathways,
     trim=TRUE,
     trimOrder=1

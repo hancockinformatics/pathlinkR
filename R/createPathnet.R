@@ -1,7 +1,7 @@
 #' Create a pathway network from enrichment results and a pathway interaction
 #'   foundation
 #'
-#' @param sigoraResult Data frame of results from Sigora. Must minimally contain
+#' @param enrichPathwayResult Data frame of results from Sigora. Must minimally contain
 #'   the columns "pathwayId" and "pValueAdjusted".
 #' @param foundation List of pathway pairs to use in constructing a network.
 #'   Typically this will be the output from `createFoundation`.
@@ -40,23 +40,25 @@
 #' )
 #'
 #' createPathnet(
-#'     sigoraResult=sigoraExamples[grepl("Pos", sigoraExamples$comparison), ],
+#'     enrichPathwayResult=sigoraExamples[
+#'         grepl("Pos", sigoraExamples$comparison),
+#'     ],
 #'     foundation=startingPathways,
 #'     trim=TRUE,
 #'     trimOrder=1
 #' )
 #'
 createPathnet <- function(
-        sigoraResult,
+        enrichPathwayResult,
         foundation,
         trim=TRUE,
         trimOrder=1
 ) {
 
     ## Input checks
-    stopifnot(is(sigoraResult, "data.frame"))
+    stopifnot(is(enrichPathwayResult, "data.frame"))
     stopifnot(
-        all(c("pathwayId", "pValueAdjusted") %in% colnames(sigoraResult))
+        all(c("pathwayId", "pValueAdjusted") %in% colnames(enrichPathwayResult))
     )
 
     stopifnot(is(foundation, "data.frame"))
@@ -74,7 +76,7 @@ createPathnet <- function(
         select(pathway1, pathwayName1) %>%
         distinct() %>%
         left_join(
-            sigoraResult,
+            enrichPathwayResult,
             by=c("pathway1" = "pathwayId"),
             multiple="all"
         )
