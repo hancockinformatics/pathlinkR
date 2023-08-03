@@ -1,4 +1,4 @@
-test_that("there are the right number of nodes", {
+test_that("the pathway network is the right size", {
     testStartingPathways <- createFoundation(
         mat = pathwayDistancesJaccard,
         maxDistance = 0.8
