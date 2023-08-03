@@ -8,7 +8,7 @@ test_that("the pathway network is the right size", {
         filter(comparison == "COVID Pos Over Time")
 
     testMyPathwayNetwork <- createPathnet(
-        sigoraResult = testExPathwayNetworkInput,
+        enrichPathwayResult = testExPathwayNetworkInput,
         foundation = testStartingPathways,
         trim = TRUE,
         trimOrder = 1

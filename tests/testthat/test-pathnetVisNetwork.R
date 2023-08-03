@@ -7,7 +7,7 @@ test_that("pathVisNetwork returns the right plot", {
     )
 
     exPathnet <- createPathnet(
-        sigoraResult = dplyr::filter(
+        enrichPathwayResult = dplyr::filter(
             sigoraExamples,
             comparison == "COVID Pos Over Time"
         ),

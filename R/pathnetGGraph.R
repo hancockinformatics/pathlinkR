@@ -52,10 +52,9 @@
 #' )
 #'
 #' exPathnet <- createPathnet(
-#'     sigoraResult=dplyr::filter(
-#'         sigoraExamples,
-#'         comparison == "COVID Pos Over Time"
-#'     ),
+#'     enrichPathwayResult=sigoraExamples[
+#'         grepl("Pos", sigoraExamples$comparison),
+#'     ],
 #'     foundation=startingPathways,
 #'     trim=TRUE,
 #'     trimOrder=1
