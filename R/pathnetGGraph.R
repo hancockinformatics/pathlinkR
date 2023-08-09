@@ -7,6 +7,7 @@
 #' @param edgeAlpha Alpha value for edges; defaults to `1`.
 #' @param nodeSizeRange Size range for nodes, mapped to significance (Bonferroni
 #'   p-value). Defaults to `c(4, 8)`.
+#' @param nodeBorderWidth Width of borders on nodes, defaults to 1.5
 #' @param edgeWidthRange Range of edge widths, mapped to `log10(similarity)`.
 #'   Defaults to `c(0.33, 3)`.
 #' @param labelProp Proportion of "interactor" (i.e. non-enriched) pathways that
@@ -72,6 +73,7 @@ pathnetGGraph <- function(
         network,
         networkLayout="nicely",
         nodeSizeRange=c(4, 8),
+        nodeBorderWidth=1.5,
         edgeColour="grey30",
         edgeAlpha=1,
         edgeWidthRange=c(0.33, 3),
@@ -96,6 +98,15 @@ pathnetGGraph <- function(
             as_tibble(activate(network, "edges"))
         )
     ))
+
+    stopifnot("'nodeSizeRange' should be a length-two numeric vector" = {
+        length(nodeSizeRange) == 2
+    })
+
+    stopifnot("'edgeWidthRange' should be a length-two numeric vector" = {
+        length(edgeWidthRange) == 2
+    })
+
 
     interactorsAll <- network %>%
         filter(is.na(pValueAdjusted)) %>%
@@ -146,7 +157,7 @@ pathnetGGraph <- function(
                 colour=groupedPathway
             ),
             pch=21,
-            stroke=1.5
+            stroke=nodeBorderWidth
         ) +
         scale_size_continuous(
             labels=scales::label_math(expr=10^-~.x),

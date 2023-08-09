@@ -8,6 +8,7 @@ pathnetGGraph(
   network,
   networkLayout = "nicely",
   nodeSizeRange = c(4, 8),
+  nodeBorderWidth = 1.5,
   edgeColour = "grey30",
   edgeAlpha = 1,
   edgeWidthRange = c(0.33, 3),
@@ -27,6 +28,8 @@ to "nicely", but supports any method found in \code{?layout_tbl_graph_igraph}}
 
 \item{nodeSizeRange}{Size range for nodes, mapped to significance (Bonferroni
 p-value). Defaults to \code{c(4, 8)}.}
+
+\item{nodeBorderWidth}{Width of borders on nodes, defaults to 1.5}
 
 \item{edgeColour}{Colour of network edges; defaults to "grey30".}
 
