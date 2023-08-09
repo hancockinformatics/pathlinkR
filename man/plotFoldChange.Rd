@@ -8,9 +8,9 @@ plotFoldChange(
   inputList,
   pathName = NA,
   pathId = NA,
+  genesToPlot = NA,
   manualTitle = NA,
   titleSize = 14,
-  genesToPlot = NA,
   geneFormat = "ensg",
   pCutoff = 0.05,
   fcCutoff = 1.5,
@@ -42,14 +42,14 @@ for the plot title. Alternative to \code{pathID}.}
 \item{pathId}{ID of a Reactome pathway to pull genes from. Alternative to
 \code{pathName}.}
 
+\item{genesToPlot}{Vector of Ensembl gene IDs you want to plot, instead of
+pulling the genes from a pathway, i.e. this option and
+\code{pathName}/\code{pathID} are mutually exclusive.}
+
 \item{manualTitle}{Provide your own title, and override the use of a pathway
-nameas the title.}
+name the title.}
 
 \item{titleSize}{Font size for the title.}
-
-\item{genesToPlot}{Vector of Ensembl gene IDs you want to plot, instead of
-pulling the genes from a pathway. I.e. this option and pathName/pathID are
-mutually exclusive.}
 
 \item{geneFormat}{Type of genes given in \code{genesToPlot}. Default is Ensembl
 gene IDs ("ensg"), but can also input a vector of HGNC symbols ("hgnc").}
@@ -83,12 +83,12 @@ and comparisons as rows.}
 \item{log2FoldChange}{Boolean (FALSE). Default plots the fold changes in the
 legend as the true fold change. Set to TRUE if you want log2 fold change.}
 
-\item{colSplit}{A vector, with the same length as \code{inputList}, which assigns
-each data frame in \code{inputList} to a group, and splits the heatmap on these
-larger groupings. The order of groups in the heatmap will be carried over,
-so one can alter the order of \code{inputList} and \code{colSplit} to affect the
-heatmap. This argument will be ignored if \code{clusterColumns} is set to TRUE.
-See Details for more information.}
+\item{colSplit}{A vector, with the same length as \code{inputList}, which
+assigns each data frame in \code{inputList} to a group, and splits the heatmap
+on these larger groupings. The order of groups in the heatmap will be
+carried over, so one can alter the order of \code{inputList} and
+\code{colSplit} to affect the heatmap. This argument will be ignored if
+\code{clusterColumns} is set to TRUE. See Details for more information.}
 
 \item{clusterRows}{Boolean (TRUE). Whether to cluster the rows (genes). May
 need to change if \code{invert=TRUE}.}
