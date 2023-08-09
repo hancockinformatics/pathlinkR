@@ -8,7 +8,7 @@ pathnetVisNetwork(
   network,
   networkLayout = "layout_nicely",
   edgeColour = "#848484",
-  edgeSizeRange = c(5, 20),
+  edgeWidthRange = c(5, 20),
   nodeSizeRange = c(20, 50),
   nodeBorderWidth = 2.5,
   labelNodes = TRUE,
@@ -22,11 +22,11 @@ pathnetVisNetwork(
 
 \item{networkLayout}{Desired layout for the network visualization. Defaults
 to "layout_nicely", and should support most igraph layouts. See
-\code{?visIgraphLayout()} for more details.}
+\code{?visIgraphLayout} for more details.}
 
 \item{edgeColour}{Colour of network edges; defaults to "#848484".}
 
-\item{edgeSizeRange}{Edge width is mapped to the similarity measure (one over
+\item{edgeWidthRange}{Edge width is mapped to the similarity measure (one over
 distance). This length-two numeric vector controls the minimum and maximum
 width of edges. Defaults to \code{c(5, 20)}.}
 

@@ -3,9 +3,9 @@
 #' @param network Tidygraph network object as output by `createPathnet`
 #' @param networkLayout Desired layout for the network visualization. Defaults
 #'   to "layout_nicely", and should support most igraph layouts. See
-#'   `?visIgraphLayout()` for more details.
+#'   `?visIgraphLayout` for more details.
 #' @param edgeColour Colour of network edges; defaults to "#848484".
-#' @param edgeSizeRange Edge width is mapped to the similarity measure (one over
+#' @param edgeWidthRange Edge width is mapped to the similarity measure (one over
 #'   distance). This length-two numeric vector controls the minimum and maximum
 #'   width of edges. Defaults to `c(5, 20)`.
 #' @param nodeSizeRange Node size is mapped to the negative log of the
@@ -62,7 +62,7 @@ pathnetVisNetwork <- function(
         network,
         networkLayout="layout_nicely",
         edgeColour="#848484",
-        edgeSizeRange=c(5, 20),
+        edgeWidthRange=c(5, 20),
         nodeSizeRange=c(20, 50),
         nodeBorderWidth=2.5,
         labelNodes=TRUE,
@@ -70,6 +70,15 @@ pathnetVisNetwork <- function(
         nodeLabelColour="black",
         highlighting=TRUE
 ) {
+
+    stopifnot("'nodeSizeRange' should be a length-two numeric vector" = {
+        length(nodeSizeRange) == 2
+    })
+
+    stopifnot("'edgeWidthRange' should be a length-two numeric vector" = {
+        length(edgeWidthRange) == 2
+    })
+
     visNetNodes <- network %>%
         as_tibble() %>%
         mutate(
@@ -129,8 +138,8 @@ pathnetVisNetwork <- function(
         visEdges(
             color=edgeColour,
             scaling=list(
-                "min"=edgeSizeRange[1],
-                "max"=edgeSizeRange[2]
+                "min"=edgeWidthRange[1],
+                "max"=edgeWidthRange[2]
             )
         ) %>%
         visNodes(
