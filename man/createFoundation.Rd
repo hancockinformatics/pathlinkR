@@ -12,11 +12,12 @@ are identical. Should match the output from \code{getPathwayDistances}.}
 
 \item{maxDistance}{Numeric distance cutoff (less than or equal) used to
 determine if two pathways should share an edge. Pathway pairs with a
-distance of 0 are always removed. One of \code{maxDistance} or \code{propToKeep} must
-be provided.}
+distance of 0 are always removed. One of \code{maxDistance} or
+\code{propToKeep} must be provided.}
 
 \item{propToKeep}{Top proportion of pathway pairs to keep as edges, ranked
-based distance. One of \code{maxDistance} or \code{propToKeep} must be provided.}
+based distance. One of \code{maxDistance} or \code{propToKeep} must be
+provided.}
 }
 \value{
 A tibble of interacting pathway pairs
