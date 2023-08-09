@@ -8,12 +8,12 @@
 #'   for the plot title. Alternative to `pathID`.
 #' @param pathId ID of a Reactome pathway to pull genes from. Alternative to
 #'   `pathName`.
-#' @param manualTitle Provide your own title, and override the use of a pathway
-#'   nameas the title.
-#' @param titleSize Font size for the title.
 #' @param genesToPlot Vector of Ensembl gene IDs you want to plot, instead of
-#'   pulling the genes from a pathway. I.e. this option and pathName/pathID are
-#'   mutually exclusive.
+#'   pulling the genes from a pathway, i.e. this option and
+#'   `pathName`/`pathID` are mutually exclusive.
+#' @param manualTitle Provide your own title, and override the use of a pathway
+#'   name the title.
+#' @param titleSize Font size for the title.
 #' @param geneFormat Type of genes given in `genesToPlot`. Default is Ensembl
 #'   gene IDs ("ensg"), but can also input a vector of HGNC symbols ("hgnc").
 #' @param pCutoff P value cutoff, default is <0.05
@@ -89,9 +89,9 @@ plotFoldChange <- function(
         inputList,
         pathName=NA,
         pathId=NA,
+        genesToPlot=NA,
         manualTitle=NA,
         titleSize=14,
-        genesToPlot=NA,
         geneFormat="ensg",
         pCutoff=0.05,
         fcCutoff=1.5,
@@ -111,28 +111,29 @@ plotFoldChange <- function(
         rowCenter=FALSE
 ) {
 
-    ## If pathway name is provided
+    stopifnot("One of 'pathName', 'pathId', 'genesToPlot' must b provided" = {
+        any(!is.na(c(pathName, pathId, genesToPlot)))
+    })
+
     if (!is.na(pathName)) {
         pathId <- sigoraDatabase %>%
             filter(pathwayName == pathName) %>%
-            select(pathwayId) %>%
-            unlist() %>%
-            .[1] %>%
-            as.character()
-        plotTitle <- pathName
-    }
+            pull(pathwayId) %>%
+            unique()
 
-    ## If pathway ID is provided
-    if (!is.na(pathId)) {
+        plotTitle <- pathName
+
+    } else if (!is.na(pathId)) {
         plotTitle <- sigoraDatabase %>%
             filter(pathwayId == pathId) %>%
-            select(pathwayName) %>%
-            unlist() %>%
-            .[1] %>%
-            as.character()
+            pull(pathwayName) %>%
+            unique()
+
+    } else if (any(!is.na(genesToPlot))) {
+        plotTitle <- NULL
     }
 
-    ## If a title is provided manually, overwrite
+    ## If a title is provided manually, overwrite any other title from above
     if (!is.na(manualTitle)) {
         plotTitle <- manualTitle
     }
@@ -324,6 +325,5 @@ plotFoldChange <- function(
         column_names_centered=colCenter,
         row_names_rot=rowAngle,
         row_names_centered=rowCenter
-
     ), column_title=plotTitle)
 }

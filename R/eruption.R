@@ -89,6 +89,18 @@ eruption <- function(
     stopifnot(is(deseqResults, "data.frame"))
     stopifnot(all(c("padj", "log2FoldChange") %in% colnames(deseqResults)))
 
+    if (!is.na(xaxis)) {
+        stopifnot("'xaxis' must be a length-two numeric vector" = {
+            length(xaxis) == 2
+        })
+    }
+
+    if (!is.na(yaxis)) {
+        stopifnot("'yaxis' must be a length-two numeric vector" = {
+            length(yaxis) == 2
+        })
+    }
+
     ## If Ensembl gene IDs are detected, annotate them with gene names from the
     ## mapping file. For Ensembl gene IDs without gene names, just use the
     ## Ensembl gene ID. If rownames are not ENSG ids, they will be used as is,
