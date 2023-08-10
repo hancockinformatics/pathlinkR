@@ -5,11 +5,11 @@
 \title{Plot Reactome pathway enrichment results}
 \usage{
 plotPathways(
-  enrichedResults,
+  enrichResults,
   columns = 1,
   specificTopPathways = "any",
   specificPathways = "any",
-  colourValues = c("blue", "red"),
+  colourValues = c("white", "steelblue3"),
   nameWidth = 35,
   nameRows = 1,
   xAngle = "angled",
@@ -24,7 +24,7 @@ plotPathways(
 )
 }
 \arguments{
-\item{enrichedResults}{Data frame of results from the function
+\item{enrichResults}{Data frame of results from the function
 \code{enrichPathway}}
 
 \item{columns}{Number of columns to split the pathways across, particularly
@@ -33,12 +33,13 @@ columns, with a default of 1.}
 
 \item{specificTopPathways}{Only plot pathways from a specific vector of
 "topPathways". Defaults to "any" which includes all pathway results, or see
-\code{unique(enrichedResults$topPathways)} (i.e. the input) for possible values.}
+\code{unique(enrichResults$topPathways)} (i.e. the input)
+for possible values.}
 
 \item{specificPathways}{Only plot specific pathways. Defaults to "any".}
 
 \item{colourValues}{Length-two character vector of colours to use for the
-scale. Defaults to \code{c("blue", "red")}.}
+scale. Defaults to \code{c("white", "steelblue3")}.}
 
 \item{nameWidth}{How many characters to show for pathway name before
 truncating? Defaults to 35.}
@@ -52,7 +53,8 @@ Defaults to 1.}
 \item{maxPVal}{P values below \code{10 ^ -maxPVal} will be set to that value.}
 
 \item{intercepts}{Add vertical lines to separate different groupings, by
-providing a vector of intercepts (e.g. c(1.5, 2.5)). Defaults to \code{NA}.}
+providing a vector of intercepts (e.g. \code{c(1.5, 2.5)}).
+Defaults to \code{NA}.}
 
 \item{includeGeneRatio}{Boolean (FALSE). Should the gene ratio be included as
 an aesthetic mapping?If so, then it is attributed to the size of the
