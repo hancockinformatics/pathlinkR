@@ -2,8 +2,8 @@
 % Please edit documentation in R/createPathnet.R
 \name{createPathnet}
 \alias{createPathnet}
-\title{Create a pathway network from enrichment results and a pathway interaction
-foundation}
+\title{Create a pathway network from enrichment results and a pathway
+interaction foundation}
 \usage{
 createPathnet(enrichPathwayResult, foundation, trim = TRUE, trimOrder = 1)
 }

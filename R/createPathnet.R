@@ -1,5 +1,5 @@
-#' Create a pathway network from enrichment results and a pathway interaction
-#' foundation
+#' Create a pathway network from enrichment results and a pathway
+#' interaction foundation
 #'
 #' @param enrichPathwayResult Data frame of results from Sigora or ReactomePA
 #'   (should be based on Reactome data). Must minimally contain the columns
