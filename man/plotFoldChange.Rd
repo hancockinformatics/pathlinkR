@@ -11,9 +11,11 @@ plotFoldChange(
   genesToPlot = NA,
   manualTitle = NA,
   titleSize = 14,
-  geneFormat = "ensg",
+  geneFormat = "ensembl",
   pCutoff = 0.05,
   fcCutoff = 1.5,
+  cellColours = c("blue", "white", "red"),
+  cellBorder = gpar(col = "grey"),
   plotSignificantOnly = TRUE,
   showStars = TRUE,
   hideNonsigFC = TRUE,
@@ -52,11 +54,18 @@ name the title.}
 \item{titleSize}{Font size for the title.}
 
 \item{geneFormat}{Type of genes given in \code{genesToPlot}. Default is Ensembl
-gene IDs ("ensg"), but can also input a vector of HGNC symbols ("hgnc").}
+gene IDs ("ensembl"), but can also input a vector of HGNC symbols ("hgnc").}
 
 \item{pCutoff}{P value cutoff, default is <0.05}
 
 \item{fcCutoff}{Absolute fold change cutoff, default is >1.5}
+
+\item{cellColours}{Vector specifying desired colours to use for the cells in
+the heatmap. Defaults to \code{c("blue", "white", "red")}.}
+
+\item{cellBorder}{A call to \code{grid::gpar()} to specify borders between
+cells in the heatmap. The default is \code{gpar(col="grey")}. To
+remove borders set to \code{gpar(col=NA)}}
 
 \item{plotSignificantOnly}{Boolean (TRUE). Only plot genes that are
 differentially expressed (i.e. they pass \code{pCutoff} and \code{fcCutoff}) in
@@ -116,13 +125,20 @@ Creates a heatmap of fold changes values for results from the
 appearance.
 }
 \details{
-The \code{colSplit} argument can be used to define larger groups
-represented in \code{inputList}. For example, consider an experiment comparing
-two different treatments to an untreated control, in both wild type and
-mutant cells. This would give the following comparisons:
+The \code{cellColours} argument is designed to map a range of negative
+and positive values to the three provided colours, with zero as the middle
+colour. If the plotted matrix contains only positive (or negative) values,
+then it will become a two-colour scale, white-to-red (or blue-to-white).
+
+The \code{colSplit} argument can be used to define larger groups represented
+in \code{inputList}. For example, consider an experiment comparing two
+different treatments to an untreated control, in both wild type and mutant
+cells. This would give the following comparisons:
 "wildtype_treatment1_vs_untreated", "wildtype_treatment2_vs_untreated",
 "mutant_treatment1_vs_untreated", and "mutant_treatment2_vs_untreated". One
-could then specify \code{colSplit} as   \code{c("Wild type", "Wild type", "Mutant", "Mutant")} to make the wild type and mutant results more visually distinct.
+could then specify \code{colSplit} as
+\code{c("Wild type", "Wild type", "Mutant", "Mutant")} to make the wild
+type and mutant results more visually distinct.
 }
 \examples{
 plotFoldChange(
