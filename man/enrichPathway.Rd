@@ -25,9 +25,9 @@ IDs as the rownames.}
 \item{filterInput}{When providing list of data frames containing the
 unfiltered output from \code{DESeq2::results()} (default format), set this to
 \code{TRUE} to filter for significant genes using the thresholds set by the
-\code{pCutoff} and \code{fcCutoff}. When this argument is \code{FALSE} it's assumed your
-passing a pre-filtered data frame to \code{inputList}, and no more filtering
-will be done.}
+\code{pCutoff} and \code{fcCutoff}. When this argument is \code{FALSE} it's
+assumed your passing a pre-filtered data frame to \code{inputList}, and no
+more filtering will be done.}
 
 \item{pCutoff}{Adjusted p value cutoff, defaults to <0.05}
 
