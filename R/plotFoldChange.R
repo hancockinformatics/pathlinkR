@@ -63,10 +63,10 @@
 #' @export
 #'
 #' @import dplyr
+#' @import purrr
 #' @importFrom circlize colorRamp2
 #' @importFrom ComplexHeatmap draw Heatmap
 #' @importFrom grid grid.text gpar
-#' @importFrom plyr join_all
 #'
 #' @description Creates a heatmap of fold changes values for results from the
 #'   `DESeq2::results()` function, with various parameters to tweak the
@@ -208,7 +208,7 @@ plotFoldChange <- function(
             rownames_to_column("ensemblGeneId") %>%
             select(ensemblGeneId, {{itemName}} := log2FoldChange)
 
-    }) %>% join_all(by="ensemblGeneId", type="full")
+    }) %>% reduce(full_join, by="ensemblGeneId")
 
 
     dfP <- imap(inputList, function(listItem, itemName) {
@@ -217,7 +217,7 @@ plotFoldChange <- function(
             rownames_to_column("ensemblGeneId") %>%
             select(ensemblGeneId, {{itemName}} := padj)
 
-    }) %>% join_all(by="ensemblGeneId", type="full")
+    }) %>% reduce(full_join, by="ensemblGeneId")
 
     ## From all the data frames, get the genes that were significant in any of
     ## them
