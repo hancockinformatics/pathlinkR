@@ -30,7 +30,7 @@
 #' @importFrom SteinerNet steinertree
 #'
 #' @description Creates a protein-protein interaction (PPI) network using
-#'   data from InnateDB, with options for network order, and filterin input.
+#'   data from InnateDB, with options for network order, and filtering input.
 #'
 #' @details The "minSteiner" method is implemented with the `SteinerNet`
 #'   package.
