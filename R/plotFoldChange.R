@@ -15,9 +15,14 @@
 #'   name the title.
 #' @param titleSize Font size for the title.
 #' @param geneFormat Type of genes given in `genesToPlot`. Default is Ensembl
-#'   gene IDs ("ensg"), but can also input a vector of HGNC symbols ("hgnc").
+#'   gene IDs ("ensembl"), but can also input a vector of HGNC symbols ("hgnc").
 #' @param pCutoff P value cutoff, default is <0.05
 #' @param fcCutoff Absolute fold change cutoff, default is >1.5
+#' @param cellColours Vector specifying desired colours to use for the cells in
+#'   the heatmap. Defaults to `c("blue", "white", "red")`.
+#' @param cellBorder A call to `grid::gpar()` to specify borders between
+#'   cells in the heatmap. The default is `gpar(col="grey")`. To
+#'   remove borders set to `gpar(col=NA)`
 #' @param plotSignificantOnly Boolean (TRUE). Only plot genes that are
 #'   differentially expressed (i.e. they pass `pCutoff` and `fcCutoff`) in
 #'   any comparison from the provided list of data frames.
@@ -58,6 +63,7 @@
 #' @export
 #'
 #' @import dplyr
+#' @importFrom circlize colorRamp2
 #' @importFrom ComplexHeatmap draw Heatmap
 #' @importFrom grid grid.text gpar
 #' @importFrom plyr join_all
@@ -66,14 +72,20 @@
 #'   `DESeq2::results()` function, with various parameters to tweak the
 #'   appearance.
 #'
-#' @details The `colSplit` argument can be used to define larger groups
-#'   represented in `inputList`. For example, consider an experiment comparing
-#'   two different treatments to an untreated control, in both wild type and
-#'   mutant cells. This would give the following comparisons:
-#'   "wildtype_treatment1_vs_untreated", "wildtype_treatment2_vs_untreated",
-#'   "mutant_treatment1_vs_untreated", and "mutant_treatment2_vs_untreated". One
-#'   could then specify `colSplit` as   `c("Wild type", "Wild type", "Mutant",
-#'   "Mutant")` to make the wild type and mutant results more visually distinct.
+#' @details The `cellColours` argument is designed to map a range of negative
+#'   and positive values to the three provided colours, with zero as the middle
+#'   colour. If the plotted matrix contains only positive (or negative) values,
+#'   then it will become a two-colour scale, white-to-red (or blue-to-white).
+#'
+#' The `colSplit` argument can be used to define larger groups represented
+#' in `inputList`. For example, consider an experiment comparing two
+#' different treatments to an untreated control, in both wild type and mutant
+#' cells. This would give the following comparisons:
+#' "wildtype_treatment1_vs_untreated", "wildtype_treatment2_vs_untreated",
+#' "mutant_treatment1_vs_untreated", and "mutant_treatment2_vs_untreated". One
+#' could then specify `colSplit` as
+#' `c("Wild type", "Wild type", "Mutant", "Mutant")` to make the wild
+#' type and mutant results more visually distinct.
 #'
 #' @references <https://bioconductor.org/packages/ComplexHeatmap/>
 #'
@@ -92,9 +104,11 @@ plotFoldChange <- function(
         genesToPlot=NA,
         manualTitle=NA,
         titleSize=14,
-        geneFormat="ensg",
+        geneFormat="ensembl",
         pCutoff=0.05,
         fcCutoff=1.5,
+        cellColours=c("blue", "white", "red"),
+        cellBorder=gpar(col="grey"),
         plotSignificantOnly=TRUE,
         showStars=TRUE,
         hideNonsigFC=TRUE,
@@ -111,9 +125,22 @@ plotFoldChange <- function(
         rowCenter=FALSE
 ) {
 
+    stopifnot(
+        "Provide a named list of data frames of results, with the name
+        of each item in the list as the comparison name."  = {
+            is.list(inputList)
+            !is.null(names(inputList))
+            all(unlist(lapply(inputList, is.data.frame)))
+        }
+    )
+
     stopifnot("One of 'pathName', 'pathId', 'genesToPlot' must b provided" = {
         any(!is.na(c(pathName, pathId, genesToPlot)))
     })
+
+    stopifnot("'geneFormat' must be either 'ensembl' or 'hgnc'" = {
+        geneFormat %in% c("ensembl", "hgnc")}
+    )
 
     if (!is.na(pathName)) {
         pathId <- sigoraDatabase %>%
@@ -121,9 +148,20 @@ plotFoldChange <- function(
             pull(pathwayId) %>%
             unique()
 
+        stopifnot(
+            "Specified 'pathName' was not found, please try a different pathway
+            name" = length(pathId) != 0
+        )
+
         plotTitle <- pathName
 
     } else if (!is.na(pathId)) {
+
+        stopifnot(
+            "Specified 'pathId' was not found, please try a different pathway
+            ID" = pathId %in% unique(sigoraDatabase$pathwayId)
+        )
+
         plotTitle <- sigoraDatabase %>%
             filter(pathwayId == pathId) %>%
             pull(pathwayName) %>%
@@ -152,25 +190,33 @@ plotFoldChange <- function(
         if (geneFormat == "hgnc") {
             genes <- mappingFile %>%
                 filter(hgncSymbol %in% genesToPlot) %>%
-                .$ensemblGeneId
+                pull(ensemblGeneId)
         }
-        if (geneFormat == "ensg") {
+        if (geneFormat == "ensembl") {
             genes <- genesToPlot
         }
     }
 
     dfFC <- imap(inputList, function(listItem, itemName) {
+        stopifnot(
+            "Rownames of data frames in 'inputList' must be Ensembl gene IDs" =
+            grepl(pattern = "^ENSG", x = rownames(listItem)[1])
+        )
+
         listItem %>%
             filter(rownames(.) %in% genes, !is.na(log2FoldChange)) %>%
             rownames_to_column("ensemblGeneId") %>%
             select(ensemblGeneId, {{itemName}} := log2FoldChange)
+
     }) %>% join_all(by="ensemblGeneId", type="full")
+
 
     dfP <- imap(inputList, function(listItem, itemName) {
         listItem %>%
             filter(rownames(.) %in% genes, !is.na(padj)) %>%
             rownames_to_column("ensemblGeneId") %>%
             select(ensemblGeneId, {{itemName}} := padj)
+
     }) %>% join_all(by="ensemblGeneId", type="full")
 
     ## From all the data frames, get the genes that were significant in any of
@@ -198,6 +244,7 @@ plotFoldChange <- function(
         select(-c(ensemblGeneId, entrezGeneId)) %>%
         column_to_rownames(var="hgncSymbol") %>%
         as.matrix()
+
     matFC[is.na(matFC)] <- 0 ## Make any NAs into 0
 
 
@@ -261,8 +308,28 @@ plotFoldChange <- function(
         row_title <- "%s"
     }
 
+    if (min(matFC) >= 0) {
+        myColFun <- colorRamp2(
+            breaks = c(0, max(matFC)),
+            c(cellColours[2], cellColours[3])
+        )
+    } else if (max(matFC) <= 0) {
+        myColFun <- colorRamp2(
+            breaks = c(min(matFC), 0),
+            c(cellColours[1], cellColours[2])
+        )
+    } else {
+        myColFun <- colorRamp2(
+            breaks = c(min(matFC), 0, max(matFC)),
+            cellColours
+        )
+    }
+
     draw(Heatmap(
-        matFC,
+        matrix=matFC,
+        border=TRUE,
+        col=myColFun,
+        rect_gp=cellBorder,
         cell_fun=function(j, i, x, y, w, h, fill) {
             if (showStars) {
                 if (abs(matFC[i,j]) > log2(1.5)) {
