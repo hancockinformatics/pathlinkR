@@ -40,10 +40,10 @@ Results are combined at the end, with an added "direction" column.}
 \item{analysis}{Default is "sigora", but can also be "reactomepa" or
 "hallmark"}
 
-\item{filterResults}{Should the output be filtered for significance? Use \code{1}
-to return the unfiltered results, or any number less than 1 for a custom
-p-value cutoff. If left as \code{default}, the significance cutoff for Sigora is
-0.001, or 0.05 for ReactomePA and Hallmark.}
+\item{filterResults}{Should the output be filtered for significance? Use
+\code{1} to return the unfiltered results, or any number less than 1 for a
+custom p-value cutoff. If left as \code{default}, the significance cutoff
+for Sigora is 0.001, or 0.05 for ReactomePA and Hallmark.}
 
 \item{gpsRepo}{Only applies to \code{analysis="sigora"}. Gene Pair Signature
 object for Sigora to use to test for enriched pathways. We recommend using
