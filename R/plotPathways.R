@@ -1,17 +1,17 @@
 #' Plot Reactome pathway enrichment results
 #'
-#' @param enrichedResults Data frame of results from the function
+#' @param enrichResults Data frame of results from the function
 #'   `enrichPathway`
 #' @param columns Number of columns to split the pathways across, particularly
 #'   relevant if there are many significant pathways. Can specify up to 3
 #'   columns, with a default of 1.
 #' @param specificTopPathways Only plot pathways from a specific vector of
 #'   "topPathways". Defaults to "any" which includes all pathway results, or see
-#'   `unique(enrichedResults$topPathways)` (i.e. the input)
+#'   `unique(enrichResults$topPathways)` (i.e. the input)
 #'   for possible values.
 #' @param specificPathways Only plot specific pathways. Defaults to "any".
 #' @param colourValues Length-two character vector of colours to use for the
-#'   scale. Defaults to `c("blue", "red")`.
+#'   scale. Defaults to `c("white", "steelblue3")`.
 #' @param nameWidth How many characters to show for pathway name before
 #'   truncating? Defaults to 35.
 #' @param nameRows How much to rows to wrap across for the pathway name?
@@ -20,7 +20,8 @@
 #'   "horizontal" (0 degrees), or "vertical" (90 degrees).
 #' @param maxPVal P values below `10 ^ -maxPVal` will be set to that value.
 #' @param intercepts Add vertical lines to separate different groupings, by
-#'   providing a vector of intercepts (e.g. c(1.5, 2.5)). Defaults to `NA`.
+#'   providing a vector of intercepts (e.g. `c(1.5, 2.5)`).
+#'   Defaults to `NA`.
 #' @param includeGeneRatio Boolean (FALSE). Should the gene ratio be included as
 #'   an aesthetic mapping?If so, then it is attributed to the size of the
 #'   triangles.
@@ -59,11 +60,11 @@
 #' )
 #'
 plotPathways <- function(
-        enrichedResults,
+        enrichResults,
         columns=1,
         specificTopPathways="any",
         specificPathways="any",
-        colourValues=c("blue", "red"),
+        colourValues=c("white", "steelblue3"),
         nameWidth=35,
         nameRows=1,
         xAngle="angled",
@@ -80,11 +81,11 @@ plotPathways <- function(
     ## If new group names are to be used, add them in
     if (!is.na(newGroupNames[1])) {
         mapNames <- tibble(
-            comparison=unique(enrichedResults$comparison),
+            comparison=unique(enrichResults$comparison),
             newNames=newGroupNames
         )
-        enrichedResults <- left_join(
-            enrichedResults,
+        enrichResults <- left_join(
+            enrichResults,
             mapNames,
             multiple="all"
         ) %>%
@@ -96,7 +97,7 @@ plotPathways <- function(
     ## Convert to -log10 p value and arbitrarily set to a max -log10 p value of
     ## 50 (i.e. adj pval=10^-50), which some enrichment results surpass,
     ## especially for Sigora.
-    enrichedResults <- enrichedResults %>% mutate(
+    enrichResults <- enrichResults %>% mutate(
         logMax=case_when(
             -log10(pValueAdjusted) > maxPVal ~ maxPVal,
             -log10(pValueAdjusted) <= maxPVal ~ -log10(pValueAdjusted)
@@ -104,44 +105,44 @@ plotPathways <- function(
     )
 
     ## Order the directionality of results, if up and down are used
-    if (!"All" %in% enrichedResults$direction) {
-        enrichedResults$direction <- factor(
-            enrichedResults$direction,
+    if (!"All" %in% enrichResults$direction) {
+        enrichResults$direction <- factor(
+            enrichResults$direction,
             levels=c("Up", "Down"))
     } else if (
-        "All" %in% enrichedResults$direction &
-        any(c("Up", "Down") %in% enrichedResults$direction)
+        "All" %in% enrichResults$direction &
+        any(c("Up", "Down") %in% enrichResults$direction)
     ) {
-        enrichedResults$direction <- factor(
-            enrichedResults$direction,
+        enrichResults$direction <- factor(
+            enrichResults$direction,
             levels=c("Up", "Down", "All"))
     }
 
     ## Order the comparisons by the order they were inputted (not alphabetical)
-    enrichedResults$comparison <- factor(
-        enrichedResults$comparison,
-        levels=unique(enrichedResults$comparison))
+    enrichResults$comparison <- factor(
+        enrichResults$comparison,
+        levels=unique(enrichResults$comparison))
 
     ## Add in the number of genes for each comparison if indicated
     if (showNumGenes) {
-        enrichedResults <- enrichedResults %>% mutate(
+        enrichResults <- enrichResults %>% mutate(
             comparison=paste0(comparison, "\n(", totalGenes, ")")
         )
-        enrichedResults$comparison <- factor(
-            enrichedResults$comparison,
-            levels=unique(enrichedResults$comparison)
+        enrichResults$comparison <- factor(
+            enrichResults$comparison,
+            levels=unique(enrichResults$comparison)
         )
     }
 
     ## If did not specify to only plot specific pathways, otherwise filter them
     if (specificTopPathways[1] == "any") {
-        specificTopPathways <- unique(enrichedResults$topPathways)
+        specificTopPathways <- unique(enrichResults$topPathways)
     }
     if (specificPathways[1] == "any") {
-        specificPathways <- unique(enrichedResults$pathwayName)
+        specificPathways <- unique(enrichResults$pathwayName)
     }
 
-    enrichedResultsGraph <- enrichedResults %>% filter(
+    enrichedResultsGraph <- enrichResults %>% filter(
         topPathways %in% specificTopPathways,
         pathwayName %in% specificPathways
     )
@@ -269,9 +270,15 @@ plotPathways <- function(
     ## Can be set to angled (45 degrees), "horizontal" (0 degrees), or
     ## "vertical" (90 degrees)
     if (xAngle == "angled") {
-        angle <- 45
-        hjust <- 1
         vjust <- 1
+        if (pathwayPosition == "right") {
+            angle <- -45
+            hjust <- 0
+        } else if (pathwayPosition == "left") {
+            angle <- 45
+            hjust <- 1
+        }
+
     } else if (xAngle == "horizontal") {
         angle <- 0
         hjust <- 0.5
