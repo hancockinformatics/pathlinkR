@@ -17,10 +17,10 @@
 #'   Results are combined at the end, with an added "direction" column.
 #' @param analysis Default is "sigora", but can also be "reactomepa" or
 #'   "hallmark"
-#' @param filterResults Should the output be filtered for significance? Use `1`
-#'   to return the unfiltered results, or any number less than 1 for a custom
-#'   p-value cutoff. If left as `default`, the significance cutoff for Sigora is
-#'   0.001, or 0.05 for ReactomePA and Hallmark.
+#' @param filterResults Should the output be filtered for significance? Use
+#'   `1` to return the unfiltered results, or any number less than 1 for a
+#'   custom p-value cutoff. If left as `default`, the significance cutoff
+#'   for Sigora is 0.001, or 0.05 for ReactomePA and Hallmark.
 #' @param gpsRepo Only applies to `analysis="sigora"`. Gene Pair Signature
 #'   object for Sigora to use to test for enriched pathways. We recommend using
 #'   the one which ships with Sigora, which is provided as "reaH".

@@ -26,9 +26,9 @@ to "layout_nicely", and should support most igraph layouts. See
 
 \item{edgeColour}{Colour of network edges; defaults to "#848484".}
 
-\item{edgeWidthRange}{Edge width is mapped to the similarity measure (one over
-distance). This length-two numeric vector controls the minimum and maximum
-width of edges. Defaults to \code{c(5, 20)}.}
+\item{edgeWidthRange}{Edge width is mapped to the similarity measure (one
+over distance). This length-two numeric vector controls the minimum and
+maximum width of edges. Defaults to \code{c(5, 20)}.}
 
 \item{nodeSizeRange}{Node size is mapped to the negative log of the
 Bonferroni-adjusted p value, and this length-two numeric vector controls
