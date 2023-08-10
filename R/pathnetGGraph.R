@@ -159,10 +159,18 @@ pathnetGGraph <- function(
             pch=21,
             stroke=nodeBorderWidth
         ) +
-        scale_size_continuous(
-            labels=scales::label_math(expr=10^-~.x),
-            range=nodeSizeRange
-        ) +
+        { if (requireNamespace("scales", quietly=TRUE)) {
+            scale_size_continuous(
+                name=expression(P[Bonferroni]),
+                labels=scales::label_math(expr=10^-~.x),
+                range=nodeSizeRange
+            )
+        } else {
+            scale_size_continuous(
+                name=expression(-~Log[10]~P[Bonferroni]),
+                range=nodeSizeRange
+            )
+        } } +
         scale_fill_manual(
             values=groupedPathwayColours,
             na.value="white",
