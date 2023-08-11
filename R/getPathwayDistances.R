@@ -46,16 +46,13 @@ getPathwayDistances <- function(
         pathwayData=sigoraDatabase,
         distMethod="jaccard"
 ) {
-
-    ## Input checks
     stopifnot(is(pathwayData, "data.frame"))
 
-    ## Identify which columns has the Ensembl gene IDs
+    ## Identify which columns have Ensembl and pathway IDs
     geneIdCol <- colnames(pathwayData)[
         unlist(map(pathwayData[1, ], ~str_detect(.x, "ENSG")))
     ]
 
-    ## Identify which columns has the Reactome pathway IDs
     pathwayIdCol <- colnames(pathwayData)[
         unlist(map(
             pathwayData[1, ],
@@ -75,10 +72,8 @@ getPathwayDistances <- function(
         pathwayIdCol, "' for pathway IDs..."
     )
 
-    message("Creating identity matrix...")
     identityTable <- pathwayData %>%
-        select(all_of(c(geneIdCol, pathwayIdCol))) %>%
-        distinct() %>%
+        distinct(geneIdCol, pathwayIdCol) %>%
         mutate(present=1) %>%
         pivot_wider(
             id_cols=all_of(pathwayIdCol),
@@ -91,8 +86,6 @@ getPathwayDistances <- function(
 
     if (length(unique(pathwayData[[pathwayIdCol]])) > 500) {
         message("Running distance calculations (this may take a while)...")
-    } else {
-        message("Running distance calculations...")
     }
 
     distanceMatrix <- as.matrix(vegdist(
