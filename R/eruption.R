@@ -84,8 +84,6 @@ eruption <- function(
         labelSize=3.5,
         pad=1.4
 ) {
-
-    ## Input checks
     stopifnot(is(deseqResults, "data.frame"))
     stopifnot(all(c("padj", "log2FoldChange") %in% colnames(deseqResults)))
 
@@ -94,33 +92,25 @@ eruption <- function(
             length(xaxis) == 2
         })
     }
-
     if (!is.na(yaxis)) {
         stopifnot("'yaxis' must be a length-two numeric vector" = {
             length(yaxis) == 2
         })
     }
 
-    ## If Ensembl gene IDs are detected, annotate them with gene names from the
-    ## mapping file. For Ensembl gene IDs without gene names, just use the
-    ## Ensembl gene ID. If rownames are not ENSG ids, they will be used as is,
-    ## and you can map it to your own ids beforehand
+    ## If Ensembl IDs are detected, annotate them with gene names from the
+    ## mapping file if they exist, or just use the Ensembl ID. If rownames are
+    ## not Ensembl IDs, they will be used as is.
     if (str_detect(rownames(deseqResults)[1], "^ENSG")) {
         res <- deseqResults %>%
             rownames_to_column("ensemblGeneId") %>%
             filter(!is.na(padj)) %>%
-            left_join(
-                mappingFile,
-                by="ensemblGeneId",
-                multiple="all"
-            ) %>%
-            mutate(
-                geneName=ifelse(
-                    !is.na(hgncSymbol),
-                    hgncSymbol,
-                    ensemblGeneId
-                )
-            )
+            left_join(mappingFile, by="ensemblGeneId", multiple="all") %>%
+            mutate(geneName=ifelse(
+                !is.na(hgncSymbol),
+                hgncSymbol,
+                ensemblGeneId
+            ))
     } else {
         res <- deseqResults %>%
             rownames_to_column("ensemblGeneId") %>%
@@ -151,10 +141,10 @@ eruption <- function(
         )
     }
 
-    ## Make sure highlightGenes, if used, are in the data frame
+    ## Make sure `highlightGenes`, if used, are in the data frame
     highlightGenes <- highlightGenes[highlightGenes %in% res$ensemblGeneId]
 
-    ## Identify top up- and down-regulated genes, and output them for the user
+    ## Identify up- and down-regulated genes, and output them for the user
     upDf <- res %>%
         filter(padj < pCutoff, log2FoldChange > log2(fcCutoff))
 
@@ -179,10 +169,6 @@ eruption <- function(
         )
     }
 
-    ## Select the genes to label. You can specify if you want to only label
-    ## annotated genes (default), i.e. those that have a gene name. This is for
-    ## "auto" and "highlight" labeling, i.e. it does not apply to manual
-    ## labeling (e.g. if you want to manually label an unannotated gene).
     if (removeUnannotated) {
         possibleLabels <- res %>%
             filter(!grepl("ENSG", geneName)) %>%
@@ -199,15 +185,13 @@ eruption <- function(
             arrange(desc(log2FoldChange ^ 2 * log10(padj) ^ 2)) %>%
             filter(geneName %in% possibleLabels) %>%
             head(n) %>%
-            select(geneName) %>%
-            unlist()
+            pull(geneName)
 
         downGenes <- downDf %>%
             arrange(desc(log2FoldChange ^ 2 * log10(padj) ^ 2)) %>%
             filter(geneName %in% possibleLabels) %>%
             head(n) %>%
-            select(geneName) %>%
-            unlist()
+            pull(geneName)
 
         ## Record which genes to label
         res <- res %>% mutate(
@@ -222,15 +206,13 @@ eruption <- function(
             filter(inList == "Y", geneName %in% possibleLabels) %>%
             arrange(desc(log2FoldChange ^ 2 * log10(padj) ^ 2)) %>%
             head(n) %>%
-            select(geneName) %>%
-            unlist()
+            pull(geneName)
 
         downGenes <- downDf %>%
             filter(inList == "Y", geneName %in% possibleLabels) %>%
             arrange(desc(log2FoldChange ^ 2 * log10(padj) ^ 2)) %>%
             head(n) %>%
-            select(geneName) %>%
-            unlist()
+            pull(geneName)
 
         res <- res %>% mutate(
             label=case_when(geneName %in% c(upGenes, downGenes) ~ geneName)
@@ -257,9 +239,8 @@ eruption <- function(
             colour=nonsigColour
         ) +
 
-        ## Plot the significant genes and genes of interest ("highlightGenes"),
-        ## with those in `highlightGenes` plotted on top of those not in
-        ## `highlightGenes` for added emphasis.
+        ## Plot the significant genes and genes of interest, with those in
+        ## `highlightGenes` plotted on top of the others for added emphasis
         geom_point(
             data=filter(res, significant == "SIG", inList == "N"),
             mapping=aes(x=log2FoldChange, y=negLogP),
