@@ -9,14 +9,15 @@ pathnetGGraph(
   networkLayout = "nicely",
   nodeSizeRange = c(4, 8),
   nodeBorderWidth = 1.5,
-  edgeColour = "grey30",
-  edgeAlpha = 1,
-  edgeWidthRange = c(0.33, 3),
-  labelProp = 0.25,
   nodeLabelSize = 5,
+  nodeLabelColour = "black",
   nodeLabelAlpha = 0.67,
   nodeLabelOverlaps = 6,
+  labelProp = 0.25,
   segColour = "black",
+  edgeColour = "grey30",
+  edgeWidthRange = c(0.33, 3),
+  edgeAlpha = 1,
   themeBaseSize = 16
 )
 }
@@ -31,27 +32,29 @@ p-value). Defaults to \code{c(4, 8)}.}
 
 \item{nodeBorderWidth}{Width of borders on nodes, defaults to 1.5}
 
-\item{edgeColour}{Colour of network edges; defaults to "grey30".}
-
-\item{edgeAlpha}{Alpha value for edges; defaults to \code{1}.}
-
-\item{edgeWidthRange}{Range of edge widths, mapped to \code{log10(similarity)}.
-Defaults to \code{c(0.33, 3)}.}
-
-\item{labelProp}{Proportion of "interactor" (i.e. non-enriched) pathways that
-the function will attempt to label. E.g. setting this to 0.5 (the default)
-means half of the non-enriched pathways will \emph{potentially} be labeled - it
-won't be exact because the node labeling is done with \code{ggrepel}.}
-
 \item{nodeLabelSize}{Size of node labels; defaults to 5.}
+
+\item{nodeLabelColour}{Colour of the node labels; defaults to "black".}
 
 \item{nodeLabelAlpha}{Transparency of node labels. Defaults to \code{0.67}.}
 
 \item{nodeLabelOverlaps}{Max overlaps for node labels, from \code{ggrepel}.
 Defaults to \code{6}.}
 
+\item{labelProp}{Proportion of "interactor" (i.e. non-enriched) pathways that
+the function will attempt to label. E.g. setting this to 0.5 (the default)
+means half of the non-enriched pathways will \emph{potentially} be labeled - it
+won't be exact because the node labeling is done with \code{ggrepel}.}
+
 \item{segColour}{Colour of line segments connecting labels to nodes. Defaults
 to "black".}
+
+\item{edgeColour}{Colour of network edges; defaults to "grey30".}
+
+\item{edgeWidthRange}{Range of edge widths, mapped to \code{log10(similarity)}.
+Defaults to \code{c(0.33, 3)}.}
+
+\item{edgeAlpha}{Alpha value for edges; defaults to \code{1}.}
 
 \item{themeBaseSize}{Base font size for all plot elements. Defaults
 to \code{16}.}
