@@ -86,19 +86,13 @@ pathnetGGraph <- function(
         edgeAlpha=1,
         themeBaseSize=16
 ) {
-    ## Check column names for both nodes and edges
     stopifnot(all(
-        c(
-            "pathwayName1",
-            "pValueAdjusted",
-            "groupedPathway"
-        ) %in% colnames(as_tibble(network))
+        c("pathwayName1", "pValueAdjusted", "groupedPathway")
+        %in% colnames(as_tibble(network))
     ))
 
     stopifnot(all(
-        "similarity" %in% colnames(
-            as_tibble(activate(network, "edges"))
-        )
+        "similarity" %in% colnames(as_tibble(activate(network, "edges")))
     ))
 
     stopifnot("'nodeSizeRange' should be a length-two numeric vector" = {
@@ -120,27 +114,28 @@ pathnetGGraph <- function(
         replace=FALSE
     )
 
-    networkToPlot <- network %>% mutate(
-        nodeFill=if_else(
-            !is.na(pValueAdjusted),
-            groupedPathway,
-            NA_character_
-        ),
-        nodeLabel=case_when(
-            !is.na(pValueAdjusted) ~ pathwayName1,
-            pathwayName1 %in% interactorsToLabel ~ pathwayName1,
-            TRUE ~ NA_character_
-        ),
-        nodeLabel=map_chr(
-            nodeLabel,
-            ~.truncNeatly(.x, l=40) %>% str_wrap(width=20)
-        ),
-        pValueAdjusted=if_else(
-            !is.na(pValueAdjusted),
-            pValueAdjusted,
-            1
+    networkToPlot <- network %>%
+        mutate(
+            nodeFill=if_else(
+                !is.na(pValueAdjusted),
+                groupedPathway,
+                NA_character_
+            ),
+            nodeLabel=case_when(
+                !is.na(pValueAdjusted) ~ pathwayName1,
+                pathwayName1 %in% interactorsToLabel ~ pathwayName1,
+                TRUE ~ NA_character_
+            ),
+            nodeLabel=map_chr(
+                nodeLabel,
+                ~.truncNeatly(.x, l=40) %>% str_wrap(width=20)
+            ),
+            pValueAdjusted=if_else(
+                !is.na(pValueAdjusted),
+                pValueAdjusted,
+                1
+            )
         )
-    )
 
     ggraph(networkToPlot, layout=networkLayout) +
         ## Edges
@@ -150,7 +145,6 @@ pathnetGGraph <- function(
             alpha=edgeAlpha
         ) +
         scale_edge_width(range=edgeWidthRange, name="Similarity") +
-
         ## Nodes
         geom_node_point(
             aes(
@@ -179,7 +173,6 @@ pathnetGGraph <- function(
             guide=NULL
         ) +
         scale_colour_manual(values=groupedPathwayColours) +
-
         ## Node labels
         geom_node_label(
             aes(label=nodeLabel),
@@ -191,17 +184,10 @@ pathnetGGraph <- function(
             segment.colour=segColour,
             max.overlaps=nodeLabelOverlaps
         ) +
-
         ## Misc
-        labs(
-            size="Bonferroni\np-value",
-            colour="Pathway type"
-        ) +
+        labs(size="Bonferroni\np-value", colour="Pathway type") +
         theme_void(base_size=themeBaseSize) +
-        theme(
-            legend.text.align=0,
-            plot.margin=unit(rep(5, 4), "mm")
-        ) +
+        theme(legend.text.align=0, plot.margin=unit(rep(5, 4), "mm")) +
         guides(
             colour=guide_legend(override.aes=list(size=5, pch=19)),
             size=guide_legend(override.aes=list(
