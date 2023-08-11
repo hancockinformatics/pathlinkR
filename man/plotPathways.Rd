@@ -9,7 +9,7 @@ plotPathways(
   columns = 1,
   specificTopPathways = "any",
   specificPathways = "any",
-  colourValues = c("white", "steelblue3"),
+  colourValues = c("blue", "red"),
   nameWidth = 35,
   nameRows = 1,
   xAngle = "angled",
