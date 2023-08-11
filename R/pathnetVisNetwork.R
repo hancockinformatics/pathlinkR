@@ -88,20 +88,10 @@ pathnetVisNetwork <- function(
                 1,
                 -log10(pValueAdjusted)
             ),
-            background=map_chr(
-                groupedPathway, ~groupedPathwayColours[[.x]]
-            ),
-            background=if_else(
-                !is.na(pValueAdjusted),
-                background,
-                "#ffffff"
-            ),
+            background=map_chr(groupedPathway, ~groupedPathwayColours[[.x]]),
+            background=if_else(!is.na(pValueAdjusted), background, "#ffffff"),
             border=map_chr(groupedPathway, ~groupedPathwayColours[[.x]]),
-            color=map2(
-                background,
-                border,
-                ~list("background"=.x, "border"=.y)
-            )
+            color=map2(background, border, ~list("background"=.x, "border"=.y))
         ) %>%
         select(
             id,
@@ -137,17 +127,11 @@ pathnetVisNetwork <- function(
         visIgraphLayout(layout=networkLayout) %>%
         visEdges(
             color=edgeColour,
-            scaling=list(
-                "min"=edgeWidthRange[1],
-                "max"=edgeWidthRange[2]
-            )
+            scaling=list("min"=edgeWidthRange[1], "max"=edgeWidthRange[2])
         ) %>%
         visNodes(
             borderWidth=nodeBorderWidth,
-            scaling=list(
-                "min"=nodeSizeRange[1],
-                "max"=nodeSizeRange[2]
-            )
+            scaling=list("min"=nodeSizeRange[1], "max"=nodeSizeRange[2])
         ) %>%
         visOptions(
             highlightNearest=highlighting,
@@ -168,11 +152,7 @@ pathnetVisNetwork <- function(
 
     if (labelNodes) {
         out1 %>%
-            visNodes(font=paste0(
-                nodeLabelSize,
-                "px arial ",
-                nodeLabelColour
-            ))
+            visNodes(font=paste0(nodeLabelSize, "px arial ", nodeLabelColour))
     } else {
         out1
     }
