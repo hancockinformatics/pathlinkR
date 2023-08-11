@@ -4,20 +4,20 @@
 #' @param networkLayout Desired layout for the network visualization. Defaults
 #'   to "layout_nicely", and should support most igraph layouts. See
 #'   `?visIgraphLayout` for more details.
-#' @param edgeColour Colour of network edges; defaults to "#848484".
-#' @param edgeWidthRange Edge width is mapped to the similarity measure (one
-#'   over distance). This length-two numeric vector controls the minimum and
-#'   maximum width of edges. Defaults to `c(5, 20)`.
 #' @param nodeSizeRange Node size is mapped to the negative log of the
 #'   Bonferroni-adjusted p value, and this length-two numeric vector controls
 #'   the minimum and maximum. Defaults to `c(20, 50)`.
 #' @param nodeBorderWidth Size of the node border, defaults to 2.5
-#' @param highlighting When clicking on a node, should directly neighbouring
-#'   nodes be highlighted (other nodes are dimmed)? Defaults to TRUE.
 #' @param labelNodes Boolean determining if nodes should be labeled. Note it
 #'   will only ever label enriched nodes/pathways.
 #' @param nodeLabelSize Size of the node labels in pixels; defaults to 60.
 #' @param nodeLabelColour Colour of the node labels; defaults to "black".
+#' @param edgeColour Colour of network edges; defaults to "#848484".
+#' @param edgeWidthRange Edge width is mapped to the similarity measure (one
+#'   over distance). This length-two numeric vector controls the minimum and
+#'   maximum width of edges. Defaults to `c(5, 20)`.
+#' @param highlighting When clicking on a node, should directly neighbouring
+#'   nodes be highlighted (other nodes are dimmed)? Defaults to TRUE.
 #'
 #' @return Interactive visNetwork plot
 #' @export
@@ -61,13 +61,13 @@
 pathnetVisNetwork <- function(
         network,
         networkLayout="layout_nicely",
-        edgeColour="#848484",
-        edgeWidthRange=c(5, 20),
         nodeSizeRange=c(20, 50),
         nodeBorderWidth=2.5,
         labelNodes=TRUE,
         nodeLabelSize=60,
         nodeLabelColour="black",
+        edgeColour="#848484",
+        edgeWidthRange=c(5, 20),
         highlighting=TRUE
 ) {
 
