@@ -56,7 +56,6 @@ createPathnet <- function(
         trimOrder=1
 ) {
 
-    ## Input checks
     stopifnot(is(enrichPathwayResult, "data.frame"))
     stopifnot(
         all(c("pathwayId", "pValueAdjusted") %in% colnames(enrichPathwayResult))
@@ -64,18 +63,12 @@ createPathnet <- function(
 
     stopifnot(is(foundation, "data.frame"))
     stopifnot(all(
-        c(
-            "pathwayName1",
-            "pathwayName2",
-            "distance",
-            "pathway1",
-            "pathway2"
-        ) %in% colnames(foundation)
+        c("pathwayName1", "pathwayName2", "distance", "pathway1", "pathway2")
+        %in% colnames(foundation)
     ))
 
     startingNodes <- foundation %>%
-        select(pathway1, pathwayName1) %>%
-        distinct() %>%
+        distinct(pathway1, pathwayName1) %>%
         left_join(
             enrichPathwayResult,
             by=c("pathway1" = "pathwayId"),
@@ -83,15 +76,14 @@ createPathnet <- function(
         )
 
     startingEdges <- foundation %>%
-        mutate(similarity=1 / distance) %>%
+        mutate(similarity = 1 / distance) %>%
         select(pathway1, pathway2, similarity, distance)
 
     pathwaysAsNetwork <- tbl_graph(
         nodes=startingNodes,
         edges=startingEdges,
         directed=FALSE
-    ) %>%
-        mutate(rn=row_number())
+    ) %>% mutate(rn=row_number())
 
     pathwaysAsNetwork2 <- if (trim) {
         x1 <- pathwaysAsNetwork %>%
