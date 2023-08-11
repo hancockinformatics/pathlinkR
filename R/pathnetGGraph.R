@@ -3,23 +3,24 @@
 #' @param network Tidygraph network object, output from `createPathnet`.
 #' @param networkLayout Desired layout for the network visualization. Defaults
 #'   to "nicely", but supports any method found in `?layout_tbl_graph_igraph`
-#' @param edgeColour Colour of network edges; defaults to "grey30".
-#' @param edgeAlpha Alpha value for edges; defaults to `1`.
 #' @param nodeSizeRange Size range for nodes, mapped to significance (Bonferroni
 #'   p-value). Defaults to `c(4, 8)`.
 #' @param nodeBorderWidth Width of borders on nodes, defaults to 1.5
-#' @param edgeWidthRange Range of edge widths, mapped to `log10(similarity)`.
-#'   Defaults to `c(0.33, 3)`.
+#' @param nodeLabelSize Size of node labels; defaults to 5.
+#' @param nodeLabelColour Colour of the node labels; defaults to "black".
+#' @param nodeLabelAlpha Transparency of node labels. Defaults to `0.67`.
+#' @param nodeLabelOverlaps Max overlaps for node labels, from `ggrepel`.
+#'   Defaults to `6`.
 #' @param labelProp Proportion of "interactor" (i.e. non-enriched) pathways that
 #'   the function will attempt to label. E.g. setting this to 0.5 (the default)
 #'   means half of the non-enriched pathways will *potentially* be labeled - it
 #'   won't be exact because the node labeling is done with `ggrepel`.
-#' @param nodeLabelSize Size of node labels; defaults to 5.
-#' @param nodeLabelAlpha Transparency of node labels. Defaults to `0.67`.
-#' @param nodeLabelOverlaps Max overlaps for node labels, from `ggrepel`.
-#'   Defaults to `6`.
 #' @param segColour Colour of line segments connecting labels to nodes. Defaults
 #'   to "black".
+#' @param edgeColour Colour of network edges; defaults to "grey30".
+#' @param edgeWidthRange Range of edge widths, mapped to `log10(similarity)`.
+#'   Defaults to `c(0.33, 3)`.
+#' @param edgeAlpha Alpha value for edges; defaults to `1`.
 #' @param themeBaseSize Base font size for all plot elements. Defaults
 #'   to `16`.
 #'
@@ -74,14 +75,15 @@ pathnetGGraph <- function(
         networkLayout="nicely",
         nodeSizeRange=c(4, 8),
         nodeBorderWidth=1.5,
-        edgeColour="grey30",
-        edgeAlpha=1,
-        edgeWidthRange=c(0.33, 3),
-        labelProp=0.25,
         nodeLabelSize=5,
+        nodeLabelColour="black",
         nodeLabelAlpha=0.67,
         nodeLabelOverlaps=6,
+        labelProp=0.25,
         segColour="black",
+        edgeColour="grey30",
+        edgeWidthRange=c(0.33, 3),
+        edgeAlpha=1,
         themeBaseSize=16
 ) {
     ## Check column names for both nodes and edges
@@ -183,6 +185,7 @@ pathnetGGraph <- function(
             aes(label=nodeLabel),
             repel=TRUE,
             size=nodeLabelSize,
+            colour=nodeLabelColour,
             alpha=nodeLabelAlpha,
             min.segment.length=0,
             segment.colour=segColour,

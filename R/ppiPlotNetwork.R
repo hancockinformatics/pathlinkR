@@ -1,7 +1,12 @@
 #' Plot an undirected PPI network using ggraph
 #'
 #' @param network A `tidygraph` object, output from `ppiBuildNetwork`
+#' @param networkLayout Layout of nodes in the network. Supports all layouts from
+#'   `ggraph`/`igraph`, or a data frame of x and y coordinates for each
+#'   node (order matters!).
 #' @param title Optional title for the plot (NA)
+#' @param nodeSize Length-two numeric vector, specifying size range of node
+#'   sizes (maps to node degree). Default is `c(3, 9)`.
 #' @param fillColumn Tidy-select column for mapping node colour. Designed to
 #'   handle continuous numeric mappings (either positive/negative only, or
 #'   both), and categorical mappings, plus a special case for displaying fold
@@ -12,21 +17,19 @@
 #' @param catFillColours Colour palette to be used when `fillType` is set
 #'   to "categorical." Defaults to "Set1" from RColorBrewer. Will otherwise be
 #'   passed as the "values" argument in `scale_fill_manual()`.
-#' @param layout Layout of nodes in the network. Supports all layouts from
-#'   `ggraph`/`igraph`, or a data frame of x and y coordinates for each
-#'   node (order matters!).
+#' @param foldChangeColours A two-length character vector containing colours
+#'   for up and down regulated genes. Defaults to `c("firebrick3", "#188119")`.
+#' @param intColour Fill colour for non-seed nodes, i.e. interactors. Defaults
+#'   to "grey70".
+#' @param nodeBorder Colour (stroke or outline) of all nodes in the network.
+#'   Defaults to "grey30".
+#' @param hubColour Colour of node labels for hubs. The top 2% of nodes
+#'   (based on calculated hub score) are highlighted with this colour, if
+#'   `label=TRUE`.
 #' @param legend Should a legend be included? Defaults to FALSE.
 #' @param edgeColour Edge colour, defaults to "grey40"
 #' @param edgeAlpha Transparency of edges, defaults to 0.5
 #' @param edgeWidth Thickness of edges connecting nodes. Defaults to 0.5
-#' @param nodeSize Length-two numeric vector, specifying size range of node
-#'   sizes (maps to node degree). Default is `c(3, 9)`.
-#' @param nodeColour Colour (stroke or outline) of all nodes in the network.
-#'   Defaults to "grey30".
-#' @param intColour Fill colour for non-seed nodes, i.e. interactors. Defaults
-#'   to "grey70".
-#' @param foldChangeColours A two-length character vector containing colours
-#'   for up and down regulated genes. Defaults to `c("firebrick3", "#188119")`.
 #' @param label Boolean, whether labels should be added to nodes. Defaults to
 #'   FALSE.
 #' @param labelColumn Tidy-select column of the network/data to be used in
@@ -37,9 +40,6 @@
 #'   node labels, to prevent the network from being too crowded.
 #' @param labelSize Size of node labels, defaults to 5.
 #' @param labelColour Colour of node labels, defaults to "black"
-#' @param hubColour Colour of node labels for hubs. The top 2% of nodes
-#'   (based on calculated hub score) are highlighted with this colour, if
-#'   `label=TRUE`.
 #' @param labelFace Font face for node labels, defaults to "bold"
 #' @param labelPadding Padding around the label, defaults to 0.25 lines.
 #' @param minSegLength Minimum length of lines to be drawn from labels to
@@ -96,34 +96,33 @@
 #'     title="COVID positive over time",
 #'     fillColumn=log2FoldChange,
 #'     fillType="foldChange",
-#'     layout="lgl",
+#'     legend=TRUE,
 #'     label=TRUE,
 #'     labelColumn=hgncSymbol,
-#'     labelFilter=5,
-#'     legend=TRUE
+#'     labelFilter=5
 #' )
 #'
 ppiPlotNetwork <- function(
         network,
+        networkLayout="nicely",
         title=NA,
+        nodeSize=c(3, 9),
         fillColumn,
         fillType,
         catFillColours="Set1",
-        layout="kk",
+        foldChangeColours=c("firebrick3", "#188119"),
+        intColour="grey70",
+        nodeBorder="grey30",
+        hubColour="blue2",
         legend=FALSE,
         edgeColour="grey40",
         edgeAlpha=0.5,
         edgeWidth=0.5,
-        nodeSize=c(3, 9),
-        nodeColour="grey30",
-        intColour="grey70",
-        foldChangeColours=c("firebrick3", "#188119"),
         label=FALSE,
         labelColumn,
         labelFilter=0,
         labelSize=5,
         labelColour="black",
-        hubColour="blue2",
         labelFace="bold",
         labelPadding=0.25,
         minSegLength=0.25
@@ -202,14 +201,14 @@ ppiPlotNetwork <- function(
         )
     }
 
-    if (is.data.frame(layout)) {
+    if (is.data.frame(networkLayout)) {
         message("Using user-supplied node coordinates...")
         ## By converting the layout object to a matrix, we no longer need to
         ## worry about column names. The first and second column will be "x" and
         ## "y", respectively.
-        layoutObject <- as.matrix(layout)
+        layoutObject <- as.matrix(networkLayout)
     } else {
-        layoutObject <- layout
+        layoutObject <- networkLayout
     }
 
     ## Set a plain white background
@@ -233,7 +232,7 @@ ppiPlotNetwork <- function(
             geom_node_point(
                 aes(size=degree, fill=newFillCol),
                 pch=21,
-                colour=nodeColour
+                colour=nodeBorder
             ) +
             networkFillGeom +
             scale_size_continuous(range=nodeSize, guide="none") +
@@ -271,7 +270,7 @@ ppiPlotNetwork <- function(
             geom_node_point(
                 aes(size=degree, fill=newFillCol),
                 pch=21,
-                colour=nodeColour
+                colour=nodeBorder
             ) +
             networkFillGeom +
             scale_size_continuous(range=nodeSize, guide="none") +
@@ -282,6 +281,7 @@ ppiPlotNetwork <- function(
             geom_node_text(
                 aes(label=nodeLabel, colour=isHub),
                 size=labelSize,
+                bg.color="white",
                 repel=TRUE,
                 fontface=labelFace,
                 check_overlap=TRUE,

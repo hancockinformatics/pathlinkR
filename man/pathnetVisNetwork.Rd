@@ -7,13 +7,13 @@
 pathnetVisNetwork(
   network,
   networkLayout = "layout_nicely",
-  edgeColour = "#848484",
-  edgeWidthRange = c(5, 20),
   nodeSizeRange = c(20, 50),
   nodeBorderWidth = 2.5,
   labelNodes = TRUE,
   nodeLabelSize = 60,
   nodeLabelColour = "black",
+  edgeColour = "#848484",
+  edgeWidthRange = c(5, 20),
   highlighting = TRUE
 )
 }
@@ -23,12 +23,6 @@ pathnetVisNetwork(
 \item{networkLayout}{Desired layout for the network visualization. Defaults
 to "layout_nicely", and should support most igraph layouts. See
 \code{?visIgraphLayout} for more details.}
-
-\item{edgeColour}{Colour of network edges; defaults to "#848484".}
-
-\item{edgeWidthRange}{Edge width is mapped to the similarity measure (one
-over distance). This length-two numeric vector controls the minimum and
-maximum width of edges. Defaults to \code{c(5, 20)}.}
 
 \item{nodeSizeRange}{Node size is mapped to the negative log of the
 Bonferroni-adjusted p value, and this length-two numeric vector controls
@@ -42,6 +36,12 @@ will only ever label enriched nodes/pathways.}
 \item{nodeLabelSize}{Size of the node labels in pixels; defaults to 60.}
 
 \item{nodeLabelColour}{Colour of the node labels; defaults to "black".}
+
+\item{edgeColour}{Colour of network edges; defaults to "#848484".}
+
+\item{edgeWidthRange}{Edge width is mapped to the similarity measure (one
+over distance). This length-two numeric vector controls the minimum and
+maximum width of edges. Defaults to \code{c(5, 20)}.}
 
 \item{highlighting}{When clicking on a node, should directly neighbouring
 nodes be highlighted (other nodes are dimmed)? Defaults to TRUE.}

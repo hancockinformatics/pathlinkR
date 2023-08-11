@@ -6,25 +6,25 @@
 \usage{
 ppiPlotNetwork(
   network,
+  networkLayout = "nicely",
   title = NA,
+  nodeSize = c(3, 9),
   fillColumn,
   fillType,
   catFillColours = "Set1",
-  layout = "kk",
+  foldChangeColours = c("firebrick3", "#188119"),
+  intColour = "grey70",
+  nodeBorder = "grey30",
+  hubColour = "blue2",
   legend = FALSE,
   edgeColour = "grey40",
   edgeAlpha = 0.5,
   edgeWidth = 0.5,
-  nodeSize = c(3, 9),
-  nodeColour = "grey30",
-  intColour = "grey70",
-  foldChangeColours = c("firebrick3", "#188119"),
   label = FALSE,
   labelColumn,
   labelFilter = 0,
   labelSize = 5,
   labelColour = "black",
-  hubColour = "blue2",
   labelFace = "bold",
   labelPadding = 0.25,
   minSegLength = 0.25
@@ -33,7 +33,14 @@ ppiPlotNetwork(
 \arguments{
 \item{network}{A \code{tidygraph} object, output from \code{ppiBuildNetwork}}
 
+\item{networkLayout}{Layout of nodes in the network. Supports all layouts from
+\code{ggraph}/\code{igraph}, or a data frame of x and y coordinates for each
+node (order matters!).}
+
 \item{title}{Optional title for the plot (NA)}
+
+\item{nodeSize}{Length-two numeric vector, specifying size range of node
+sizes (maps to node degree). Default is \code{c(3, 9)}.}
 
 \item{fillColumn}{Tidy-select column for mapping node colour. Designed to
 handle continuous numeric mappings (either positive/negative only, or
@@ -48,9 +55,18 @@ Options are: "foldChange", "twoSided", "oneSided", or "categorical".}
 to "categorical." Defaults to "Set1" from RColorBrewer. Will otherwise be
 passed as the "values" argument in \code{scale_fill_manual()}.}
 
-\item{layout}{Layout of nodes in the network. Supports all layouts from
-\code{ggraph}/\code{igraph}, or a data frame of x and y coordinates for each
-node (order matters!).}
+\item{foldChangeColours}{A two-length character vector containing colours
+for up and down regulated genes. Defaults to \code{c("firebrick3", "#188119")}.}
+
+\item{intColour}{Fill colour for non-seed nodes, i.e. interactors. Defaults
+to "grey70".}
+
+\item{nodeBorder}{Colour (stroke or outline) of all nodes in the network.
+Defaults to "grey30".}
+
+\item{hubColour}{Colour of node labels for hubs. The top 2\% of nodes
+(based on calculated hub score) are highlighted with this colour, if
+\code{label=TRUE}.}
 
 \item{legend}{Should a legend be included? Defaults to FALSE.}
 
@@ -59,18 +75,6 @@ node (order matters!).}
 \item{edgeAlpha}{Transparency of edges, defaults to 0.5}
 
 \item{edgeWidth}{Thickness of edges connecting nodes. Defaults to 0.5}
-
-\item{nodeSize}{Length-two numeric vector, specifying size range of node
-sizes (maps to node degree). Default is \code{c(3, 9)}.}
-
-\item{nodeColour}{Colour (stroke or outline) of all nodes in the network.
-Defaults to "grey30".}
-
-\item{intColour}{Fill colour for non-seed nodes, i.e. interactors. Defaults
-to "grey70".}
-
-\item{foldChangeColours}{A two-length character vector containing colours
-for up and down regulated genes. Defaults to \code{c("firebrick3", "#188119")}.}
 
 \item{label}{Boolean, whether labels should be added to nodes. Defaults to
 FALSE.}
@@ -86,10 +90,6 @@ node labels, to prevent the network from being too crowded.}
 \item{labelSize}{Size of node labels, defaults to 5.}
 
 \item{labelColour}{Colour of node labels, defaults to "black"}
-
-\item{hubColour}{Colour of node labels for hubs. The top 2\% of nodes
-(based on calculated hub score) are highlighted with this colour, if
-\code{label=TRUE}.}
 
 \item{labelFace}{Font face for node labels, defaults to "bold"}
 
@@ -141,11 +141,10 @@ ppiPlotNetwork(
     title="COVID positive over time",
     fillColumn=log2FoldChange,
     fillType="foldChange",
-    layout="lgl",
+    legend=TRUE,
     label=TRUE,
     labelColumn=hgncSymbol,
-    labelFilter=5,
-    legend=TRUE
+    labelFilter=5
 )
 
 }

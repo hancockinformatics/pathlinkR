@@ -13,7 +13,6 @@ test_that("we get the right plot output", {
             exNetwork,
             fillColumn = log2FoldChange,
             fillType = "foldChange",
-            layout = "kk",
             legend = TRUE,
             label = FALSE
         )
