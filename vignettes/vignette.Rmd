@@ -136,7 +136,7 @@ ppiPlotNetwork(
     title=names(deseqExampleList)[1],
     fillColumn=log2FoldChange,
     fillType="foldChange",
-    layout="kk",
+    nodeSize = c(2, 6),
     label=TRUE,
     labelColumn=hgncSymbol,
     labelFilter=5,
