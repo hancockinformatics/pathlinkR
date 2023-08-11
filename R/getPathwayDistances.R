@@ -73,7 +73,8 @@ getPathwayDistances <- function(
     )
 
     identityTable <- pathwayData %>%
-        distinct(geneIdCol, pathwayIdCol) %>%
+        select(all_of(c(geneIdCol, pathwayIdCol))) %>%
+        distinct() %>%
         mutate(present=1) %>%
         pivot_wider(
             id_cols=all_of(pathwayIdCol),
