@@ -76,9 +76,7 @@ ppiBuildNetwork <- function(
         )
     )
 
-    df <- deseqResults %>%
-        rownames_to_column("gene") %>%
-        as_tibble()
+    df <- as_tibble(rownames_to_column(deseqResults, "gene"))
 
     if (filterInput) {
         df <- filter(
@@ -89,13 +87,11 @@ ppiBuildNetwork <- function(
     }
 
     message(
-        "ppiBuildNetwork will use ",
-        nrow(df),
+        "ppiBuildNetwork will use ", nrow(df),
         " genes for network construction..."
     )
 
     ## Check for and remove any duplicate IDs, warning the user when this occurs
-    message("Cleaning the input data...")
     dfClean <- distinct(df, gene, .keep_all=TRUE)
     geneVector <- unique(dfClean[["gene"]])
 
@@ -126,7 +122,6 @@ ppiBuildNetwork <- function(
 
     ppiDataEnsembl <- select(ppiData, starts_with("ensembl"))
 
-    message("Finding interactions...")
     if (order == "zero") {
         edgeTable <- ppiDataEnsembl %>% filter(
             ensemblGeneA %in% geneVector & ensemblGeneB %in% geneVector
@@ -137,7 +132,6 @@ ppiBuildNetwork <- function(
         )
     }
 
-    message("Creating the network...")
     networkInit <- edgeTable %>%
         as_tbl_graph(directed=FALSE) %>%
         ppiRemoveSubnetworks() %>%
@@ -155,10 +149,7 @@ ppiBuildNetwork <- function(
         message("Performing 'simple' minimum network trimming...")
 
         networkOut1 <- networkInit %>%
-            filter(
-                !(degree == 1 & !seed),
-                !(betweenness == 0 & !seed)
-            ) %>%
+            filter(!(degree == 1 & !seed), !(betweenness == 0 & !seed)) %>%
             mutate(
                 degree=centrality_degree(),
                 betweenness=centrality_betweenness()
@@ -206,23 +197,14 @@ ppiBuildNetwork <- function(
         )
     }
 
-    message("Mapping input Ensembl IDs to HGNC symbols...")
-    networkMapped <- left_join(
-        networkOut2,
-        select(mappingFile, "name"=ensemblGeneId, hgncSymbol),
-        by="name",
-        multiple="all"
-    )
-
-    networkFinal <- left_join(
-        networkMapped,
-        dfClean,
-        by=c("name"="gene"),
-        multiple="all"
-    )
+    networkFinal <- networkOut2 %>%
+        left_join(
+            select(mappingFile, "name"=ensemblGeneId, hgncSymbol),
+            by="name",
+            multiple="all"
+        ) %>%
+        left_join(dfClean, by=c("name"="gene"), multiple="all")
 
     attr(networkFinal, "order") <- order
-
-    message("Done.\n")
     return(networkFinal)
 }
