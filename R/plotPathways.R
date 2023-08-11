@@ -64,7 +64,7 @@ plotPathways <- function(
         columns=1,
         specificTopPathways="any",
         specificPathways="any",
-        colourValues=c("white", "steelblue3"),
+        colourValues=c("blue", "red"),
         nameWidth=35,
         nameRows=1,
         xAngle="angled",
@@ -374,7 +374,6 @@ plotPathways <- function(
                 legend.title=element_text(size=13 * legendMultiply),
                 axis.text.y=element_text(colour="black", size=12),
                 axis.text.x=element_text(
-                    face="bold",
                     colour="black",
                     size=12,
                     angle=angle,

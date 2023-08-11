@@ -295,14 +295,12 @@ eruption <- function(
             plot.subtitle=element_text(size=14),
             plot.background=element_blank(),
             axis.text=element_text(colour="black", size=11),
-            axis.title=element_text(
-                size=13, face="bold", colour="black"
-            )
+            axis.title=element_text(size=13, colour="black")
         ) +
 
         labs(
-            x=expression(bold(log["2"]~Fold~Change)),
-            y=expression(bold(-log["10"]~P[adj]))
+            x=expression(log[2]~Fold~change),
+            y=expression(-~log[10]~P[adjusted])
         ) +
 
         ## Set axes
