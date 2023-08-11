@@ -73,8 +73,6 @@ enrichPathway <- function(
         gpsRepo=reaH,
         geneUniverse=NULL
 ) {
-
-    ## Check inputs
     stopifnot(analysis %in% c("sigora", "reactomepa", "hallmark"))
 
     stopifnot(
@@ -88,8 +86,6 @@ enrichPathway <- function(
 
     ## Iterate through each element of "inputList"
     resultList <- imap(inputList, function(x, comparison) {
-
-        ## Basic checks before continuing
         stopifnot(
             "Elements of 'inputList' should be named" = !is.null(comparison)
         )
@@ -106,15 +102,9 @@ enrichPathway <- function(
         ## Filter the input genes if specified
         deseqResults <-
             if (filterInput) {
-                stopifnot(
-                    c("padj", "log2FoldChange") %in% colnames(x)
-                )
+                stopifnot(c("padj", "log2FoldChange") %in% colnames(x))
                 message("\tFiltering the results before testing...")
-                filter(
-                    x,
-                    padj < pCutoff,
-                    abs(log2FoldChange) > log2(fcCutoff)
-                )
+                filter(x, padj < pCutoff, abs(log2FoldChange) > log2(fcCutoff))
             } else {
                 x
             }
@@ -156,14 +146,9 @@ enrichPathway <- function(
                     )
                 }
             )
-
             resultFinal$totalGenes <- nrow(deseqResults)
 
-            message(
-                "\tDone! Found ",
-                nrow(resultFinal),
-                " enriched pathways.\n"
-            )
+            message("\tDone, found ", nrow(resultFinal), " enriched pathways.\n")
             return(resultFinal)
         }
 
@@ -185,7 +170,7 @@ enrichPathway <- function(
                             pull(EntrezGene.ID) %>%
                             unique()
 
-                        enricher(
+                        as_tibble(enricher(
                             genesEntrez,
                             TERM2GENE=select(
                                 reactomeDatabase,
@@ -205,7 +190,7 @@ enrichPathway <- function(
                                 0.05,
                                 filterResults
                             )
-                        ) %>% as_tibble()
+                        ))
                     }
                 ) %>%
                     mutate(geneID=as.character(geneID)) %>%
@@ -287,11 +272,7 @@ enrichPathway <- function(
                     totalGenes
                 )
 
-            message(
-                "\tDone! Found ",
-                nrow(resultFinal),
-                " enriched pathways.\n"
-            )
+            message("\tDone, found ", nrow(resultFinal), " enriched pathways.\n")
             return(resultFinal)
         }
     })
@@ -299,7 +280,6 @@ enrichPathway <- function(
     results_all_comparisons <- resultList %>%
         bind_rows(.id="comparison") %>%
         left_join(
-            .,
             select(topPathwaysMore, pathwayId, topPathways),
             by="pathwayId",
             multiple="all"
