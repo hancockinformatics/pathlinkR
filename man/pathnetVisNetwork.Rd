@@ -83,5 +83,5 @@ pathnetVisNetwork(exPathnet)
 \url{https://datastorm-open.github.io/visNetwork/}
 }
 \seealso{
-\url{https://github.com/hancockinformatics/pathnet}
+\url{https://github.com/hancockinformatics/pathlinkR}
 }
