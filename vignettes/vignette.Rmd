@@ -39,7 +39,7 @@ pathophysiology from their gene expression studies.
 # Installation
 To install and load the package:
 ```{r load_library}
-## Install code will go here, make sure to set "eval=FALSE"!
+# BiocManager::install("pathlinkR")
 library(pathlinkR)
 ```
 
