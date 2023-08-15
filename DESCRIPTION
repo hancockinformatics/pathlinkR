@@ -1,7 +1,7 @@
 Package: pathnet
 Type: Package
 Title: Analyze and interpret RNA-Seq results
-Version: 0.99.220
+Version: 0.99.221
 Authors@R: c(
     person("Travis", "Blimkie", , "travis.m.blimkie@gmail.com", role = c("cre"), comment = c(ORCID = "0000-0001-8778-8627")),
     person("Andy", "An", , "andy@hancocklab.com", role = c("aut"))
@@ -47,10 +47,13 @@ Depends:
 LazyDataCompression: xz
 LazyData: true
 Suggests: 
+    AnnotationDbi,
     BiocStyle,
+    biomaRt,
     covr,
     jsonlite,
     knitr,
+    org.Hs.eg.db,
     rmarkdown,
     scales,
     testthat (>= 3.0.0),
