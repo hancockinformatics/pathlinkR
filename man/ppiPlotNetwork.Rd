@@ -33,9 +33,9 @@ ppiPlotNetwork(
 \arguments{
 \item{network}{A \code{tidygraph} object, output from \code{ppiBuildNetwork}}
 
-\item{networkLayout}{Layout of nodes in the network. Supports all layouts from
-\code{ggraph}/\code{igraph}, or a data frame of x and y coordinates for each
-node (order matters!).}
+\item{networkLayout}{Layout of nodes in the network. Supports all layouts
+from \code{ggraph}/\code{igraph}, or a data frame of x and y coordinates for
+each node (order matters!).}
 
 \item{title}{Optional title for the plot (NA)}
 
