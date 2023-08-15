@@ -151,5 +151,5 @@ plotFoldChange(
 \url{https://bioconductor.org/packages/ComplexHeatmap/}
 }
 \seealso{
-\url{https://github.com/hancockinformatics/pathnet}
+\url{https://github.com/hancockinformatics/pathlinkR}
 }

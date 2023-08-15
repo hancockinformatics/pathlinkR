@@ -51,7 +51,7 @@
 #'
 #' @references None.
 #'
-#' @seealso <https://github.com/hancockinformatics/pathnet>
+#' @seealso <https://github.com/hancockinformatics/pathlinkR>
 #'
 #' @examples
 #' plotPathways(
