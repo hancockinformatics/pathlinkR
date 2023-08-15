@@ -106,5 +106,5 @@ eruption(deseqResults=deseqExampleList[[1]])
 None.
 }
 \seealso{
-\url{https://github.com/hancockinformatics/pathnet}
+\url{https://github.com/hancockinformatics/pathlinkR}
 }
