@@ -26,7 +26,7 @@ the pairwise distances using a constructed identity matrix. Zero means two
 pathways are identical, while one means two pathways share no genes in
 common.
 
-\code{pathnet} includes an example distance object
+\code{pathlinkR} includes an example distance object
 (\code{pathwayDistancesJaccard}), created using the included
 "sigoraDatabase" object and the Jaccard distance measure.
 }
@@ -45,5 +45,5 @@ getPathwayDistances(
 None.
 }
 \seealso{
-\url{https://github.com/hancockinformatics/pathnet}
+\url{https://github.com/hancockinformatics/pathlinkR}
 }
