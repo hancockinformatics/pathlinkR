@@ -148,7 +148,9 @@ enrichPathway <- function(
             )
             resultFinal$totalGenes <- nrow(deseqResults)
 
-            message("\tDone, found ", nrow(resultFinal), " enriched pathways.\n")
+            message(
+                "\tDone, found ", nrow(resultFinal), " enriched pathways.\n"
+            )
             return(resultFinal)
         }
 
@@ -272,7 +274,9 @@ enrichPathway <- function(
                     totalGenes
                 )
 
-            message("\tDone, found ", nrow(resultFinal), " enriched pathways.\n")
+            message(
+                "\tDone, found ", nrow(resultFinal), " enriched pathways.\n"
+            )
             return(resultFinal)
         }
     })

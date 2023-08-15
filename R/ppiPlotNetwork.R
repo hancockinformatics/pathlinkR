@@ -1,9 +1,9 @@
 #' Plot an undirected PPI network using ggraph
 #'
 #' @param network A `tidygraph` object, output from `ppiBuildNetwork`
-#' @param networkLayout Layout of nodes in the network. Supports all layouts from
-#'   `ggraph`/`igraph`, or a data frame of x and y coordinates for each
-#'   node (order matters!).
+#' @param networkLayout Layout of nodes in the network. Supports all layouts
+#'   from `ggraph`/`igraph`, or a data frame of x and y coordinates for
+#'   each node (order matters!).
 #' @param title Optional title for the plot (NA)
 #' @param nodeSize Length-two numeric vector, specifying size range of node
 #'   sizes (maps to node degree). Default is `c(3, 9)`.
