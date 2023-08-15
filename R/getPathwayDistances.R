@@ -24,13 +24,13 @@
 #'   pathways are identical, while one means two pathways share no genes in
 #'   common.
 #'
-#'   `pathnet` includes an example distance object
+#'   `pathlinkR` includes an example distance object
 #'   (`pathwayDistancesJaccard`), created using the included
 #'   "sigoraDatabase" object and the Jaccard distance measure.
 #'
 #' @references None.
 #'
-#' @seealso <https://github.com/hancockinformatics/pathnet>
+#' @seealso <https://github.com/hancockinformatics/pathlinkR>
 #'
 #' @examples
 #' # Here we'll use a subset of pathways to save time

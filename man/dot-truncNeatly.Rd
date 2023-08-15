@@ -23,5 +23,5 @@ ellipsis at the end to indicate some text has been removed.
 None.
 }
 \seealso{
-\url{https://github.com/hancockinformatics/pathnet}
+\url{https://github.com/hancockinformatics/pathlinkR}
 }

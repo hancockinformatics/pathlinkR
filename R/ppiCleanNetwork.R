@@ -2,7 +2,7 @@
 #'
 #' @param network `tidygraph` object from a GraphML or JSON file
 #'
-#' @return `tidygraph` object which can be forwarded to other `pathnet`
+#' @return `tidygraph` object which can be forwarded to other `pathlinkR`
 #' functions such as `ppiPlotNetwork`
 #'
 #' @export
@@ -17,11 +17,11 @@
 #'   packages or websites (e.g. <https://networkanalyst.ca>) could be imported
 #'   and visualized with `ppiPlotNetwork`.
 #'
-#' @seealso <https://github.com/hancockinformatics/pathnet/>
+#' @seealso <https://github.com/hancockinformatics/pathlinkR/>
 #'
 #' @examples
 #' tj1 <- jsonlite::read_json(
-#'     system.file("extdata/networkAnalystExample.json", package="pathnet"),
+#'     system.file("extdata/networkAnalystExample.json", package="pathlinkR"),
 #'     simplifyVector=TRUE
 #' )
 #'

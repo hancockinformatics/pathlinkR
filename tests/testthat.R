@@ -7,6 +7,6 @@
 # * https://testthat.r-lib.org/reference/test_package.html#special-files
 
 library(testthat)
-library(pathnet)
+library(pathlinkR)
 
-test_check("pathnet")
+test_check("pathlinkR")

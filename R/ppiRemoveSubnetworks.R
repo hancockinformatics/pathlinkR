@@ -7,7 +7,7 @@
 #' @importFrom igraph V components induced_subgraph
 #' @importFrom tibble enframe
 #'
-#' @seealso <https://github.com/hancockinformatics/pathnet/>
+#' @seealso <https://github.com/hancockinformatics/pathlinkR/>
 #'
 ppiRemoveSubnetworks <- function(network) {
     igraph::V(network)$comp <- components(network)$membership

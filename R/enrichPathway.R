@@ -51,7 +51,7 @@
 #'   ReactomePA: <https://www.bioconductor.org/packages/ReactomePA/>
 #'   MSigDB/Hallmark: <https://www.gsea-msigdb.org/gsea/msigdb/collections.jsp>
 #'
-#' @seealso <https://github.com/hancockinformatics/pathnet>
+#' @seealso <https://github.com/hancockinformatics/pathlinkR>
 #'
 #' @examples
 #' enrichPathway(

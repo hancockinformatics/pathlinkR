@@ -85,5 +85,5 @@ ReactomePA: \url{https://www.bioconductor.org/packages/ReactomePA/}
 MSigDB/Hallmark: \url{https://www.gsea-msigdb.org/gsea/msigdb/collections.jsp}
 }
 \seealso{
-\url{https://github.com/hancockinformatics/pathnet}
+\url{https://github.com/hancockinformatics/pathlinkR}
 }

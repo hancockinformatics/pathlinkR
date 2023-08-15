@@ -57,7 +57,7 @@
 #'
 #' @references None.
 #'
-#' @seealso <https://github.com/hancockinformatics/pathnet>
+#' @seealso <https://github.com/hancockinformatics/pathlinkR>
 #'
 #' @examples
 #' eruption(deseqResults=deseqExampleList[[1]])

@@ -46,7 +46,7 @@
 #'   <https://cran.r-project.org/web/packages/SteinerNet/index.html> for details
 #'   on the Steiner network trimming.
 #'
-#' @seealso <https://github.com/hancockinformatics/pathnet/>
+#' @seealso <https://github.com/hancockinformatics/pathlinkR/>
 #'
 #' @examples
 #' ppiBuildNetwork(

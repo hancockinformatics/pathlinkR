@@ -10,7 +10,7 @@ ppiCleanNetwork(network)
 \item{network}{\code{tidygraph} object from a GraphML or JSON file}
 }
 \value{
-\code{tidygraph} object which can be forwarded to other \code{pathnet}
+\code{tidygraph} object which can be forwarded to other \code{pathlinkR}
 functions such as \code{ppiPlotNetwork}
 }
 \description{
@@ -24,7 +24,7 @@ and visualized with \code{ppiPlotNetwork}.
 }
 \examples{
 tj1 <- jsonlite::read_json(
-    system.file("extdata/networkAnalystExample.json", package="pathnet"),
+    system.file("extdata/networkAnalystExample.json", package="pathlinkR"),
     simplifyVector=TRUE
 )
 
@@ -46,5 +46,5 @@ tj3 <- ppiCleanNetwork(tidygraph::as_tbl_graph(tj2))
 
 }
 \seealso{
-\url{https://github.com/hancockinformatics/pathnet/}
+\url{https://github.com/hancockinformatics/pathlinkR/}
 }

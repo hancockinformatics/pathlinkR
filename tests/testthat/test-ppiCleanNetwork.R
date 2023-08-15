@@ -1,7 +1,10 @@
 test_that("the output looks right", {
 
     tj1 <- jsonlite::read_json(
-        system.file("extdata/networkAnalystExample.json", package = "pathnet"),
+        system.file(
+            "extdata/networkAnalystExample.json",
+            package = "pathlinkR"
+        ),
         simplifyVector = TRUE
     )
 

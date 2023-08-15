@@ -16,5 +16,5 @@ Largest subnetwork from the input network list as an igraph object
 INTERNAL Find and return the largest subnetwork
 }
 \seealso{
-\url{https://github.com/hancockinformatics/pathnet/}
+\url{https://github.com/hancockinformatics/pathlinkR/}
 }

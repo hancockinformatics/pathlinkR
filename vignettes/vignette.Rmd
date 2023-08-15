@@ -1,5 +1,5 @@
 ---
-title: "Analyze and visualize RNA-Seq data with pathnet"
+title: "Analyze and visualize RNA-Seq data with pathlinkR"
 author:
 - Andy An
 - Travis Blimkie
@@ -9,7 +9,7 @@ output:
         toc_depth: 3
         toc_float: true
 vignette: >
-  %\VignetteIndexEntry{Analyze and visualize RNA-Seq data with pathnet}
+  %\VignetteIndexEntry{Analyze and visualize RNA-Seq data with pathlinkR}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -40,7 +40,7 @@ pathophysiology from their gene expression studies.
 To install and load the package:
 ```{r load_library}
 ## Install code will go here, make sure to set "eval=FALSE"!
-library(pathnet)
+library(pathlinkR)
 ```
 
 
@@ -111,7 +111,7 @@ tell us statistically if what we're seeing is real biology or not.
 
 
 # Building and visualizing PPI networks
-`pathnet` also provides tools for constructing and visualizing Protein-Protein
+`pathlinkR` also provides tools for constructing and visualizing Protein-Protein
 Interaction (PPI) networks. Here we leverage PPI data gathered from
 [InnateDB](https://www.innatedb.com/) to generate a list of interactions among
 DE genes identified in RNA-Seq analyses. These interactions can then be used to
@@ -277,7 +277,7 @@ change in non-COVID-19 sepsis patients.
 
 
 # Generating networks from enriched pathways
-`pathnet` also includes functions for turning the pathway enrichment results
+`pathlinkR` also includes functions for turning the pathway enrichment results
 from either Reactome-based method ("sigora" or "ReactomePA") into networks,
 using the overlap of the genes assigned to each pathway to determine their
 similarity to each other. In these networks, each pathway is a node, with

@@ -39,7 +39,7 @@
 #'
 #' @references <https://datastorm-open.github.io/visNetwork/>
 #'
-#' @seealso <https://github.com/hancockinformatics/pathnet>
+#' @seealso <https://github.com/hancockinformatics/pathlinkR>
 #'
 #' @examples
 #' startingPathways <- createFoundation(

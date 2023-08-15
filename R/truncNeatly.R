@@ -13,7 +13,7 @@
 #'
 #' @references None.
 #'
-#' @seealso <https://github.com/hancockinformatics/pathnet>
+#' @seealso <https://github.com/hancockinformatics/pathlinkR>
 #'
 .truncNeatly <- function(x, l=60) {
     map_chr(

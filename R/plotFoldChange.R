@@ -89,7 +89,7 @@
 #'
 #' @references <https://bioconductor.org/packages/ComplexHeatmap/>
 #'
-#' @seealso <https://github.com/hancockinformatics/pathnet>
+#' @seealso <https://github.com/hancockinformatics/pathlinkR>
 #'
 #' @examples
 #' plotFoldChange(
