@@ -39,7 +39,7 @@ for possible values.}
 \item{specificPathways}{Only plot specific pathways. Defaults to "any".}
 
 \item{colourValues}{Length-two character vector of colours to use for the
-scale. Defaults to \code{c("white", "steelblue3")}.}
+scale. Defaults to \code{c("blue", "red")}.}
 
 \item{nameWidth}{How many characters to show for pathway name before
 truncating? Defaults to 35.}
