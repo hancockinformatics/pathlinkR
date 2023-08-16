@@ -11,7 +11,7 @@
 #'   for possible values.
 #' @param specificPathways Only plot specific pathways. Defaults to "any".
 #' @param colourValues Length-two character vector of colours to use for the
-#'   scale. Defaults to `c("white", "steelblue3")`.
+#'   scale. Defaults to `c("blue", "red")`.
 #' @param nameWidth How many characters to show for pathway name before
 #'   truncating? Defaults to 35.
 #' @param nameRows How much to rows to wrap across for the pathway name?

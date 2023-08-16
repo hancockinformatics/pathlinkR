@@ -64,7 +64,6 @@
 #'
 #' @import dplyr
 #' @import purrr
-#' @importFrom circlize colorRamp2
 #' @importFrom ComplexHeatmap draw Heatmap
 #' @importFrom grid grid.text gpar
 #'
@@ -244,7 +243,6 @@ plotFoldChange <- function(
         select(-c(ensemblGeneId, entrezGeneId)) %>%
         column_to_rownames(var="hgncSymbol") %>%
         as.matrix()
-
     matFC[is.na(matFC)] <- 0 ## Make any NAs into 0
 
 
@@ -260,29 +258,16 @@ plotFoldChange <- function(
         matFC[matP > pCutoff] <- 0 ## Did not pass pCutoff
     }
 
-    ## Set the limits for colours for the plotting heatmap
-    limit <- ceiling(max(abs(matFC), na.rm=TRUE))
-
-    ## If plotting real fold changes instead of log2
-    if (!log2FoldChange) {
-        if ((limit %% 2) == 0) {
-            range <- c(-limit, -limit / 2, 0, limit / 2, limit)
-        } else {
-            limit <- limit + 1
-            range <- c(-limit, -limit / 2, 0, limit / 2, limit)
-        }
-        foldChangeTitle <- "Fold\nChange"
-        labels <- c(-2^limit, -2^(limit/2), 1, 2^(limit/2), 2^limit)
-    } else {
-        range <- c(-limit, -limit / 2, 0, limit / 2, limit)
-        foldChangeTitle <- "log2 FC"
-        labels <- range
-    }
-    parameters <- list(
-        at=range,
-        labels=labels,
-        title=foldChangeTitle
+    ## Use a helper function, which properly creates the colour scale and legend
+    ## breaks/labels, based on:
+    ## - If we're plotting log2 or standard fold changes
+    ## - If the values are one sided i.e. all greater or less than 0
+    heatmapLegendInfo <- .plotFoldChangeLegend(
+        .matFC = matFC,
+        .log2FoldChange = log2FoldChange,
+        .cellColours = cellColours
     )
+
 
     ## If columns aren't being split
     if (is.na(colSplit[1])) {
@@ -308,89 +293,76 @@ plotFoldChange <- function(
         row_title <- "%s"
     }
 
-    if (min(matFC) >= 0) {
-        myColFun <- colorRamp2(
-            breaks = c(0, max(matFC)),
-            c(cellColours[2], cellColours[3])
-        )
-    } else if (max(matFC) <= 0) {
-        myColFun <- colorRamp2(
-            breaks = c(min(matFC), 0),
-            c(cellColours[1], cellColours[2])
-        )
-    } else {
-        myColFun <- colorRamp2(
-            breaks = c(min(matFC), 0, max(matFC)),
-            cellColours
-        )
-    }
 
-    draw(Heatmap(
-        matrix=matFC,
-        border=TRUE,
-        col=myColFun,
-        rect_gp=cellBorder,
-        cell_fun=function(j, i, x, y, w, h, fill) {
-            if (showStars) {
-                if (abs(matFC[i,j]) > log2(1.5)) {
-                    if (matP[i, j] < 0.001) {
-                        grid.text("***", x, y, vjust=vjust, rot=rot)
+    draw(
+        Heatmap(
+            matrix = matFC,
+            border = TRUE,
+            col = heatmapLegendInfo[[2]],
+            rect_gp = cellBorder,
+            cell_fun = function(j, i, x, y, w, h, fill) {
+                if (showStars) {
+                    if (abs(matFC[i, j]) > log2(1.5)) {
+                        if (matP[i, j] < 0.001) {
+                            grid.text("***", x, y, vjust = vjust, rot = rot)
+                        }
+                        else if (matP[i, j] < 0.01) {
+                            grid.text("**", x, y, vjust = vjust, rot = rot)
+                        }
+                        else if (matP[i, j] < 0.05) {
+                            grid.text("*", x, y, vjust = vjust, rot = rot)
+                        }
                     }
-                    else if (matP[i, j] < 0.01) {
-                        grid.text("**", x, y, vjust=vjust, rot=rot)
-                    }
-                    else if (matP[i, j] < 0.05) {
-                        grid.text("*", x, y, vjust=vjust, rot=rot)
+
+                    ## If plotting significance values for genes that don't pass
+                    ## fcCutoff
+                    if (abs(matFC[i, j]) < log2(1.5) & !hideNonsigFC) {
+                        if (matP[i, j] < 0.001) {
+                            grid.text(
+                                "***",
+                                x,
+                                y,
+                                vjust = vjust,
+                                rot = rot,
+                                gp = gpar(col = "grey50")
+                            )
+                        }
+                        else if (matP[i, j] < 0.01) {
+                            grid.text(
+                                "**",
+                                x,
+                                y,
+                                vjust = vjust,
+                                rot = rot,
+                                gp = gpar(col = "grey50")
+                            )
+                        }
+                        else if (matP[i, j] < 0.05) {
+                            grid.text(
+                                "*",
+                                x,
+                                y,
+                                vjust = vjust,
+                                rot = rot,
+                                gp = gpar(col = "grey50")
+                            )
+                        }
                     }
                 }
-
-                ## If plotting significance values for genes that don't pass
-                ## fcCutoff
-                if (abs(matFC[i,j]) < log2(1.5) & !hideNonsigFC) {
-                    if (matP[i, j] < 0.001) {
-                        grid.text(
-                            "***",
-                            x,
-                            y,
-                            vjust=vjust,
-                            rot=rot,
-                            gp=gpar(col="grey50")
-                        )
-                    }
-                    else if (matP[i, j] < 0.01) {
-                        grid.text(
-                            "**",
-                            x,
-                            y,
-                            vjust=vjust,
-                            rot=rot,
-                            gp=gpar(col="grey50")
-                        )
-                    }
-                    else if (matP[i, j] < 0.05) {
-                        grid.text(
-                            "*",
-                            x,
-                            y,
-                            vjust=vjust,
-                            rot=rot,
-                            gp=gpar(col="grey50")
-                        )
-                    }
-                }
-            }
-        },
-        column_title=columnTitle,
-        row_title=row_title,
-        heatmap_legend_param=parameters,
-        column_title_gp=gpar(fontsize=titleSize),
-        row_split=rowSplit,
-        column_split=colSplit,
-        cluster_columns=clusterColumns,
-        cluster_rows=clusterRows,
-        column_names_rot=colAngle,
-        column_names_centered=colCenter,
-        row_names_rot=rowAngle,
-        row_names_centered=rowCenter
-    ), column_title=plotTitle)
+            },
+            column_title = columnTitle,
+            row_title = row_title,
+            heatmap_legend_param = heatmapLegendInfo[[1]],
+            column_title_gp = gpar(fontsize = titleSize),
+            row_split = rowSplit,
+            column_split = colSplit,
+            cluster_columns = clusterColumns,
+            cluster_rows = clusterRows,
+            column_names_rot = colAngle,
+            column_names_centered = colCenter,
+            row_names_rot = rowAngle,
+            row_names_centered = rowCenter
+        ),
+        column_title = plotTitle
+    )
 }
