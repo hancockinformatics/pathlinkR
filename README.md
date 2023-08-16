@@ -1,10 +1,12 @@
-# pathlinkR
+# pathlinkR <img src="vignettes/favicon_32.svg" align="right" height="138" />
 
 <!-- badges: start -->
 ![GitHub R package version (branch)](https://img.shields.io/github/r-package/v/hancockinformatics/pathlinkR/main?label=pathlinkR%40main)
 [![R-CMD-check](https://github.com/hancockinformatics/pathlinkR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/hancockinformatics/pathlinkR/actions/workflows/R-CMD-check.yaml)
 [![Codecov test coverage](https://codecov.io/gh/hancockinformatics/pathlinkR/branch/main/graph/badge.svg)](https://app.codecov.io/gh/hancockinformatics/pathlinkR?branch=main)
 <!-- badges: end -->
+
+## Overview
 
 **pathlinkR** is an R package designed to facilitate analysis DE genes produced
 from of RNA-Seq experiments. Our aim with pathlinkR is to provide a number of
