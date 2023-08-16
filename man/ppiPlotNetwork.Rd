@@ -8,7 +8,7 @@ ppiPlotNetwork(
   network,
   networkLayout = "nicely",
   title = NA,
-  nodeSize = c(3, 9),
+  nodeSize = c(2, 6),
   fillColumn,
   fillType,
   catFillColours = "Set1",
@@ -17,13 +17,14 @@ ppiPlotNetwork(
   nodeBorder = "grey30",
   hubColour = "blue2",
   legend = FALSE,
+  legendTitle = NULL,
   edgeColour = "grey40",
   edgeAlpha = 0.5,
   edgeWidth = 0.5,
   label = FALSE,
   labelColumn,
-  labelFilter = 0,
-  labelSize = 5,
+  labelFilter = 8,
+  labelSize = 4,
   labelColour = "black",
   labelFace = "bold",
   labelPadding = 0.25,
@@ -40,7 +41,7 @@ each node (order matters!).}
 \item{title}{Optional title for the plot (NA)}
 
 \item{nodeSize}{Length-two numeric vector, specifying size range of node
-sizes (maps to node degree). Default is \code{c(3, 9)}.}
+sizes (maps to node degree). Default is \code{c(2, 6)}.}
 
 \item{fillColumn}{Tidy-select column for mapping node colour. Designed to
 handle continuous numeric mappings (either positive/negative only, or
@@ -69,6 +70,8 @@ Defaults to "grey30".}
 \code{label=TRUE}.}
 
 \item{legend}{Should a legend be included? Defaults to FALSE.}
+
+\item{legendTitle}{Optional title for the legend, defaults to \code{NULL}.}
 
 \item{edgeColour}{Edge colour, defaults to "grey40"}
 
