@@ -1,4 +1,4 @@
-# pathlinkR <img src="vignettes/favicon_32.svg" align="right" height="138" />
+# pathlinkR <img src="man/figures/favicon_32.svg" align="right" height="138" />
 
 <!-- badges: start -->
 ![GitHub R package version (branch)](https://img.shields.io/github/r-package/v/hancockinformatics/pathlinkR/main?label=pathlinkR%40main)
