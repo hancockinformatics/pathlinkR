@@ -1,6 +1,6 @@
 #' Create a volcano plot from an unfiltered DESeq2 results object
 #'
-#' @param deseqResults Data frame of DESeq2 results, with Ensembl gene IDs as
+#' @param deseqResult Data frame of DESeq2 results, with Ensembl gene IDs as
 #'   rownames, i.e. out from `DESeq2::results()`.
 #' @param pCutoff Adjusted p value cutoff, defaults to <0.05
 #' @param fcCutoff Absolute fold change cutoff, defaults to >1.5
@@ -60,10 +60,10 @@
 #' @seealso <https://github.com/hancockinformatics/pathlinkR>
 #'
 #' @examples
-#' eruption(deseqResults=deseqExampleList[[1]])
+#' eruption(deseqResult=deseqExampleList[[1]])
 #'
 eruption <- function(
-        deseqResults,
+        deseqResult,
         pCutoff=0.05,
         fcCutoff=1.5,
         baseColour="steelblue4",
@@ -84,8 +84,8 @@ eruption <- function(
         labelSize=3.5,
         pad=1.4
 ) {
-    stopifnot(is(deseqResults, "data.frame"))
-    stopifnot(all(c("padj", "log2FoldChange") %in% colnames(deseqResults)))
+    stopifnot(is(deseqResult, "data.frame"))
+    stopifnot(all(c("padj", "log2FoldChange") %in% colnames(deseqResult)))
 
     if (!is.na(xaxis)) {
         stopifnot("'xaxis' must be a length-two numeric vector" = {
@@ -101,8 +101,8 @@ eruption <- function(
     ## If Ensembl IDs are detected, annotate them with gene names from the
     ## mapping file if they exist, or just use the Ensembl ID. If rownames are
     ## not Ensembl IDs, they will be used as is.
-    if (str_detect(rownames(deseqResults)[1], "^ENSG")) {
-        res <- deseqResults %>%
+    if (str_detect(rownames(deseqResult)[1], "^ENSG")) {
+        res <- deseqResult %>%
             rownames_to_column("ensemblGeneId") %>%
             filter(!is.na(padj)) %>%
             left_join(mappingFile, by="ensemblGeneId", multiple="all") %>%
@@ -112,7 +112,7 @@ eruption <- function(
                 ensemblGeneId
             ))
     } else {
-        res <- deseqResults %>%
+        res <- deseqResult %>%
             rownames_to_column("ensemblGeneId") %>%
             mutate(geneName=ensemblGeneId)
     }

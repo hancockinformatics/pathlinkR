@@ -5,7 +5,7 @@
 \title{Create a volcano plot from an unfiltered DESeq2 results object}
 \usage{
 eruption(
-  deseqResults,
+  deseqResult,
   pCutoff = 0.05,
   fcCutoff = 1.5,
   baseColour = "steelblue4",
@@ -28,7 +28,7 @@ eruption(
 )
 }
 \arguments{
-\item{deseqResults}{Data frame of DESeq2 results, with Ensembl gene IDs as
+\item{deseqResult}{Data frame of DESeq2 results, with Ensembl gene IDs as
 rownames, i.e. out from \code{DESeq2::results()}.}
 
 \item{pCutoff}{Adjusted p value cutoff, defaults to <0.05}
@@ -99,7 +99,7 @@ Since this function returns a ggplot object, further custom changes could
 be applied using the standard ggplot2 functions.
 }
 \examples{
-eruption(deseqResults=deseqExampleList[[1]])
+eruption(deseqResult=deseqExampleList[[1]])
 
 }
 \references{
