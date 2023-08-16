@@ -7,7 +7,6 @@ output:
     BiocStyle::html_document:
         toc: true
         toc_depth: 3
-        toc_float: true
 vignette: >
   %\VignetteIndexEntry{Analyze and visualize RNA-Seq data with pathlinkR}
   %\VignetteEngine{knitr::rmarkdown}
@@ -30,237 +29,333 @@ Often times, gene expression studies such as microarrays and RNA-Seq result in
 hundreds to thousands of differentially expressed genes (DEGs). It becomes very
 difficult to understand the biological significance of such massive data sets,
 especially when there are multiple conditions and comparisons being analyzed.
-This package facilitates visualization of downstream analyses for differential
+This package facilitates visualization and downstream analyses of differential
 gene expression results, using pathway enrichment and protein-protein
 interaction networks, to aid researchers in uncovering underlying biology and
 pathophysiology from their gene expression studies.
 
+We have included an example data set of gene expression results in this package
+as the object `deseqExampleList`. This is a list of 2 data frames, generated
+using the `results()` functions from the package
+[DESeq2](https://bioconductor.org/packages/DESeq2/) (Love et al. 2014). The data
+is from an RNA-Seq study investigating COVID-19 and non-COVID-19 sepsis patients
+at admission (T1) compared to  approximately1 week later (T2) in the ICU,
+indexed over time (i.e., T2 vs T1) (An et al. 2023).
+
 
 # Installation
 To install and load the package:
-```{r load_library}
+```{r load_library, message=FALSE}
 # BiocManager::install("pathlinkR")
 library(pathlinkR)
 ```
 
 
-# Creating volcano plots
-One of the first visualizations with gene expression studies is finding how many
-DEGs there are. DEGs are usually defined by specific cutoffs for fold changes
-and adjusted p-values. Generally, cutoffs of adjusted p-value <0.05 and absolute
-fold change >1.5 are used, which are set as defaults here. To generate a volcano
-plot, we can use the function `eruption()` in this package.
-
-We have included example gene expression study results in this package:
-`deseqExampleList`. This is a list of 2 data frames generated using
-[DESeq2](https://bioconductor.org/packages/DESeq2/) (Love et al. 2014). The data
-is from an RNA-Seq study investigating COVID-19 and non-COVID-19 sepsis patients
-at admission (T1) compared to ~1 week later (T2) in the ICU, indexed over time
-(i.e., T2 vs T1) (An et al. 2023).
+# Visualizing RNA-Seq data with volcano plots
+One of the first visualizations commonly performed with gene expression studies
+is to identify the number of DEGs. These are typically defined using specific
+cutoffs for both fold change and statistical significance. Thresholds of
+adjusted p-value <0.05 and absolute fold change >1.5 are used as the default,
+though any value can be specified. **pathlinkR** includes the function
+`eruption()` to create a volcano plot.
 ```{r datasets_and_preliminary_volcano_plot}
-## Two different comparisons are included
-names(deseqExampleList)
+## A quick look at the DESeq2 results table
+head(deseqExampleList[[1]])
 
-## A quick look at what a DESeq2 result looks like
-deseqExample <- deseqExampleList[[1]]
-head(deseqExample)
-
-## Generate a volcano plot using this first dataframe
-eruption(deseqExample, title=names(deseqExampleList)[1])
-```
-
-There are multiple options available for customizing this volcano plot. You can
-add a title, adjust cutoffs, change colours, change the number of labelled
-points, change x and y axis limits, convert between log2 and non-log2 fold
-change (for a better sense of magnitude), and highlight specific genes.
-
-Since we're looking at COVID-19 in these example data sets, let's highlight
-genes in the interferon signaling pathway. We will use a database of Reactome
-pathways used by the pathway enrichment software
-[sigora](https://cran.r-project.org/package=sigora) to generate a list of genes
-involved in interferon signaling. More information on Reactome pathways and the
-sigora package can be found in the pathway enrichment section below.
-```{r customized_volcano_plot}
-ifnGenes <- sigoraDatabase %>% 
-    filter(pathwayName == "Interferon Signaling") %>% 
-    pull(ensemblGeneId)
-
-## Here we'll make the following changes:
-## - Highlight the interferon genes
-## - Give them a description on the plot
-## - Converts the x-axis from log2 fold change to non-log2 fold change
-## - Label only the top 5 up and down-regulated genes
-## - These top genes should be only from the interferon gene list
+## Generate a volcano plot from the first data frame, with default thresholds
 eruption(
-    deseqResults=deseqExample,
-    title=names(deseqExampleList)[1],
-    highlightGenes=ifnGenes, 
-    highlightName="Interferon genes (red)", 
-    nonlog2=TRUE, 
-    n=5, 
-    label="highlight" 
+  deseqResult=deseqExampleList[[1]],
+  title=names(deseqExampleList[1])
 )
 ```
 
-We see quite a lot of interferon signaling genes that are down-regulated in 
-COVID-19 patients at ICU admission, perhaps reflective of some resolution of an
-antiviral response. However, it's difficult to get a sense of whether this is 
-due to chance or if there is a true biological significance, as there are also 
-many interferon genes that were not DEGs. This is where pathway enrichment can 
-tell us statistically if what we're seeing is real biology or not.
+There are multiple options available for customizing this volcano plot, including:
+
+- Adjust the cutoffs
+- Switch the colours of significant and non-significant genes
+- Change the number of labelled genes
+- Adjust the x- and y-axis limits
+- Plot either log2 or non-log2 fold change (for a better sense of magnitude)
+- Highlight specific gene sets of interest
+
+Since we're looking at COVID-19 in this example data set, let's highlight genes
+in the interferon signaling pathway. We'll use a database of Reactome pathways
+used by the pathway enrichment package
+[Sigora](https://cran.r-project.org/package=sigora) to find the genes involved
+in interferon signaling. More information on Reactome pathways and the Sigora
+package can be found in the pathway enrichment section below.
+
+Let's make the following adjustment to the standard volcano plot:
+
+- Highlight the interferon genes and provide a brief description
+- Converts the x-axis from log2 fold change to non-log2 fold change
+- Label only the top 10 up- and down-regulated genes which belong to the 
+  interferon pathway
+```{r customized_volcano_plot}
+interferonGenes <- sigoraDatabase %>% 
+    filter(pathwayName == "Interferon Signaling") %>% 
+    pull(ensemblGeneId)
+
+eruption(
+    deseqResult=deseqExampleList[[1]],
+    title=names(deseqExampleList[1]),
+    highlightGenes=interferonGenes,
+    highlightName="Interferon genes (red)",
+    label="highlight",
+    nonlog2=TRUE,
+    n=10
+)
+```
+
+
+# Visualizing fold changes across comparisons
+In addition to creating volcano plots, we can also visualize our DEGs using
+heatmaps of genes involved in a specific pathways (e.g. one identified as
+significant by `enrichPathway()`). The function `plotFoldChange()` accomplishes
+this by taking in an input list of `DESeq2::results()` data frames, just like
+`enrichPathway()`, and creating a heatmap of fold changes for the constituent
+genes.
+```{r plot_fold_changes_I, fig.height=10}
+plotFoldChange(
+    deseqExampleList,
+    pathName="Interferon alpha/beta signaling"
+)
+```
+
+Another example, with more customization:
+
+- Shorten the names of each comparison
+- Provide a custom list of genes to visualize, and add an informative title
+- Use log2 fold changes in the heatmap cells
+- Swap the rows and columns from the default, and add a split between the rows
+  (comparisons)
+```{r plot_fold_changes_II}
+deseqExampleListRenamed <- setNames(
+    deseqExampleList,
+    c("Pos", "Neg")
+)
+
+plotFoldChange(
+    deseqExampleListRenamed,
+    manualTitle="Signature genes",
+    genesToPlot=c("CD4", "CD8A","CD8B", "CD28", "ZAP70"),
+    geneFormat="hgnc",
+    colSplit=c("Pos", "Neg"),
+    log2FoldChange=TRUE,
+    colAngle=45,
+    clusterRows=FALSE,
+    clusterColumns=TRUE,
+    invert=TRUE
+)
+```
 
 
 # Building and visualizing PPI networks
-`pathlinkR` also provides tools for constructing and visualizing Protein-Protein
+**pathlinkR** includes tools for constructing and visualizing Protein-Protein
 Interaction (PPI) networks. Here we leverage PPI data gathered from
 [InnateDB](https://www.innatedb.com/) to generate a list of interactions among
-DE genes identified in RNA-Seq analyses. These interactions can then be used to
-build PPI networks using tools from the packages `igraph` and `tidygraph`, with
-multiple options for controlling the type of network, such as support for first,
-minimum, or zero order networks. The two main functions used to accomplish this
-are `ppiBuildNetwork` and `ppiPlotNetwork`.
+DE genes identified in gene expression analyses. These interactions can then be
+used to build PPI networks within R, with multiple options for controlling the
+type of network, such as support for first, minimum, or zero order networks. The
+two main functions used to accomplish this are `ppiBuildNetwork` and
+`ppiPlotNetwork`.
+
+Let's continue looking at the DEGs from the COVID positive patients over time,
+using the significant DEGs to build a PPI network. Since the data frame we're
+inputting includes all measured genes (not just the significant ones), we'll use
+the `filterInput=TRUE` option to ensure the network is made only with those
+genes which pass the standard thresholds (defined above). Since we're
+visualizing a network of DEGs, let's colour the nodes to indicate the direction
+of their dysregulation (i.e. up- or down-regulated) by specifying
+`fillType="foldChange"`.
 ```{r ppi_networks, fig.width=12, fig.height=10, warning=FALSE}
-## Construct a zero order network, i.e. it will only contain the input genes, 
-## no other interactors
 exNetwork <- ppiBuildNetwork(
     deseqResults=deseqExampleList[[1]],
     filterInput=TRUE,
     order="zero"
 )
 
-## Plot the PPI network, colouring the nodes based on their log2 fold change
-## values. Many options are available to customize the final plot; see
-## `?ppiPlotNetwork` for all the details.
 ppiPlotNetwork(
     network=exNetwork,
     title=names(deseqExampleList)[1],
     fillColumn=log2FoldChange,
     fillType="foldChange",
-    nodeSize = c(2, 6),
     label=TRUE,
     labelColumn=hgncSymbol,
-    labelFilter=5,
     legend=TRUE
+)
+```
+
+The nodes with blue labels (e.g. STAT1, FBXO6, CDH1, etc.) are hubs within the
+network; i.e. those genes which have a high betweenness score. The statistic
+used to determine hub nodes can be set in `ppiBuildNetwork()` with the
+"hubMeasure" option.
+
+Let's make some tweaks to this standard network. The output of
+`ppiBuildNetwork()` is a *tidygraph* object, meaning we can use the suite of
+**dplyr** verbs to make changes. So let's add a column to denote if a DEG is
+from the interferon pathway (defined above) and highlight only those genes.
+```{r ppi_network_tweaks}
+exNetworkInterferon <- mutate(
+    exNetwork,
+    isInterferon = if_else(name %in% interferonGenes, "y", "n")
+)
+
+ppiPlotNetwork(
+    network=exNetworkInterferon,
+    networkLayout="lgl",
+    title=names(deseqExampleList)[1],
+    fillColumn=isInterferon,
+    fillType="categorical",
+    catFillColours=c("y"="red", "n"="grey"),
+    label=TRUE,
+    labelColumn=hgncSymbol,
+    legend=TRUE,
+    legendTitle="Interferon\ngenes"
 )
 ```
 
 
 # Performing pathway enrichment
-The essence of pathway enrichment is the concept of over-representation. In
-other words, are there more "pathway A" genes in a list of analyzed genes (e.g.,
-DEGs) than expected? To calculate this, the simplest method is to compare the
-ratio of DEGs in "pathway A" to all DEGs and all genes in "pathway A" to all
-genes in all pathways in a database, which is termed "over-representation
-analysis". For this package, we'll be using the
-[Reactome](https://reactome.org/) database (Fabregat et al. 2017).
+The essence of pathway enrichment is the concept of over-representation: that
+is, are there more genes belonging to a specific pathway present in our DEG list
+than we would expect to find by chance? To calculate this, the simplest method
+is to compare the ratio of DEGs in some pathway to all DEGs, and all genes in
+tat pathway to all genes in all pathways in a database. **pathlinkR** mainly
+uses the [Reactome](https://reactome.org/) database (Fabregat et al. 2017) for
+this purpose.
 
-One issue that occurs with over-representation analysis is the assumption that
-each gene in each pathway has "equal" value and belonging to that pathway. In
-reality, a single protein can have multiple (and sometimes very different)
+One issue that can occur with over-representation analysis is the assumption
+that each gene in each pathway has "equal" value in belonging to that pathway.
+In reality, a single protein can have multiple (and sometimes very different)
 functions, and belong to multiple pathways, like protein kinases. There are also
 pathways that have substantial overlap with cellular machinery, like the TLR
 pathways. This can lead to enrichment of multiple similar pathways or even
-unrelated "false-positive" pathways that make parsing through results very
+unrelated "false-positives" that make parsing through the results very
 difficult.
 
-One solution is to use unique gene pairs, as elegantly described by the creators
-of the package [sigora](https://cran.r-project.org/package=sigora) (Foroushani
-et al. 2013). In our experience, this methodology decreases the number of
-similar pathways as well as unrelated pathways from promiscuous genes, leaving
-behind only the pathways that are likely related to the underlying biology. In
-our pathway enrichment function `enrichPathway()`, the default enrichment method
-is "sigora".
+One solution is to use unique gene pairs, as described by the creators of the
+package [Sigora](https://cran.r-project.org/package=sigora) (Foroushani et al.
+2013). This methodology decreases the number of similar and unrelated pathways
+from promiscuous genes, focusing more on the pathways that are likely related to
+the underlying biology. This approach is the default used in the **pathlinkR**
+function  `enrichPathway()`.
 
-The `enrichPathway()` function takes in a list of data frames (each from
-`DESeq2::results()`), and by default will split the genes into up and
-down-regulated, then perform enrichment separately (set `split=FALSE` to
-perform enrichment without splitting DEGs by direction). The name of the
-dataframe(s) in the list should indicate the comparison that was made in the
-DESeq2 results, as it will be used to identify the results.
-```{r sigora_enrichment, eval=FALSE}
-## Perform enrichment with sigora (default). We also need to specify the
-## gene-pair signature repository (more in the Supplemental section), but we 
-## can simply use the one that comes with `sigora`.
+The `enrichPathway()` function takes as input a list of data frames (each from
+`DESeq2::results()`), and by default will split the genes into up- and
+down-regulated before performing pathway enrichment one each set. The name of
+the data frames in the list should indicate the comparison that was made in the
+DESeq2 results, as it will be used to identify the results. For
+`analysis="sigora"` we also need to provide a special object, the Gene Pair
+Signature Repository (`gpsRepo`) which contains the pathways and gene pairs to
+be tested; **pathlinkR** comes with the object `reaH` from **Sigora** containing
+the human Reactome pathways pre-computed and ready-to-use.
+```{r sigora_enrichment}
 enrichedResultsSigora <- enrichPathway(
     inputList=deseqExampleList,
+    analysis="sigora",
+    filterInput=TRUE,
     gpsRepo=reaH
 )
+
+head(enrichedResultsSigora)
 ```
 
-```{r hidden_sigora, echo=FALSE}
-enrichedResultsSigora <- sigoraExamples
-```
-
-```{r sigora_enrichment_no_split, eval=FALSE}
-## Enrichment without splitting by fold change direction
+If you prefer to test the up- and down-regulated genes together, simply set the
+option `split=FALSE`:
+```{r sigora_enrichment_no_split}
 enrichedResultsSigoraNoSplit <- enrichPathway(
     inputList=deseqExampleList,
-    gpsRepo=reaH, 
+    analysis="sigora",
+    filterInput=TRUE,
+    gpsRepo=reaH,
     split=FALSE
 )
+
+head(enrichedResultsSigoraNoSplit)
 ```
 
 For those who still prefer traditional over-representation analysis, we include
 the option of doing so by setting `analysis="reactomepa"`, which uses
 [ReactomePA](https://www.bioconductor.org/packages/ReactomePA/) (Yu et al.
-2016).
+2016). When using this method, we recommend providing a gene universe to serve
+as a background for the enrichment test; here we'll use all the genes which were
+tested for significance by DESeq2 (i.e. all genes from the count matrix), 
+converting them to Entrez gene IDs before running the test.
 ```{r reactomepa_enrichment}
-## Perform enrichment with ReactomePA
+exGeneUniverse <- mappingFile %>% 
+  filter(ensemblGeneId %in% rownames(deseqExampleList[[1]])) %>% 
+  pull(entrezGeneId)
+
 enrichedResultsRpa <- enrichPathway(
     inputList=deseqExampleList,
-    analysis="reactomepa"
+    analysis="reactomepa",
+    filterInput=TRUE,
+    split=TRUE,
+    geneUniverse=exGeneUniverse
 )
+
+head(enrichedResultsRpa)
 ```
 
-In addition to the Reactome database, we also provide over-representation
-analysis using the [Hallmark gene
-sets](https://www.gsea-msigdb.org/gsea/msigdb/human/collections.jsp) from the
-Molecular Signatures Database (MSigDb). These are 50 gene sets that represent
-"specific, well-defined biological states or processes with coherent expression"
-(Liberzon et al. 2015). This database provides a more high-level summary of key
-biological processes compared to the more granular Reactome pathways.
+In addition to the Reactome database used when setting `analysis` to "sigora" or
+"reactomepa", we also provide over-representation analysis using the [Hallmark
+gene sets](https://www.gsea-msigdb.org/gsea/msigdb/human/collections.jsp) from
+the Molecular Signatures Database (MSigDb). These are 50 gene sets that
+represent "specific, well-defined biological states or processes with coherent
+expression" (Liberzon et al. 2015). This database provides a more high-level
+summary of key biological processes compared to the more granular Reactome
+pathways.
 ```{r hallmark_enrichment}
 enrichedResultsHm <- enrichPathway(
     inputList=deseqExampleList,
-    analysis="hallmark"
+    analysis="hallmark",
+    filterInput=TRUE,
+    split=TRUE
 )
+
+head(enrichedResultsHm)
 ```
 
 
 # Plotting pathway enrichment results
 Now that we have (a lot of) pathway enrichment results from multiple
 comparisons, its time to visualize them. The function `plotPathways` does this
-by grouping Reactome pathways or Hallmark gene sets under parent groups, and
-indicating if each pathway is up/down-regulated across different comparisons,
-making it easy to identify which pathways are shared or unique to which
-comparisons. Because there are often many pathways, you can split the plot up
-into multiple columns (up to 3) or truncate the pathway names to make the
-results fit more easily.
+by grouping Reactome pathways (or Hallmark gene sets) under parent groups, and
+indicates if each pathway is up- or down-regulated in each comparison, making it
+easy to identify which pathways are shared or unique to different DEG lists.
+Because there are often many pathways, you can split the plot into multiple
+columns (up to 3), and truncate the pathway names to make the results fit more
+easily.
 
-Sometimes, after splitting, a pathway can be enriched in both up and
-down-regulated genes (these usually occur with larger pathways), and are
-indicated by a white asterisk where the more significant (lower adjusted
-p-value) directionality is displayed. You can also change the angle/labels of
-the comparisons, or add the number of DEGs in each comparison to the labels.
-Lastly, you can specify which pathways or top pathway groups to pull out to
-visualize.
-
+Sometimes a pathway may be enriched in both up- and down-regulated genes from
+the same DEG list (these usually occur with larger pathways). Such occurrences
+are indicated by a white asterisk where the more significant (lower adjusted
+p-value) direction is displayed. You can also change the angle/labels of the
+comparisons, or add the number of DEGs in each comparison below the labels.
+Lastly, you can specify which pathways or top pathway groups to include for
+visualization.
 ```{r plot_pathways_I, fig.width=12, fig.height=10}
-## Plot the sigora results in two columns
-plotPathways(enrichedResultsSigora, columns=2)
+plotPathways(
+  enrichResults=enrichedResultsSigora, 
+  columns=2
+)
 ```
 
+Let's again plot the sigora results, this time with the following tweaks:
+
+- Only show immune-related pathways based on the top pathway grouping
+- Change the colour scaling used for the adjusted p-values
+- Condense the comparison names to better fit onto the plot, and make them
+  display horizontally
+- Add the number of DEGs used for enrichment below the comparison name
+- Increase the truncation cutoff value of pathway names for more words
 ```{r plot_pathways_II, fig.width=8, fig.height=8}
-## Plot the sigora results with the following tweaks:
-## - Only the immune system pathways
-## - Condense the names
-## - Add the number of DEGs used for enrichment
-## - Make the labels horizontal
-## - Increase the truncation cutoff value for more words
 plotPathways(
-    enrichedResultsSigora, 
+    enrichedResultsSigora,
     specificTopPathways="Immune System",
-    newGroupNames=c("COVID\nPositive", "COVID\nNegative"), 
+    colourValues=c("#440154", "#FDE725"),
+    newGroupNames=c("COVID\nPositive", "COVID\nNegative"),
     showNumGenes=TRUE,
     xAngle="horizontal",
     nameWidth=50
@@ -277,34 +372,36 @@ change in non-COVID-19 sepsis patients.
 
 
 # Generating networks from enriched pathways
-`pathlinkR` also includes functions for turning the pathway enrichment results
-from either Reactome-based method ("sigora" or "ReactomePA") into networks,
+**pathlinkR** includes functions for turning the pathway enrichment results
+from either Reactome-based method ("sigora" or "reactomepa") into networks,
 using the overlap of the genes assigned to each pathway to determine their
-similarity to each other. In these networks, each pathway is a node, with
-connections or edges between them determined via distance measures. A threshold
+similarity to one other. In these networks, each pathway is a node, with
+connections or edges between them determined via a distance measure. A threshold
 can be set, where two pathways with a minimum similarity measure are considered
 connected, and would have an edge drawn between their nodes.
 
 We provide a pre-computed distance matrix of Reactome pathways, generated using
 Jaccard distance, but there is support for multiple distance measures to be
-used.
+used. Once this "foundation" of pathway interactions is created, a pathway
+network can be built using the `createPathnet` function:
 ```{r pathway_network_I, fig.width=12, fig.height=10, warning=FALSE}
 startingPathways <- createFoundation(
-    mat=pathwayDistancesJaccard,
+    mat=pathwayDistancesJaccard, # Using pre-computed distances
     maxDistance=0.8
 )
 
+# Get the enriched pathways from the "COVID Pos Over Time" comparison
 exPathwayNetworkInput <- sigoraExamples %>% 
     filter(comparison == "COVID Pos Over Time")
 
 myPathwayNetwork <- createPathnet(
     enrichPathwayResult=exPathwayNetworkInput,
-    foundation=startingPathways,
-    trim=TRUE,
-    trimOrder=1
+    foundation=startingPathways
 )
+```
 
-## Static plot with ggraph
+There are two options for visualization, the first being a static network:
+```{r plot_pathnet_I}
 pathnetGGraph(
     myPathwayNetwork,
     labelProp=0.1,
@@ -314,12 +411,26 @@ pathnetGGraph(
 )
 ```
 
+Nodes (pathways) which are filled in are enriched pathways (i.e. those output by
+`enrichPathway()`). Size of nodes is correlated with statistical significance,
+while edge thickness relates to the similarity of two connected pathways.
+
+Though this type of visualization is useful, we can also display this network 
+using an alternate method that creates an interactive display:
 ```{r pathway_network_II}
-## Interactive plot with visNetwork
 pathnetVisNetwork(myPathwayNetwork)
 ```
 
-## Pathway networks using only DE genes
+Nodes within this network can be dragged around and re-positioned. Or hold the
+**SHIFT** key while clicking-and-dragging to select (and move) multiple nodes at
+once. Clicking on a single node will highlight its direct neighbours, and the
+dropdown at the top-left corner will highlight pathways from a specific category
+(e.g. Immune/Hemostasis).
+
+
+## Pathway networks using only DEGs
+Another option is to use only DEGs when generating the pathway network
+information, as outlined below:
 ```{r pathway_network_III}
 candidateData <- sigoraExamples %>%
     filter(comparison == "COVID Pos Over Time") %>% 
@@ -333,7 +444,7 @@ candidateData <- sigoraExamples %>%
     relocate(pathwayId, ensemblGeneId, "hgncSymbol"=genes, pathwayName) %>%
     distinct()
 
-## Now that we have a smaller table in the same format as sigora_database, we
+## Now that we have a smaller table in the same format as sigoraDatabase, we
 ## can construct our own matrix of pathway distances
 candidateDistData <- getPathwayDistances(
     pathwayData=candidateData,
@@ -354,68 +465,33 @@ candidatesAsNetwork <- createPathnet(
     trim=FALSE
 )
 
-pathnetVisNetwork(candidatesAsNetwork)
-```
-
-
-# Visualizing fold changes across comparisons
-In addition to creating volcano plots, we can also visualize fold changes from
-DESeq2 results using heatmaps of genes involved in specific pathways (e.g. those
-identified as significant by `enrichPathway()`). The function `plotFoldChange()`
-accomplishes this by taking in an input list of `DESeq2::results()` data frames,
-just like `enrichPathway()`.
-```{r plot_fold_changes_I, fig.height=10}
-plotFoldChange(
-    deseqExampleList,
-    pathName="Interferon alpha/beta signaling",
-    colSplit=c("Positive", "Negative"),
-    clusterColumns=FALSE
-)
-```
-
-Another example, with more customization:
-```{r plot_fold_changes_II}
-deseqExampleListRenamed <- purrr::set_names(
-    deseqExampleList,
-    c("Pos", "Neg")
-)
-
-plotFoldChange(
-    deseqExampleListRenamed,
-    manualTitle="Signature genes",
-    genesToPlot=c("CD4", "CD8A","CD8B", "CD28", "ZAP70"),
-    geneFormat="hgnc",
-    colSplit=c("Pos", "Neg"),
-    log2FoldChange=TRUE,
-    colAngle=45,
-    clusterRows=FALSE,
-    clusterColumns=TRUE,
-    invert=TRUE
-)
+pathnetVisNetwork(candidatesAsNetwork, nodeLabelSize=30)
 ```
 
 
 # Supplemental materials
 
 ## Gene-pair signatures
-`sigora` uses gene-pair signature (GPS) repositories that stores information on
+**Sigora** uses a Gene-Pair Signature (GPS) Repository that stores information on
 which gene pairs are unique for which pathways. We recommend using the one
-already loaded with `sigora`, which is `reaH` (Reactome Human). You can also
-generate your own GPS repo using `sigora` and your own set of pathways (e.g.
-from another pathway database like GO or KEGG). Please consult `sigora`
-documentation on how to generate your custom GPS repo.
+already loaded with **pathlinkR**, which is "reaH" (Reactome Human). You can
+also generate your own GPS repo using **Sigora's** own functions and a custom
+set of pathways (e.g. from another pathway database like GO or KEGG). Please
+consult the **Sigora** documentation on how to generate your custom GPS
+repository.
 
-## Why are there different p-value cut-offs for sigora vs ReactomePA/Hallmark?
-Because there are now multiple gene pairs vs just genes, the gene-pair
+## Why are there different p-value cut-offs for sigora vs. ReactomePA/Hallmark?
+Because there are now multiple gene pairs vs. single genes, the gene-pair
 "universe" is greatly increased and it is more likely for a result to be
 significant. Therefore, the cutoff threshold for significance is more stringent
-(p-value < 0.001) and a more conservative adjustment method (Bonferroni) is
-used. For regular over-representation analysis, a less conservative adjustment
-method (Benjamini-Hochberg) is used with adjusted p-value <0.05. These are
-automatically set with `filterResults="default"`. You can adjust these
-cut-offs by setting `filterResults` to different values between 0 and 1, or `1`
-if you want all the pathways (this may be useful for comparing which enriched
-genes appear in which comparisons, even if the enrichment is not significant).
+(adjusted p-value < 0.001) and a more conservative adjustment method
+(Bonferroni) is used. For regular over-representation analysis, a less
+conservative adjustment method (Benjamini-Hochberg) is used with adjusted
+p-value < 0.05. These are automatically set with `filterResults="default"`. You
+can adjust these cut-offs by setting `filterResults` to different values between
+0 and 1, or 1 if you want all the pathways (this may be useful for comparing
+which enriched genes appear in which comparisons, even if the enrichment is not
+significant).
 
 
 # Citations
