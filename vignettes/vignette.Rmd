@@ -15,8 +15,8 @@ vignette: >
 ---
 
 <head>
-<link rel="shortcut icon" href="favicon_32.svg">
-<link rel="shortcut icon" href="favicon_16.svg">
+<link rel="shortcut icon" href="../man/figures/favicon_32.svg">
+<link rel="shortcut icon" href="../man/figures/favicon_16.svg">
 </head>
 
 ```{r setup, include=FALSE}
