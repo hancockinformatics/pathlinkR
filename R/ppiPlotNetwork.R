@@ -6,7 +6,7 @@
 #'   each node (order matters!).
 #' @param title Optional title for the plot (NA)
 #' @param nodeSize Length-two numeric vector, specifying size range of node
-#'   sizes (maps to node degree). Default is `c(3, 9)`.
+#'   sizes (maps to node degree). Default is `c(2, 6)`.
 #' @param fillColumn Tidy-select column for mapping node colour. Designed to
 #'   handle continuous numeric mappings (either positive/negative only, or
 #'   both), and categorical mappings, plus a special case for displaying fold
@@ -27,6 +27,7 @@
 #'   (based on calculated hub score) are highlighted with this colour, if
 #'   `label=TRUE`.
 #' @param legend Should a legend be included? Defaults to FALSE.
+#' @param legendTitle Optional title for the legend, defaults to `NULL`.
 #' @param edgeColour Edge colour, defaults to "grey40"
 #' @param edgeAlpha Transparency of edges, defaults to 0.5
 #' @param edgeWidth Thickness of edges connecting nodes. Defaults to 0.5
@@ -106,7 +107,7 @@ ppiPlotNetwork <- function(
         network,
         networkLayout="nicely",
         title=NA,
-        nodeSize=c(3, 9),
+        nodeSize=c(2, 6),
         fillColumn,
         fillType,
         catFillColours="Set1",
@@ -115,13 +116,14 @@ ppiPlotNetwork <- function(
         nodeBorder="grey30",
         hubColour="blue2",
         legend=FALSE,
+        legendTitle=NULL,
         edgeColour="grey40",
         edgeAlpha=0.5,
         edgeWidth=0.5,
         label=FALSE,
         labelColumn,
-        labelFilter=0,
-        labelSize=5,
+        labelFilter=8,
+        labelSize=4,
         labelColour="black",
         labelFace="bold",
         labelPadding=0.25,
@@ -236,7 +238,7 @@ ppiPlotNetwork <- function(
             ) +
             networkFillGeom +
             scale_size_continuous(range=nodeSize, guide="none") +
-            labs(fill=NULL) +
+            labs(fill=legendTitle) +
             { if (!is.na(title)) labs(title=title) } +
             themeTweaks +
             networkFillGuide
@@ -274,7 +276,7 @@ ppiPlotNetwork <- function(
             ) +
             networkFillGeom +
             scale_size_continuous(range=nodeSize, guide="none") +
-            labs(fill=NULL) +
+            labs(fill=legendTitle) +
             { if (!is.na(title)) labs(title=title) } +
             themeTweaks +
             networkFillGuide +
