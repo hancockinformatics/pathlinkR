@@ -1,3 +1,10 @@
+CHANGES IN VERSION 0.99.317
+----------------------------
+
+* Renamed a number of functions to improve consistency, and make it clear which 
+  ones are related and part of the same "workflow"
+
+
 CHANGES IN VERSION 0.99.310
 ----------------------------
 
