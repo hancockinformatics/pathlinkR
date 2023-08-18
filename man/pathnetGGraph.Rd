@@ -75,13 +75,13 @@ labels. You'll likely need to tweak this value, and try different seeds, to
 get the desired effect.
 }
 \examples{
-startingPathways <- createFoundation(
+startingPathways <- pathnetFoundation(
     mat=pathwayDistancesJaccard,
     maxDistance=0.8
 )
 
-exPathnet <- createPathnet(
-    enrichPathwayResult=sigoraExamples[
+exPathnet <- pathnetCreate(
+    pathwayEnrichmentResult=sigoraExamples[
         grepl("Pos", sigoraExamples$comparison),
     ],
     foundation=startingPathways,

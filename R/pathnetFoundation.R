@@ -32,12 +32,12 @@
 #' @seealso <https://github.com/hancockinformatics/pathlinkR>
 #'
 #' @examples
-#' startingPathways <- createFoundation(
+#' startingPathways <- pathnetFoundation(
 #'     mat=pathwayDistancesJaccard,
 #'     maxDistance=0.8
 #' )
 #'
-createFoundation <- function(mat, maxDistance=NA, propToKeep=NA) {
+pathnetFoundation <- function(mat, maxDistance=NA, propToKeep=NA) {
     stopifnot(all(rownames(mat) == colnames(mat)))
 
     matTibble <- as.data.frame(mat) %>%
