@@ -1,13 +1,13 @@
 #' Plot Reactome pathway enrichment results
 #'
-#' @param enrichResults Data frame of results from the function
+#' @param pathwayEnrichmentResults Data frame of results from the function
 #'   `enrichPathway`
 #' @param columns Number of columns to split the pathways across, particularly
 #'   relevant if there are many significant pathways. Can specify up to 3
 #'   columns, with a default of 1.
 #' @param specificTopPathways Only plot pathways from a specific vector of
 #'   "topPathways". Defaults to "any" which includes all pathway results, or see
-#'   `unique(enrichResults$topPathways)` (i.e. the input)
+#'   `unique(pathwayEnrichmentResults$topPathways)` (i.e. the input)
 #'   for possible values.
 #' @param specificPathways Only plot specific pathways. Defaults to "any".
 #' @param colourValues Length-two character vector of colours to use for the
@@ -54,13 +54,13 @@
 #' @seealso <https://github.com/hancockinformatics/pathlinkR>
 #'
 #' @examples
-#' plotPathways(
+#' pathwayPlots(
 #'     sigoraExamples,
 #'     columns=2
 #' )
 #'
-plotPathways <- function(
-        enrichResults,
+pathwayPlots <- function(
+        pathwayEnrichmentResults,
         columns=1,
         specificTopPathways="any",
         specificPathways="any",
@@ -81,11 +81,11 @@ plotPathways <- function(
     ## If new group names are to be used, add them in
     if (!is.na(newGroupNames[1])) {
         mapNames <- tibble(
-            comparison=unique(enrichResults$comparison),
+            comparison=unique(pathwayEnrichmentResults$comparison),
             newNames=newGroupNames
         )
-        enrichResults <- left_join(
-            enrichResults,
+        pathwayEnrichmentResults <- left_join(
+            pathwayEnrichmentResults,
             mapNames,
             multiple="all"
         ) %>%
@@ -97,7 +97,7 @@ plotPathways <- function(
     ## Convert to -log10 p value and arbitrarily set to a max -log10 p value of
     ## 50 (i.e. adj pval=10^-50), which some enrichment results surpass,
     ## especially for Sigora.
-    enrichResults <- enrichResults %>% mutate(
+    pathwayEnrichmentResults <- pathwayEnrichmentResults %>% mutate(
         logMax=case_when(
             -log10(pValueAdjusted) > maxPVal ~ maxPVal,
             -log10(pValueAdjusted) <= maxPVal ~ -log10(pValueAdjusted)
@@ -105,44 +105,44 @@ plotPathways <- function(
     )
 
     ## Order the directionality of results, if up and down are used
-    if (!"All" %in% enrichResults$direction) {
-        enrichResults$direction <- factor(
-            enrichResults$direction,
+    if (!"All" %in% pathwayEnrichmentResults$direction) {
+        pathwayEnrichmentResults$direction <- factor(
+            pathwayEnrichmentResults$direction,
             levels=c("Up", "Down"))
     } else if (
-        "All" %in% enrichResults$direction &
-        any(c("Up", "Down") %in% enrichResults$direction)
+        "All" %in% pathwayEnrichmentResults$direction &
+        any(c("Up", "Down") %in% pathwayEnrichmentResults$direction)
     ) {
-        enrichResults$direction <- factor(
-            enrichResults$direction,
+        pathwayEnrichmentResults$direction <- factor(
+            pathwayEnrichmentResults$direction,
             levels=c("Up", "Down", "All"))
     }
 
     ## Order the comparisons by the order they were inputted (not alphabetical)
-    enrichResults$comparison <- factor(
-        enrichResults$comparison,
-        levels=unique(enrichResults$comparison))
+    pathwayEnrichmentResults$comparison <- factor(
+        pathwayEnrichmentResults$comparison,
+        levels=unique(pathwayEnrichmentResults$comparison))
 
     ## Add in the number of genes for each comparison if indicated
     if (showNumGenes) {
-        enrichResults <- enrichResults %>% mutate(
+        pathwayEnrichmentResults <- pathwayEnrichmentResults %>% mutate(
             comparison=paste0(comparison, "\n(", totalGenes, ")")
         )
-        enrichResults$comparison <- factor(
-            enrichResults$comparison,
-            levels=unique(enrichResults$comparison)
+        pathwayEnrichmentResults$comparison <- factor(
+            pathwayEnrichmentResults$comparison,
+            levels=unique(pathwayEnrichmentResults$comparison)
         )
     }
 
     ## If did not specify to only plot specific pathways, otherwise filter them
     if (specificTopPathways[1] == "any") {
-        specificTopPathways <- unique(enrichResults$topPathways)
+        specificTopPathways <- unique(pathwayEnrichmentResults$topPathways)
     }
     if (specificPathways[1] == "any") {
-        specificPathways <- unique(enrichResults$pathwayName)
+        specificPathways <- unique(pathwayEnrichmentResults$pathwayName)
     }
 
-    enrichedResultsGraph <- enrichResults %>% filter(
+    enrichedResultsGraph <- pathwayEnrichmentResults %>% filter(
         topPathways %in% specificTopPathways,
         pathwayName %in% specificPathways
     )
