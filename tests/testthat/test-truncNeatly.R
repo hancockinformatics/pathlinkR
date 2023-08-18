@@ -3,5 +3,5 @@ test_that("string truncation works", {
 })
 
 test_that("NA in means NA out", {
-    expect_equal(.truncNeatly(x = NA), NA_character_)
+    expect_equal(.truncNeatly(x=NA), NA_character_)
 })
