@@ -62,13 +62,13 @@ highlighting nodes belonging to a larger group (e.g. top-level Reactome
 category).
 }
 \examples{
-startingPathways <- createFoundation(
+startingPathways <- pathnetFoundation(
     mat=pathwayDistancesJaccard,
     maxDistance=0.8
 )
 
-exPathnet <- createPathnet(
-    enrichPathwayResult=sigoraExamples[
+exPathnet <- pathnetCreate(
+    pathwayEnrichmentResult=sigoraExamples[
         grepl("Pos", sigoraExamples$comparison),
     ],
     foundation=startingPathways,

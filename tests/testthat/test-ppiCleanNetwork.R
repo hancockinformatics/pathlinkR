@@ -3,21 +3,21 @@ test_that("the output looks right", {
     tj1 <- jsonlite::read_json(
         system.file(
             "extdata/networkAnalystExample.json",
-            package = "pathlinkR"
+            package="pathlinkR"
         ),
-        simplifyVector = TRUE
+        simplifyVector=TRUE
     )
 
     tj2 <- igraph::graph_from_data_frame(
-        d = dplyr::select(tj1$edges, source, target),
-        directed = FALSE,
-        vertices = dplyr::select(
+        d=dplyr::select(tj1$edges, source, target),
+        directed=FALSE,
+        vertices=dplyr::select(
             tj1$nodes,
             id,
             label,
             x,
             y,
-            "types" = molType,
+            "types"=molType,
             expr
         )
     )

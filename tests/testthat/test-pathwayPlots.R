@@ -3,9 +3,9 @@ test_that("pathway plots are correct", {
 
     vdiffr::expect_doppelganger(
         "pathwayPlotExample",
-        plotPathways(
+        pathwayPlots(
             sigoraExamples,
-            columns = 2
+            columns=2
         )
     )
 })
