@@ -54,7 +54,7 @@
 #' @seealso <https://github.com/hancockinformatics/pathlinkR>
 #'
 #' @examples
-#' enrichPathway(
+#' pathwayEnrichment(
 #'     inputList=deseqExampleList[1],
 #'     filterInput=TRUE,
 #'     split=TRUE,
@@ -62,7 +62,7 @@
 #'     filterResults="default",
 #' )
 #'
-enrichPathway <- function(
+pathwayEnrichment <- function(
         inputList,
         filterInput=TRUE,
         pCutoff=0.05,
