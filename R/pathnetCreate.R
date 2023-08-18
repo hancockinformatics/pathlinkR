@@ -1,9 +1,9 @@
 #' Create a pathway network from enrichment results and a pathway
 #' interaction foundation
 #'
-#' @param pathwayEnrichmentResult Data frame of results from Sigora or ReactomePA
-#'   (should be based on Reactome data). Must minimally contain the columns
-#'   "pathwayId" and "pValueAdjusted".
+#' @param pathwayEnrichmentResult Data frame of results from Sigora or
+#'   ReactomePA (should be based on Reactome data). Must minimally contain the
+#'   columns "pathwayId" and "pValueAdjusted".
 #' @param foundation List of pathway pairs to use in constructing a network.
 #'   Typically this will be the output from `createFoundation`.
 #' @param trim Remove independent subgraphs which don't contain any enriched
@@ -57,9 +57,9 @@ pathnetCreate <- function(
 ) {
 
     stopifnot(is(pathwayEnrichmentResult, "data.frame"))
-    stopifnot(
-        all(c("pathwayId", "pValueAdjusted") %in% colnames(pathwayEnrichmentResult))
-    )
+    stopifnot(all(
+        c("pathwayId", "pValueAdjusted") %in% colnames(pathwayEnrichmentResult)
+    ))
 
     stopifnot(is(foundation, "data.frame"))
     stopifnot(all(

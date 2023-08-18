@@ -64,12 +64,13 @@ head(deseqExampleList[[1]])
 
 ## Generate a volcano plot from the first data frame, with default thresholds
 eruption(
-  deseqResult=deseqExampleList[[1]],
-  title=names(deseqExampleList[1])
+    deseqResult=deseqExampleList[[1]],
+    title=names(deseqExampleList[1])
 )
 ```
 
-There are multiple options available for customizing this volcano plot, including:
+There are multiple options available for customizing this volcano plot,
+including:
 
 - Adjust the cutoffs
 - Switch the colours of significant and non-significant genes
@@ -111,10 +112,10 @@ eruption(
 # Visualizing fold changes across comparisons
 In addition to creating volcano plots, we can also visualize our DEGs using
 heatmaps of genes involved in a specific pathways (e.g. one identified as
-significant by `pathwayEnrichment()`). The function `plotFoldChange()` accomplishes
-this by taking in an input list of `DESeq2::results()` data frames, just like
-`pathwayEnrichment()`, and creating a heatmap of fold changes for the constituent
-genes.
+significant by `pathwayEnrichment()`). The function `plotFoldChange()`
+accomplishes this by taking in an input list of `DESeq2::results()` data frames,
+just like `pathwayEnrichment()`, and creating a heatmap of fold changes for the
+constituent genes.
 ```{r plot_fold_changes_I, fig.height=10}
 plotFoldChange(
     deseqExampleList,
@@ -241,8 +242,8 @@ from promiscuous genes, focusing more on the pathways that are likely related to
 the underlying biology. This approach is the default used in the **pathlinkR**
 function  `pathwayEnrichment()`.
 
-The `pathwayEnrichment()` function takes as input a list of data frames (each from
-`DESeq2::results()`), and by default will split the genes into up- and
+The `pathwayEnrichment()` function takes as input a list of data frames (each
+from `DESeq2::results()`), and by default will split the genes into up- and
 down-regulated before performing pathway enrichment one each set. The name of
 the data frames in the list should indicate the comparison that was made in the
 DESeq2 results, as it will be used to identify the results. For
@@ -284,8 +285,8 @@ tested for significance by DESeq2 (i.e. all genes from the count matrix),
 converting them to Entrez gene IDs before running the test.
 ```{r reactomepa_enrichment}
 exGeneUniverse <- mappingFile %>% 
-  filter(ensemblGeneId %in% rownames(deseqExampleList[[1]])) %>% 
-  pull(entrezGeneId)
+    filter(ensemblGeneId %in% rownames(deseqExampleList[[1]])) %>% 
+    pull(entrezGeneId)
 
 enrichedResultsRpa <- pathwayEnrichment(
     inputList=deseqExampleList,
@@ -337,8 +338,8 @@ Lastly, you can specify which pathways or top pathway groups to include for
 visualization.
 ```{r plot_pathways_I, fig.width=12, fig.height=10}
 pathwayPlots(
-  pathwayEnrichmentResults=enrichedResultsSigora, 
-  columns=2
+    pathwayEnrichmentResults=enrichedResultsSigora, 
+    columns=2
 )
 ```
 
@@ -412,8 +413,9 @@ pathnetGGraph(
 ```
 
 Nodes (pathways) which are filled in are enriched pathways (i.e. those output by
-`pathwayEnrichment()`). Size of nodes is correlated with statistical significance,
-while edge thickness relates to the similarity of two connected pathways.
+`pathwayEnrichment()`). Size of nodes is correlated with statistical
+significance, while edge thickness relates to the similarity of two connected
+pathways.
 
 Though this type of visualization is useful, we can also display this network 
 using an alternate method that creates an interactive display:
@@ -472,8 +474,8 @@ pathnetVisNetwork(candidatesAsNetwork, nodeLabelSize=30)
 # Supplemental materials
 
 ## Gene-pair signatures
-**Sigora** uses a Gene-Pair Signature (GPS) Repository that stores information on
-which gene pairs are unique for which pathways. We recommend using the one
+**Sigora** uses a Gene-Pair Signature (GPS) Repository that stores information 
+on which gene pairs are unique for which pathways. We recommend using the one
 already loaded with **pathlinkR**, which is "reaH" (Reactome Human). You can
 also generate your own GPS repo using **Sigora's** own functions and a custom
 set of pathways (e.g. from another pathway database like GO or KEGG). Please
