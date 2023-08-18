@@ -1,9 +1,9 @@
 #' Create a pathway network from enrichment results and a pathway
 #' interaction foundation
 #'
-#' @param enrichPathwayResult Data frame of results from Sigora or ReactomePA
-#'   (should be based on Reactome data). Must minimally contain the columns
-#'   "pathwayId" and "pValueAdjusted".
+#' @param pathwayEnrichmentResult Data frame of results from Sigora or
+#'   ReactomePA (should be based on Reactome data). Must minimally contain the
+#'   columns "pathwayId" and "pValueAdjusted".
 #' @param foundation List of pathway pairs to use in constructing a network.
 #'   Typically this will be the output from `createFoundation`.
 #' @param trim Remove independent subgraphs which don't contain any enriched
@@ -35,13 +35,13 @@
 #' @seealso <https://github.com/hancockinformatics/pathlinkR>
 #'
 #' @examples
-#' startingPathways <- createFoundation(
+#' startingPathways <- pathnetFoundation(
 #'     mat=pathwayDistancesJaccard,
 #'     maxDistance=0.8
 #' )
 #'
-#' createPathnet(
-#'     enrichPathwayResult=sigoraExamples[
+#' pathnetCreate(
+#'     pathwayEnrichmentResult=sigoraExamples[
 #'         grepl("Pos", sigoraExamples$comparison),
 #'     ],
 #'     foundation=startingPathways,
@@ -49,17 +49,17 @@
 #'     trimOrder=1
 #' )
 #'
-createPathnet <- function(
-        enrichPathwayResult,
+pathnetCreate <- function(
+        pathwayEnrichmentResult,
         foundation,
         trim=TRUE,
         trimOrder=1
 ) {
 
-    stopifnot(is(enrichPathwayResult, "data.frame"))
-    stopifnot(
-        all(c("pathwayId", "pValueAdjusted") %in% colnames(enrichPathwayResult))
-    )
+    stopifnot(is(pathwayEnrichmentResult, "data.frame"))
+    stopifnot(all(
+        c("pathwayId", "pValueAdjusted") %in% colnames(pathwayEnrichmentResult)
+    ))
 
     stopifnot(is(foundation, "data.frame"))
     stopifnot(all(
@@ -70,7 +70,7 @@ createPathnet <- function(
     startingNodes <- foundation %>%
         distinct(pathway1, pathwayName1) %>%
         left_join(
-            enrichPathwayResult,
+            pathwayEnrichmentResult,
             by=c("pathway1" = "pathwayId"),
             multiple="all"
         )

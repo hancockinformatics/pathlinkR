@@ -1,19 +1,19 @@
 test_that("pathVisNetwork returns the right plot", {
     set.seed(1)
 
-    startingPathways <- createFoundation(
+    startingPathways <- pathnetFoundation(
         mat = pathwayDistancesJaccard,
         maxDistance = 0.8
     )
 
-    exPathnet <- createPathnet(
-        enrichPathwayResult = dplyr::filter(
+    exPathnet <- pathnetCreate(
+        pathwayEnrichmentResult=dplyr::filter(
             sigoraExamples,
             comparison == "COVID Pos Over Time"
         ),
-        foundation = startingPathways,
-        trim = TRUE,
-        trimOrder = 1
+        foundation=startingPathways,
+        trim=TRUE,
+        trimOrder=1
     )
 
     vdiffr::expect_doppelganger(
