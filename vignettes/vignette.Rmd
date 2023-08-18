@@ -111,9 +111,9 @@ eruption(
 # Visualizing fold changes across comparisons
 In addition to creating volcano plots, we can also visualize our DEGs using
 heatmaps of genes involved in a specific pathways (e.g. one identified as
-significant by `enrichPathway()`). The function `plotFoldChange()` accomplishes
+significant by `pathwayEnrichment()`). The function `plotFoldChange()` accomplishes
 this by taking in an input list of `DESeq2::results()` data frames, just like
-`enrichPathway()`, and creating a heatmap of fold changes for the constituent
+`pathwayEnrichment()`, and creating a heatmap of fold changes for the constituent
 genes.
 ```{r plot_fold_changes_I, fig.height=10}
 plotFoldChange(
@@ -239,9 +239,9 @@ package [Sigora](https://cran.r-project.org/package=sigora) (Foroushani et al.
 2013). This methodology decreases the number of similar and unrelated pathways
 from promiscuous genes, focusing more on the pathways that are likely related to
 the underlying biology. This approach is the default used in the **pathlinkR**
-function  `enrichPathway()`.
+function  `pathwayEnrichment()`.
 
-The `enrichPathway()` function takes as input a list of data frames (each from
+The `pathwayEnrichment()` function takes as input a list of data frames (each from
 `DESeq2::results()`), and by default will split the genes into up- and
 down-regulated before performing pathway enrichment one each set. The name of
 the data frames in the list should indicate the comparison that was made in the
@@ -251,7 +251,7 @@ Signature Repository (`gpsRepo`) which contains the pathways and gene pairs to
 be tested; **pathlinkR** comes with the object `reaH` from **Sigora** containing
 the human Reactome pathways pre-computed and ready-to-use.
 ```{r sigora_enrichment}
-enrichedResultsSigora <- enrichPathway(
+enrichedResultsSigora <- pathwayEnrichment(
     inputList=deseqExampleList,
     analysis="sigora",
     filterInput=TRUE,
@@ -264,7 +264,7 @@ head(enrichedResultsSigora)
 If you prefer to test the up- and down-regulated genes together, simply set the
 option `split=FALSE`:
 ```{r sigora_enrichment_no_split}
-enrichedResultsSigoraNoSplit <- enrichPathway(
+enrichedResultsSigoraNoSplit <- pathwayEnrichment(
     inputList=deseqExampleList,
     analysis="sigora",
     filterInput=TRUE,
@@ -287,7 +287,7 @@ exGeneUniverse <- mappingFile %>%
   filter(ensemblGeneId %in% rownames(deseqExampleList[[1]])) %>% 
   pull(entrezGeneId)
 
-enrichedResultsRpa <- enrichPathway(
+enrichedResultsRpa <- pathwayEnrichment(
     inputList=deseqExampleList,
     analysis="reactomepa",
     filterInput=TRUE,
@@ -307,7 +307,7 @@ expression" (Liberzon et al. 2015). This database provides a more high-level
 summary of key biological processes compared to the more granular Reactome
 pathways.
 ```{r hallmark_enrichment}
-enrichedResultsHm <- enrichPathway(
+enrichedResultsHm <- pathwayEnrichment(
     inputList=deseqExampleList,
     analysis="hallmark",
     filterInput=TRUE,
@@ -336,8 +336,8 @@ comparisons, or add the number of DEGs in each comparison below the labels.
 Lastly, you can specify which pathways or top pathway groups to include for
 visualization.
 ```{r plot_pathways_I, fig.width=12, fig.height=10}
-plotPathways(
-  enrichResults=enrichedResultsSigora, 
+pathwayPlots(
+  pathwayEnrichmentResults=enrichedResultsSigora, 
   columns=2
 )
 ```
@@ -351,7 +351,7 @@ Let's again plot the sigora results, this time with the following tweaks:
 - Add the number of DEGs used for enrichment below the comparison name
 - Increase the truncation cutoff value of pathway names for more words
 ```{r plot_pathways_II, fig.width=8, fig.height=8}
-plotPathways(
+pathwayPlots(
     enrichedResultsSigora,
     specificTopPathways="Immune System",
     colourValues=c("#440154", "#FDE725"),
@@ -385,7 +385,7 @@ Jaccard distance, but there is support for multiple distance measures to be
 used. Once this "foundation" of pathway interactions is created, a pathway
 network can be built using the `createPathnet` function:
 ```{r pathway_network_I, fig.width=12, fig.height=10, warning=FALSE}
-startingPathways <- createFoundation(
+startingPathways <- pathnetFoundation(
     mat=pathwayDistancesJaccard, # Using pre-computed distances
     maxDistance=0.8
 )
@@ -394,8 +394,8 @@ startingPathways <- createFoundation(
 exPathwayNetworkInput <- sigoraExamples %>% 
     filter(comparison == "COVID Pos Over Time")
 
-myPathwayNetwork <- createPathnet(
-    enrichPathwayResult=exPathwayNetworkInput,
+myPathwayNetwork <- pathnetCreate(
+    pathwayEnrichmentResult=exPathwayNetworkInput,
     foundation=startingPathways
 )
 ```
@@ -412,7 +412,7 @@ pathnetGGraph(
 ```
 
 Nodes (pathways) which are filled in are enriched pathways (i.e. those output by
-`enrichPathway()`). Size of nodes is correlated with statistical significance,
+`pathwayEnrichment()`). Size of nodes is correlated with statistical significance,
 while edge thickness relates to the similarity of two connected pathways.
 
 Though this type of visualization is useful, we can also display this network 
@@ -451,13 +451,13 @@ candidateDistData <- getPathwayDistances(
     distMethod="jaccard"
 )
 
-candidateStartingPathways <- createFoundation(
+candidateStartingPathways <- pathnetFoundation(
     mat=candidateDistData,
     maxDistance=0.9
 )
 
-candidatesAsNetwork <- createPathnet(
-    enrichPathwayResult=filter(
+candidatesAsNetwork <- pathnetCreate(
+    pathwayEnrichmentResult=filter(
         sigoraExamples, 
         comparison == "COVID Pos Over Time"
     ),
