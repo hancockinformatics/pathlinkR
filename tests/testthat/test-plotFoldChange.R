@@ -5,7 +5,7 @@ test_that("fold change heatmaps are working", {
         "plotFoldChangeExample",
         plotFoldChange(
             deseqExampleList,
-            pathName = "Generation of second messenger molecules"
+            pathName="Generation of second messenger molecules"
         )
     )
 })
