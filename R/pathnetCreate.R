@@ -113,7 +113,7 @@ pathnetCreate <- function(
     pathwaysAsNetwork4 <- pathwaysAsNetwork3 %>%
         left_join(
             y =select(
-                topPathwaysMore, pathwayId,
+                pathwayCategories, pathwayId,
                 pathwayName, groupedPathway
             ),
             by=c("pathway1" = "pathwayId"),
