@@ -19,7 +19,7 @@ vignette: >
 </head>
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, comment = "")
+knitr::opts_chunk$set(echo=TRUE, comment="")
 library(dplyr)
 ```
 
@@ -247,16 +247,18 @@ from `DESeq2::results()`), and by default will split the genes into up- and
 down-regulated before performing pathway enrichment one each set. The name of
 the data frames in the list should indicate the comparison that was made in the
 DESeq2 results, as it will be used to identify the results. For
-`analysis="sigora"` we also need to provide a special object, the Gene Pair
-Signature Repository (`gpsRepo`) which contains the pathways and gene pairs to
-be tested; **pathlinkR** comes with the object `reaH` from **Sigora** containing
-the human Reactome pathways pre-computed and ready-to-use.
+`analysis="sigora"` we also need to provide a Gene Pair Signature Repository
+(`gpsRepo`) which contains the pathways and gene pairs to be tested. Leaving
+this argument to "default" will use the `reaH` GPS repository from
+**Sigora**, containing human Reactome pathways. Alternatively one can supply
+their own GPS repository; see `?sigora::makeGPS()` for details on how to
+make one.
 ```{r sigora_enrichment}
 enrichedResultsSigora <- pathwayEnrichment(
     inputList=deseqExampleList,
     analysis="sigora",
     filterInput=TRUE,
-    gpsRepo=reaH
+    gpsRepo="default"
 )
 
 head(enrichedResultsSigora)
@@ -269,7 +271,7 @@ enrichedResultsSigoraNoSplit <- pathwayEnrichment(
     inputList=deseqExampleList,
     analysis="sigora",
     filterInput=TRUE,
-    gpsRepo=reaH,
+    gpsRepo="default",
     split=FALSE
 )
 
