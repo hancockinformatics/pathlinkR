@@ -67,6 +67,19 @@
 #' }
 "mSigDbTermToGene"
 
+#' Manually-curated list of Reactome and Hallmark pathways and their top
+#' pathways and grouped pathways
+#'
+#' @format A data frame (tibble) with 2685 rows and 5 columns
+#' \describe{
+#'   \item{pathwayId}{Reactome or Hallmark pathway identifier}
+#'   \item{pathwayName}{Pathway name}
+#'   \item{topLevelPathway}{Top hierarchy pathway term, shortened in some cases}
+#'   \item{groupedPathway}{Top grouped pathway, 8 for Reactome}
+#'   \item{topLevelOriginal}{Original top pathway name}
+#' }
+"pathwayCategories"
+
 #' Matrix of pairwise Jaccard indices for all human Reactome pathways
 #'
 #' @format A matrix with 1001 rows and columns
@@ -132,16 +145,3 @@
 #'   \item{topLevelPathway}{Pathway category}
 #' }
 "sigoraExamples"
-
-#' Manually-curated list of Reactome and Hallmark pathways and their top
-#' pathways and grouped pathways
-#'
-#' @format A data frame (tibble) with 2685 rows and 5 columns
-#' \describe{
-#'   \item{pathwayId}{Reactome or Hallmark pathway identifier}
-#'   \item{pathwayName}{Pathway name}
-#'   \item{topLevelPathway}{Top hierarchy pathway term, shortened in some cases}
-#'   \item{groupedPathway}{Top grouped pathway, 8 for Reactome}
-#'   \item{topLevelOriginal}{Original top pathway name}
-#' }
-"pathwayCategories"
