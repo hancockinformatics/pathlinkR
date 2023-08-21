@@ -8,9 +8,9 @@ interaction foundation}
 pathnetCreate(pathwayEnrichmentResult, foundation, trim = TRUE, trimOrder = 1)
 }
 \arguments{
-\item{pathwayEnrichmentResult}{Data frame of results from Sigora or ReactomePA
-(should be based on Reactome data). Must minimally contain the columns
-"pathwayId" and "pValueAdjusted".}
+\item{pathwayEnrichmentResult}{Data frame of results from Sigora or
+ReactomePA (should be based on Reactome data). Must minimally contain the
+columns "pathwayId" and "pValueAdjusted".}
 
 \item{foundation}{List of pathway pairs to use in constructing a network.
 Typically this will be the output from \code{createFoundation}.}

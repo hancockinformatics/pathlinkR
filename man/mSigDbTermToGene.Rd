@@ -5,7 +5,7 @@
 \alias{mSigDbTermToGene}
 \title{Table of Hallmark gene sets and their genes}
 \format{
-A data frame with 8,209 rows and 2 columns
+A data frame (tibble) with 8,209 rows and 2 columns
 \describe{
 \item{pathwayId}{Name of the Hallmark Gene Set}
 \item{ensemblGeneId}{Ensembl IDs}

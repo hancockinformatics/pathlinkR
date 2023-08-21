@@ -7,7 +7,6 @@
 \format{
 A list of two data frames, each with 6 columns (and rownames),
 containing example results from DESeq2
-
 \describe{
 \item{baseMean}{A combined score for the gene}
 \item{log2FoldChange}{Fold change value for the gene}
