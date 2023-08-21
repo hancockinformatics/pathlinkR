@@ -2,7 +2,6 @@
 #'
 #' @format A list of two data frames, each with 6 columns (and rownames),
 #'   containing example results from DESeq2
-#'
 #' \describe{
 #'   \item{baseMean}{A combined score for the gene}
 #'   \item{log2FoldChange}{Fold change value for the gene}
@@ -49,19 +48,6 @@
 #' }
 "innateDbExp"
 
-#' Table of Reactome pathways that had multiple top pathways originally, and
-#' manually curated to only have one top pathway in find_top_pathways.R
-#'
-#' @format A tibble with 25 rows and 2 columns
-#' \describe{
-#'   \item{pathwayId}{Reactome pathway ID}
-#'   \item{pathwayName}{Name of the pathway}
-#'   \item{topPathwayName}{Name of the top pathway}
-#'   \item{species}{species}
-#'   \item{topPathway}{ID of the top pathway}
-#' }
-"manualDupeAnnotation"
-
 #' Table of human gene ID mappings
 #'
 #' @format A data frame (tibble) with 43,993 rows and 3 columns
@@ -74,7 +60,7 @@
 
 #' Table of Hallmark gene sets and their genes
 #'
-#' @format A data frame with 8,209 rows and 2 columns
+#' @format A data frame (tibble) with 8,209 rows and 2 columns
 #' \describe{
 #'   \item{pathwayId}{Name of the Hallmark Gene Set}
 #'   \item{ensemblGeneId}{Ensembl IDs}
@@ -92,7 +78,7 @@
 
 #' Table of all Reactome pathways and genes
 #'
-#' @format A data frame with 123574 rows and 3 columns
+#' @format A data frame (tibble) with 123574 rows and 3 columns
 #' \describe{
 #'   \item{pathwayId}{Reactome pathway ID}
 #'   \item{entrezGeneId}{Entrez gene ID}
@@ -118,7 +104,7 @@
 
 #' Table of all Sigora pathways and their constituent genes
 #'
-#' @format A tibble with 60775 rows and 4 columns
+#' @format A data frame (tibble) with 60775 rows and 4 columns
 #' \describe{
 #'   \item{pathwayId}{Reactome pathway identifier}
 #'   \item{pathwayName}{Reactome pathway description}
@@ -127,7 +113,7 @@
 #' }
 "sigoraDatabase"
 
-#' Example output from `enrich_pathways` run on "deseqExampleList"
+#' Example Sigora output from running `pathwayEnrichment` on "deseqExampleList"
 #'
 #' @format A data frame (tibble) with 66 rows and 12 columns
 #' \describe{
