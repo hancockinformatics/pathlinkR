@@ -19,7 +19,7 @@ input list}
 \item{numBgGenes}{All genes from the pathway database}
 \item{geneRatio}{Quotient of the number of candidate and background genes}
 \item{totalGenes}{Total number of input genes}
-\item{topPathways}{Pathway category}
+\item{topLevelPathway}{Pathway category}
 }
 }
 \usage{
