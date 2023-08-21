@@ -88,22 +88,6 @@
 #' }
 "reactomeDatabase"
 
-#' The default Sigora Gene Pair Signature (GPS) object
-#'
-#' @format A list of length nine with the following top-level elements
-#' \describe{
-#'   \item{origRepo}{The original pathway data}
-#'   \item{L1}{Level 1 pathways}
-#'   \item{L2}{Level 2 pathways}
-#'   \item{L3}{Level 3 pathways}
-#'   \item{L4}{Level 4 pathways}
-#'   \item{L5}{Level 5 pathways}
-#'   \item{repoName}{Name of the repository used to build the GPS object}
-#'   \item{pathwaydescriptions}{Pathway names}
-#'   \item{call}{Function call to create the GPS object}
-#' }
-"reaH"
-
 #' Table of all Sigora pathways and their constituent genes
 #'
 #' @format A data frame (tibble) with 60775 rows and 4 columns
