@@ -20,7 +20,7 @@ test_that("Sigora enrichment works as expected", {
             "numBgGenes",
             "geneRatio",
             "totalGenes",
-            "topPathways"
+            "topLevelPathway"
         )
     )
 })
@@ -47,7 +47,7 @@ test_that("ReactomePA enrichment works as expected", {
             "numBgGenes",
             "geneRatio",
             "totalGenes",
-            "topPathways"
+            "topLevelPathway"
         )
     )
 })
@@ -75,7 +75,7 @@ test_that("Hallmark enrichment works as expected", {
             "numBgGenes",
             "geneRatio",
             "totalGenes",
-            "topPathways"
+            "topLevelPathway"
         )
     )
 })

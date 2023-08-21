@@ -149,7 +149,7 @@ plotFoldChange <- function(
 
         stopifnot(
             "Specified 'pathName' was not found, please try a different pathway
-            name" = length(pathId) != 0
+            name"=length(pathId) != 0
         )
 
         plotTitle <- pathName
@@ -158,7 +158,7 @@ plotFoldChange <- function(
 
         stopifnot(
             "Specified 'pathId' was not found, please try a different pathway
-            ID" = pathId %in% unique(sigoraDatabase$pathwayId)
+            ID"=pathId %in% unique(sigoraDatabase$pathwayId)
         )
 
         plotTitle <- sigoraDatabase %>%

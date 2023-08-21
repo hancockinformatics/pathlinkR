@@ -2,13 +2,11 @@ deseqExampleList
 groupedPathwayColours
 idmap
 innateDbExp
-manualDupeAnnotation
 mappingFile
 mSigDbTermToGene
+pathwayCategories
 pathwayDistancesJaccard
 reactomeDatabase
 reaH
 sigoraDatabase
 sigoraExamples
-topPathwaysMore
-topPathways

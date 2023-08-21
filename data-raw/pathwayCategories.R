@@ -340,35 +340,26 @@ hallmarkAnnotated <- hallmark2 %>% mutate(
 hallmarkDb <- hallmarkAnnotated %>%
     select(
         "pathwayId"=gs_name,
-        topPathways,
         "pathwayName"=gs_name,
-        "ensemblGeneId"=ensembl_gene,
+        "topLevelPathway"=topPathways
     ) %>%
-    mutate(
-        groupedPathway=NA,
-        topPathwaysOriginal=NA
-    )
+    mutate(groupedPathway=NA, topLevelOriginal=NA) %>%
+    distinct()
 
 
-# Save this as another topPathways file ----------------------------------
+# Save this topPathways file ----------------------------------------------
 
-# Difference between previous one is:
-# 1. Used all Reactome pathways instead of just SIGORA pathways (2,621 pathways
-#    over 1,298 originally)
-# 2. Disease is now a grouped pathway instead of separating into other grouped
-#    pathways
-# 3. Added Hallmark gene sets
-topPathwaysMore <- rbind(
+pathwayCategories <- rbind(
     select(
         reactomeAllGrouped,
         pathwayId,
-        "topPathways"=topPathwayName,
         pathwayName,
+        "topLevelPathway"=topPathwayName,
         groupedPathway,
-        "topPathwaysOriginal"=topPathwayNameOriginal
+        "topLevelOriginal"=topPathwayNameOriginal
     ),
-    hallmarkDb %>% select(-ensemblGeneId) %>% distinct()
+    hallmarkDb
 ) %>%
     as_tibble()
 
-usethis::use_data(topPathwaysMore, overwrite=TRUE, compress="bzip2")
+usethis::use_data(pathwayCategories, overwrite=TRUE)

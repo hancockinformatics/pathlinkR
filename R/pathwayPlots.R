@@ -6,8 +6,8 @@
 #'   relevant if there are many significant pathways. Can specify up to 3
 #'   columns, with a default of 1.
 #' @param specificTopPathways Only plot pathways from a specific vector of
-#'   "topPathways". Defaults to "any" which includes all pathway results, or see
-#'   `unique(pathwayEnrichmentResults$topPathways)` (i.e. the input)
+#'   "topLevelPathway". Defaults to "any" which includes all pathway results, or see
+#'   `unique(pathwayEnrichmentResults$topLevelPathway)` (i.e. the input)
 #'   for possible values.
 #' @param specificPathways Only plot specific pathways. Defaults to "any".
 #' @param colourValues Length-two character vector of colours to use for the
@@ -136,14 +136,14 @@ pathwayPlots <- function(
 
     ## If did not specify to only plot specific pathways, otherwise filter them
     if (specificTopPathways[1] == "any") {
-        specificTopPathways <- unique(pathwayEnrichmentResults$topPathways)
+        specificTopPathways <- unique(pathwayEnrichmentResults$topLevelPathway)
     }
     if (specificPathways[1] == "any") {
         specificPathways <- unique(pathwayEnrichmentResults$pathwayName)
     }
 
     enrichedResultsGraph <- pathwayEnrichmentResults %>% filter(
-        topPathways %in% specificTopPathways,
+        topLevelPathway %in% specificTopPathways,
         pathwayName %in% specificPathways
     )
 
@@ -215,9 +215,9 @@ pathwayPlots <- function(
     ## How many pathways per top pathway? Add 1 to account for the extra space
     ## the facet takes up.
     numPathways <- enrichedResultsClean %>%
-        select(topPathways, pathwayName) %>%
+        select(topLevelPathway, pathwayName) %>%
         unique() %>%
-        group_by(topPathways) %>%
+        group_by(topLevelPathway) %>%
         summarise(pathways=n() + 1)
 
     ## Arrange ascending
@@ -239,27 +239,27 @@ pathwayPlots <- function(
             columnSmallest <- columnSplitting %>%
                 arrange(pathways) %>%
                 head(1) %>%
-                .$topPathways
+                .$topLevelPathway
 
             ## Now, add the name of the top pathway to one of the columns and
             ## increase the number of pathways
             columnSplitting <- columnSplitting %>% mutate(
                 pathways=case_when(
-                    topPathways == columnSmallest ~ pathways + add$pathways,
+                    topLevelPathway == columnSmallest ~ pathways + add$pathways,
                     TRUE ~ pathways
                 ),
-                topPathways=case_when(
-                    topPathways == columnSmallest ~ paste0(
-                        topPathways, "," ,add$topPathways
+                topLevelPathway=case_when(
+                    topLevelPathway == columnSmallest ~ paste0(
+                        topLevelPathway, "," ,add$topLevelPathway
                     ),
-                    TRUE ~ topPathways
+                    TRUE ~ topLevelPathway
                 )
             )
         }
     }
 
     ## Now create a list of top pathways for each column
-    columnList <- columnSplitting$topPathways %>%
+    columnList <- columnSplitting$topLevelPathway %>%
         as.list() %>%
         str_split(",")
 
@@ -295,7 +295,7 @@ pathwayPlots <- function(
             ggplot(
                 data=filter(
                     enrichedResultsClean,
-                    topPathways %in% columnList[n][[1]]
+                    topLevelPathway %in% columnList[n][[1]]
                 ),
                 mapping=aes(
                     x=comparison,
@@ -306,7 +306,7 @@ pathwayPlots <- function(
             ) +
 
             facet_col(
-                facets=~topPathways,
+                facets=~topLevelPathway,
                 scales="free_y",
                 space="free"
             ) +
@@ -317,7 +317,7 @@ pathwayPlots <- function(
             geom_point(
                 data=filter(
                     enrichedResultsDupes,
-                    topPathways %in% columnList[n][[1]]
+                    topLevelPathway %in% columnList[n][[1]]
                 ),
                 mapping=aes(x=comparison, y=pathwayName),
                 shape=8,

@@ -129,19 +129,19 @@
 #'   \item{numBgGenes}{All genes from the pathway database}
 #'   \item{geneRatio}{Quotient of the number of candidate and background genes}
 #'   \item{totalGenes}{Total number of input genes}
-#'   \item{topPathways}{Pathway category}
+#'   \item{topLevelPathway}{Pathway category}
 #' }
 "sigoraExamples"
 
 #' Manually-curated list of Reactome and Hallmark pathways and their top
 #' pathways and grouped pathways
 #'
-#' @format A data frame (tibble) with 2671 rows and 5 columns
+#' @format A data frame (tibble) with 2685 rows and 5 columns
 #' \describe{
 #'   \item{pathwayId}{Reactome or Hallmark pathway identifier}
-#'   \item{topPathways}{Top hierarchy pathway term, shortened in some cases}
 #'   \item{pathwayName}{Pathway name}
+#'   \item{topLevelPathway}{Top hierarchy pathway term, shortened in some cases}
 #'   \item{groupedPathway}{Top grouped pathway, 8 for Reactome}
-#'   \item{topPathwaysOriginal}{Original top pathway name}
+#'   \item{topLevelOriginal}{Original top pathway name}
 #' }
-"topPathwaysMore"
+"pathwayCategories"
