@@ -6,7 +6,7 @@
 \title{Manually-curated list of Reactome and Hallmark pathways and their top
 pathways and grouped pathways}
 \format{
-A data frame (tibble) with 2671 rows and 5 columns
+A data frame (tibble) with 2685 rows and 5 columns
 \describe{
 \item{pathwayId}{Reactome or Hallmark pathway identifier}
 \item{pathwayName}{Pathway name}
