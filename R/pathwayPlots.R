@@ -6,9 +6,9 @@
 #'   relevant if there are many significant pathways. Can specify up to 3
 #'   columns, with a default of 1.
 #' @param specificTopPathways Only plot pathways from a specific vector of
-#'   "topLevelPathway". Defaults to "any" which includes all pathway results, or see
-#'   `unique(pathwayEnrichmentResults$topLevelPathway)` (i.e. the input)
-#'   for possible values.
+#'   "topLevelPathway". Defaults to "any" which includes all pathway results, or
+#'   see `unique(pathwayEnrichmentResults$topLevelPathway)` (i.e. the
+#'   input) for possible values.
 #' @param specificPathways Only plot specific pathways. Defaults to "any".
 #' @param colourValues Length-two character vector of colours to use for the
 #'   scale. Defaults to `c("blue", "red")`.

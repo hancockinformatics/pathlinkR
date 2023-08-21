@@ -126,7 +126,8 @@
 #' }
 "sigoraDatabase"
 
-#' Example Sigora output from running `pathwayEnrichment` on "deseqExampleList"
+#' Example Sigora output from running `pathwayEnrichment` on
+#'   "deseqExampleList"
 #'
 #' @format A data frame (tibble) with 66 rows and 12 columns
 #' \describe{
