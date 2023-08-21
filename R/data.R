@@ -17,17 +17,6 @@
 #' @format A length 8 named vector of hex colour values
 "groupedPathwayColours"
 
-#' A data frame (tibble) of ID mappings for different human ID types, from
-#' the Sigora package.
-#'
-#' @format A data frame with 47037 rows and 3 columns
-#' \describe{
-#'   \item{Ensembl.Gene.ID}{Ensembl gene ID}
-#'   \item{EntrezGene.ID}{Entrez/NCBI gene ID}
-#'   \item{Symbol}{HGNC symbol}
-#' }
-"idmap"
-
 #' A data frame containing human PPI data from InnateDB, from the entry
 #' "All Experimentally Validated Interactions (updated weekly)" at
 #' <https://innatedb.com/redirect.do?go=downloadImported>.
