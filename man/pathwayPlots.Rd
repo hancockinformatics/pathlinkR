@@ -32,9 +32,9 @@ relevant if there are many significant pathways. Can specify up to 3
 columns, with a default of 1.}
 
 \item{specificTopPathways}{Only plot pathways from a specific vector of
-"topLevelPathway". Defaults to "any" which includes all pathway results, or see
-\code{unique(pathwayEnrichmentResults$topLevelPathway)} (i.e. the input)
-for possible values.}
+"topLevelPathway". Defaults to "any" which includes all pathway results, or
+see \code{unique(pathwayEnrichmentResults$topLevelPathway)} (i.e. the
+input) for possible values.}
 
 \item{specificPathways}{Only plot specific pathways. Defaults to "any".}
 

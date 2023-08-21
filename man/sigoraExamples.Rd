@@ -3,7 +3,8 @@
 \docType{data}
 \name{sigoraExamples}
 \alias{sigoraExamples}
-\title{Example Sigora output from running \code{pathwayEnrichment} on "deseqExampleList"}
+\title{Example Sigora output from running \code{pathwayEnrichment} on
+"deseqExampleList"}
 \format{
 A data frame (tibble) with 66 rows and 12 columns
 \describe{
@@ -26,6 +27,7 @@ input list}
 sigoraExamples
 }
 \description{
-Example Sigora output from running \code{pathwayEnrichment} on "deseqExampleList"
+Example Sigora output from running \code{pathwayEnrichment} on
+"deseqExampleList"
 }
 \keyword{datasets}
