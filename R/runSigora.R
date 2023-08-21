@@ -37,6 +37,10 @@
         }
     )
 
+    data_env <- new.env(parent=emptyenv())
+    data("idmap", envir=data_env, package="sigora")
+    idmap <- data_env[["idmap"]]
+
     ## Run SIGORA based on default settings (GPSrepo=reaH, level=4)
     invisible(capture.output(
         sigoraResult1 <- sigora(
