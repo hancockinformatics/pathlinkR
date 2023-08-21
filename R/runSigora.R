@@ -20,7 +20,7 @@
 #'
 .runSigora <- function(
         enrichGenes,
-        gpsRepo=reaH,
+        gpsRepo,
         pValFilter=NA
 ) {
 
@@ -41,6 +41,8 @@
     data("idmap", "reaH", envir=data_env, package="sigora")
     idmap <- data_env[["idmap"]]
     reaH <- data_env[["reaH"]]
+
+    if (gpsRepo == "default") gpsRepo <- reaH
 
     ## Run SIGORA based on default settings (GPSrepo=reaH, level=4)
     invisible(capture.output(
