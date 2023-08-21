@@ -9,6 +9,7 @@ utils::globalVariables(c(
         "color",
         "comp",
         "comparison",
+        "data",
         "degree",
         "description",
         "Description",

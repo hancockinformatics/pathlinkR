@@ -12,7 +12,7 @@ pathwayEnrichment(
   split = TRUE,
   analysis = "sigora",
   filterResults = "default",
-  gpsRepo = reaH,
+  gpsRepo = "default",
   geneUniverse = NULL
 )
 }
@@ -46,8 +46,9 @@ custom p-value cutoff. If left as \code{default}, the significance cutoff
 for Sigora is 0.001, or 0.05 for ReactomePA and Hallmark.}
 
 \item{gpsRepo}{Only applies to \code{analysis="sigora"}. Gene Pair Signature
-object for Sigora to use to test for enriched pathways. We recommend using
-the one which ships with Sigora, which is provided as "reaH".}
+object for Sigora to use to test for enriched pathways. Leaving this set
+as "default" will use the "reaH" GPS object from \code{Sigora}, or you can
+provide your own custom GPS repository.}
 
 \item{geneUniverse}{Only applies when \code{analysis} is "reactomepa" or
 "hallmark". The set of background genes to use when testing with ReactomePA

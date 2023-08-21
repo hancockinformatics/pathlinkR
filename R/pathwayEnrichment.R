@@ -22,8 +22,9 @@
 #'   custom p-value cutoff. If left as `default`, the significance cutoff
 #'   for Sigora is 0.001, or 0.05 for ReactomePA and Hallmark.
 #' @param gpsRepo Only applies to `analysis="sigora"`. Gene Pair Signature
-#'   object for Sigora to use to test for enriched pathways. We recommend using
-#'   the one which ships with Sigora, which is provided as "reaH".
+#'   object for Sigora to use to test for enriched pathways. Leaving this set
+#'   as "default" will use the "reaH" GPS object from `Sigora`, or you can
+#'   provide your own custom GPS repository.
 #' @param geneUniverse Only applies when `analysis` is "reactomepa" or
 #'   "hallmark". The set of background genes to use when testing with ReactomePA
 #'   or Hallmark gene sets. For ReactomePA this must be a character vector of
@@ -70,7 +71,7 @@ pathwayEnrichment <- function(
         split=TRUE,
         analysis="sigora",
         filterResults="default",
-        gpsRepo=reaH,
+        gpsRepo="default",
         geneUniverse=NULL
 ) {
     stopifnot(analysis %in% c("sigora", "reactomepa", "hallmark"))
@@ -85,9 +86,8 @@ pathwayEnrichment <- function(
     )
 
     data_env <- new.env(parent=emptyenv())
-    data("idmap", "reaH", envir=data_env, package="sigora")
+    data("idmap", envir=data_env, package="sigora")
     idmap <- data_env[["idmap"]]
-    reaH <- data_env[["reaH"]]
 
     ## Iterate through each element of "inputList"
     resultList <- imap(inputList, function(x, comparison) {
