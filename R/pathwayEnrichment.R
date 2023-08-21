@@ -284,7 +284,7 @@ pathwayEnrichment <- function(
     results_all_comparisons <- resultList %>%
         bind_rows(.id="comparison") %>%
         left_join(
-            select(topPathwaysMore, pathwayId, topPathways),
+            select(pathwayCategories, pathwayId, topLevelPathway),
             by="pathwayId",
             multiple="all"
         ) %>%
