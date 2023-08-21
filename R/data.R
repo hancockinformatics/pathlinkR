@@ -145,17 +145,3 @@
 #'   \item{topPathwaysOriginal}{Original top pathway name}
 #' }
 "topPathwaysMore"
-
-#' Manually-curated Reactome pathways with a simple category assignment
-#'
-#' @format A data frame (tibble) with 1298 rows and 6 columns
-#' \describe{
-#'   \item{pathwayId}{Reactome pathway identifier}
-#'   \item{topPathways}{Top hierarchy pathway term}
-#'   \item{secondTopPathway}{Seond-highest hierarchy term}
-#'   \item{comments}{Comments about the pathway}
-#'   \item{pathwayName}{Pathway name}
-#'   \item{groupedPathway}{Manually-curated pathway type; seven possible values}
-#'   \item{topPathwaysOriginal}{Original top pathway}
-#' }
-"topPathways"
