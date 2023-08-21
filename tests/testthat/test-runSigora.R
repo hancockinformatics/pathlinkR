@@ -3,5 +3,6 @@ test_that("runSigora works on a basic level", {
 
     testGenesSmall <- testGenes[seq(10)]
 
-    expect_no_error(.runSigora(testGenes))
+
+    expect_no_error(.runSigora(testGenes, gpsRepo="default"))
 })
