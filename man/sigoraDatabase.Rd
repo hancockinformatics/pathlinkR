@@ -5,7 +5,7 @@
 \alias{sigoraDatabase}
 \title{Table of all Sigora pathways and their constituent genes}
 \format{
-A tibble with 60775 rows and 4 columns
+A data frame (tibble) with 60775 rows and 4 columns
 \describe{
 \item{pathwayId}{Reactome pathway identifier}
 \item{pathwayName}{Reactome pathway description}

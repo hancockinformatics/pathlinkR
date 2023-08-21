@@ -5,7 +5,7 @@
 \alias{reactomeDatabase}
 \title{Table of all Reactome pathways and genes}
 \format{
-A data frame with 123574 rows and 3 columns
+A data frame (tibble) with 123574 rows and 3 columns
 \describe{
 \item{pathwayId}{Reactome pathway ID}
 \item{entrezGeneId}{Entrez gene ID}
