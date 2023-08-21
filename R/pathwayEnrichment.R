@@ -85,8 +85,9 @@ pathwayEnrichment <- function(
     )
 
     data_env <- new.env(parent=emptyenv())
-    data("idmap", envir=data_env, package="sigora")
+    data("idmap", "reaH", envir=data_env, package="sigora")
     idmap <- data_env[["idmap"]]
+    reaH <- data_env[["reaH"]]
 
     ## Iterate through each element of "inputList"
     resultList <- imap(inputList, function(x, comparison) {
