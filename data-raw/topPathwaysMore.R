@@ -148,7 +148,7 @@ reactomeDupe <- plyr::rbind.fill(reactomeDupe, inSigora)
 
 # |- Load the manually annotated duplicated pathways ----------------------
 
-load("data/manualDupeAnnotation.rda")
+manualDupeAnnotation <- read_tsv("inst/extdata/manualDupeAnnotation.tsv")
 
 # Add the missing ones back in
 reactomeAllAnnotated <- plyr::rbind.fill(

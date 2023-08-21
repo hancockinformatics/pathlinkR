@@ -1,0 +1,46 @@
+pathwayId	pathwayName	topPathwayName	species	topPathway
+R-HSA-68962	Activation of the pre-replicative complex	DNA Replication	NA	R-HSA-69306
+R-HSA-170670	Adenylate cyclase inhibitory pathway	Signal Transduction	NA	R-HSA-162582
+R-HSA-426048	Arachidonate production from DAG	Hemostasis	NA	R-HSA-109582
+R-HSA-2466712	Biosynthesis of A2E, implicated in retinal degradation	Disease	NA	R-HSA-1643685
+R-HSA-5694530	Cargo concentration in the ER	Vesicle-mediated transport	NA	R-HSA-5653656
+R-HSA-69017	CDK-mediated phosphorylation and removal of Cdc6	DNA Replication	NA	R-HSA-69306
+R-HSA-6807878	COPI-mediated anterograde transport	Vesicle-mediated transport	NA	R-HSA-5653656
+R-HSA-204005	COPII-mediated vesicle transport	Vesicle-mediated transport	NA	R-HSA-5653656
+R-HSA-199920	CREB phosphorylation	Signal Transduction	NA	R-HSA-162582
+R-HSA-3560792	Defective SLC26A2 causes chondrodysplasias	Disease	NA	R-HSA-1643685
+R-HSA-68952	DNA replication initiation	DNA Replication	NA	R-HSA-69306
+R-HSA-69190	DNA strand elongation	DNA Replication	NA	R-HSA-69306
+R-HSA-2173795	Downregulation of SMAD2/3:SMAD4 transcriptional activity	Gene expression (Transcription)	NA	R-HSA-74160
+R-HSA-114508	Effects of PIP2 hydrolysis	Hemostasis	NA	R-HSA-109582
+R-HSA-199977	ER to Golgi Anterograde Transport	Vesicle-mediated transport	NA	R-HSA-5653656
+R-HSA-198753	ERK/MAPK targets	Signal Transduction	NA	R-HSA-162582
+R-HSA-202670	ERKs are inactivated	Signal Transduction	NA	R-HSA-162582
+R-HSA-354194	GRB2:SOS provides linkage to MAPK signaling for Integrins 	Hemostasis	NA	R-HSA-109582
+R-HSA-354192	Integrin signaling	Hemostasis	NA	R-HSA-109582
+R-HSA-69186	Lagging Strand Synthesis	DNA Replication	NA	R-HSA-69306
+R-HSA-69109	Leading Strand Synthesis	DNA Replication	NA	R-HSA-69306
+R-HSA-450294	MAP kinase activation	Signal Transduction	NA	R-HSA-162582
+R-HSA-450282	MAPK targets/ Nuclear events mediated by MAP kinases	Signal Transduction	NA	R-HSA-162582
+R-HSA-1500620	Meiosis	Reproduction	Homo sapiens	R-HSA-1474165
+R-HSA-912446	Meiotic recombination	Reproduction	NA	R-HSA-1474165
+R-HSA-1221632	Meiotic synapsis	Reproduction	NA	R-HSA-1474165
+R-HSA-68949	Orc1 removal from chromatin	DNA Replication	NA	R-HSA-69306
+R-HSA-372708	p130Cas linkage to MAPK signaling for integrins	Hemostasis	NA	R-HSA-109582
+R-HSA-109703	PKB-mediated events	Signal Transduction	NA	R-HSA-162582
+R-HSA-69091	Polymerase switching	DNA Replication	NA	R-HSA-69306
+R-HSA-69183	Processive synthesis on the lagging strand	DNA Replication	NA	R-HSA-69306
+R-HSA-69166	Removal of the Flap Intermediate	DNA Replication	NA	R-HSA-69306
+R-HSA-975634	Retinoid metabolism and transport	Metabolism	NA	R-HSA-1430728
+R-HSA-2173796	SMAD2/SMAD3:SMAD4 heterotrimer regulates transcription	Gene expression (Transcription)	NA	R-HSA-74160
+R-HSA-69052	Switching of origins to a post-replicative state	DNA Replication	NA	R-HSA-69306
+R-HSA-69239	Synthesis of DNA	DNA Replication	NA	R-HSA-69306
+R-HSA-2173793	Transcriptional activity of SMAD2/SMAD3:SMAD4 heterotrimer	Gene expression (Transcription)	NA	R-HSA-74160
+R-HSA-174362	Transport and synthesis of PAPS	Metabolism	NA	R-HSA-1430728
+R-HSA-176974	Unwinding of DNA	DNA Replication	NA	R-HSA-69306
+R-HSA-168253	Host Interactions with Influenza Factors	Disease	Homo sapiens	R-HSA-1643685
+R-HSA-168254	Influenza Infection	Disease	Homo sapiens	R-HSA-1643685
+R-HSA-8853338	Signaling by FGFR3 point mutants in cancer	Disease	Homo sapiens	R-HSA-1643685
+R-HSA-68827	CDT1 association with the CDC6:ORC:origin complex	DNA Replication	Homo sapiens	R-HSA-69306
+R-HSA-9006921	Integrin signaling	Hemostasis	Homo sapiens	R-HSA-109582
+R-HSA-194840	Rho GTPase cycle	Signal Transduction	Homo sapiens	R-HSA-162582
