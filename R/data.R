@@ -17,6 +17,15 @@
 #' @format A length 8 named vector of hex colour values
 "groupedPathwayColours"
 
+#' Table of Hallmark gene sets and their genes
+#'
+#' @format A data frame (tibble) with 8,209 rows and 2 columns
+#' \describe{
+#'   \item{pathwayId}{Name of the Hallmark Gene Set}
+#'   \item{ensemblGeneId}{Ensembl gene IDs}
+#' }
+"hallmarkDatabase"
+
 #' A data frame containing human PPI data from InnateDB, from the entry
 #' "All Experimentally Validated Interactions (updated weekly)" at
 #' <https://innatedb.com/redirect.do?go=downloadImported>.
@@ -46,15 +55,6 @@
 #'   \item{entrezGeneId}{NCBI Entrez IDs}
 #' }
 "mappingFile"
-
-#' Table of Hallmark gene sets and their genes
-#'
-#' @format A data frame (tibble) with 8,209 rows and 2 columns
-#' \describe{
-#'   \item{pathwayId}{Name of the Hallmark Gene Set}
-#'   \item{ensemblGeneId}{Ensembl IDs}
-#' }
-"mSigDbTermToGene"
 
 #' Manually-curated list of Reactome and Hallmark pathways and their top
 #' pathways and grouped pathways

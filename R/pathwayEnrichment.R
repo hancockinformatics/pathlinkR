@@ -228,7 +228,7 @@ pathwayEnrichment <- function(
 
                         enricher(
                             y,
-                            TERM2GENE=mSigDbTermToGene,
+                            TERM2GENE=hallmarkDatabase,
                             universe=geneUniverse,
                             pvalueCutoff=ifelse(
                                 filterResults == "default",
