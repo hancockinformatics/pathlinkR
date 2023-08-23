@@ -82,7 +82,7 @@ hallmark <- msigdbr(category="H") %>%
     )
 
 
-mSigDbTermToGene <- hallmark %>%
+hallmarkDatabase <- hallmark %>%
     left_join(topTerms, multiple="all") %>%
     relocate(
         pathwayId,
@@ -97,4 +97,4 @@ mSigDbTermToGene <- hallmark %>%
 
 # Save the data -----------------------------------------------------------
 
-usethis::use_data(mSigDbTermToGene, overwrite=TRUE)
+usethis::use_data(hallmarkDatabase, overwrite=TRUE)
