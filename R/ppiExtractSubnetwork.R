@@ -12,12 +12,13 @@
 #'   `pathwayEnrichmentResults`
 #'
 #' @return A `tidygraph` object for plotting or further analysis
-#'
 #' @export
 #'
-#' @import dplyr
-#' @importFrom igraph as.igraph V induced.subgraph decompose.graph simplify
-#'   delete.vertices get.shortest.paths
+#' @importFrom dplyr %>% filter mutate pull row_number
+#' @importFrom igraph as.igraph decompose.graph delete.vertices
+#'   get.shortest.paths induced.subgraph simplify V
+#' @importFrom tibble as_tibble
+#' @importFrom tidygraph as_tbl_graph
 #'
 #' @details Uses functions from the igraph package to extract a minimally
 #'   connected subnetwork from the starting network, using either a list of

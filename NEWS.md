@@ -1,3 +1,10 @@
+CHANGES IN VERSION 0.99.332
+----------------------------
+
+* Changed methodology for importing functions
+* Added two new functions for PPI networks: "ppiEnrichNetwork" and "ppiExtractSubnetwork"
+
+
 CHANGES IN VERSION 0.99.317
 ----------------------------
 

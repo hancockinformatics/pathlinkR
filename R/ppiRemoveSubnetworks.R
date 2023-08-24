@@ -4,6 +4,7 @@
 #'
 #' @return Largest subnetwork from the input network list as an igraph object
 #'
+#' @importFrom dplyr %>% arrange desc
 #' @importFrom igraph V components induced_subgraph
 #' @importFrom tibble enframe
 #'

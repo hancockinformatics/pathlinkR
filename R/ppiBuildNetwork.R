@@ -24,10 +24,13 @@
 #' @return `tidygraph` object for plotting or further analysis
 #' @export
 #'
-#' @import dplyr
-#' @import stringr
-#' @import tidygraph
+#' @importFrom dplyr %>% distinct filter intersect left_join mutate pull select
+#'   starts_with
 #' @importFrom SteinerNet steinertree
+#' @importFrom stringr str_wrap
+#' @importFrom tibble as_tibble rownames_to_column
+#' @importFrom tidygraph activate as_tbl_graph centrality_betweenness
+#'   centrality_degree centrality_hub
 #'
 #' @description Creates a protein-protein interaction (PPI) network using
 #'   data from InnateDB, with options for network order, and filtering input.

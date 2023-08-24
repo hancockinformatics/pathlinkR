@@ -13,10 +13,10 @@
 #' @return A tibble of interacting pathway pairs
 #' @export
 #'
-#' @import dplyr
-#' @import stringr
-#' @import tidyr
+#' @importFrom dplyr %>% across arrange contains distinct filter left_join
+#'   mutate relocate slice_head where
 #' @importFrom tibble rownames_to_column
+#' @importFrom tidyr pivot_longer
 #'
 #' @description From a "n by n" distance matrix, generate a table of interacting
 #'   pathways to use in constructing a pathway network. The cutoff can be
@@ -73,7 +73,7 @@ pathnetFoundation <- function(mat, maxDistance=NA, propToKeep=NA) {
         relocate(contains("name"), distance) %>%
         mutate(
             across(where(is.factor), as.character),
-            across(where(is.character), str_trim)
+            across(where(is.character), trimws)
         )
 
     return(annoEdgeTable)

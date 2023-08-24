@@ -3,12 +3,12 @@
 #' @param network `tidygraph` object from a GraphML or JSON file
 #'
 #' @return `tidygraph` object which can be forwarded to other `pathlinkR`
-#' functions such as `ppiPlotNetwork`
-#'
+#'   functions such as `ppiPlotNetwork`
 #' @export
 #'
-#' @import dplyr
-#' @import tidygraph
+#' @importFrom dplyr %>% everything if_else mutate select
+#' @importFrom igraph graph_from_data_frame
+#' @importFrom tidygraph as_tbl_graph centrality_betweenness centrality_degree
 #'
 #' @description Takes network file (GraphML or JSON) and process it into a
 #'   tidygraph object, adding network statistics along the way.
