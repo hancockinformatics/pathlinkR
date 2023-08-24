@@ -39,11 +39,16 @@
 #' @return A ggplot object
 #' @export
 #'
-#' @import dplyr
-#' @import ggplot2
-#' @import stringr
+#' @importFrom dplyr %>% arrange case_when filter group_by left_join mutate n
+#'   pull
+#'   select summarise
 #' @importFrom ggforce facet_col
+#' @importFrom ggplot2 aes element_text geom_point geom_vline guides
+#'   guide_legend labs theme theme_bw scale_fill_continuous
+#'   scale_shape_continuous scale_shape_manual scale_x_discrete scale_y_discrete
 #' @importFrom ggpubr ggarrange
+#' @importFrom stringr str_remove_all str_split str_wrap
+#' @importFrom tibble tibble
 #'
 #' @description Creates a plot to visualize and compare pathway enrichment
 #'   results from multiple DE comparisons. Can automatically assign each

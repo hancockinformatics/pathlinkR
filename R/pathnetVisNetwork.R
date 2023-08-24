@@ -22,10 +22,13 @@
 #' @return Interactive visNetwork plot
 #' @export
 #'
-#' @import dplyr
-#' @import purrr
-#' @import tidygraph
-#' @import visNetwork
+#' @importFrom dplyr %>% any_of distinct everything if_else mutate rename
+#'   row_number select
+#' @importFrom purrr map2 map_chr
+#' @importFrom tibble as_tibble enframe
+#' @importFrom tidygraph activate
+#' @importFrom visNetwork visEdges visExport visIgraphLayout visLegend
+#'   visNetwork visNodes visOptions
 #'
 #' @description Plots the network object generated from `createPathnet`,
 #'   creating a visual and interactive representation of similarities/

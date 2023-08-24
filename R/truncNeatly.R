@@ -5,7 +5,9 @@
 #'
 #' @return Character vector
 #'
-#' @import stringr
+#' @importFrom dplyr %>%
+#' @importFrom purrr map_chr
+#' @importFrom stringr str_length str_sub str_replace
 #'
 #' @description Trims a character string to the desired length, without breaking
 #'   in the middle of a word (i.e. chops at the nearest space). Appends an

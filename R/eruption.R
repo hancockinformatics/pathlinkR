@@ -38,10 +38,11 @@
 #' @return Volcano plot as a ggplot object
 #' @export
 #'
-#' @import dplyr
-#' @import ggplot2
-#' @import stringr
+#' @importFrom dplyr %>% arrange case_when distinct left_join mutate pull select
+#' @importFrom ggplot2 aes element_blank element_text geom_hline geom_point
+#'   geom_vline ggplot labs theme theme_bw xlim ylim
 #' @importFrom ggrepel geom_text_repel
+#' @importFrom tibble rownames_to_column
 #'
 #' @description Creates a volcano plot of genes output from `DESeq2::results()`,
 #'   with various options for tweaking the appearance. Ensembl gene IDs should
@@ -101,7 +102,7 @@ eruption <- function(
     ## If Ensembl IDs are detected, annotate them with gene names from the
     ## mapping file if they exist, or just use the Ensembl ID. If rownames are
     ## not Ensembl IDs, they will be used as is.
-    if (str_detect(rownames(deseqResult)[1], "^ENSG")) {
+    if (grepl(x=rownames(deseqResult)[1], pattern="^ENSG")) {
         res <- deseqResult %>%
             rownames_to_column("ensemblGeneId") %>%
             filter(!is.na(padj)) %>%
@@ -340,7 +341,7 @@ eruption <- function(
         ## All the work for setting the x axis breaks/labels is done inside
         ## `.eruptionBreaks` to shorten and simplify this script
         p <- p +
-            xlab("Fold Change") +
+            labs(x="Fold Change") +
             theme(axis.text.x=element_text(vjust=0, size=11)) +
             .eruptionBreaks(xaxis)
     }
