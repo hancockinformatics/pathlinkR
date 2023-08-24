@@ -62,10 +62,11 @@
 #' @return A heatmap of fold changes for genes of interest
 #' @export
 #'
-#' @import dplyr
-#' @import purrr
 #' @importFrom ComplexHeatmap draw Heatmap
-#' @importFrom grid grid.text gpar
+#' @importFrom dplyr %>% filter full_join left_join pull select
+#' @importFrom grid gpar grid.text
+#' @importFrom purrr imap reduce
+#' @importFrom tibble rownames_to_column
 #'
 #' @description Creates a heatmap of fold changes values for results from the
 #'   `DESeq2::results()` function, with various parameters to tweak the

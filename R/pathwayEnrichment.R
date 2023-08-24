@@ -33,9 +33,12 @@
 #' @return A data frame of pathway enrichment results for all input comparisons
 #' @export
 #'
-#' @import dplyr
-#' @import purrr
 #' @importFrom clusterProfiler enricher
+#' @importFrom dplyr %>% any_of bind_rows distinct filter group_by left_join
+#'   mutate pull select ungroup
+#' @importFrom purrr imap imap_dfr possibly
+#' @importFrom tibble as_tibble
+#' @importFrom tidyr separate_longer_delim separate_wider_delim
 #'
 #' @description This function provides a simple and consistent interface to
 #'   three different pathway enrichment tools: Sigora and ReactomePA (which both

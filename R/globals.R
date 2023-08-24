@@ -35,6 +35,7 @@ utils::globalVariables(c(
         "hgncSymbol",
         "hubScore",
         "hubScoreBtw",
+        "id",
         "ID",
         "idmap",
         "inList",

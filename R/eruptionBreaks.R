@@ -6,7 +6,8 @@
 #'
 #' @return ggplot scale object
 #'
-#' @import ggplot2
+#' @importFrom dplyr between
+#' @importFrom ggplot2 scale_x_continuous
 #'
 #' @description Internal function which is used to create even breaks for
 #'   volcano plots produced by `eruption`.

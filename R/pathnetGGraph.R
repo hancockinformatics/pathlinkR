@@ -27,11 +27,16 @@
 #' @return An object of class "gg"
 #' @export
 #'
-#' @import ggplot2
-#' @import ggraph
-#' @import dplyr
-#' @import stringr
-#' @import tidygraph
+#' @importFrom dplyr %>% case_when filter if_else mutate pull
+#' @importFrom ggplot2 aes guides guide_legend labs scale_size_continuous
+#'   scale_colour_manual scale_fill_manual theme theme_void
+#' @importFrom ggraph geom_edge_link geom_node_label geom_node_point ggraph
+#'   scale_edge_width
+#' @importFrom grid unit
+#' @importFrom purrr map_chr
+#' @importFrom stringr str_wrap
+#' @importFrom tibble as_tibble
+#' @importFrom tidygraph activate
 #'
 #' @description Plots the network object generated from `createPathnet`,
 #'   creating a visual representation of pathway similarity/interactions based

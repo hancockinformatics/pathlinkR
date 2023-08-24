@@ -8,10 +8,10 @@ test_that("the output looks right", {
         simplifyVector=TRUE
     )
 
-    tj2 <- igraph::graph_from_data_frame(
-        d=dplyr::select(tj1$edges, source, target),
+    tj2 <- graph_from_data_frame(
+        d=select(tj1$edges, source, target),
         directed=FALSE,
-        vertices=dplyr::select(
+        vertices=select(
             tj1$nodes,
             id,
             label,
@@ -22,9 +22,9 @@ test_that("the output looks right", {
         )
     )
 
-    tj3 <- ppiCleanNetwork(tidygraph::as_tbl_graph(tj2))
+    tj3 <- ppiCleanNetwork(as_tbl_graph(tj2))
 
-    tj4 <- dplyr::as_tibble(tj3)
+    tj4 <- as_tibble(tj3)
 
     expect_length(tj3, 146)
     expect_equal(ncol(tj4), 11)

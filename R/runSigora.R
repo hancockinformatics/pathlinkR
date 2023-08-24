@@ -6,10 +6,12 @@
 #'
 #' @return Data frame of results from Sigora
 #'
-#' @import dplyr
-#' @import purrr
-#' @import stringr
+#' @importFrom dplyr %>% across arrange bind_rows contains distinct everything
+#'   filter group_by left_join mutate select summarise ungroup
+#' @importFrom purrr imap
 #' @importFrom sigora sigora
+#' @importFrom stringr str_count
+#' @importFrom tibble as_tibble tibble
 #'
 #' @description Internal wrapper function to run Sigora and return the results
 #'   with desired columns
@@ -84,7 +86,7 @@
     ) %>%
         bind_rows() %>%
         group_by(pathwy.id) %>%
-        summarize(genes=paste0(Symbol, collapse=";")) %>%
+        summarise(genes=paste0(Symbol, collapse=";")) %>%
         mutate(numCandidateGenes=1 + str_count(genes, ";")) %>%
         ungroup() %>%
         mutate(geneRatio=numCandidateGenes / nGenes)

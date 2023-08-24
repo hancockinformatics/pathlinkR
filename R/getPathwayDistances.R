@@ -12,11 +12,10 @@
 #'   overlap of their constituent genes.
 #' @export
 #'
-#' @import dplyr
-#' @import purrr
-#' @import stringr
-#' @import tidyr
+#' @importFrom dplyr %>% all_of distinct mutate select
+#' @importFrom purrr map
 #' @importFrom tibble column_to_rownames
+#' @importFrom tidyr pivot_wider
 #' @importFrom vegan vegdist
 #'
 #' @description Given a data frame of pathways and their member genes, calculate
@@ -50,13 +49,13 @@ getPathwayDistances <- function(
 
     ## Identify which columns have Ensembl and pathway IDs
     geneIdCol <- colnames(pathwayData)[
-        unlist(map(pathwayData[1, ], ~str_detect(.x, "ENSG")))
+        unlist(map(pathwayData[1, ], ~grepl(x=.x, pattern="ENSG")))
     ]
 
     pathwayIdCol <- colnames(pathwayData)[
         unlist(map(
             pathwayData[1, ],
-            ~str_detect(.x, "R-[A-Z]{3}-[0-9]{1,10}")
+            ~grepl(x=.x, pattern="R-[A-Z]{3}-[0-9]{1,10}")
         ))
     ]
 
