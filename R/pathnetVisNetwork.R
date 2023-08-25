@@ -25,7 +25,7 @@
 #' @import dplyr
 #'
 #' @importFrom purrr map2 map_chr
-#' @importFrom tibble as_tibble enframe
+#' @importFrom tibble enframe
 #' @importFrom tidygraph activate
 #' @importFrom visNetwork visEdges visExport visIgraphLayout visLegend
 #'   visNetwork visNodes visOptions
@@ -83,7 +83,7 @@ pathnetVisNetwork <- function(
     })
 
     visNetNodes <- network %>%
-        as_tibble() %>%
+        tibble::as_tibble() %>%
         mutate(
             id=row_number(),
             value=if_else(
@@ -118,7 +118,7 @@ pathnetVisNetwork <- function(
 
     visnetEdges <- network %>%
         activate("edges") %>%
-        as_tibble() %>%
+        tibble::as_tibble() %>%
         rename("value"=similarity) %>%
         distinct()
 

@@ -55,7 +55,6 @@
 #'
 #' @importFrom ggraph geom_edge_link geom_node_point geom_node_text ggraph
 #'   set_graph_style
-#' @importFrom tibble as_tibble
 #'
 #' @description Visualize a protein-protein interaction (PPI) network using
 #'   `ggraph` functions, output from `ppiBuildNetwork`.
@@ -247,10 +246,10 @@ ppiPlotNetwork <- function(
 
     } else {
 
-        hubNodes <- as_tibble(network) %>%
+        hubNodes <- tibble::as_tibble(network) %>%
             rename("hubScore"=starts_with("hubScore")) %>%
             arrange(desc(hubScore)) %>%
-            slice_head(n=3 + ceiling(nrow(as_tibble(network)) * 0.01)) %>%
+            slice_head(n=3 + ceiling(nrow(tibble::as_tibble(network)) * 0.01)) %>%
             pull(name)
 
         networkLabeled <- network %>% mutate(

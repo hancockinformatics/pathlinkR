@@ -36,7 +36,6 @@
 #' @import dplyr
 #'
 #' @importFrom purrr imap imap_dfr possibly
-#' @importFrom tibble as_tibble
 #' @importFrom tidyr separate_longer_delim separate_wider_delim
 #'
 #' @description This function provides a simple and consistent interface to
@@ -179,7 +178,7 @@ pathwayEnrichment <- function(
                             pull(EntrezGene.ID) %>%
                             unique()
 
-                        as_tibble(clusterProfiler::enricher(
+                        tibble::as_tibble(clusterProfiler::enricher(
                             genesEntrez,
                             TERM2GENE=select(
                                 reactomeDatabase,
@@ -228,7 +227,7 @@ pathwayEnrichment <- function(
                     .id="direction",
                     function(y, direction) {
 
-                        clusterProfiler::enricher(
+                        tibble::as_tibble(clusterProfiler::enricher(
                             y,
                             TERM2GENE=hallmarkDatabase,
                             universe=geneUniverse,
@@ -237,7 +236,7 @@ pathwayEnrichment <- function(
                                 0.05,
                                 filterResults
                             )
-                        ) %>% as_tibble()
+                        ))
                     }
                 ) %>%
                     separate_longer_delim(geneID, delim="/") %>%
@@ -295,7 +294,7 @@ pathwayEnrichment <- function(
             by="pathwayId",
             multiple="all"
         ) %>%
-        as_tibble()
+        tibble::as_tibble()
 
     return(results_all_comparisons)
 }

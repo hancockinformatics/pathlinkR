@@ -35,7 +35,6 @@
 #' @importFrom grid unit
 #' @importFrom purrr map_chr
 #' @importFrom stringr str_wrap
-#' @importFrom tibble as_tibble
 #' @importFrom tidygraph activate
 #'
 #' @description Plots the network object generated from `createPathnet`,
@@ -93,11 +92,11 @@ pathnetGGraph <- function(
 ) {
     stopifnot(all(
         c("pathwayName1", "pValueAdjusted", "groupedPathway")
-        %in% colnames(as_tibble(network))
+        %in% colnames(tibble::as_tibble(network))
     ))
 
     stopifnot(all(
-        "similarity" %in% colnames(as_tibble(activate(network, "edges")))
+        "similarity" %in% colnames(tibble::as_tibble(activate(network, "edges")))
     ))
 
     stopifnot("'nodeSizeRange' should be a length-two numeric vector" = {
