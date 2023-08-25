@@ -28,7 +28,7 @@
 #'
 #' @importFrom SteinerNet steinertree
 #' @importFrom stringr str_wrap
-#' @importFrom tibble as_tibble rownames_to_column
+#' @importFrom tibble rownames_to_column
 #' @importFrom tidygraph activate as_tbl_graph centrality_betweenness
 #'   centrality_degree centrality_hub
 #'
@@ -79,7 +79,7 @@ ppiBuildNetwork <- function(
         )
     )
 
-    df <- as_tibble(rownames_to_column(deseqResults, "gene"))
+    df <- tibble::as_tibble(rownames_to_column(deseqResults, "gene"))
 
     if (filterInput) {
         df <- filter(
@@ -192,7 +192,7 @@ ppiBuildNetwork <- function(
             networkOut1 %>% mutate(hubScoreHub=centrality_hub())
         }
 
-    if (nrow(as_tibble(networkOut2)) > 2000) {
+    if (nrow(tibble::as_tibble(networkOut2)) > 2000) {
         message(
             "Your network contains more than 2000 nodes, and will likely be ",
             "difficult to interpret when plotted."

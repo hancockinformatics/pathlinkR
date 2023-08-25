@@ -18,7 +18,6 @@
 #'
 #' @importFrom igraph as.igraph decompose.graph delete.vertices
 #'   get.shortest.paths induced.subgraph simplify V
-#' @importFrom tibble as_tibble
 #' @importFrom tidygraph as_tbl_graph
 #'
 #' @details Uses functions from the igraph package to extract a minimally
@@ -120,7 +119,7 @@ ppiExtractSubnetwork <- function(
     message("found ", length(genesToExtract), " genes.")
 
 
-    geneNodeIds <- as_tibble(network) %>%
+    geneNodeIds <- tibble::as_tibble(network) %>%
         mutate(rn=row_number()) %>%
         filter(name %in% genesToExtract) %>%
         pull(rn)
@@ -163,7 +162,7 @@ ppiExtractSubnetwork <- function(
 
     message(
         "Done, new subnetwork contains ",
-        nrow(as_tibble(moduleNetworkTidygraph)),
+        nrow(tibble::as_tibble(moduleNetworkTidygraph)),
         " nodes.\n"
     )
 
