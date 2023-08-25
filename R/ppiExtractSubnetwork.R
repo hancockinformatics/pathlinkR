@@ -14,7 +14,8 @@
 #' @return A `tidygraph` object for plotting or further analysis
 #' @export
 #'
-#' @importFrom dplyr %>% filter mutate pull row_number
+#' @import dplyr
+#'
 #' @importFrom igraph as.igraph decompose.graph delete.vertices
 #'   get.shortest.paths induced.subgraph simplify V
 #' @importFrom tibble as_tibble

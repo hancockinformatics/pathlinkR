@@ -27,9 +27,9 @@
 #' @return An object of class "gg"
 #' @export
 #'
-#' @importFrom dplyr %>% case_when filter if_else mutate pull
-#' @importFrom ggplot2 aes guides guide_legend labs scale_size_continuous
-#'   scale_colour_manual scale_fill_manual theme theme_void
+#' @import dplyr
+#' @import ggplot2
+#'
 #' @importFrom ggraph geom_edge_link geom_node_label geom_node_point ggraph
 #'   scale_edge_width
 #' @importFrom grid unit

@@ -33,8 +33,8 @@
 #' @return A data frame of pathway enrichment results for all input comparisons
 #' @export
 #'
-#' @importFrom dplyr %>% any_of bind_rows distinct filter group_by left_join
-#'   mutate pull select ungroup
+#' @import dplyr
+#'
 #' @importFrom purrr imap imap_dfr possibly
 #' @importFrom tibble as_tibble
 #' @importFrom tidyr separate_longer_delim separate_wider_delim

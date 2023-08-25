@@ -22,8 +22,8 @@
 #' @return Interactive visNetwork plot
 #' @export
 #'
-#' @importFrom dplyr %>% any_of distinct everything if_else mutate rename
-#'   row_number select
+#' @import dplyr
+#'
 #' @importFrom purrr map2 map_chr
 #' @importFrom tibble as_tibble enframe
 #' @importFrom tidygraph activate

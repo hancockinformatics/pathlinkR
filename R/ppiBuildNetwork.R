@@ -24,8 +24,8 @@
 #' @return `tidygraph` object for plotting or further analysis
 #' @export
 #'
-#' @importFrom dplyr %>% distinct filter intersect left_join mutate pull select
-#'   starts_with
+#' @import dplyr
+#'
 #' @importFrom SteinerNet steinertree
 #' @importFrom stringr str_wrap
 #' @importFrom tibble as_tibble rownames_to_column
