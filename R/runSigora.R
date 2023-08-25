@@ -10,7 +10,7 @@
 #'
 #' @importFrom purrr imap
 #' @importFrom stringr str_count
-#' @importFrom tibble as_tibble tibble
+#' @importFrom tibble tibble
 #'
 #' @description Internal wrapper function to run Sigora and return the results
 #'   with desired columns
@@ -67,7 +67,7 @@
 
     ## Get the DE genes that were enriched for each pathway
     sigoraDetailedList1 <- sigoraResult1$detailed_results %>%
-        as_tibble() %>%
+        tibble::as_tibble() %>%
         select(pathway, contains("gene")) %>%
         split(x=., f=.$pathway)
 
@@ -106,5 +106,5 @@
             numCandidateGenes,
             numBgGenes,
             geneRatio
-        ) %>% as_tibble()
+        ) %>% tibble::as_tibble()
 }

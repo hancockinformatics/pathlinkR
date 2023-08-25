@@ -22,7 +22,7 @@
 #'
 #' @import dplyr
 #'
-#' @importFrom tibble as_tibble column_to_rownames
+#' @importFrom tibble column_to_rownames
 #'
 #' @seealso <https://github.com/hancockinformatics/pathlinkR>
 #'
@@ -48,7 +48,7 @@ ppiEnrichNetwork <- function(
 ) {
 
     networkTable <- network %>%
-        as_tibble() %>%
+        tibble::as_tibble() %>%
         column_to_rownames("name")
 
     newList <- list("network" = networkTable)
