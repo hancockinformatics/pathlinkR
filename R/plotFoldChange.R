@@ -62,8 +62,9 @@
 #' @return A heatmap of fold changes for genes of interest
 #' @export
 #'
+#' @import dplyr
+#'
 #' @importFrom ComplexHeatmap draw Heatmap
-#' @importFrom dplyr %>% filter full_join left_join pull select
 #' @importFrom grid gpar grid.text
 #' @importFrom purrr imap reduce
 #' @importFrom tibble rownames_to_column

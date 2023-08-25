@@ -6,7 +6,8 @@
 #'   functions such as `ppiPlotNetwork`
 #' @export
 #'
-#' @importFrom dplyr %>% everything if_else mutate select
+#' @import dplyr
+#'
 #' @importFrom igraph graph_from_data_frame
 #' @importFrom tidygraph as_tbl_graph centrality_betweenness centrality_degree
 #'

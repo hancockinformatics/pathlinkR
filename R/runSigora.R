@@ -6,10 +6,9 @@
 #'
 #' @return Data frame of results from Sigora
 #'
-#' @importFrom dplyr %>% across arrange bind_rows contains distinct everything
-#'   filter group_by left_join mutate select summarise ungroup
+#' @import dplyr
+#'
 #' @importFrom purrr imap
-#' @importFrom sigora sigora
 #' @importFrom stringr str_count
 #' @importFrom tibble as_tibble tibble
 #'
@@ -48,7 +47,7 @@
 
     ## Run SIGORA based on default settings (GPSrepo=reaH, level=4)
     invisible(capture.output(
-        sigoraResult1 <- sigora(
+        sigoraResult1 <- sigora::sigora(
             GPSrepo=gpsRepo,
             level=4,
             markers=TRUE,

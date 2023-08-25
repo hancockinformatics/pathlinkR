@@ -38,9 +38,9 @@
 #' @return Volcano plot as a ggplot object
 #' @export
 #'
-#' @importFrom dplyr %>% arrange case_when distinct left_join mutate pull select
-#' @importFrom ggplot2 aes element_blank element_text geom_hline geom_point
-#'   geom_vline ggplot labs theme theme_bw xlim ylim
+#' @import dplyr
+#' @import ggplot2
+#'
 #' @importFrom ggrepel geom_text_repel
 #' @importFrom tibble rownames_to_column
 #'

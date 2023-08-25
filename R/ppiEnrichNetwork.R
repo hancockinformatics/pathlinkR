@@ -20,7 +20,8 @@
 #' @return A data frame (tibble) of enriched pathways
 #' @export
 #'
-#' @importFrom dplyr %>%
+#' @import dplyr
+#'
 #' @importFrom tibble as_tibble column_to_rownames
 #'
 #' @seealso <https://github.com/hancockinformatics/pathlinkR>

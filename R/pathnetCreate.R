@@ -14,8 +14,8 @@
 #' @return A pathway network as a tidygraph object
 #' @export
 #'
-#' @importFrom dplyr %>% any_of distinct everything filter left_join mutate pull
-#'   row_number select
+#' @import dplyr
+#'
 #' @importFrom igraph as.igraph neighborhood
 #' @importFrom purrr map
 #' @importFrom tidygraph activate tbl_graph
