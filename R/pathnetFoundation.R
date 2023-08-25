@@ -13,8 +13,8 @@
 #' @return A tibble of interacting pathway pairs
 #' @export
 #'
-#' @importFrom dplyr %>% across arrange contains distinct filter left_join
-#'   mutate relocate slice_head where
+#' @import dplyr
+#'
 #' @importFrom tibble rownames_to_column
 #' @importFrom tidyr pivot_longer
 #'

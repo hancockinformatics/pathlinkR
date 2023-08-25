@@ -12,7 +12,8 @@
 #'   overlap of their constituent genes.
 #' @export
 #'
-#' @importFrom dplyr %>% all_of distinct mutate select
+#' @import dplyr
+#'
 #' @importFrom purrr map
 #' @importFrom tibble column_to_rownames
 #' @importFrom tidyr pivot_wider

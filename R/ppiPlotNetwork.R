@@ -50,11 +50,9 @@
 #' @return An object of class "gg"
 #' @export
 #'
-#' @importFrom dplyr %>% arrange pull case_when mutate rename slice_head
-#'   starts_with
-#' @importFrom ggplot2 aes element_text guides guide_legend labs
-#'   scale_colour_manual scale_fill_brewer scale_fill_gradient2
-#'   scale_fill_manual scale_fill_viridis_c scale_size_continuous theme
+#' @import dplyr
+#' @import ggplot2
+#'
 #' @importFrom ggraph geom_edge_link geom_node_point geom_node_text ggraph
 #'   set_graph_style
 #' @importFrom tibble as_tibble

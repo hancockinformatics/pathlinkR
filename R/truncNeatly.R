@@ -5,7 +5,8 @@
 #'
 #' @return Character vector
 #'
-#' @importFrom dplyr %>%
+#' @import dplyr
+#'
 #' @importFrom purrr map_chr
 #' @importFrom stringr str_length str_sub str_replace
 #'
