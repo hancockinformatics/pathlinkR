@@ -91,7 +91,7 @@ Let's make the following adjustment to the standard volcano plot:
 - Highlight the interferon genes and provide a brief description
 - Converts the x-axis from log2 fold change to non-log2 fold change
 - Label only the top 10 up- and down-regulated genes which belong to the 
-  interferon pathway
+    interferon pathway
 ```{r customized_volcano_plot}
 interferonGenes <- sigoraDatabase %>% 
     filter(pathwayName == "Interferon Signaling") %>% 
@@ -129,7 +129,7 @@ Another example, with more customization:
 - Provide a custom list of genes to visualize, and add an informative title
 - Use log2 fold changes in the heatmap cells
 - Swap the rows and columns from the default, and add a split between the rows
-  (comparisons)
+    (comparisons)
 ```{r plot_fold_changes_II}
 deseqExampleListRenamed <- setNames(
     deseqExampleList,
@@ -350,7 +350,7 @@ Let's again plot the sigora results, this time with the following tweaks:
 - Only show immune-related pathways based on the top pathway grouping
 - Change the colour scaling used for the adjusted p-values
 - Condense the comparison names to better fit onto the plot, and make them
-  display horizontally
+    display horizontally
 - Add the number of DEGs used for enrichment below the comparison name
 - Increase the truncation cutoff value of pathway names for more words
 ```{r plot_pathways_II, fig.width=8, fig.height=8}

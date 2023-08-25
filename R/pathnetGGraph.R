@@ -96,7 +96,9 @@ pathnetGGraph <- function(
     ))
 
     stopifnot(all(
-        "similarity" %in% colnames(tibble::as_tibble(activate(network, "edges")))
+        "similarity" %in% colnames(
+            tibble::as_tibble(activate(network, "edges"))
+        )
     ))
 
     stopifnot("'nodeSizeRange' should be a length-two numeric vector" = {
