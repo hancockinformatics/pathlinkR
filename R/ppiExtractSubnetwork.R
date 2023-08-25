@@ -87,7 +87,8 @@ ppiExtractSubnetwork <- function(
         )
 
         stopifnot(
-            "The 'genes' column must contain HGNC symbols separated with a ';'" = {
+            "The 'genes' column must contain HGNC symbols separated
+            with a ';'" = {
                 grepl(
                     x=pathwayEnrichmentResult[["genes"]][1],
                     pattern="\\w+;"
@@ -145,7 +146,7 @@ ppiExtractSubnetwork <- function(
 
         moduleShortestPaths <- list()
 
-        for (i in seq(length(geneNodeIds))) {
+        for (i in seq_len(length(geneNodeIds))) {
             moduleShortestPaths[[i]] <- get.shortest.paths(
                 as.igraph(network),
                 geneNodeIds[i],
