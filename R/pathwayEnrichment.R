@@ -33,7 +33,6 @@
 #' @return A data frame of pathway enrichment results for all input comparisons
 #' @export
 #'
-#' @importFrom clusterProfiler enricher
 #' @importFrom dplyr %>% any_of bind_rows distinct filter group_by left_join
 #'   mutate pull select ungroup
 #' @importFrom purrr imap imap_dfr possibly
@@ -180,7 +179,7 @@ pathwayEnrichment <- function(
                             pull(EntrezGene.ID) %>%
                             unique()
 
-                        as_tibble(enricher(
+                        as_tibble(clusterProfiler::enricher(
                             genesEntrez,
                             TERM2GENE=select(
                                 reactomeDatabase,
@@ -229,7 +228,7 @@ pathwayEnrichment <- function(
                     .id="direction",
                     function(y, direction) {
 
-                        enricher(
+                        clusterProfiler::enricher(
                             y,
                             TERM2GENE=hallmarkDatabase,
                             universe=geneUniverse,
