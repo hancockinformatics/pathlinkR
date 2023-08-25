@@ -249,7 +249,9 @@ ppiPlotNetwork <- function(
         hubNodes <- tibble::as_tibble(network) %>%
             rename("hubScore"=starts_with("hubScore")) %>%
             arrange(desc(hubScore)) %>%
-            slice_head(n=3 + ceiling(nrow(tibble::as_tibble(network)) * 0.01)) %>%
+            slice_head(
+                n=3 + ceiling(nrow(tibble::as_tibble(network)) * 0.01)
+            ) %>%
             pull(name)
 
         networkLabeled <- network %>% mutate(
