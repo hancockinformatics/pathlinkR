@@ -7,16 +7,16 @@ test_that("subnetwork extraction works with a pathway name", {
 
     exPathways <- ppiEnrichNetwork(
         network=exNetwork,
-        analysis="sigora"
+        analysis="hallmark"
     )
 
     exSubnetwork <- ppiExtractSubnetwork(
         network=exNetwork,
         pathwayEnrichmentResult=exPathways,
-        pathwayToExtract="Interferon alpha/beta signaling"
+        pathwayToExtract="INTERFERON ALPHA RESPONSE"
     )
 
-    expect_equal(nrow(as_tibble(exSubnetwork)), 27)
+    expect_equal(nrow(as_tibble(exSubnetwork)), 74)
 })
 
 test_that("subnetwork extraction works with a list of genes", {
@@ -28,11 +28,11 @@ test_that("subnetwork extraction works with a list of genes", {
 
     exPathways2 <- ppiEnrichNetwork(
         network=exNetwork2,
-        analysis="sigora"
+        analysis="hallmark"
     )
 
     myGenes <- mappingFile %>%
-        filter(hgncSymbol %in% unlist(strsplit(exPathways2[[1, 7]], ";"))) %>%
+        filter(hgncSymbol %in% unlist(strsplit(exPathways2[[2, 7]], ";"))) %>%
         pull(ensemblGeneId)
 
     exSubnetwork2 <- ppiExtractSubnetwork(
@@ -40,5 +40,5 @@ test_that("subnetwork extraction works with a list of genes", {
         genes=myGenes
     )
 
-    expect_equal(nrow(as_tibble(exSubnetwork2)), 27)
+    expect_equal(nrow(as_tibble(exSubnetwork2)), 74)
 })
