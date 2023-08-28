@@ -35,7 +35,7 @@ test_that("the output looks right", {
         "betweenness",
         "seed",
         "hubScoreBtw",
-        "geneName"
+        "hgncSymbol"
     )
 
     expect_true(all(expectedColnames %in% colnames(tj4)))

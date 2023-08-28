@@ -120,8 +120,8 @@ pathnetCreate <- function(
             multiple="all"
         ) %>%
         select(
-            pathway1,
-            pathwayName1,
+            "pathwayId"=pathway1,
+            "pathwayName"=pathwayName1,
             everything(),
             -any_of(c(
                 "pathwayName.x", "pathwayName.y", "level_1",

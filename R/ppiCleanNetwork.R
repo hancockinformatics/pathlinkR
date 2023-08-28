@@ -59,7 +59,7 @@ ppiCleanNetwork <- function(network) {
             betweenness,
             seed,
             hubScoreBtw,
-            "geneName"=label,
+            "hgncSymbol"=label,
             everything()
         ) %>%
         ppiRemoveSubnetworks() %>%

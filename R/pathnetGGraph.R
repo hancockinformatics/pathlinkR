@@ -91,7 +91,7 @@ pathnetGGraph <- function(
         themeBaseSize=16
 ) {
     stopifnot(all(
-        c("pathwayName1", "pValueAdjusted", "groupedPathway")
+        c("pathwayName", "pValueAdjusted", "groupedPathway")
         %in% colnames(tibble::as_tibble(network))
     ))
 
@@ -112,7 +112,7 @@ pathnetGGraph <- function(
 
     interactorsAll <- network %>%
         filter(is.na(pValueAdjusted)) %>%
-        pull(pathwayName1)
+        pull(pathwayName)
 
     interactorsToLabel <- sample(
         interactorsAll,
@@ -128,8 +128,8 @@ pathnetGGraph <- function(
                 NA_character_
             ),
             nodeLabel=case_when(
-                !is.na(pValueAdjusted) ~ pathwayName1,
-                pathwayName1 %in% interactorsToLabel ~ pathwayName1,
+                !is.na(pValueAdjusted) ~ pathwayName,
+                pathwayName %in% interactorsToLabel ~ pathwayName,
                 TRUE ~ NA_character_
             ),
             nodeLabel=map_chr(
