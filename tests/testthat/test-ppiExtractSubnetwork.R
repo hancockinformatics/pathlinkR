@@ -32,7 +32,7 @@ test_that("subnetwork extraction works with a list of genes", {
     )
 
     myGenes <- mappingFile %>%
-        filter(hgncSymbol %in% unlist(strsplit(exPathways2[[2, 7]], ";"))) %>%
+        filter(hgncSymbol %in% unlist(strsplit(exPathways2[[2, 5]], ";"))) %>%
         pull(ensemblGeneId)
 
     exSubnetwork2 <- ppiExtractSubnetwork(
