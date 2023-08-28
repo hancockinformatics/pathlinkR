@@ -19,7 +19,8 @@
 #' @param highlighting When clicking on a node, should directly neighbouring
 #'   nodes be highlighted (other nodes are dimmed)? Defaults to TRUE.
 #'
-#' @return Interactive visNetwork plot
+#' @return An interactive pathway, network or "pathnet"; object of class
+#'   "visNetwork"
 #' @export
 #'
 #' @import dplyr
@@ -34,7 +35,7 @@
 #'   creating a visual and interactive representation of similarities/
 #'   interactions between pathways using their overlapping genes.
 #'
-#' @details  This function makes use of the visNetwork library, which allows for
+#' @details This function makes use of the visNetwork library, which allows for
 #'   various forms of interactivity, such as including text when hovering over
 #'   nodes, node selection and dragging (including multiple selections), and
 #'   highlighting nodes belonging to a larger group (e.g. top-level Reactome

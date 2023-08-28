@@ -103,7 +103,8 @@ points. The default specified here is 0.25, half of the normal default
 value.}
 }
 \value{
-An object of class "gg"
+A Protein-Protein Interaction (PPI) network plot; an object of class
+"ggplot"
 }
 \description{
 Visualize a protein-protein interaction (PPI) network using

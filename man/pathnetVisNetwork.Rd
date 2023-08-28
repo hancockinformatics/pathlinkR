@@ -47,7 +47,8 @@ maximum width of edges. Defaults to \code{c(5, 20)}.}
 nodes be highlighted (other nodes are dimmed)? Defaults to TRUE.}
 }
 \value{
-Interactive visNetwork plot
+An interactive pathway, network or "pathnet"; object of class
+"visNetwork"
 }
 \description{
 Plots the network object generated from \code{createPathnet},

@@ -9,7 +9,7 @@
 #'   distances. Can be any option supported by `vegan::vegdist()`.
 #'
 #' @return Matrix of the pairwise pathway distances (dissimilarity) based on
-#'   overlap of their constituent genes.
+#'   overlap of their constituent genes; object of class "matrix".
 #' @export
 #'
 #' @import dplyr

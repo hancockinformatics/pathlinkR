@@ -8,10 +8,24 @@
 #'   `ppiEnrichNetwork`. You must provide either `genes` or
 #'   `pathwayEnrichmentResult` argument.
 #' @param pathwayToExtract Name of the pathway determining what genes (nodes)
-#'   are pulled from the input network. Must be present in
-#'   `pathwayEnrichmentResults`
+#'   are pulled from the input network. Must be present in the "pathwayName"
+#'   column of `pathwayEnrichmentResults`.
 #'
-#' @return A `tidygraph` object for plotting or further analysis
+#' @return A Protein-Protein Interaction (PPI) network; a "tidygraph" object for
+#'   plotting or further analysis, with the minimum set of columns for nodes
+#'   (additional columns from the input will also be included):
+#'   \item{name}{Ensembl gene ID for the node}
+#'   \item{degree}{Degree of the node, i.e. the number of interactions}
+#'   \item{betweenness}{Betweenness measure for the node}
+#'   \item{seed}{TRUE when the node was part of the input list of genes}
+#'   \item{hubScore}{Special hubScore for each node. The suffix denotes the
+#'   measure being used; e.g. "hubScoreBtw" is for betweenness}
+#'   \item{hgncSymbol}{HGNC gene name for the node}
+#'
+#' Additionally the following columns are provided for edges:
+#'   \item{from}{Starting node for the interaction/edge as a row number}
+#'   \item{to}{Ending node for the interaction/edge as a row number}
+#'
 #' @export
 #'
 #' @import dplyr
@@ -39,13 +53,13 @@
 #'
 #' exPathways <- ppiEnrichNetwork(
 #'     network=exNetwork,
-#'     analysis="sigora"
+#'     analysis="hallmark"
 #' )
 #'
 #' ppiExtractSubnetwork(
 #'     network=exNetwork,
 #'     pathwayEnrichmentResult=exPathways,
-#'     pathwayToExtract="Interferon alpha/beta signaling"
+#'     pathwayToExtract="INTERFERON ALPHA RESPONSE"
 #' )
 #'
 ppiExtractSubnetwork <- function(

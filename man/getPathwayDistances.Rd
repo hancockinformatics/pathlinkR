@@ -18,7 +18,7 @@ distances. Can be any option supported by \code{vegan::vegdist()}.}
 }
 \value{
 Matrix of the pairwise pathway distances (dissimilarity) based on
-overlap of their constituent genes.
+overlap of their constituent genes; object of class "matrix".
 }
 \description{
 Given a data frame of pathways and their member genes, calculate

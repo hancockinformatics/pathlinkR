@@ -56,7 +56,24 @@ or Hallmark gene sets. For ReactomePA this must be a character vector of
 Entrez genes. For Hallmark, it must be Ensembl IDs.}
 }
 \value{
-A data frame of pathway enrichment results for all input comparisons
+A "data.frame" (tibble) of pathway enrichment results for all input
+comparisons, with the following columns:
+\item{comparison}{Source comparison from the names of \code{inputList}}
+\item{direction}{Whether the pathway was enriched in all genes
+(\code{split=FALSE}), or up- or down-regulated genes (\code{split=TRUE})}
+\item{pathwayId}{Pathway identifier}
+\item{pathwayName}{Pathway name}
+\item{pValue}{Nominal p value for the pathway}
+\item{pValueAdjusted}{p value corrected for multiple testing}
+\item{genes}{Candidate genes, which were DE for the comparison and also in
+the pathway}
+\item{numCandidateGenes}{Number of candidate genes}
+\item{numBgGenes}{Number of background genes for the pathway}
+\item{geneRatio}{Ratio of candidate and background genes}
+\item{totalGenes}{Number of DE genes which were tested for enriched
+pathways}
+\item{topLevelPathway}{High level Reactome term which serves to group
+similar pathways}
 }
 \description{
 This function provides a simple and consistent interface to

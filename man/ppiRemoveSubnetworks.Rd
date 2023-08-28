@@ -10,7 +10,7 @@ ppiRemoveSubnetworks(network)
 \item{network}{Graph object}
 }
 \value{
-Largest subnetwork from the input network list as an igraph object
+Largest subnetwork from the input network list as an "igraph" object
 }
 \description{
 INTERNAL Find and return the largest subnetwork

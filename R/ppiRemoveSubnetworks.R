@@ -2,7 +2,7 @@
 #'
 #' @param network Graph object
 #'
-#' @return Largest subnetwork from the input network list as an igraph object
+#' @return Largest subnetwork from the input network list as an "igraph" object
 #'
 #' @import dplyr
 #'

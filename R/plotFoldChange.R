@@ -59,7 +59,8 @@
 #' @param rowCenter Whether to center column text. The default is FALSE, but it
 #'   should be set to TRUE if vertical column name (e.g. `rowAngle=90`).
 #'
-#' @return A heatmap of fold changes for genes of interest
+#' @return A heatmap of fold changes for genes of interest; an "ggplot" class
+#'   object
 #' @export
 #'
 #' @import dplyr
