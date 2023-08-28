@@ -83,7 +83,7 @@ specifically label. Can be HGNC symbols or Ensembl gene IDs.}
 \item{pad}{Padding of labels; adjust this if the labels overlap}
 }
 \value{
-Volcano plot as a ggplot object
+Volcano plot of genes from an RNA-Seq experiment; a "ggplot" object
 }
 \description{
 Creates a volcano plot of genes output from \code{DESeq2::results()},

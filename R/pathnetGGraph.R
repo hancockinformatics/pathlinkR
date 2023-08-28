@@ -24,7 +24,7 @@
 #' @param themeBaseSize Base font size for all plot elements. Defaults
 #'   to `16`.
 #'
-#' @return An object of class "gg"
+#' @return A pathway network or "pathnet"; a plot object of class "ggplot"
 #' @export
 #'
 #' @import dplyr

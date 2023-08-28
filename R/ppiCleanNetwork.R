@@ -2,8 +2,20 @@
 #'
 #' @param network `tidygraph` object from a GraphML or JSON file
 #'
-#' @return `tidygraph` object which can be forwarded to other `pathlinkR`
-#'   functions such as `ppiPlotNetwork`
+#' @return A Protein-Protein Interaction (PPI) network; a "tidygraph" object,
+#'  with the minimal set of columns (other from the input are also included):
+#'   \item{name}{Identifier for the node}
+#'   \item{degree}{Degree of the node, i.e. the number of interactions}
+#'   \item{betweenness}{Betweenness measure for the node}
+#'   \item{seed}{TRUE when the node was part of the input list of genes}
+#'   \item{hubScore}{Special hubScore for each node. The suffix denotes the
+#'   measure being used; e.g. "hubScoreBtw" is for betweenness}
+#'   \item{hgncSymbol}{HGNC gene name for the node}
+#'
+#' Additionally the following columns are provided for edges:
+#'   \item{from}{Starting node for the interaction/edge as a row number}
+#'   \item{to}{Ending node for the interaction/edge as a row number}
+#'
 #' @export
 #'
 #' @import dplyr

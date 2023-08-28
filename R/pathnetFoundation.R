@@ -10,7 +10,14 @@
 #'   based distance. One of `maxDistance` or `propToKeep` must be
 #'   provided.
 #'
-#' @return A tibble of interacting pathway pairs
+#' @return A "data.frame" (tibble) of interacting pathway pairs with the
+#'   following columns:
+#' \item{pathwayName1}{Name of the first pathway in the pair}
+#' \item{pathwayName2}{Name of the second pathway in the pair}
+#' \item{distance}{Distance measure for the two pathways}
+#' \item{pathway1}{Reactome ID for the first pathway in the pair}
+#' \item{pathway2}{Reactome ID for the first pathway in the pair}
+#'
 #' @export
 #'
 #' @import dplyr

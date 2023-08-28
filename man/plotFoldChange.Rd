@@ -117,7 +117,8 @@ should be set to FALSE if the column name is angled (e.g. \code{colAngle=45}).}
 should be set to TRUE if vertical column name (e.g. \code{rowAngle=90}).}
 }
 \value{
-A heatmap of fold changes for genes of interest
+A heatmap of fold changes for genes of interest; an "ggplot" class
+object
 }
 \description{
 Creates a heatmap of fold changes values for results from the

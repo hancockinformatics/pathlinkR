@@ -76,7 +76,7 @@ the left or right side. Default is "right".}
 different names. Input a vector in the order as they appear.}
 }
 \value{
-A ggplot object
+A plot of enriched pathways; a "ggplot" object
 }
 \description{
 Creates a plot to visualize and compare pathway enrichment

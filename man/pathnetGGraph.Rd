@@ -60,7 +60,7 @@ Defaults to \code{c(0.33, 3)}.}
 to \code{16}.}
 }
 \value{
-An object of class "gg"
+A pathway network or "pathnet"; a plot object of class "ggplot"
 }
 \description{
 Plots the network object generated from \code{createPathnet},

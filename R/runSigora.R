@@ -4,7 +4,7 @@
 #' @param gpsRepo GPS object to use for testing pathways
 #' @param pValFilter Desired threshold for filtering results
 #'
-#' @return Data frame of results from Sigora
+#' @return A "data.frame" (tibble) of results from Sigora
 #'
 #' @import dplyr
 #'
