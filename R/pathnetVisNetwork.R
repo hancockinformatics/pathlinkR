@@ -98,10 +98,10 @@ pathnetVisNetwork <- function(
         ) %>%
         select(
             id,
-            "title"=pathwayName1,
+            "title"=pathwayName,
             everything(),
             -any_of(c(
-                "background", "border", "direction", "pathwayName", "pValue"
+                "background", "border", "direction", "pValue"
             ))
         )
 

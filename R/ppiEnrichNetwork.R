@@ -35,8 +35,7 @@
 #'
 #' ppiEnrichNetwork(
 #'     network=exNetwork,
-#'     analysis="sigora",
-#'     gpsRepo="default"
+#'     analysis="hallmark"
 #' )
 #'
 ppiEnrichNetwork <- function(
@@ -61,5 +60,5 @@ ppiEnrichNetwork <- function(
         filterResults=filterResults,
         gpsRepo=gpsRepo,
         geneUniverse=geneUniverse
-    )
+    ) %>% select(-c(comparison, direction))
 }

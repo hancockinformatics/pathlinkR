@@ -12,5 +12,5 @@ test_that("network enrichment works properly", {
         gpsRepo="default"
     )
 
-    expect_equal(dim(exOutput), c(20, 12))
+    expect_equal(dim(exOutput), c(20, 10))
 })
