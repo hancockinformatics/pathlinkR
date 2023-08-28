@@ -17,7 +17,21 @@
 #'   or Hallmark gene sets. For ReactomePA this must be a character vector of
 #'   Entrez genes. For Hallmark, it must be Ensembl IDs.
 #'
-#' @return A data frame (tibble) of enriched pathways
+#' @return A "data.frame" (tibble) of enriched pathways, with the following
+#'   columns:
+#'   \item{pathwayId}{Pathway identifier}
+#'   \item{pathwayName}{Pathway name}
+#'   \item{pValue}{Nominal p value for the pathway}
+#'   \item{pValueAdjusted}{p value corrected for multiple testing}
+#'   \item{genes}{Candidate genes, which were DE for the comparison and also in
+#'   the pathway}
+#'   \item{numCandidateGenes}{Number of candidate genes}
+#'   \item{numBgGenes}{Number of background genes for the pathway}
+#'   \item{geneRatio}{Ratio of candidate and background genes}
+#'   \item{totalGenes}{Number of DE genes which were tested for enriched
+#'   pathways}
+#'   \item{topLevelPathway}{High level Reactome term which serves to group
+#'   similar pathways}
 #' @export
 #'
 #' @import dplyr

@@ -47,7 +47,8 @@
 #'   points. The default specified here is 0.25, half of the normal default
 #'   value.
 #'
-#' @return An object of class "gg"
+#' @return A Protein-Protein Interaction (PPI) network plot; an object of class
+#'   "ggplot"
 #' @export
 #'
 #' @import dplyr

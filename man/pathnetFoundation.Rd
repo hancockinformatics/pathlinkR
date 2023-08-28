@@ -20,7 +20,13 @@ based distance. One of \code{maxDistance} or \code{propToKeep} must be
 provided.}
 }
 \value{
-A tibble of interacting pathway pairs
+A "data.frame" (tibble) of interacting pathway pairs with the
+following columns:
+\item{pathwayName1}{Name of the first pathway in the pair}
+\item{pathwayName2}{Name of the second pathway in the pair}
+\item{distance}{Distance measure for the two pathways}
+\item{pathway1}{Reactome ID for the first pathway in the pair}
+\item{pathway2}{Reactome ID for the first pathway in the pair}
 }
 \description{
 From a "n by n" distance matrix, generate a table of interacting

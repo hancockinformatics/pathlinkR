@@ -14,7 +14,7 @@
 \item{pValFilter}{Desired threshold for filtering results}
 }
 \value{
-Data frame of results from Sigora
+A "data.frame" (tibble) of results from Sigora
 }
 \description{
 Internal wrapper function to run Sigora and return the results

@@ -36,7 +36,7 @@
 #' @param newGroupNames If you want to change the names of the comparisons to
 #'   different names. Input a vector in the order as they appear.
 #'
-#' @return A ggplot object
+#' @return A plot of enriched pathways; a "ggplot" object
 #' @export
 #'
 #' @import dplyr

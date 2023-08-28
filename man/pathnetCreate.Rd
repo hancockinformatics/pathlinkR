@@ -22,7 +22,28 @@ pathways (default is \code{TRUE}).}
 keep more non-enriched pathway nodes. Defaults to \code{1}.}
 }
 \value{
-A pathway network as a tidygraph object
+A pathway network as a "tidygraph" object, with the following columns
+for nodes:
+\item{pathwayId}{Reactome pathway ID}
+\item{pathwayName}{Reactome pathway name}
+\item{comparison}{Name of source comparison, if this pathway was enriched}
+\item{direction}{Whether an enriched pathway was found in all genes or up-
+or down-regulated genes}
+\item{pValue}{Nominal p-value from the enrichment result}
+\item{pValueAdjusted}{Corrected p-value from the enrichment}
+\item{genes}{Candidate genes for the given pathway if it was enriched}
+\item{numCandidateGenes}{Number of candidate genes}
+\item{numBgGenes}{Number of background genes}
+\item{geneRatio}{Ratio of candidate and background genes}
+\item{totalGenes}{Total number of DE genes tested, for an enriched pathway}
+\item{topLevelPathway}{Highest level Reactome term for a given pathway}
+\item{groupedPathway}{Custom pathway category used in visualizations}
+
+For edges, the following information is also included:
+\item{from}{Starting node (row number) for the edge}
+\item{to}{Ending node (row number) for the edge}
+\item{similarity}{Similarity of two nodes/pathways}
+\item{distance}{Inverse of similarity}
 }
 \description{
 Creates a tidygraph network object from the provided pathway

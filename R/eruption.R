@@ -35,7 +35,7 @@
 #' @param labelSize Size of font for labels
 #' @param pad Padding of labels; adjust this if the labels overlap
 #'
-#' @return Volcano plot as a ggplot object
+#' @return Volcano plot of genes from an RNA-Seq experiment; a "ggplot" object
 #' @export
 #'
 #' @import dplyr
