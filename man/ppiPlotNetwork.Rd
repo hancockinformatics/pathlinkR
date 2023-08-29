@@ -16,6 +16,7 @@ ppiPlotNetwork(
   intColour = "grey70",
   nodeBorder = "grey30",
   hubColour = "blue2",
+  subnetwork = TRUE,
   legend = FALSE,
   legendTitle = NULL,
   edgeColour = "grey40",
@@ -68,6 +69,9 @@ Defaults to "grey30".}
 \item{hubColour}{Colour of node labels for hubs. The top 2\% of nodes
 (based on calculated hub score) are highlighted with this colour, if
 \code{label=TRUE}.}
+
+\item{subnetwork}{Logical determining if networks from
+\code{ppiExtractSubnetwork()} should be treated as such. Defaults to TRUE.}
 
 \item{legend}{Should a legend be included? Defaults to FALSE.}
 

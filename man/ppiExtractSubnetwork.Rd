@@ -12,7 +12,7 @@ ppiExtractSubnetwork(
 )
 }
 \arguments{
-\item{network}{Input network object; output from \code{ppiBuildNetwork}}
+\item{network}{Input network object; output from \code{ppiBuildNetwork()}}
 
 \item{genes}{List of Ensembl gene IDs to use as the starting point to extract
 a subnetwork from the initial network. You must provide either the
@@ -49,7 +49,8 @@ Extract a subnetwork based on pathway genes
 Uses functions from the igraph package to extract a minimally
 connected subnetwork from the starting network, using either a list of
 Ensembl genes or genes from an enriched pathway as the basis. To see what
-genes were pulled out for the pathway, check \code{attr(x, "starters")}.
+genes were pulled out for the pathway, see the "starters" attribute of the
+output network.
 }
 \examples{
 exNetwork <- ppiBuildNetwork(

@@ -13,7 +13,7 @@ ppiEnrichNetwork(
 )
 }
 \arguments{
-\item{network}{A tidygraph network object, with Ensembl IDs in the first
+\item{network}{A "tidygraph" network object, with Ensembl IDs in the first
 column of the node table}
 
 \item{analysis}{Default is "sigora", but can also be "reactomepa" or
