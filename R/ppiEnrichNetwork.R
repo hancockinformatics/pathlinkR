@@ -1,6 +1,6 @@
 #' Test a PPI network for enriched pathways
 #'
-#' @param network A tidygraph network object, with Ensembl IDs in the first
+#' @param network A "tidygraph" network object, with Ensembl IDs in the first
 #'   column of the node table
 #' @param analysis Default is "sigora", but can also be "reactomepa" or
 #'   "hallmark"
@@ -32,6 +32,7 @@
 #'   pathways}
 #'   \item{topLevelPathway}{High level Reactome term which serves to group
 #'   similar pathways}
+#'
 #' @export
 #'
 #' @import dplyr

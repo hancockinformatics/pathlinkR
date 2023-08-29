@@ -42,6 +42,7 @@ utils::globalVariables(c(
         "innateDbExp",
         "is",
         "isHub",
+        "isStarter",
         "label",
         "log2FoldChange",
         "logMax",
