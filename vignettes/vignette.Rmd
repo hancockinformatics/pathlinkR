@@ -20,7 +20,6 @@ vignette: >
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo=TRUE, comment="")
-library(dplyr)
 ```
 
 
@@ -46,7 +45,9 @@ indexed over time (i.e., T2 vs T1) (An et al. 2023).
 # Installation
 To install and load the package:
 ```{r load_library, message=FALSE}
+# We'll also be using some functions from dplyr
 # BiocManager::install("pathlinkR")
+library(dplyr)
 library(pathlinkR)
 ```
 
@@ -215,6 +216,48 @@ ppiPlotNetwork(
     legendTitle="Interferon\ngenes"
 )
 ```
+
+
+## Enriching networks and extracting subnetworks
+**pathlinkR** includes two functions for further analyzing PPI networks. First, 
+`ppiEnrichNetwork()` will use the node table from a network to test for enriched
+Reactome pathways or Hallmark gene sets (see the next section for more detail on
+the pathway enrichment methods):
+```{r ppiEnrichNetwork}
+exNetworkPathways <- ppiEnrichNetwork(
+    network=exNetwork, 
+    analysis="hallmark",
+    filterResults="default",
+    geneUniverse = rownames(deseqExampleList[[1]])
+)
+
+exNetworkPathways
+```
+
+Second, the function `ppiExtractSubnetwork()` can extract a minimally-connected
+subnetwork from a starting network, using the genes from an enriched pathway as
+the "starting" nodes for extraction. For example, below we use the results from
+the Hallmark enrichment above to pull out a subnetwork of genes from the
+"Interferon Gamma Response" term, then plot this reduced network while
+highlighting the genes from the pathway:
+```{r ppiExtractSubnetwork}
+exSubnetwork <- ppiExtractSubnetwork(
+    network=exNetwork,
+    pathwayEnrichmentResult=exNetworkPathways,
+    pathwayToExtract="INTERFERON GAMMA RESPONSE"
+)
+
+ppiPlotNetwork(
+    network=exSubnetwork,
+    fillType="oneSided",
+    fillColumn=degree,
+    labelColumn=hgncSymbol
+)
+```
+
+Alternatively you can use the "genesToExtract" argument in
+`ppiExtractSubnetwork()` to supply your own set of genes (as Ensembl IDs) to
+extract as a subnetwork.
 
 
 # Performing pathway enrichment
