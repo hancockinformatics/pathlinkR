@@ -18,3 +18,33 @@ test_that("we get the right plot output", {
         )
     )
 })
+
+test_that("plotting subnetworks works as expected", {
+    exNetwork2 <- ppiBuildNetwork(
+        deseqResults=deseqExampleList[[1]],
+        filterInput=TRUE,
+        order="zero"
+    )
+
+    exPathways <- ppiEnrichNetwork(
+        network=exNetwork2,
+        analysis="hallmark"
+    )
+
+    exSubnetwork <- ppiExtractSubnetwork(
+        network=exNetwork2,
+        pathwayEnrichmentResult=exPathways,
+        pathwayToExtract="INTERFERON ALPHA RESPONSE"
+    )
+
+    vdiffr::expect_doppelganger(
+        "example-subnetwork",
+        ppiPlotNetwork(
+            network=exSubnetwork,
+            fillType="oneSided",
+            fillColumn=degree,
+            label=TRUE,
+            labelColumn=hgncSymbol
+        )
+    )
+})

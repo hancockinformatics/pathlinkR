@@ -1,6 +1,6 @@
 #' Extract a subnetwork based on pathway genes
 #'
-#' @param network Input network object; output from `ppiBuildNetwork`
+#' @param network Input network object; output from `ppiBuildNetwork()`
 #' @param genes List of Ensembl gene IDs to use as the starting point to extract
 #'   a subnetwork from the initial network. You must provide either the
 #'   `genes` or `pathwayEnrichmentResult` argument.
@@ -37,7 +37,8 @@
 #' @details Uses functions from the igraph package to extract a minimally
 #'   connected subnetwork from the starting network, using either a list of
 #'   Ensembl genes or genes from an enriched pathway as the basis. To see what
-#'   genes were pulled out for the pathway, check `attr(x, "starters")`.
+#'   genes were pulled out for the pathway, see the "starters" attribute of the
+#'   output network.
 #'
 #' @references Code for network module (subnetwork) extraction was based off of
 #' that used in "jboktor/NetworkAnalystR" on Github.
