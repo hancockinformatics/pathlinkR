@@ -282,18 +282,26 @@ plotFoldChange <- function(
         colSplit <- factor(colSplit, levels=unique(colSplit))
         columnTitle <- "%s"
     }
+
     rowSplit <- rep(NA, nrow(matFC))
-    row_title <- NULL
+    rowTitle <- NULL
 
     ## If plotting so that row names are conditions and column names are genes
     if (invert) {
+
+        if (!clusterColumns) {
+            message(
+                "Since columns are genes, you may want to specify ",
+                "'clusterColumns=TRUE'"
+            )
+        }
+
         matFC <- t(matFC)
         matP <- t(matP)
         var <- colSplit
         colSplit <- rowSplit
         rowSplit <- var
         columnTitle <- NULL
-        row_title <- "%s"
     }
 
 
@@ -353,19 +361,19 @@ plotFoldChange <- function(
                     }
                 }
             },
-            column_title = columnTitle,
-            row_title = row_title,
-            heatmap_legend_param = heatmapLegendInfo[[1]],
-            column_title_gp = gpar(fontsize = titleSize),
-            row_split = rowSplit,
-            column_split = colSplit,
-            cluster_columns = clusterColumns,
-            cluster_rows = clusterRows,
-            column_names_rot = colAngle,
-            column_names_centered = colCenter,
-            row_names_rot = rowAngle,
-            row_names_centered = rowCenter
+            column_title=columnTitle,
+            row_title=rowTitle,
+            heatmap_legend_param=heatmapLegendInfo[[1]],
+            column_title_gp=gpar(fontsize = titleSize),
+            row_split=rowSplit,
+            column_split=colSplit,
+            cluster_columns=clusterColumns,
+            cluster_rows=clusterRows,
+            column_names_rot=colAngle,
+            column_names_centered=colCenter,
+            row_names_rot=rowAngle,
+            row_names_centered=rowCenter
         ),
-        column_title = plotTitle
+        column_title=plotTitle
     )
 }
