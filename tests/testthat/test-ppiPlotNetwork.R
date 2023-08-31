@@ -1,3 +1,6 @@
+## Note we don't test with `label=TRUE` because even with a seed, the placement
+## of the labels varies enough (though slightly) between runs to constantly fail
+## the test
 test_that("we get the right plot output", {
     set.seed(1)
 
@@ -20,6 +23,8 @@ test_that("we get the right plot output", {
 })
 
 test_that("plotting subnetworks works as expected", {
+    set.seed(1)
+
     exNetwork2 <- ppiBuildNetwork(
         deseqResults=deseqExampleList[[1]],
         filterInput=TRUE,
