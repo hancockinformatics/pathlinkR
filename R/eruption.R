@@ -88,12 +88,12 @@ eruption <- function(
     stopifnot(is(deseqResult, "data.frame"))
     stopifnot(all(c("padj", "log2FoldChange") %in% colnames(deseqResult)))
 
-    if (!is.na(xaxis)) {
+    if (!all(is.na(xaxis))) {
         stopifnot("'xaxis' must be a length-two numeric vector" = {
             length(xaxis) == 2
         })
     }
-    if (!is.na(yaxis)) {
+    if (!all(is.na(yaxis))) {
         stopifnot("'yaxis' must be a length-two numeric vector" = {
             length(yaxis) == 2
         })
