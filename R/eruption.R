@@ -145,14 +145,13 @@ eruption <- function(
     ## Make sure `highlightGenes`, if used, are in the data frame
     highlightGenes <- highlightGenes[highlightGenes %in% res$ensemblGeneId]
 
-    ## Identify up- and down-regulated genes, and output them for the user
+    ## Identify up- and down-regulated genes
     upDf <- res %>%
         filter(padj < pCutoff, log2FoldChange > log2(fcCutoff))
 
     downDf <- res %>%
         filter(padj < pCutoff, log2FoldChange < log2(1 / fcCutoff))
 
-    ## Number of up, down, and total DE genes
     numGenes <- c(nrow(upDf), nrow(downDf), nrow(upDf) + nrow(downDf))
 
     message(
