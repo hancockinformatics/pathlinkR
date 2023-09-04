@@ -104,7 +104,7 @@ ppiBuildNetwork <- function(
     }
 
     message(
-      "ppiBuildNetwork will use ", nrow(df), " DEGs for network construction"
+        "ppiBuildNetwork will use ", nrow(df), " DEGs for network construction"
     )
 
     ## Check for and remove any duplicate IDs, warning the user when this occurs
