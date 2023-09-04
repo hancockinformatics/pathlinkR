@@ -202,7 +202,7 @@ plotFoldChange <- function(
     dfFC <- imap(inputList, function(listItem, itemName) {
         stopifnot(
             "Rownames of data frames in 'inputList' must be Ensembl gene IDs" =
-            grepl(pattern = "^ENSG", x = rownames(listItem)[1])
+                grepl(pattern = "^ENSG", x = rownames(listItem)[1])
         )
 
         listItem %>%
@@ -288,14 +288,12 @@ plotFoldChange <- function(
 
     ## If plotting so that row names are conditions and column names are genes
     if (invert) {
-
         if (!clusterColumns) {
             message(
                 "Since columns are genes, you may want to specify ",
                 "'clusterColumns=TRUE'"
             )
         }
-
         matFC <- t(matFC)
         matP <- t(matP)
         var <- colSplit
@@ -303,7 +301,6 @@ plotFoldChange <- function(
         rowSplit <- var
         columnTitle <- NULL
     }
-
 
     draw(
         Heatmap(
@@ -313,58 +310,41 @@ plotFoldChange <- function(
             rect_gp = cellBorder,
             cell_fun = function(j, i, x, y, w, h, fill) {
                 if (showStars) {
-                    if (abs(matFC[i, j]) > log2(1.5)) {
-                        if (matP[i, j] < 0.001) {
-                            grid.text("***", x, y, vjust = vjust, rot = rot)
-                        }
-                        else if (matP[i, j] < 0.01) {
-                            grid.text("**", x, y, vjust = vjust, rot = rot)
-                        }
-                        else if (matP[i, j] < 0.05) {
-                            grid.text("*", x, y, vjust = vjust, rot = rot)
-                        }
+
+                    cellLabel <- if (matP[i, j] < 0.001) {
+                        "***"
+                    } else if (matP[i, j] < 0.01) {
+                        "**"
+                    }
+                    else if (matP[i, j] < 0.05) {
+                        "*"
                     }
 
-                    ## If plotting significance values for genes that don't pass
-                    ## fcCutoff
+                    if (abs(matFC[i, j]) > log2(1.5)) {
+                        grid.text(
+                            label=cellLabel,
+                            x=x,
+                            y=y,
+                            vjust=vjust,
+                            rot=rot
+                        )
+                    }
                     if (abs(matFC[i, j]) < log2(1.5) & !hideNonsigFC) {
-                        if (matP[i, j] < 0.001) {
-                            grid.text(
-                                "***",
-                                x,
-                                y,
-                                vjust = vjust,
-                                rot = rot,
-                                gp = gpar(col = "grey50")
-                            )
-                        }
-                        else if (matP[i, j] < 0.01) {
-                            grid.text(
-                                "**",
-                                x,
-                                y,
-                                vjust = vjust,
-                                rot = rot,
-                                gp = gpar(col = "grey50")
-                            )
-                        }
-                        else if (matP[i, j] < 0.05) {
-                            grid.text(
-                                "*",
-                                x,
-                                y,
-                                vjust = vjust,
-                                rot = rot,
-                                gp = gpar(col = "grey50")
-                            )
-                        }
+                        grid.text(
+                            label=cellLabel,
+                            x=x,
+                            y=y,
+                            vjust=vjust,
+                            rot=rot,
+                            gp=gpar(col="grey50")
+                        )
                     }
                 }
             },
             column_title=columnTitle,
             row_title=rowTitle,
             heatmap_legend_param=heatmapLegendInfo[[1]],
-            column_title_gp=gpar(fontsize = titleSize),
+            column_title_gp=gpar(fontsize=titleSize),
             row_split=rowSplit,
             column_split=colSplit,
             cluster_columns=clusterColumns,
