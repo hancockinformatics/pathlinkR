@@ -161,7 +161,7 @@ ppiExtractSubnetwork <- function(
 
         moduleShortestPaths <- list()
 
-        for (i in seq_len(length(geneNodeIds))) {
+        for (i in seq(length(geneNodeIds))) {
             moduleShortestPaths[[i]] <- get.shortest.paths(
                 as.igraph(network),
                 geneNodeIds[i],
