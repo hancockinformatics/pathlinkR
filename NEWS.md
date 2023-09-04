@@ -1,3 +1,9 @@
+CHANGES IN VERSION 0.99.350
+----------------------------
+
+* Rewrite of pathwayPlots to be more efficient
+
+
 CHANGES IN VERSION 0.99.332
 ----------------------------
 
