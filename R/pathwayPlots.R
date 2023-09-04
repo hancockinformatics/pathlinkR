@@ -42,10 +42,7 @@
 #' @import dplyr
 #' @import ggplot2
 #'
-#' @importFrom ggforce facet_col
-#' @importFrom ggpubr ggarrange
 #' @importFrom stringr str_remove_all str_split str_wrap
-#' @importFrom tibble tibble
 #'
 #' @description Creates a plot to visualize and compare pathway enrichment
 #'   results from multiple DE comparisons. Can automatically assign each
@@ -56,10 +53,7 @@
 #' @seealso <https://github.com/hancockinformatics/pathlinkR>
 #'
 #' @examples
-#' pathwayPlots(
-#'     sigoraExamples,
-#'     columns=2
-#' )
+#' pathwayPlots(sigoraExamples, columns=2)
 #'
 pathwayPlots <- function(
         pathwayEnrichmentResults,
@@ -80,161 +74,85 @@ pathwayPlots <- function(
         newGroupNames=NA
 ) {
 
+    stopifnot("A maximum of three columns can be specified."=columns <= 3)
+
+    plotData <- pathwayEnrichmentResults
+
     ## If new group names are to be used, add them in
     if (!is.na(newGroupNames[1])) {
-        mapNames <- tibble(
-            comparison=unique(pathwayEnrichmentResults$comparison),
-            newNames=newGroupNames
-        )
-        pathwayEnrichmentResults <- left_join(
-            pathwayEnrichmentResults,
-            mapNames,
-            multiple="all"
-        ) %>%
-            select(!comparison) %>%
-            mutate(comparison=newNames) %>%
-            select(!newNames)
+        plotData <- plotData %>%
+            left_join(
+                tibble::tibble(
+                    comparison=unique(plotData$comparison),
+                    newNames=newGroupNames
+                ),
+                multiple="all"
+            ) %>%
+            select(-comparison) %>%
+            rename("comparison"=newNames)
     }
 
-    ## Convert to -log10 p value and arbitrarily set to a max -log10 p value of
-    ## 50 (i.e. adj pval=10^-50), which some enrichment results surpass,
-    ## especially for Sigora.
-    pathwayEnrichmentResults <- pathwayEnrichmentResults %>% mutate(
-        logMax=case_when(
-            -log10(pValueAdjusted) > maxPVal ~ maxPVal,
-            -log10(pValueAdjusted) <= maxPVal ~ -log10(pValueAdjusted)
-        )
-    )
-
-    ## Order the directionality of results, if up and down are used
-    if (!"All" %in% pathwayEnrichmentResults$direction) {
-        pathwayEnrichmentResults$direction <- factor(
-            pathwayEnrichmentResults$direction,
-            levels=c("Up", "Down"))
-    } else if (
-        "All" %in% pathwayEnrichmentResults$direction &
-        any(c("Up", "Down") %in% pathwayEnrichmentResults$direction)
-    ) {
-        pathwayEnrichmentResults$direction <- factor(
-            pathwayEnrichmentResults$direction,
-            levels=c("Up", "Down", "All"))
-    }
-
-    ## Order the comparisons by the order they were inputted (not alphabetical)
-    pathwayEnrichmentResults$comparison <- factor(
-        pathwayEnrichmentResults$comparison,
-        levels=unique(pathwayEnrichmentResults$comparison))
-
-    ## Add in the number of genes for each comparison if indicated
+    ## If indicated add the number of genes to each comparison
     if (showNumGenes) {
-        pathwayEnrichmentResults <- pathwayEnrichmentResults %>% mutate(
+        plotData <- plotData %>% mutate(
             comparison=paste0(comparison, "\n(", totalGenes, ")")
         )
-        pathwayEnrichmentResults$comparison <- factor(
-            pathwayEnrichmentResults$comparison,
-            levels=unique(pathwayEnrichmentResults$comparison)
-        )
     }
 
-    ## If did not specify to only plot specific pathways, otherwise filter them
-    if (specificTopPathways[1] == "any") {
-        specificTopPathways <- unique(pathwayEnrichmentResults$topLevelPathway)
-    }
-    if (specificPathways[1] == "any") {
-        specificPathways <- unique(pathwayEnrichmentResults$pathwayName)
-    }
-
-    enrichedResultsGraph <- pathwayEnrichmentResults %>% filter(
-        topLevelPathway %in% specificTopPathways,
-        pathwayName %in% specificPathways
-    )
-
-    ## In certain cases, a pathway may be enriched by both up- and
-    ## down-regulated genes. Find duplicated pathways, and only show the one
-    ## that is more enriched (lower p-value)
-    duplicates <- enrichedResultsGraph %>%
-        group_by(pathwayName, comparison) %>%
-        filter(n() > 1) %>%
-        mutate(uniqueId=paste0(pathwayName, comparison))
-
-    enrichedResultsGraph <- enrichedResultsGraph %>%
-        mutate(uniqueId=paste0(pathwayName, comparison))
-
-    enrichedResultsClean <- enrichedResultsGraph %>%
-        filter(!uniqueId %in% duplicates$uniqueId)
-
-    enrichedResultsDupes <- enrichedResultsClean[0, ]
-
-    ## This chooses the top enriched pathway of duplicates and also adds the
-    ## other pathway into enrichedResultsDupes.
-    if (nrow(duplicates) > 0) {
-        message(
-            "\nNote: The following pathways were enriched in both directions ",
-            "for the given comparisons. These are indicated with an asterisk ",
-            "over the triangle, which is only shown for the lower p value ",
-            "result:"
+    plotDataGraph <- plotData %>%
+        mutate(
+            logMax=case_when(
+                -log10(pValueAdjusted) > maxPVal ~ maxPVal,
+                -log10(pValueAdjusted) <= maxPVal ~ -log10(pValueAdjusted)
+            ),
+            direction=factor(
+                direction,
+                rev(sort(unique(plotData$direction)))
+            ),
+            comparison=factor(
+                comparison,
+                unique(plotData$comparison)
+            )
         )
 
-        duplicates_message <- duplicates %>%
-            mutate(new=paste0("\t", comparison, ": ", pathwayName)) %>%
-            pull(new) %>%
-            as.character() %>%
-            str_remove_all("\n") %>%
-            unique()
-
-        message(paste0(
-            duplicates_message,
-            collapse="\n"
-        ))
-
-        for (i in seq_len(nrow(duplicates))) {
-            row <- duplicates[i, ]
-
-            choices <- enrichedResultsGraph %>%
-                filter(
-                    pathwayName == row$pathwayName,
-                    comparison == row$comparison
-                ) %>%
-                arrange(pValueAdjusted) ## Choose the lowest p value
-
-            ## Add the lower p value to the clean dataframe
-            enrichedResultsClean <-
-                rbind(enrichedResultsClean, choices[1, ])
-
-            ## keep the other enrichment to the dupes dataframe
-            enrichedResultsDupes <-
-                rbind(enrichedResultsDupes, choices[2, ])
-        }
+    if (specificTopPathways[1] != "any") {
+        plotDataGraph <- plotDataGraph %>%
+            filter(topLevelPathway %in% specificTopPathways)
     }
-
-    ## Now organize pathways into multiple columns. Maximum is 3 columns to
-    ## graph, if inputted larger, will be set to 3.
-    if (columns > 3) {
-        message("Maximum is three columns to graph. Plotting three columns.")
-        columns <- 3
+    if (specificPathways[1] != "any") {
+        plotDataGraph <- plotDataGraph %>%
+            filter(pathwayName %in% specificPathways)
     }
 
     ## How many pathways per top pathway? Add 1 to account for the extra space
     ## the facet takes up.
-    numPathways <- enrichedResultsClean %>%
-        select(topLevelPathway, pathwayName) %>%
-        unique() %>%
+    numPathways <- plotDataGraph %>%
+        distinct(topLevelPathway, pathwayName) %>%
         group_by(topLevelPathway) %>%
-        summarise(pathways=n() + 1)
+        summarise(pathways=n() + 1) %>%
+        arrange(pathways)
 
-    ## Arrange ascending
-    numPathways <- numPathways %>% arrange(pathways)
+    ## In the case where a pathway is enriched in both up- and down- regulated
+    ## genes, only show the one with a lower p-value
+    plotDataDups <- plotDataGraph %>%
+        group_by(pathwayName, comparison) %>%
+        filter(n() > 1)
 
-    ## The n largest top pathways are chosen to start off the columns
+    plotDataNoDups <- plotDataGraph %>%
+        group_by(pathwayName, comparison) %>%
+        arrange(pValueAdjusted) %>%
+        distinct(pathwayName, comparison, .keep_all = TRUE)
+
+    ## The n largest top pathways are chosen to start off the columns. For cases
+    ## when you specify specific pathways, make sure that there are more
+    ## pathways than columns...
     columnSplitting <- numPathways %>% tail(columns)
 
-    ## For cases when you specify specific pathways, make sure that there are
-    ## more pathways than columns...
     if (nrow(columnSplitting) < columns) {
         columns <- nrow(columnSplitting)
 
     } else {
-        for (i in (columns + 1):nrow(numPathways)) {
+        for (i in seq(columns + 1, nrow(numPathways))) {
             ## The "n + 1" largest top pathway to add
             add <- numPathways %>% tail(i) %>% .[1,]
 
@@ -260,17 +178,11 @@ pathwayPlots <- function(
         }
     }
 
-    ## Now create a list of top pathways for each column
     columnList <- columnSplitting$topLevelPathway %>%
         as.list() %>%
         str_split(",")
 
-    ## Plot pathways
-    plotlist <- list()
-    name_trunc <- nameWidth * nameRows - 5
-
-    ## Can be set to angled (45 degrees), "horizontal" (0 degrees), or
-    ## "vertical" (90 degrees)
+    ## Can be "horizontal" (0), "angled" (45 degrees), or "vertical" (90)
     if (xAngle == "angled") {
         vjust <- 1
         if (pathwayPosition == "right") {
@@ -280,7 +192,6 @@ pathwayPlots <- function(
             angle <- 45
             hjust <- 1
         }
-
     } else if (xAngle == "horizontal") {
         angle <- 0
         hjust <- 0.5
@@ -291,35 +202,49 @@ pathwayPlots <- function(
         vjust <- 0.5
     }
 
+    themePathway <- theme_bw() +
+        theme(
+            strip.text.x=element_text(size=12, face="bold", colour="black"),
+            legend.text=element_text(size=12 * legendMultiply),
+            legend.title=element_text(size=13 * legendMultiply),
+            axis.text.y=element_text(colour="black", size=12),
+            axis.text.x=element_text(
+                colour="black",
+                size=12,
+                angle=angle,
+                hjust=hjust,
+                vjust=vjust
+            )
+        )
 
-    for (n in seq_len(length(columnList))) {
-        plot <-
-            ggplot(
-                data=filter(
-                    enrichedResultsClean,
-                    topLevelPathway %in% columnList[n][[1]]
-                ),
-                mapping=aes(
-                    x=comparison,
-                    y=pathwayName,
-                    fill=logMax,
-                    shape=direction
-                )
-            ) +
+    ## Plot pathways
+    plotList <- lapply(columnList, function(x) {
+        ggplot(
+            data=filter(
+                plotDataNoDups,
+                topLevelPathway %in% x
+            ),
+            mapping=aes(
+                x=comparison,
+                y=pathwayName,
+                fill=logMax,
+                shape=direction
+            )
+        ) +
 
-            facet_col(
+            ggforce::facet_col(
                 facets=~topLevelPathway,
                 scales="free_y",
                 space="free"
             ) +
 
-            {if (includeGeneRatio) geom_point(aes(size=gene_ratio))} +
+            {if (includeGeneRatio) geom_point(aes(size=geneRatio))} +
             {if (!includeGeneRatio) geom_point(size=size)} +
 
             geom_point(
                 data=filter(
-                    enrichedResultsDupes,
-                    topLevelPathway %in% columnList[n][[1]]
+                    plotDataDups,
+                    topLevelPathway %in% x
                 ),
                 mapping=aes(x=comparison, y=pathwayName),
                 shape=8,
@@ -328,20 +253,20 @@ pathwayPlots <- function(
                 show.legend=FALSE
             ) +
 
+            ## Keep comparisons even if they don't enrich for any pathways
+            scale_x_discrete(drop=FALSE) +
+
             ## Wrap and truncate pathway names if necessary
             scale_y_discrete(
                 labels=~str_wrap(
-                    .truncNeatly(.x, name_trunc),
+                    .truncNeatly(.x, nameWidth * nameRows - 5),
                     width=nameWidth
                 ),
                 position=pathwayPosition
             ) +
 
-            ## Keeps comparisons even if they don"t enrich for any pathways
-            scale_x_discrete(drop=FALSE) +
-
             scale_shape_manual(
-                values=c("Down"=25 , "Up"=24, "All"=21),
+                values=c("Down"=25, "Up"=24, "All"=21),
                 name="Regulation",
                 na.value=NA,
                 drop=FALSE # Keep both up/down if only one direction enriched
@@ -363,47 +288,26 @@ pathwayPlots <- function(
                 na.value=NA
             ) +
 
-            ## Can also add lines to separate different groups
+            ## Add optional lines to separate different groups
             {if (!is.na(intercepts[1])) geom_vline(xintercept=intercepts)} +
-            labs(x=NULL, y=NULL) +
 
-            theme_bw() +
-            theme(
-                strip.text.x=element_text(
-                    size=12, face="bold", colour="black"
-                ),
-                legend.text=element_text(size=12 * legendMultiply),
-                legend.title=element_text(size=13 * legendMultiply),
-                axis.text.y=element_text(colour="black", size=12),
-                axis.text.x=element_text(
-                    colour="black",
-                    size=12,
-                    angle=angle,
-                    hjust=hjust,
-                    vjust=vjust
-                )
-            ) +
+            labs(x=NULL, y=NULL) +
+            themePathway +
             guides(
-                shape=guide_legend(
-                    override.aes=list(size=5 * legendMultiply)
-                ),
-                size =guide_legend(
-                    override.aes=list(shape=24, fill="black")
-                )
+                shape=guide_legend(override.aes=list(size=5 * legendMultiply)),
+                size =guide_legend(override.aes=list(shape=24, fill="black"))
             )
-        plotlist <- append(plotlist, list(plot))
-    }
+    })
 
     if (columns > 1) {
-        plot <- ggarrange(
-            plotlist=plotlist,
+        ggpubr::ggarrange(
+            plotlist=plotList,
             ncol=columns,
             common.legend=TRUE,
             legend="right",
             align="v"
         )
-        return(plot)
     } else {
-        return(plot)
+        plotList
     }
 }
