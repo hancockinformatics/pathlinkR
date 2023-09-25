@@ -1,7 +1,7 @@
 #' List of example results from DESeq2
 #'
-#' @format A list of two data frames, each with 6 columns (and rownames),
-#'   containing example results from DESeq2
+#' @return An object of class "list"
+#' @format  A list of two data frames, with 6 columns:
 #' \describe{
 #'   \item{baseMean}{A combined score for the gene}
 #'   \item{log2FoldChange}{Fold change value for the gene}
@@ -10,15 +10,18 @@
 #'   \item{pvalue}{The nominal p value for the gene}
 #'   \item{padj}{The adjusted p value for the gene}
 #' }
+#'
 "deseqExampleList"
 
 #' Colour assignments for grouped pathways
 #'
+#' @return An object of class "character"
 #' @format A length 8 named vector of hex colour values
 "groupedPathwayColours"
 
 #' Table of Hallmark gene sets and their genes
 #'
+#' @return An object of class "tbl", "tbl.df", "data.frame"
 #' @format A data frame (tibble) with 8,209 rows and 2 columns
 #' \describe{
 #'   \item{pathwayId}{Name of the Hallmark Gene Set}
@@ -33,7 +36,8 @@
 #' of duplicate interactions, and removing interactions that have the same
 #' components but are swapped between A and B.
 #'
-#' @format A data frame with 152259 rows and 4 columns:
+#' @return An object of class "tbl", "tbl.df", "data.frame"
+#' @format A data frame (tibble) with 152259 rows and 4 columns:
 #' \describe{
 #'   \item{ensemblGeneA}{Ensembl gene ID for the first gene/protein in the
 #'     interaction}
@@ -48,6 +52,7 @@
 
 #' Table of human gene ID mappings
 #'
+#' @return An object of class "tbl", "tbl.df", "data.frame"
 #' @format A data frame (tibble) with 43,993 rows and 3 columns
 #' \describe{
 #'   \item{ensemblGeneId}{Ensembl IDs}
@@ -59,6 +64,7 @@
 #' Manually-curated list of Reactome and Hallmark pathways and their top
 #' pathways and grouped pathways
 #'
+#' @return An object of class "tbl", "tbl.df", "data.frame"
 #' @format A data frame (tibble) with 2685 rows and 5 columns
 #' \describe{
 #'   \item{pathwayId}{Reactome or Hallmark pathway identifier}
@@ -71,6 +77,7 @@
 
 #' Matrix of pairwise Jaccard indices for all human Reactome pathways
 #'
+#' @return An object of class "matrix"
 #' @format A matrix with 1001 rows and columns
 #' \describe{
 #'   \item{Rows}{Reactome pathway identifiers}
@@ -80,6 +87,7 @@
 
 #' Table of all Reactome pathways and genes
 #'
+#' @return An object of class "tbl", "tbl.df", "data.frame"
 #' @format A data frame (tibble) with 123574 rows and 3 columns
 #' \describe{
 #'   \item{pathwayId}{Reactome pathway ID}
@@ -90,6 +98,7 @@
 
 #' Table of all Sigora pathways and their constituent genes
 #'
+#' @return An object of class "tbl", "tbl.df", "data.frame"
 #' @format A data frame (tibble) with 60775 rows and 4 columns
 #' \describe{
 #'   \item{pathwayId}{Reactome pathway identifier}
@@ -100,8 +109,9 @@
 "sigoraDatabase"
 
 #' Example Sigora output from running `pathwayEnrichment` on
-#'   "deseqExampleList"
+#' "deseqExampleList"
 #'
+#' @return An object of class "tbl", "tbl.df", "data.frame"
 #' @format A data frame (tibble) with 66 rows and 12 columns
 #' \describe{
 #'   \item{comparison}{Comparison from which results are derived; names of the

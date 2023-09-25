@@ -5,8 +5,7 @@
 \alias{deseqExampleList}
 \title{List of example results from DESeq2}
 \format{
-A list of two data frames, each with 6 columns (and rownames),
-containing example results from DESeq2
+A list of two data frames, with 6 columns:
 \describe{
 \item{baseMean}{A combined score for the gene}
 \item{log2FoldChange}{Fold change value for the gene}
@@ -18,6 +17,9 @@ containing example results from DESeq2
 }
 \usage{
 deseqExampleList
+}
+\value{
+An object of class "list"
 }
 \description{
 List of example results from DESeq2

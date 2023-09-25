@@ -10,7 +10,7 @@ A few important steps have been taken to filter the data, namely the removal
 of duplicate interactions, and removing interactions that have the same
 components but are swapped between A and B.}
 \format{
-A data frame with 152259 rows and 4 columns:
+A data frame (tibble) with 152259 rows and 4 columns:
 \describe{
 \item{ensemblGeneA}{Ensembl gene ID for the first gene/protein in the
 interaction}
@@ -24,6 +24,9 @@ interaction}
 }
 \usage{
 innateDbExp
+}
+\value{
+An object of class "tbl", "tbl.df", "data.frame"
 }
 \description{
 A data frame containing human PPI data from InnateDB, from the entry
