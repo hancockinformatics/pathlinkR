@@ -26,6 +26,9 @@ input list}
 \usage{
 sigoraExamples
 }
+\value{
+An object of class "tbl", "tbl.df", "data.frame"
+}
 \description{
 Example Sigora output from running \code{pathwayEnrichment} on
 "deseqExampleList"

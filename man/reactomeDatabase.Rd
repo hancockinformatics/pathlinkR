@@ -15,6 +15,9 @@ A data frame (tibble) with 123574 rows and 3 columns
 \usage{
 reactomeDatabase
 }
+\value{
+An object of class "tbl", "tbl.df", "data.frame"
+}
 \description{
 Table of all Reactome pathways and genes
 }

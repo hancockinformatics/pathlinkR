@@ -14,6 +14,9 @@ A matrix with 1001 rows and columns
 \usage{
 pathwayDistancesJaccard
 }
+\value{
+An object of class "matrix"
+}
 \description{
 Matrix of pairwise Jaccard indices for all human Reactome pathways
 }

@@ -18,6 +18,9 @@ A data frame (tibble) with 2685 rows and 5 columns
 \usage{
 pathwayCategories
 }
+\value{
+An object of class "tbl", "tbl.df", "data.frame"
+}
 \description{
 Manually-curated list of Reactome and Hallmark pathways and their top
 pathways and grouped pathways

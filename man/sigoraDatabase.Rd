@@ -16,6 +16,9 @@ A data frame (tibble) with 60775 rows and 4 columns
 \usage{
 sigoraDatabase
 }
+\value{
+An object of class "tbl", "tbl.df", "data.frame"
+}
 \description{
 Table of all Sigora pathways and their constituent genes
 }
