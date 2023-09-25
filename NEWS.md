@@ -1,3 +1,9 @@
+CHANGES IN VERSION 0.99.352
+----------------------------
+
+* Added value tag to data documentation
+
+
 CHANGES IN VERSION 0.99.350
 ----------------------------
 

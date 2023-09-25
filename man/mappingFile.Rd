@@ -15,6 +15,9 @@ A data frame (tibble) with 43,993 rows and 3 columns
 \usage{
 mappingFile
 }
+\value{
+An object of class "tbl", "tbl.df", "data.frame"
+}
 \description{
 Table of human gene ID mappings
 }

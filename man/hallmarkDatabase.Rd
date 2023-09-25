@@ -14,6 +14,9 @@ A data frame (tibble) with 8,209 rows and 2 columns
 \usage{
 hallmarkDatabase
 }
+\value{
+An object of class "tbl", "tbl.df", "data.frame"
+}
 \description{
 Table of Hallmark gene sets and their genes
 }
