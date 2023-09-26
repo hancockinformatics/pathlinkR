@@ -14,7 +14,6 @@ of functions/tools which can be applied to list(s) of DE genes, to help the user
 obtain biological insights into their results, and produce publication-ready
 figures to summarize these findings.
 
-<img src="man/figures/readme_example_plot.png">
 
 ## Installation
 For the time being, **pathlinkR** can be installed from this Github repository
