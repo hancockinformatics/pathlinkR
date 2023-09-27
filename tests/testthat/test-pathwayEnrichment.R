@@ -1,6 +1,6 @@
 test_that("Sigora enrichment works as expected", {
     testResultReactomepa <- pathwayEnrichment(
-        inputList=deseqExampleList,
+        inputList=exampleDESeqResults,
         analysis="sigora"
     )
 
@@ -27,7 +27,7 @@ test_that("Sigora enrichment works as expected", {
 
 test_that("ReactomePA enrichment works as expected", {
     testResultReactomepa <- pathwayEnrichment(
-        inputList=deseqExampleList,
+        inputList=exampleDESeqResults,
         analysis="reactomepa"
     )
 
@@ -54,7 +54,7 @@ test_that("ReactomePA enrichment works as expected", {
 
 test_that("Hallmark enrichment works as expected", {
     testResultHallmark <- pathwayEnrichment(
-        inputList=deseqExampleList,
+        inputList=exampleDESeqResults,
         analysis="hallmark",
         split=FALSE
     )

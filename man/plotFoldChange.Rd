@@ -143,7 +143,7 @@ type and mutant results more visually distinct.
 }
 \examples{
 plotFoldChange(
-    deseqExampleList,
+    exampleDESeqResults,
     pathName="Generation of second messenger molecules"
 )
 

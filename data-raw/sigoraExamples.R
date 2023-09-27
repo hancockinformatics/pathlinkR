@@ -6,7 +6,7 @@ devtools::load_all()
 # Run enrichment ----------------------------------------------------------
 
 sigoraExamples <- pathwayEnrichment(
-    inputList=deseqExampleList,
+    inputList=exampleDESeqResults,
     filterInput=TRUE,
     split=TRUE
 )

@@ -95,7 +95,7 @@
 #'
 #' @examples
 #' plotFoldChange(
-#'     deseqExampleList,
+#'     exampleDESeqResults,
 #'     pathName="Generation of second messenger molecules"
 #' )
 #'

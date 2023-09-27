@@ -34,7 +34,7 @@ interaction networks, to aid researchers in uncovering underlying biology and
 pathophysiology from their gene expression studies.
 
 We have included an example data set of gene expression results in this package
-as the object `deseqExampleList`. This is a list of 2 data frames, generated
+as the object `exampleDESeqResults`. This is a list of 2 data frames, generated
 using the `results()` functions from the package
 [DESeq2](https://bioconductor.org/packages/DESeq2/) (Love et al. 2014). The data
 is from an RNA-Seq study investigating COVID-19 and non-COVID-19 sepsis patients
@@ -61,12 +61,12 @@ though any value can be specified. **pathlinkR** includes the function
 `eruption()` to create a volcano plot.
 ```{r datasets_and_preliminary_volcano_plot}
 ## A quick look at the DESeq2 results table
-head(deseqExampleList[[1]])
+head(exampleDESeqResults[[1]])
 
 ## Generate a volcano plot from the first data frame, with default thresholds
 eruption(
-    deseqResult=deseqExampleList[[1]],
-    title=names(deseqExampleList[1])
+    deseqResult=exampleDESeqResults[[1]],
+    title=names(exampleDESeqResults[1])
 )
 ```
 
@@ -99,8 +99,8 @@ interferonGenes <- sigoraDatabase %>%
     pull(ensemblGeneId)
 
 eruption(
-    deseqResult=deseqExampleList[[1]],
-    title=names(deseqExampleList[1]),
+    deseqResult=exampleDESeqResults[[1]],
+    title=names(exampleDESeqResults[1]),
     highlightGenes=interferonGenes,
     highlightName="Interferon genes (red)",
     label="highlight",
@@ -119,7 +119,7 @@ just like `pathwayEnrichment()`, and creating a heatmap of fold changes for the
 constituent genes.
 ```{r plot_fold_changes_I, fig.height=10}
 plotFoldChange(
-    deseqExampleList,
+    exampleDESeqResults,
     pathName="Interferon alpha/beta signaling"
 )
 ```
@@ -132,13 +132,13 @@ Another example, with more customization:
 - Swap the rows and columns from the default, and add a split between the rows
     (comparisons)
 ```{r plot_fold_changes_II}
-deseqExampleListRenamed <- setNames(
-    deseqExampleList,
+exampleDESeqResultsRenamed <- setNames(
+    exampleDESeqResults,
     c("Pos", "Neg")
 )
 
 plotFoldChange(
-    deseqExampleListRenamed,
+    exampleDESeqResultsRenamed,
     manualTitle="Signature genes",
     genesToPlot=c("CD4", "CD8A","CD8B", "CD28", "ZAP70"),
     geneFormat="hgnc",
@@ -172,14 +172,14 @@ of their dysregulation (i.e. up- or down-regulated) by specifying
 `fillType="foldChange"`.
 ```{r ppi_networks, fig.width=12, fig.height=10, warning=FALSE}
 exNetwork <- ppiBuildNetwork(
-    deseqResults=deseqExampleList[[1]],
+    deseqResults=exampleDESeqResults[[1]],
     filterInput=TRUE,
     order="zero"
 )
 
 ppiPlotNetwork(
     network=exNetwork,
-    title=names(deseqExampleList)[1],
+    title=names(exampleDESeqResults)[1],
     fillColumn=log2FoldChange,
     fillType="foldChange",
     label=TRUE,
@@ -206,7 +206,7 @@ exNetworkInterferon <- mutate(
 ppiPlotNetwork(
     network=exNetworkInterferon,
     networkLayout="lgl",
-    title=names(deseqExampleList)[1],
+    title=names(exampleDESeqResults)[1],
     fillColumn=isInterferon,
     fillType="categorical",
     catFillColours=c("y"="red", "n"="grey"),
@@ -228,7 +228,7 @@ exNetworkPathways <- ppiEnrichNetwork(
     network=exNetwork, 
     analysis="hallmark",
     filterResults="default",
-    geneUniverse = rownames(deseqExampleList[[1]])
+    geneUniverse = rownames(exampleDESeqResults[[1]])
 )
 
 exNetworkPathways
@@ -298,7 +298,7 @@ their own GPS repository; see `?sigora::makeGPS()` for details on how to
 make one.
 ```{r sigora_enrichment}
 enrichedResultsSigora <- pathwayEnrichment(
-    inputList=deseqExampleList,
+    inputList=exampleDESeqResults,
     analysis="sigora",
     filterInput=TRUE,
     gpsRepo="default"
@@ -311,7 +311,7 @@ If you prefer to test the up- and down-regulated genes together, simply set the
 option `split=FALSE`:
 ```{r sigora_enrichment_no_split}
 enrichedResultsSigoraNoSplit <- pathwayEnrichment(
-    inputList=deseqExampleList,
+    inputList=exampleDESeqResults,
     analysis="sigora",
     filterInput=TRUE,
     gpsRepo="default",
@@ -330,11 +330,11 @@ tested for significance by DESeq2 (i.e. all genes from the count matrix),
 converting them to Entrez gene IDs before running the test.
 ```{r reactomepa_enrichment}
 exGeneUniverse <- mappingFile %>% 
-    filter(ensemblGeneId %in% rownames(deseqExampleList[[1]])) %>% 
+    filter(ensemblGeneId %in% rownames(exampleDESeqResults[[1]])) %>% 
     pull(entrezGeneId)
 
 enrichedResultsRpa <- pathwayEnrichment(
-    inputList=deseqExampleList,
+    inputList=exampleDESeqResults,
     analysis="reactomepa",
     filterInput=TRUE,
     split=TRUE,
@@ -354,7 +354,7 @@ summary of key biological processes compared to the more granular Reactome
 pathways.
 ```{r hallmark_enrichment}
 enrichedResultsHm <- pathwayEnrichment(
-    inputList=deseqExampleList,
+    inputList=exampleDESeqResults,
     analysis="hallmark",
     filterInput=TRUE,
     split=TRUE

@@ -75,7 +75,7 @@ method can be found at \code{?igraph::hub_score}.
 }
 \examples{
 ppiBuildNetwork(
-    deseqResults=deseqExampleList[[1]],
+    deseqResults=exampleDESeqResults[[1]],
     filterInput=TRUE,
     order="zero"
 )

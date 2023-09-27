@@ -89,7 +89,7 @@ Rownames are assumed to contain the input Ensembl genes to be tested.
 }
 \examples{
 pathwayEnrichment(
-    inputList=deseqExampleList[1],
+    inputList=exampleDESeqResults[1],
     filterInput=TRUE,
     split=TRUE,
     analysis="reactomepa",

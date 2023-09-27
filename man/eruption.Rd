@@ -99,7 +99,7 @@ Since this function returns a ggplot object, further custom changes could
 be applied using the standard ggplot2 functions.
 }
 \examples{
-eruption(deseqResult=deseqExampleList[[1]])
+eruption(deseqResult=exampleDESeqResults[[1]])
 
 }
 \references{

@@ -43,7 +43,7 @@
 #'
 #' @examples
 #' exNetwork <- ppiBuildNetwork(
-#'     deseqResults=deseqExampleList[[1]],
+#'     deseqResults=exampleDESeqResults[[1]],
 #'     filterInput=TRUE,
 #'     order="zero"
 #' )

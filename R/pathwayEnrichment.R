@@ -75,7 +75,7 @@
 #'
 #' @examples
 #' pathwayEnrichment(
-#'     inputList=deseqExampleList[1],
+#'     inputList=exampleDESeqResults[1],
 #'     filterInput=TRUE,
 #'     split=TRUE,
 #'     analysis="reactomepa",
