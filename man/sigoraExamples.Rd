@@ -4,7 +4,7 @@
 \name{sigoraExamples}
 \alias{sigoraExamples}
 \title{Example Sigora output from running \code{pathwayEnrichment} on
-"deseqExampleList"}
+"exampleDESeqResults"}
 \format{
 A data frame (tibble) with 66 rows and 12 columns
 \describe{
@@ -31,6 +31,6 @@ An object of class "tbl", "tbl.df", "data.frame"
 }
 \description{
 Example Sigora output from running \code{pathwayEnrichment} on
-"deseqExampleList"
+"exampleDESeqResults"
 }
 \keyword{datasets}

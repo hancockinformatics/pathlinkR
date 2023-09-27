@@ -61,7 +61,7 @@
 #' @seealso <https://github.com/hancockinformatics/pathlinkR>
 #'
 #' @examples
-#' eruption(deseqResult=deseqExampleList[[1]])
+#' eruption(deseqResult=exampleDESeqResults[[1]])
 #'
 eruption <- function(
         deseqResult,

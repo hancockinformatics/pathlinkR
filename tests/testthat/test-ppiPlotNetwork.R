@@ -5,7 +5,7 @@ test_that("we get the right plot output", {
     set.seed(1)
 
     exNetwork <- ppiBuildNetwork(
-        deseqResults=deseqExampleList[[1]],
+        deseqResults=exampleDESeqResults[[1]],
         filterInput=TRUE,
         order="zero"
     )
@@ -26,7 +26,7 @@ test_that("plotting subnetworks works as expected", {
     set.seed(1)
 
     exNetwork2 <- ppiBuildNetwork(
-        deseqResults=deseqExampleList[[1]],
+        deseqResults=exampleDESeqResults[[1]],
         filterInput=TRUE,
         order="zero"
     )
