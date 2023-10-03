@@ -80,35 +80,6 @@ including:
 - Plot either log2 or non-log2 fold change (for a better sense of magnitude)
 - Highlight specific gene sets of interest
 
-Since we're looking at COVID-19 in this example data set, let's highlight genes
-in the interferon signaling pathway. We'll use a database of Reactome pathways
-used by the pathway enrichment package
-[Sigora](https://cran.r-project.org/package=sigora) to find the genes involved
-in interferon signaling. More information on Reactome pathways and the Sigora
-package can be found in the pathway enrichment section below.
-
-Let's make the following adjustment to the standard volcano plot:
-
-- Highlight the interferon genes and provide a brief description
-- Converts the x-axis from log2 fold change to non-log2 fold change
-- Label only the top 10 up- and down-regulated genes which belong to the 
-    interferon pathway
-```{r customized_volcano_plot}
-interferonGenes <- sigoraDatabase %>% 
-    filter(pathwayName == "Interferon Signaling") %>% 
-    pull(ensemblGeneId)
-
-eruption(
-    deseqResult=exampleDESeqResults[[1]],
-    title=names(exampleDESeqResults[1]),
-    highlightGenes=interferonGenes,
-    highlightName="Interferon genes (red)",
-    label="highlight",
-    nonlog2=TRUE,
-    n=10
-)
-```
-
 
 # Visualizing fold changes across comparisons
 In addition to creating volcano plots, we can also visualize our DEGs using
@@ -124,32 +95,13 @@ plotFoldChange(
 )
 ```
 
-Another example, with more customization:
+A number of options are provided for customization, including:
 
 - Shorten the names of each comparison
 - Provide a custom list of genes to visualize, and add an informative title
 - Use log2 fold changes in the heatmap cells
 - Swap the rows and columns from the default, and add a split between the rows
     (comparisons)
-```{r plot_fold_changes_II}
-exampleDESeqResultsRenamed <- setNames(
-    exampleDESeqResults,
-    c("Pos", "Neg")
-)
-
-plotFoldChange(
-    exampleDESeqResultsRenamed,
-    manualTitle="Signature genes",
-    genesToPlot=c("CD4", "CD8A","CD8B", "CD28", "ZAP70"),
-    geneFormat="hgnc",
-    colSplit=c("Pos", "Neg"),
-    log2FoldChange=TRUE,
-    colAngle=45,
-    clusterRows=FALSE,
-    clusterColumns=TRUE,
-    invert=TRUE
-)
-```
 
 
 # Building and visualizing PPI networks
@@ -193,31 +145,6 @@ network; i.e. those genes which have a high betweenness score. The statistic
 used to determine hub nodes can be set in `ppiBuildNetwork()` with the
 "hubMeasure" option.
 
-Let's make some tweaks to this standard network. The output of
-`ppiBuildNetwork()` is a *tidygraph* object, meaning we can use the suite of
-**dplyr** verbs to make changes. So let's add a column to denote if a DEG is
-from the interferon pathway (defined above) and highlight only those genes.
-```{r ppi_network_tweaks}
-exNetworkInterferon <- mutate(
-    exNetwork,
-    isInterferon = if_else(name %in% interferonGenes, "y", "n")
-)
-
-ppiPlotNetwork(
-    network=exNetworkInterferon,
-    networkLayout="lgl",
-    title=names(exampleDESeqResults)[1],
-    fillColumn=isInterferon,
-    fillType="categorical",
-    catFillColours=c("y"="red", "n"="grey"),
-    label=TRUE,
-    labelColumn=hgncSymbol,
-    legend=TRUE,
-    legendTitle="Interferon\ngenes"
-)
-```
-
-
 ## Enriching networks and extracting subnetworks
 **pathlinkR** includes two functions for further analyzing PPI networks. First, 
 `ppiEnrichNetwork()` will use the node table from a network to test for enriched
@@ -230,8 +157,6 @@ exNetworkPathways <- ppiEnrichNetwork(
     filterResults="default",
     geneUniverse = rownames(exampleDESeqResults[[1]])
 )
-
-exNetworkPathways
 ```
 
 Second, the function `ppiExtractSubnetwork()` can extract a minimally-connected
@@ -307,20 +232,6 @@ enrichedResultsSigora <- pathwayEnrichment(
 head(enrichedResultsSigora)
 ```
 
-If you prefer to test the up- and down-regulated genes together, simply set the
-option `split=FALSE`:
-```{r sigora_enrichment_no_split}
-enrichedResultsSigoraNoSplit <- pathwayEnrichment(
-    inputList=exampleDESeqResults,
-    analysis="sigora",
-    filterInput=TRUE,
-    gpsRepo="default",
-    split=FALSE
-)
-
-head(enrichedResultsSigoraNoSplit)
-```
-
 For those who still prefer traditional over-representation analysis, we include
 the option of doing so by setting `analysis="reactomepa"`, which uses
 [ReactomePA](https://www.bioconductor.org/packages/ReactomePA/) (Yu et al.
@@ -388,7 +299,7 @@ pathwayPlots(
 )
 ```
 
-Let's again plot the sigora results, this time with the following tweaks:
+A variety of tweaks can be applied to these plot as well:
 
 - Only show immune-related pathways based on the top pathway grouping
 - Change the colour scaling used for the adjusted p-values
@@ -396,17 +307,6 @@ Let's again plot the sigora results, this time with the following tweaks:
     display horizontally
 - Add the number of DEGs used for enrichment below the comparison name
 - Increase the truncation cutoff value of pathway names for more words
-```{r plot_pathways_II, fig.width=8, fig.height=8}
-pathwayPlots(
-    enrichedResultsSigora,
-    specificTopPathways="Immune System",
-    colourValues=c("#440154", "#FDE725"),
-    newGroupNames=c("COVID\nPositive", "COVID\nNegative"),
-    showNumGenes=TRUE,
-    xAngle="horizontal",
-    nameWidth=50
-)
-```
 
 From these results, you can see that while many of the immune system pathways
 change in the same direction over time in COVID-19 and non-COVID-19 sepsis
@@ -463,17 +363,8 @@ significance, while edge thickness relates to the similarity of two connected
 pathways.
 
 Though this type of visualization is useful, we can also display this network 
-using an alternate method that creates an interactive display:
-```{r pathway_network_II}
-pathnetVisNetwork(myPathwayNetwork)
-```
-
-Nodes within this network can be dragged around and re-positioned. Or hold the
-**SHIFT** key while clicking-and-dragging to select (and move) multiple nodes at
-once. Clicking on a single node will highlight its direct neighbours, and the
-dropdown at the top-left corner will highlight pathways from a specific category
-(e.g. Immune/Hemostasis).
-
+using an alternate method that creates an interactive display, with the function
+'pathnetVisNetwork().
 
 ## Pathway networks using only DEGs
 Another option is to use only DEGs when generating the pathway network
@@ -491,7 +382,7 @@ candidateData <- sigoraExamples %>%
     relocate(pathwayId, ensemblGeneId, "hgncSymbol"=genes, pathwayName) %>%
     distinct()
 
-## Now that we have a smaller table in the same format as sigoraDatabase, we
+## Now that we have a smaller table in the same format as "sigoraDatabase", we
 ## can construct our own matrix of pathway distances
 candidateDistData <- getPathwayDistances(
     pathwayData=candidateData,
@@ -511,8 +402,6 @@ candidatesAsNetwork <- pathnetCreate(
     foundation=candidateStartingPathways,
     trim=FALSE
 )
-
-pathnetVisNetwork(candidatesAsNetwork, nodeLabelSize=30)
 ```
 
 
