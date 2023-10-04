@@ -19,7 +19,7 @@ vignette: >
 </head>
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo=TRUE, comment="")
+knitr::opts_chunk$set(echo=TRUE, comment="", dev="png")
 ```
 
 This vignette contains some minimal examples for the main **pathlinkR** 
@@ -91,7 +91,7 @@ significant by `pathwayEnrichment()`). The function `plotFoldChange()`
 accomplishes this by taking in an input list of `DESeq2::results()` data frames,
 just like `pathwayEnrichment()`, and creating a heatmap of fold changes for the
 constituent genes.
-```{r plot_fold_changes_I, fig.height=10}
+```{r plot_fold_changes_I, fig.height=8}
 plotFoldChange(
     exampleDESeqResults,
     pathName="Interferon alpha/beta signaling"
@@ -125,7 +125,7 @@ genes which pass the standard thresholds (defined above). Since we're
 visualizing a network of DEGs, let's colour the nodes to indicate the direction
 of their dysregulation (i.e. up- or down-regulated) by specifying
 `fillType="foldChange"`.
-```{r ppi_networks, fig.width=12, fig.height=10, warning=FALSE}
+```{r ppi_networks, fig.width=10, fig.height=8, warning=FALSE}
 exNetwork <- ppiBuildNetwork(
     deseqResults=exampleDESeqResults[[1]],
     filterInput=TRUE,
@@ -295,7 +295,7 @@ p-value) direction is displayed. You can also change the angle/labels of the
 comparisons, or add the number of DEGs in each comparison below the labels.
 Lastly, you can specify which pathways or top pathway groups to include for
 visualization.
-```{r plot_pathways_I, fig.width=12, fig.height=10}
+```{r plot_pathways_I, fig.width=10, fig.height=8}
 pathwayPlots(
     pathwayEnrichmentResults=enrichedResultsSigora, 
     columns=2
@@ -356,9 +356,10 @@ There are two options for visualization, the first being a static network:
 pathnetGGraph(
     myPathwayNetwork,
     labelProp=0.1,
-    nodeLabelSize=4,
+    nodeLabelSize=3,
     nodeLabelOverlaps=8,
-    segColour="red"
+    segColour="red",
+    themeBaseSize = 14
 )
 ```
 
