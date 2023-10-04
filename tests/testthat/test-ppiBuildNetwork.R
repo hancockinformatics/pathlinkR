@@ -42,7 +42,7 @@ test_that("simple minimum order networks behave as expected", {
 
     expect_equal(
         nrow(as_tibble(tidygraph::activate(exNetworkSimple, "edges"))),
-        15824
+        15822
     )
 
     expect_equal(

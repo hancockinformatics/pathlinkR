@@ -37,18 +37,14 @@
 #' components but are swapped between A and B.
 #'
 #' @return An object of class "tbl", "tbl.df", "data.frame"
-#' @format A data frame (tibble) with 152259 rows and 4 columns:
+#' @format A data frame (tibble) with 152,256 rows and 2 columns:
 #' \describe{
 #'   \item{ensemblGeneA}{Ensembl gene ID for the first gene/protein in the
 #'     interaction}
-#'   \item{hgncSymbolA}{HGNC symbol for the first gene/protein in the
-#'     interaction}
 #'   \item{ensemblGeneB}{Ensembl gene ID for the second gene/protein in the
 #'     interaction}
-#'   \item{hgncSymbolB}{HGNC symbol for the second gene/protein in the
-#'     interaction}
 #' }
-"innateDbExp"
+"innateDbPPI"
 
 #' Table of human gene ID mappings
 #'

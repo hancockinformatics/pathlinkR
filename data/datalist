@@ -1,7 +1,7 @@
 exampleDESeqResults
 groupedPathwayColours
 hallmarkDatabase
-innateDbExp
+innateDbPPI
 mappingFile
 pathwayCategories
 pathwayDistancesJaccard

@@ -39,7 +39,7 @@ utils::globalVariables(c(
         "ID",
         "idmap",
         "inList",
-        "innateDbExp",
+        "innateDbPPI",
         "is",
         "isHub",
         "isStarter",
