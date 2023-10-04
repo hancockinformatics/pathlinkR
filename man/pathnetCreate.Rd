@@ -58,6 +58,8 @@ and the optimal value will depend on the number of enriched pathways and
 the number of interacting pathways (i.e. number of rows in "foundation").
 }
 \examples{
+pathwayDistancesJaccard <- getPathwayDistances()
+
 startingPathways <- pathnetFoundation(
     mat=pathwayDistancesJaccard,
     maxDistance=0.8

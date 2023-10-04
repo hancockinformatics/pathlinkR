@@ -334,8 +334,10 @@ Jaccard distance, but there is support for multiple distance measures to be
 used. Once this "foundation" of pathway interactions is created, a pathway
 network can be built using the `createPathnet` function:
 ```{r pathway_network_I, fig.width=12, fig.height=10, warning=FALSE}
+pathwayDistancesJaccard <- getPathwayDistances()
+
 startingPathways <- pathnetFoundation(
-    mat=pathwayDistancesJaccard, # Using pre-computed distances
+    mat=pathwayDistancesJaccard,
     maxDistance=0.8
 )
 

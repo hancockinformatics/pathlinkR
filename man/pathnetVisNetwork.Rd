@@ -63,6 +63,8 @@ highlighting nodes belonging to a larger group (e.g. top-level Reactome
 category).
 }
 \examples{
+pathwayDistancesJaccard <- getPathwayDistances()
+
 startingPathways <- pathnetFoundation(
     mat=pathwayDistancesJaccard,
     maxDistance=0.8
