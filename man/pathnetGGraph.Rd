@@ -75,6 +75,8 @@ labels. You'll likely need to tweak this value, and try different seeds, to
 get the desired effect.
 }
 \examples{
+pathwayDistancesJaccard <- getPathwayDistances()
+
 startingPathways <- pathnetFoundation(
     mat=pathwayDistancesJaccard,
     maxDistance=0.8

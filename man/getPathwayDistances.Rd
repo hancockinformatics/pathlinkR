@@ -25,10 +25,6 @@ Given a data frame of pathways and their member genes, calculate
 the pairwise distances using a constructed identity matrix. Zero means two
 pathways are identical, while one means two pathways share no genes in
 common.
-
-\code{pathlinkR} includes an example distance object
-(\code{pathwayDistancesJaccard}), created using the included
-"sigoraDatabase" object and the Jaccard distance measure.
 }
 \examples{
 # Here we'll use a subset of pathways to save time

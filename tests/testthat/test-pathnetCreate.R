@@ -1,4 +1,6 @@
 test_that("the pathway network is the right size", {
+    pathwayDistancesJaccard <- getPathwayDistances()
+
     testStartingPathways <- pathnetFoundation(
         mat=pathwayDistancesJaccard,
         maxDistance=0.8

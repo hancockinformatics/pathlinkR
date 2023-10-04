@@ -1,10 +1,9 @@
 exampleDESeqResults
 groupedPathwayColours
 hallmarkDatabase
-innateDbExp
+innateDbPPI
 mappingFile
 pathwayCategories
-pathwayDistancesJaccard
 reactomeDatabase
 sigoraDatabase
 sigoraExamples

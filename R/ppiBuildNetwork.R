@@ -79,7 +79,7 @@ ppiBuildNetwork <- function(
         fcCutoff=1.5,
         order="zero",
         hubMeasure="betweenness",
-        ppiData=innateDbExp
+        ppiData=innateDbPPI
 ) {
 
     stopifnot(is(deseqResults, "data.frame"))

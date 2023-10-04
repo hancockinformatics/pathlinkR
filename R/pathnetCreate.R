@@ -57,6 +57,8 @@
 #' @seealso <https://github.com/hancockinformatics/pathlinkR>
 #'
 #' @examples
+#' pathwayDistancesJaccard <- getPathwayDistances()
+#'
 #' startingPathways <- pathnetFoundation(
 #'     mat=pathwayDistancesJaccard,
 #'     maxDistance=0.8
