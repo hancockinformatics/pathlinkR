@@ -22,6 +22,9 @@ vignette: >
 knitr::opts_chunk$set(echo=TRUE, comment="")
 ```
 
+This vignette contains some minimal examples for the main **pathlinkR** 
+functions; for more complete documentation, please see our [Github pages](https://hancockinformatics.github.io/pathlinkRdocs/).
+
 
 # Introduction
 Often times, gene expression studies such as microarrays and RNA-Seq result in
@@ -362,47 +365,11 @@ Nodes (pathways) which are filled in are enriched pathways (i.e. those output by
 significance, while edge thickness relates to the similarity of two connected
 pathways.
 
-Though this type of visualization is useful, we can also display this network 
+Though this type of visualization is useful, we can also display this network
 using an alternate method that creates an interactive display, with the function
-'pathnetVisNetwork().
-
-## Pathway networks using only DEGs
-Another option is to use only DEGs when generating the pathway network
-information, as outlined below:
-```{r pathway_network_III}
-candidateData <- sigoraExamples %>%
-    filter(comparison == "COVID Pos Over Time") %>% 
-    select(pathwayId, genes) %>%
-    tidyr::separate_rows(genes, sep=";") %>%
-    left_join(
-        sigoraDatabase,
-        by=c("pathwayId", "genes" = "hgncSymbol"),
-        multiple="all"
-    ) %>%
-    relocate(pathwayId, ensemblGeneId, "hgncSymbol"=genes, pathwayName) %>%
-    distinct()
-
-## Now that we have a smaller table in the same format as "sigoraDatabase", we
-## can construct our own matrix of pathway distances
-candidateDistData <- getPathwayDistances(
-    pathwayData=candidateData,
-    distMethod="jaccard"
-)
-
-candidateStartingPathways <- pathnetFoundation(
-    mat=candidateDistData,
-    maxDistance=0.9
-)
-
-candidatesAsNetwork <- pathnetCreate(
-    pathwayEnrichmentResult=filter(
-        sigoraExamples, 
-        comparison == "COVID Pos Over Time"
-    ),
-    foundation=candidateStartingPathways,
-    trim=FALSE
-)
-```
+`pathnetVisNetwork()`; see our 
+[Github pages](https://hancockinformatics.github.io/pathlinkRdocs/) for these
+details.
 
 
 # Supplemental materials
