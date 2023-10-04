@@ -1,4 +1,7 @@
 test_that("the foundation has the right dimensions and columns", {
+
+    pathwayDistancesJaccard <- getPathwayDistances()
+
     testStartingPathways <- pathnetFoundation(
         mat=pathwayDistancesJaccard,
         maxDistance=0.8

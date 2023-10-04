@@ -71,16 +71,6 @@
 #' }
 "pathwayCategories"
 
-#' Matrix of pairwise Jaccard indices for all human Reactome pathways
-#'
-#' @return An object of class "matrix"
-#' @format A matrix with 1001 rows and columns
-#' \describe{
-#'   \item{Rows}{Reactome pathway identifiers}
-#'   \item{Columns}{Reactome pathway identifiers}
-#' }
-"pathwayDistancesJaccard"
-
 #' Table of all Reactome pathways and genes
 #'
 #' @return An object of class "tbl", "tbl.df", "data.frame"

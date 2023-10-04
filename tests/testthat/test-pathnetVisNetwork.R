@@ -1,6 +1,8 @@
 test_that("pathVisNetwork returns the right plot", {
     set.seed(1)
 
+    pathwayDistancesJaccard <- getPathwayDistances()
+
     startingPathways <- pathnetFoundation(
         mat = pathwayDistancesJaccard,
         maxDistance = 0.8
