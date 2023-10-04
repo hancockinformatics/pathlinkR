@@ -1,6 +1,5 @@
 # Load packages -----------------------------------------------------------
 
-library(biomaRt)
 library(dplyr)
 
 
@@ -33,35 +32,9 @@ innatedbNoDups <- innatedbTrimmed[
 ]
 
 
-# Get gene mapping from biomaRt -------------------------------------------
-
-biomartMapping <- getBM(
-  mart=useMart("ensembl", dataset="hsapiens_gene_ensembl"),
-  attributes=c("ensembl_gene_id", "hgnc_symbol")
-)
-
-
-# Map the interactors -----------------------------------------------------
-
-innatedbMapped <- innatedbNoDups %>%
-  left_join(
-    biomartMapping,
-    by=c("ensemblGeneA" = "ensembl_gene_id"),
-    multiple="all"
-  ) %>%
-  rename("hgncSymbolA" = hgnc_symbol) %>%
-  left_join(
-    biomartMapping,
-    by=c("ensemblGeneB" = "ensembl_gene_id"),
-    multiple="all"
-  ) %>%
-  rename("hgncSymbolB" = hgnc_symbol) %>%
-  relocate(ends_with("A"))
-
-
 # Remove promiscuous interactors ------------------------------------------
 
-innateDbExp <- innatedbMapped %>%
+innateDbPPI <- innatedbNoDups %>%
   group_by(ensemblGeneA) %>%
   filter(n() < 1000) %>%
   ungroup() %>%
@@ -72,4 +45,4 @@ innateDbExp <- innatedbMapped %>%
 
 # Save the data -----------------------------------------------------------
 
-usethis::use_data(innateDbExp, overwrite=TRUE)
+usethis::use_data(innateDbPPI, overwrite=TRUE)

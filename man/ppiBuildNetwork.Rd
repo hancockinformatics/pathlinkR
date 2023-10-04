@@ -11,7 +11,7 @@ ppiBuildNetwork(
   fcCutoff = 1.5,
   order = "zero",
   hubMeasure = "betweenness",
-  ppiData = innateDbExp
+  ppiData = innateDbPPI
 )
 }
 \arguments{
