@@ -27,7 +27,7 @@ pathways are identical, while one means two pathways share no genes in
 common.
 }
 \examples{
-# Here we'll use a subset of pathways to save time
+# Here we'll use a subset of all the pathways, to save time
 getPathwayDistances(
     pathwayData=dplyr::slice_head(
         dplyr::arrange(sigoraDatabase, pathwayId),

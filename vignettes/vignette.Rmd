@@ -23,7 +23,8 @@ knitr::opts_chunk$set(echo=TRUE, comment="", dev="png")
 ```
 
 This vignette contains some minimal examples for the main **pathlinkR** 
-functions; for more complete documentation, please see our [Github pages](https://hancockinformatics.github.io/pathlinkRdocs/).
+functions; for more complete documentation, please see our 
+[Github pages](https://hancockinformatics.github.io/pathlinkRdocs/).
 
 
 # Introduction
