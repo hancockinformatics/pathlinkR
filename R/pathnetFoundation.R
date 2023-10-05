@@ -39,12 +39,14 @@
 #' @seealso <https://github.com/hancockinformatics/pathlinkR>
 #'
 #' @examples
-#' pathwayDistancesJaccard <- getPathwayDistances()
+#' if (FALSE) {
+#'     pathwayDistancesJaccard <- getPathwayDistances()
 #'
-#' startingPathways <- pathnetFoundation(
-#'     mat=pathwayDistancesJaccard,
-#'     maxDistance=0.8
-#' )
+#'     startingPathways <- pathnetFoundation(
+#'         mat=pathwayDistancesJaccard,
+#'         maxDistance=0.8
+#'     )
+#' }
 #'
 pathnetFoundation <- function(mat, maxDistance=NA, propToKeep=NA) {
     stopifnot(all(rownames(mat) == colnames(mat)))

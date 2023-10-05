@@ -29,7 +29,7 @@
 #' @seealso <https://github.com/hancockinformatics/pathlinkR>
 #'
 #' @examples
-#' # Here we'll use a subset of pathways to save time
+#' # Here we'll use a subset of all the pathways, to save time
 #' getPathwayDistances(
 #'     pathwayData=dplyr::slice_head(
 #'         dplyr::arrange(sigoraDatabase, pathwayId),
