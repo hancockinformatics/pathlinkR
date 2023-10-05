@@ -75,29 +75,31 @@ labels. You'll likely need to tweak this value, and try different seeds, to
 get the desired effect.
 }
 \examples{
-pathwayDistancesJaccard <- getPathwayDistances()
+if (FALSE) {
+    pathwayDistancesJaccard <- getPathwayDistances()
 
-startingPathways <- pathnetFoundation(
-    mat=pathwayDistancesJaccard,
-    maxDistance=0.8
-)
+    startingPathways <- pathnetFoundation(
+        mat=pathwayDistancesJaccard,
+        maxDistance=0.8
+    )
 
-exPathnet <- pathnetCreate(
-    pathwayEnrichmentResult=sigoraExamples[
-        grepl("Pos", sigoraExamples$comparison),
-    ],
-    foundation=startingPathways,
-    trim=TRUE,
-    trimOrder=1
-)
+    exPathnet <- pathnetCreate(
+        pathwayEnrichmentResult=sigoraExamples[
+            grepl("Pos", sigoraExamples$comparison),
+        ],
+        foundation=startingPathways,
+        trim=TRUE,
+        trimOrder=1
+    )
 
-pathnetGGraph(
-    exPathnet,
-    labelProp=0.1,
-    nodeLabelSize=4,
-    nodeLabelOverlaps=8,
-    segColour="red"
-)
+    pathnetGGraph(
+        exPathnet,
+        labelProp=0.1,
+        nodeLabelSize=4,
+        nodeLabelOverlaps=8,
+        segColour="red"
+    )
+}
 
 }
 \references{

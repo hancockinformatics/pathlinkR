@@ -63,23 +63,25 @@ highlighting nodes belonging to a larger group (e.g. top-level Reactome
 category).
 }
 \examples{
-pathwayDistancesJaccard <- getPathwayDistances()
+if (FALSE) {
+    pathwayDistancesJaccard <- getPathwayDistances()
 
-startingPathways <- pathnetFoundation(
-    mat=pathwayDistancesJaccard,
-    maxDistance=0.8
-)
+    startingPathways <- pathnetFoundation(
+        mat=pathwayDistancesJaccard,
+        maxDistance=0.8
+    )
 
-exPathnet <- pathnetCreate(
-    pathwayEnrichmentResult=sigoraExamples[
-        grepl("Pos", sigoraExamples$comparison),
-    ],
-    foundation=startingPathways,
-    trim=TRUE,
-    trimOrder=1
-)
+    exPathnet <- pathnetCreate(
+        pathwayEnrichmentResult=sigoraExamples[
+            grepl("Pos", sigoraExamples$comparison),
+        ],
+        foundation=startingPathways,
+        trim=TRUE,
+        trimOrder=1
+    )
 
-pathnetVisNetwork(exPathnet)
+    pathnetVisNetwork(exPathnet)
+}
 
 }
 \references{

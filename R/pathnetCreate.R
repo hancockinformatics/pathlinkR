@@ -57,21 +57,23 @@
 #' @seealso <https://github.com/hancockinformatics/pathlinkR>
 #'
 #' @examples
-#' pathwayDistancesJaccard <- getPathwayDistances()
+#' if (FALSE) {
+#'     pathwayDistancesJaccard <- getPathwayDistances()
 #'
-#' startingPathways <- pathnetFoundation(
-#'     mat=pathwayDistancesJaccard,
-#'     maxDistance=0.8
-#' )
+#'     startingPathways <- pathnetFoundation(
+#'         mat=pathwayDistancesJaccard,
+#'         maxDistance=0.8
+#'     )
 #'
-#' pathnetCreate(
-#'     pathwayEnrichmentResult=sigoraExamples[
-#'         grepl("Pos", sigoraExamples$comparison),
-#'     ],
-#'     foundation=startingPathways,
-#'     trim=TRUE,
-#'     trimOrder=1
-#' )
+#'     pathnetCreate(
+#'         pathwayEnrichmentResult=sigoraExamples[
+#'             grepl("Pos", sigoraExamples$comparison),
+#'         ],
+#'         foundation=startingPathways,
+#'         trim=TRUE,
+#'         trimOrder=1
+#'     )
+#' }
 #'
 pathnetCreate <- function(
         pathwayEnrichmentResult,
