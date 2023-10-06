@@ -1,7 +1,10 @@
 test_that("pathVisNetwork returns the right plot", {
     set.seed(1)
 
-    pathwayDistancesJaccard <- getPathwayDistances()
+    pathwayDistancesJaccard <- getPathwayDistances(
+        pathwayData=slice_head(arrange(sigoraDatabase, pathwayId), prop = 0.25),
+        distMethod="jaccard"
+    )
 
     startingPathways <- pathnetFoundation(
         mat = pathwayDistancesJaccard,

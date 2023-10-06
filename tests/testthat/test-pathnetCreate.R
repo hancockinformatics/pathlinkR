@@ -1,5 +1,8 @@
 test_that("the pathway network is the right size", {
-    pathwayDistancesJaccard <- getPathwayDistances()
+    pathwayDistancesJaccard <- getPathwayDistances(
+      pathwayData=slice_head(arrange(sigoraDatabase, pathwayId), prop = 0.25),
+      distMethod="jaccard"
+    )
 
     testStartingPathways <- pathnetFoundation(
         mat=pathwayDistancesJaccard,
@@ -16,5 +19,5 @@ test_that("the pathway network is the right size", {
         trimOrder=1
     )
 
-    expect_length(testMyPathwayNetwork, 98)
+    expect_length(testMyPathwayNetwork, 27)
 })
