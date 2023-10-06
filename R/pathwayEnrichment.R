@@ -78,7 +78,7 @@
 #'     inputList=exampleDESeqResults[1],
 #'     filterInput=TRUE,
 #'     split=TRUE,
-#'     analysis="reactomepa",
+#'     analysis="hallmark",
 #'     filterResults="default",
 #' )
 #'
