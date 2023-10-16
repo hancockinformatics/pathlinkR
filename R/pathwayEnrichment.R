@@ -224,7 +224,8 @@ pathwayEnrichment <- function(
                     left_join(
                         mappingFile,
                         by=c("geneID" = "entrezGeneId"),
-                        multiple="all"
+                        multiple="all",
+                        relationship="many-to-many"
                     ) %>%
                     select(
                         -any_of(c("geneID", "entrezGeneId", "ensemblGeneId"))
@@ -261,7 +262,8 @@ pathwayEnrichment <- function(
                     left_join(
                         mappingFile,
                         by=c("geneID" = "ensemblGeneId"),
-                        multiple="all"
+                        multiple="all",
+                        relationship="many-to-many"
                     ) %>%
                     select(
                         -any_of(c("geneID", "entrezGeneId", "ensemblGeneId"))
