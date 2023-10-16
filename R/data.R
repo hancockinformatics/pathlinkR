@@ -29,12 +29,14 @@
 #' }
 "hallmarkDatabase"
 
-#' A data frame containing human PPI data from InnateDB, from the entry
-#' "All Experimentally Validated Interactions (updated weekly)" at
-#' <https://innatedb.com/redirect.do?go=downloadImported>.
-#' A few important steps have been taken to filter the data, namely the removal
-#' of duplicate interactions, and removing interactions that have the same
-#' components but are swapped between A and B.
+#' InnateDB PPI data
+#'
+#' @description A data frame containing human PPI data from InnateDB, from the
+#'   entry "All Experimentally Validated Interactions (updated weekly)" at
+#'   <https://innatedb.com/redirect.do?go=downloadImported>. A few important
+#'   steps have been taken to filter the data, namely the removal of duplicate
+#'   interactions, and removing interactions that have the same components but
+#'   are swapped between A and B.
 #'
 #' @return An object of class "tbl", "tbl.df", "data.frame"
 #' @format A data frame (tibble) with 152,256 rows and 2 columns:
@@ -94,8 +96,10 @@
 #' }
 "sigoraDatabase"
 
-#' Example Sigora output from running `pathwayEnrichment` on
-#' "exampleDESeqResults"
+#' Sigora enrichment example
+#'
+#' @description Example Sigora output from running `pathwayEnrichment` on
+#'   "exampleDESeqResults"
 #'
 #' @return An object of class "tbl", "tbl.df", "data.frame"
 #' @format A data frame (tibble) with 66 rows and 12 columns

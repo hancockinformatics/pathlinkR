@@ -3,12 +3,7 @@
 \docType{data}
 \name{innateDbPPI}
 \alias{innateDbPPI}
-\title{A data frame containing human PPI data from InnateDB, from the entry
-"All Experimentally Validated Interactions (updated weekly)" at
-\url{https://innatedb.com/redirect.do?go=downloadImported}.
-A few important steps have been taken to filter the data, namely the removal
-of duplicate interactions, and removing interactions that have the same
-components but are swapped between A and B.}
+\title{InnateDB PPI data}
 \format{
 A data frame (tibble) with 152,256 rows and 2 columns:
 \describe{
@@ -25,11 +20,11 @@ innateDbPPI
 An object of class "tbl", "tbl.df", "data.frame"
 }
 \description{
-A data frame containing human PPI data from InnateDB, from the entry
-"All Experimentally Validated Interactions (updated weekly)" at
-\url{https://innatedb.com/redirect.do?go=downloadImported}.
-A few important steps have been taken to filter the data, namely the removal
-of duplicate interactions, and removing interactions that have the same
-components but are swapped between A and B.
+A data frame containing human PPI data from InnateDB, from the
+entry "All Experimentally Validated Interactions (updated weekly)" at
+\url{https://innatedb.com/redirect.do?go=downloadImported}. A few important
+steps have been taken to filter the data, namely the removal of duplicate
+interactions, and removing interactions that have the same components but
+are swapped between A and B.
 }
 \keyword{datasets}

@@ -3,8 +3,7 @@
 \docType{data}
 \name{sigoraExamples}
 \alias{sigoraExamples}
-\title{Example Sigora output from running \code{pathwayEnrichment} on
-"exampleDESeqResults"}
+\title{Sigora enrichment example}
 \format{
 A data frame (tibble) with 66 rows and 12 columns
 \describe{
