@@ -3,8 +3,7 @@
 \docType{data}
 \name{pathwayCategories}
 \alias{pathwayCategories}
-\title{Manually-curated list of Reactome and Hallmark pathways and their top
-pathways and grouped pathways}
+\title{Top-level pathway categories}
 \format{
 A data frame (tibble) with 2685 rows and 5 columns
 \describe{
@@ -15,6 +14,11 @@ A data frame (tibble) with 2685 rows and 5 columns
 \item{topLevelOriginal}{Original top pathway name}
 }
 }
+\source{
+See \url{https://reactome.org/} and
+\url{https://www.gsea-msigdb.org/gsea/msigdb/collections.jsp} for
+information on each of these databases.
+}
 \usage{
 pathwayCategories
 }
@@ -22,7 +26,7 @@ pathwayCategories
 An object of class "tbl", "tbl.df", "data.frame"
 }
 \description{
-Manually-curated list of Reactome and Hallmark pathways and their top
-pathways and grouped pathways
+A data frame containing all Reactome pathways and Hallmark
+terms, along with a manually-curated top-level category for each entry.
 }
 \keyword{datasets}

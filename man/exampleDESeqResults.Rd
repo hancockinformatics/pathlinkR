@@ -15,6 +15,10 @@ A list of two data frames, each with 5000 rows and 6 columns:
 \item{padj}{The adjusted p value for the gene}
 }
 }
+\source{
+For details on DESeq2 and its data structures/methods, please see
+\url{https://bioconductor.org/packages/DESeq2/}
+}
 \usage{
 exampleDESeqResults
 }

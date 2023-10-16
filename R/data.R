@@ -11,12 +11,16 @@
 #'   \item{padj}{The adjusted p value for the gene}
 #' }
 #'
+#' @source For details on DESeq2 and its data structures/methods, please see
+#' \url{https://bioconductor.org/packages/DESeq2/}
+#'
 "exampleDESeqResults"
 
 #' Colour assignments for grouped pathways
 #'
 #' @return An object of class "character"
 #' @format A length 8 named vector of hex colour values
+#'
 "groupedPathwayColours"
 
 #' Table of Hallmark gene sets and their genes
@@ -27,6 +31,10 @@
 #'   \item{pathwayId}{Name of the Hallmark Gene Set}
 #'   \item{ensemblGeneId}{Ensembl gene IDs}
 #' }
+#'
+#' @source For more information on the MSigDB Hallmark gene sets, please see
+#' \url{https://www.gsea-msigdb.org/gsea/msigdb/collections.jsp}
+#'
 "hallmarkDatabase"
 
 #' InnateDB PPI data
@@ -46,9 +54,17 @@
 #'   \item{ensemblGeneB}{Ensembl gene ID for the second gene/protein in the
 #'     interaction}
 #' }
+#'
+#' @source For more details on the data sourced from InnateDB, please see
+#' their website: \url{https://www.innatedb.com}
+#'
 "innateDbPPI"
 
 #' Table of human gene ID mappings
+#'
+#' @description A data frame to aid in mapping human gene IDs between different
+#' formats, inclusing Ensembl IDs, HGNC symbols, and Entrez IDs. Mapping
+#' information was sourced using \code{biomaRt} and \code{AnnotationDbi}.
 #'
 #' @return An object of class "tbl", "tbl.df", "data.frame"
 #' @format A data frame (tibble) with 43,993 rows and 3 columns
@@ -57,10 +73,17 @@
 #'   \item{hgncSymbol}{HGNC symbols}
 #'   \item{entrezGeneId}{NCBI Entrez IDs}
 #' }
+#'
+#' @source See \url{https://bioconductor.org/packages/biomaRt/} and
+#'   \url{https://bioconductor.org/packages/AnnotationDbi/} for information on
+#'   each of the utilized packages and functions.
+#'
 "mappingFile"
 
-#' Manually-curated list of Reactome and Hallmark pathways and their top
-#' pathways and grouped pathways
+#' Top-level pathway categories
+#'
+#' @description A data frame containing all Reactome pathways and Hallmark
+#' terms, along with a manually-curated top-level category for each entry.
 #'
 #' @return An object of class "tbl", "tbl.df", "data.frame"
 #' @format A data frame (tibble) with 2685 rows and 5 columns
@@ -71,6 +94,11 @@
 #'   \item{groupedPathway}{Top grouped pathway, 8 for Reactome}
 #'   \item{topLevelOriginal}{Original top pathway name}
 #' }
+#'
+#' @source See \url{https://reactome.org/} and
+#'   \url{https://www.gsea-msigdb.org/gsea/msigdb/collections.jsp} for
+#'   information on each of these databases.
+#'
 "pathwayCategories"
 
 #' Table of all Reactome pathways and genes
@@ -82,6 +110,10 @@
 #'   \item{entrezGeneId}{Entrez gene ID}
 #'   \item{pathwayName}{Name of the Reactome pathway}
 #' }
+#'
+#' @source See \url{https://reactome.org/} for information on each of this
+#'   patwhay resource.
+#'
 "reactomeDatabase"
 
 #' Table of all Sigora pathways and their constituent genes
@@ -94,11 +126,15 @@
 #'   \item{ensemblGeneId}{Ensembl gene identifier}
 #'   \item{hgncSymbol}{HGNC gene symbol}
 #' }
+#'
+#' @source Please refer to the Sigora package for more details:
+#'   \url{https://cran.r-project.org/package=sigora}
+#'
 "sigoraDatabase"
 
 #' Sigora enrichment example
 #'
-#' @description Example Sigora output from running `pathwayEnrichment` on
+#' @description Example Sigora output from running `pathwayEnrichment()` on
 #'   "exampleDESeqResults"
 #'
 #' @return An object of class "tbl", "tbl.df", "data.frame"
@@ -118,4 +154,8 @@
 #'   \item{totalGenes}{Total number of input genes}
 #'   \item{topLevelPathway}{Pathway category}
 #' }
+#'
+#' @source Please refer to the Sigora package for more details on that method:
+#'   \url{https://cran.r-project.org/package=sigora}
+#'
 "sigoraExamples"

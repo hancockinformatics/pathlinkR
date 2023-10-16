@@ -12,6 +12,10 @@ A data frame (tibble) with 123574 rows and 3 columns
 \item{pathwayName}{Name of the Reactome pathway}
 }
 }
+\source{
+See \url{https://reactome.org/} for information on each of this
+patwhay resource.
+}
 \usage{
 reactomeDatabase
 }

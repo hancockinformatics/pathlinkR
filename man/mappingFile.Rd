@@ -12,6 +12,11 @@ A data frame (tibble) with 43,993 rows and 3 columns
 \item{entrezGeneId}{NCBI Entrez IDs}
 }
 }
+\source{
+See \url{https://bioconductor.org/packages/biomaRt/} and
+\url{https://bioconductor.org/packages/AnnotationDbi/} for information on
+each of the utilized packages and functions.
+}
 \usage{
 mappingFile
 }
@@ -19,6 +24,8 @@ mappingFile
 An object of class "tbl", "tbl.df", "data.frame"
 }
 \description{
-Table of human gene ID mappings
+A data frame to aid in mapping human gene IDs between different
+formats, inclusing Ensembl IDs, HGNC symbols, and Entrez IDs. Mapping
+information was sourced using \code{biomaRt} and \code{AnnotationDbi}.
 }
 \keyword{datasets}

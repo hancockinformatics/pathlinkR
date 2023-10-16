@@ -22,6 +22,10 @@ input list}
 \item{topLevelPathway}{Pathway category}
 }
 }
+\source{
+Please refer to the Sigora package for more details on that method:
+\url{https://cran.r-project.org/package=sigora}
+}
 \usage{
 sigoraExamples
 }
@@ -29,7 +33,7 @@ sigoraExamples
 An object of class "tbl", "tbl.df", "data.frame"
 }
 \description{
-Example Sigora output from running \code{pathwayEnrichment} on
+Example Sigora output from running \code{pathwayEnrichment()} on
 "exampleDESeqResults"
 }
 \keyword{datasets}

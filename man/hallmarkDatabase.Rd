@@ -11,6 +11,10 @@ A data frame (tibble) with 8,209 rows and 2 columns
 \item{ensemblGeneId}{Ensembl gene IDs}
 }
 }
+\source{
+For more information on the MSigDB Hallmark gene sets, please see
+\url{https://www.gsea-msigdb.org/gsea/msigdb/collections.jsp}
+}
 \usage{
 hallmarkDatabase
 }

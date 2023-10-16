@@ -13,6 +13,10 @@ A data frame (tibble) with 60775 rows and 4 columns
 \item{hgncSymbol}{HGNC gene symbol}
 }
 }
+\source{
+Please refer to the Sigora package for more details:
+\url{https://cran.r-project.org/package=sigora}
+}
 \usage{
 sigoraDatabase
 }
