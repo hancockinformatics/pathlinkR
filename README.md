@@ -16,10 +16,14 @@ figures to summarize these findings.
 
 
 ## Installation
-For the time being, **pathlinkR** can be installed from this Github repository
-using the [devtools](https://cran.r-project.org/package=devtools) function:
+**pathlinkR** can be installed from this Github repository via devtools, or 
+from Bioconductor as follows (currently unreleased):
 ```r
+# devtools
 devtools::install_github("https://github.com/hancockinformatics/pathlinkR")
+
+# Bioconductor
+BiocManager::install("pathlinkR")
 ```
 
 ## Workflow & functions
