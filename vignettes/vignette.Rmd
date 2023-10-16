@@ -39,11 +39,11 @@ pathophysiology from their gene expression studies.
 
 We have included an example data set of gene expression results in this package
 as the object `exampleDESeqResults`. This is a list of 2 data frames, generated
-using the `results()` functions from the package
-[DESeq2](https://bioconductor.org/packages/DESeq2/) (Love et al. 2014). The data
-is from an RNA-Seq study investigating COVID-19 and non-COVID-19 sepsis patients
-at admission (T1) compared to  approximately1 week later (T2) in the ICU,
-indexed over time (i.e., T2 vs T1) (An et al. 2023).
+using the `results()` functions from the package 
+`r BiocStyle::Biocpkg("DESeq2")` (Love et al. 2014). The data is from an RNA-Seq
+study investigating COVID-19 and non-COVID-19 sepsis patients at admission (T1)
+compared to  approximately1 week later (T2) in the ICU, indexed over time (i.e.,
+T2 vs T1) (An et al. 2023).
 
 
 # Installation
@@ -115,8 +115,8 @@ Interaction (PPI) networks. Here we leverage PPI data gathered from
 DE genes identified in gene expression analyses. These interactions can then be
 used to build PPI networks within R, with multiple options for controlling the
 type of network, such as support for first, minimum, or zero order networks. The
-two main functions used to accomplish this are `ppiBuildNetwork` and
-`ppiPlotNetwork`.
+two main functions used to accomplish this are `ppiBuildNetwork()` and
+`ppiPlotNetwork()`.
 
 Let's continue looking at the DEGs from the COVID positive patients over time,
 using the significant DEGs to build a PPI network. Since the data frame we're
@@ -208,7 +208,7 @@ unrelated "false-positives" that make parsing through the results very
 difficult.
 
 One solution is to use unique gene pairs, as described by the creators of the
-package [Sigora](https://cran.r-project.org/package=sigora) (Foroushani et al.
+package `r BiocStyle::CRANpkg("sigora")` (Foroushani et al.
 2013). This methodology decreases the number of similar and unrelated pathways
 from promiscuous genes, focusing more on the pathways that are likely related to
 the underlying biology. This approach is the default used in the **pathlinkR**
@@ -222,8 +222,8 @@ DESeq2 results, as it will be used to identify the results. For
 `analysis="sigora"` we also need to provide a Gene Pair Signature Repository
 (`gpsRepo`) which contains the pathways and gene pairs to be tested. Leaving
 this argument to "default" will use the `reaH` GPS repository from
-**Sigora**, containing human Reactome pathways. Alternatively one can supply
-their own GPS repository; see `?sigora::makeGPS()` for details on how to
+**sigora**, containing human Reactome pathways. Alternatively one can supply
+their own GPS repository; see `??sigora::makeGPS()` for details on how to
 make one.
 ```{r sigora_enrichment}
 enrichedResultsSigora <- pathwayEnrichment(
@@ -237,12 +237,12 @@ head(enrichedResultsSigora)
 ```
 
 For those who still prefer traditional over-representation analysis, we include
-the option of doing so by setting `analysis="reactomepa"`, which uses
-[ReactomePA](https://www.bioconductor.org/packages/ReactomePA/) (Yu et al.
-2016). When using this method, we recommend providing a gene universe to serve
-as a background for the enrichment test; here we'll use all the genes which were
-tested for significance by DESeq2 (i.e. all genes from the count matrix), 
-converting them to Entrez gene IDs before running the test.
+the option of doing so by setting `analysis="reactomepa"`, which uses 
+`r BiocStyle::Biocpkg("ReactomePA")` (Yu et al. 2016). When using this method,
+we recommend providing a gene universe to serve as a background for the
+enrichment test; here we'll use all the genes which were tested for significance
+by DESeq2 (i.e. all genes from the count matrix), converting them to Entrez gene
+IDs before running the test.
 ```{r reactomepa_enrichment}
 exGeneUniverse <- mappingFile %>% 
     filter(ensemblGeneId %in% rownames(exampleDESeqResults[[1]])) %>% 
@@ -281,7 +281,7 @@ head(enrichedResultsHm)
 
 # Plotting pathway enrichment results
 Now that we have (a lot of) pathway enrichment results from multiple
-comparisons, its time to visualize them. The function `plotPathways` does this
+comparisons, its time to visualize them. The function `plotPathways()` does this
 by grouping Reactome pathways (or Hallmark gene sets) under parent groups, and
 indicates if each pathway is up- or down-regulated in each comparison, making it
 easy to identify which pathways are shared or unique to different DEG lists.
@@ -333,7 +333,7 @@ connected, and would have an edge drawn between their nodes.
 We provide a pre-computed distance matrix of Reactome pathways, generated using
 Jaccard distance, but there is support for multiple distance measures to be
 used. Once this "foundation" of pathway interactions is created, a pathway
-network can be built using the `createPathnet` function:
+network can be built using the `createPathnet()` function:
 ```{r pathway_network_I, fig.width=12, fig.height=10, warning=FALSE}
 pathwayDistancesJaccard <- getPathwayDistances()
 
@@ -379,13 +379,13 @@ details.
 # Supplemental materials
 
 ## Gene-pair signatures
-**Sigora** uses a Gene-Pair Signature (GPS) Repository that stores information 
+**sigora** uses a Gene-Pair Signature (GPS) Repository that stores information
 on which gene pairs are unique for which pathways. We recommend using the one
-already loaded with **pathlinkR**, which is "reaH" (Reactome Human). You can
-also generate your own GPS repo using **Sigora's** own functions and a custom
-set of pathways (e.g. from another pathway database like GO or KEGG). Please
-consult the **Sigora** documentation on how to generate your custom GPS
-repository.
+provided by sigora, which can be loaded via `data("reaH", package = "sigora")`
+(Reactome Human). You can also generate your own GPS repo using sigora's own
+function and a custom set of pathways (e.g. from another pathway database like
+GO or KEGG). Please consult the sigora documentation on how to generate your
+custom GPS repository.
 
 ## Why are there different p-value cut-offs for sigora vs. ReactomePA/Hallmark?
 Because there are now multiple gene pairs vs. single genes, the gene-pair
