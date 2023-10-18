@@ -1,9 +1,4 @@
 test_that("we have basic functionality", {
-    exGetPathwayDistances <- getPathwayDistances(
-        pathwayData=slice_head(arrange(sigoraDatabase, pathwayId), prop = 0.25),
-        distMethod="jaccard"
-    )
-
     expect_equal(nrow(exGetPathwayDistances), ncol(exGetPathwayDistances))
 })
 

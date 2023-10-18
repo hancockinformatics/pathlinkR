@@ -1,13 +1,8 @@
 test_that("we get the right plot", {
     set.seed(1)
 
-    pathwayDistancesJaccard <- getPathwayDistances(
-      pathwayData=slice_head(arrange(sigoraDatabase, pathwayId), prop = 0.25),
-      distMethod="jaccard"
-    )
-
     startingPathways <- pathnetFoundation(
-        mat=pathwayDistancesJaccard,
+        mat=exGetPathwayDistances,
         maxDistance=0.8
     )
 

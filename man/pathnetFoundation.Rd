@@ -39,14 +39,18 @@ The desired cutoff will also vary based on the distance measure used, so
 some trial-and-error may be needed to find an appropriate value.
 }
 \examples{
-if (FALSE) {
-    pathwayDistancesJaccard <- getPathwayDistances()
+pathwayDistancesJaccard <- getPathwayDistances(
+    pathwayData=dplyr::slice_head(
+        dplyr::arrange(sigoraDatabase, pathwayId),
+        prop=0.1
+    ),
+    distMethod="jaccard"
+)
 
-    startingPathways <- pathnetFoundation(
-        mat=pathwayDistancesJaccard,
-        maxDistance=0.8
-    )
-}
+startingPathways <- pathnetFoundation(
+    mat=pathwayDistancesJaccard,
+    maxDistance=0.8
+)
 
 }
 \references{

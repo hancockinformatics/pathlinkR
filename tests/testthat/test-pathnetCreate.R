@@ -1,11 +1,6 @@
 test_that("the pathway network is the right size", {
-    pathwayDistancesJaccard <- getPathwayDistances(
-      pathwayData=slice_head(arrange(sigoraDatabase, pathwayId), prop = 0.25),
-      distMethod="jaccard"
-    )
-
     testStartingPathways <- pathnetFoundation(
-        mat=pathwayDistancesJaccard,
+        mat=exGetPathwayDistances,
         maxDistance=0.8
     )
 

@@ -58,23 +58,28 @@ and the optimal value will depend on the number of enriched pathways and
 the number of interacting pathways (i.e. number of rows in "foundation").
 }
 \examples{
-if (FALSE) {
-    pathwayDistancesJaccard <- getPathwayDistances()
+pathwayDistancesJaccard <- getPathwayDistances(
+    pathwayData=dplyr::slice_head(
+        dplyr::arrange(sigoraDatabase, pathwayId),
+        prop=0.1
+    ),
+    distMethod="jaccard"
+)
 
-    startingPathways <- pathnetFoundation(
-        mat=pathwayDistancesJaccard,
-        maxDistance=0.8
-    )
+startingPathways <- pathnetFoundation(
+    mat=pathwayDistancesJaccard,
+    maxDistance=0.8
+)
 
-    pathnetCreate(
-        pathwayEnrichmentResult=sigoraExamples[
-            grepl("Pos", sigoraExamples$comparison),
-        ],
-        foundation=startingPathways,
-        trim=TRUE,
-        trimOrder=1
-    )
-}
+pathnetCreate(
+    pathwayEnrichmentResult=sigoraExamples[grepl(
+        "Pos",
+        sigoraExamples$comparison
+    ), ],
+    foundation=startingPathways,
+    trim=TRUE,
+    trimOrder=1
+)
 
 }
 \references{

@@ -33,7 +33,7 @@
 #' getPathwayDistances(
 #'     pathwayData=dplyr::slice_head(
 #'         dplyr::arrange(sigoraDatabase, pathwayId),
-#'         prop=0.25
+#'         prop=0.1
 #'     ),
 #'     distMethod="jaccard"
 #' )

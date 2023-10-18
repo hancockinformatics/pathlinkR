@@ -1,12 +1,6 @@
 test_that("the foundation has the right dimensions and columns", {
-
-    pathwayDistancesJaccard <- getPathwayDistances(
-        pathwayData=slice_head(arrange(sigoraDatabase, pathwayId), prop = 0.25),
-        distMethod="jaccard"
-    )
-
     testStartingPathways <- pathnetFoundation(
-        mat=pathwayDistancesJaccard,
+        mat=exGetPathwayDistances,
         maxDistance=0.8
     )
 
