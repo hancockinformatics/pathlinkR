@@ -65,6 +65,7 @@ though any value can be specified. **pathlinkR** includes the function
 `eruption()` to create a volcano plot.
 ```{r datasets_and_preliminary_volcano_plot}
 ## A quick look at the DESeq2 results table
+data("exampleDESeqResults")
 head(exampleDESeqResults[[1]])
 
 ## Generate a volcano plot from the first data frame, with default thresholds

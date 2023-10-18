@@ -61,6 +61,7 @@
 #' @seealso <https://github.com/hancockinformatics/pathlinkR>
 #'
 #' @examples
+#' data("exampleDESeqResults")
 #' eruption(deseqResult=exampleDESeqResults[[1]])
 #'
 eruption <- function(
@@ -85,6 +86,11 @@ eruption <- function(
         labelSize=3.5,
         pad=1.4
 ) {
+
+    data_env <- new.env(parent = emptyenv())
+    data("mappingFile", envir = data_env, package = "pathlinkR")
+    mappingFile <- data_env[["mappingFile"]]
+
     stopifnot(is(deseqResult, "data.frame"))
     stopifnot(all(c("padj", "log2FoldChange") %in% colnames(deseqResult)))
 
@@ -154,20 +160,20 @@ eruption <- function(
 
     numGenes <- c(nrow(upDf), nrow(downDf), nrow(upDf) + nrow(downDf))
 
-    message(
-        "Creating volcano plot with ",
-        numGenes[3], " DEGs: ",
-        numGenes[2], " down-regulated and ",
-        numGenes[1], " up-regulated."
-    )
-
-    if (length(highlightGenes) > 0) {
-        message(
-            "An additional ",
-            length(highlightGenes),
-            " genes will be highlighted."
-        )
-    }
+    # message(
+    #     "Creating volcano plot with ",
+    #     numGenes[3], " DEGs: ",
+    #     numGenes[2], " down-regulated and ",
+    #     numGenes[1], " up-regulated."
+    # )
+    #
+    # if (length(highlightGenes) > 0) {
+    #     message(
+    #         "An additional ",
+    #         length(highlightGenes),
+    #         " genes will be highlighted."
+    #     )
+    # }
 
     if (removeUnannotated) {
         possibleLabels <- res %>%

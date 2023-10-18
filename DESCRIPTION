@@ -45,8 +45,6 @@ Imports:
     visNetwork
 Depends: 
     R (>= 4.3.0)
-LazyDataCompression: xz
-LazyData: true
 Suggests: 
     AnnotationDbi,
     BiocStyle,
