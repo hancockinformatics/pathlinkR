@@ -39,6 +39,8 @@
 #' @seealso <https://github.com/hancockinformatics/pathlinkR>
 #'
 #' @examples
+#' data("sigoraDatabase")
+#'
 #' pathwayDistancesJaccard <- getPathwayDistances(
 #'     pathwayData=dplyr::slice_head(
 #'         dplyr::arrange(sigoraDatabase, pathwayId),
