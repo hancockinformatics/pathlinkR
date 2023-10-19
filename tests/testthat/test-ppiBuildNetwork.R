@@ -1,4 +1,6 @@
 test_that("zero order network behave as expected", {
+    data("exampleDESeqResults")
+
     exNetworkZero <- ppiBuildNetwork(
         deseqResults=exampleDESeqResults[[1]],
         filterInput=TRUE,
@@ -32,6 +34,8 @@ test_that("zero order network behave as expected", {
 })
 
 test_that("simple minimum order networks behave as expected", {
+    data("exampleDESeqResults")
+
     exNetworkSimple <- ppiBuildNetwork(
         deseqResults=exampleDESeqResults[[1]],
         filterInput=TRUE,
@@ -66,6 +70,8 @@ test_that("simple minimum order networks behave as expected", {
 
 test_that("Steinder-trimmed networks behave as expected", {
     set.seed(1)
+
+    data("exampleDESeqResults")
 
     exNetworkSteiner <- ppiBuildNetwork(
         deseqResults=exampleDESeqResults[[1]],

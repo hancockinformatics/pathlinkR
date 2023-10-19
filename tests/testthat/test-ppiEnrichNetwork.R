@@ -1,4 +1,5 @@
 test_that("network enrichment works properly", {
+    data("exampleDESeqResults")
 
     exNetwork <- ppiBuildNetwork(
         deseqResults=exampleDESeqResults[[1]],

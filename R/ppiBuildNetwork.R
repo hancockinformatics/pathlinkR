@@ -66,6 +66,8 @@
 #' @seealso <https://github.com/hancockinformatics/pathlinkR/>
 #'
 #' @examples
+#' data("exampleDESeqResults")
+#'
 #' ppiBuildNetwork(
 #'     deseqResults=exampleDESeqResults[[1]],
 #'     filterInput=TRUE,
@@ -81,6 +83,11 @@ ppiBuildNetwork <- function(
         hubMeasure="betweenness",
         ppiData=innateDbPPI
 ) {
+
+    data_env <- new.env(parent = emptyenv())
+    data("innateDbPPI", "mappingFile", envir = data_env, package = "pathlinkR")
+    innateDbPPI <- data_env[["innateDbPPI"]]
+    mappingFile <- data_env[["mappingFile"]]
 
     stopifnot(is(deseqResults, "data.frame"))
     stopifnot(grepl(pattern="ENSG", x=rownames(deseqResults)[1]))

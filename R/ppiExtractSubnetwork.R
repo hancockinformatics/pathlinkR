@@ -46,6 +46,8 @@
 #' @seealso <https://github.com/hancockinformatics/pathlinkR>
 #'
 #' @examples
+#' data("exampleDESeqResults")
+#'
 #' exNetwork <- ppiBuildNetwork(
 #'     deseqResults=exampleDESeqResults[[1]],
 #'     filterInput=TRUE,
@@ -69,6 +71,10 @@ ppiExtractSubnetwork <- function(
         pathwayEnrichmentResult=NULL,
         pathwayToExtract
 ) {
+
+    data_env <- new.env(parent = emptyenv())
+    data("mappingFile", envir = data_env, package = "pathlinkR")
+    mappingFile <- data_env[["mappingFile"]]
 
     stopifnot(
         "You must specify either 'genes' or 'pathwayEnrichmentResult' to

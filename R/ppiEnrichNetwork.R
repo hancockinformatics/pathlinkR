@@ -42,6 +42,8 @@
 #' @seealso <https://github.com/hancockinformatics/pathlinkR>
 #'
 #' @examples
+#' data("exampleDESeqResults")
+#'
 #' exNetwork <- ppiBuildNetwork(
 #'     deseqResults=exampleDESeqResults[[1]],
 #'     filterInput=TRUE,
