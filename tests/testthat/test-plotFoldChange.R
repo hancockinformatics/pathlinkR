@@ -1,6 +1,8 @@
 test_that("fold change heatmaps are working", {
     set.seed(1)
 
+    data("exampleDESeqResults")
+
     vdiffr::expect_doppelganger(
         "plotFoldChangeExample",
         plotFoldChange(
@@ -12,6 +14,8 @@ test_that("fold change heatmaps are working", {
 
 test_that("customization options work correctly", {
     set.seed(1)
+
+    data("exampleDESeqResults")
 
     vdiffr::expect_doppelganger(
         "plotFoldChangeExample2",

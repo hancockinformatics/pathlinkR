@@ -94,6 +94,8 @@
 #' @seealso <https://github.com/hancockinformatics/pathlinkR>
 #'
 #' @examples
+#' data("exampleDESeqResults")
+#'
 #' plotFoldChange(
 #'     exampleDESeqResults,
 #'     pathName="Generation of second messenger molecules"
@@ -126,6 +128,11 @@ plotFoldChange <- function(
         rowAngle=0,
         rowCenter=FALSE
 ) {
+
+    data_env <- new.env(parent = emptyenv())
+    data("sigoraDatabase", "mappingFile", envir = data_env, package = "pathlinkR")
+    sigoraDatabase <- data_env[["sigoraDatabase"]]
+    mappingFile <- data_env[["mappingFile"]]
 
     stopifnot(
         "Provide a named list of data frames of results, with the name
