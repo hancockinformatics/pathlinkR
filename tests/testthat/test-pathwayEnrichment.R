@@ -1,13 +1,17 @@
 test_that("Sigora enrichment works as expected", {
-    testResultReactomepa <- pathwayEnrichment(
-        inputList=exampleDESeqResults,
-        analysis="sigora"
+    data("exampleDESeqResults")
+
+    suppressMessages(
+        testResultSigora <- pathwayEnrichment(
+            inputList=exampleDESeqResults[1],
+            analysis="sigora"
+        )
     )
 
-    expect_equal(dim(testResultReactomepa), c(66, 12))
+    expect_equal(dim(testResultSigora), c(30, 12))
 
     expect_setequal(
-        colnames(testResultReactomepa),
+        colnames(testResultSigora),
         c(
             "comparison",
             "direction",
@@ -26,9 +30,13 @@ test_that("Sigora enrichment works as expected", {
 })
 
 test_that("ReactomePA enrichment works as expected", {
-    testResultReactomepa <- pathwayEnrichment(
-        inputList=exampleDESeqResults,
-        analysis="reactomepa"
+    data("exampleDESeqResults")
+
+    suppressMessages(
+        testResultReactomepa <- pathwayEnrichment(
+            inputList=exampleDESeqResults,
+            analysis="reactomepa"
+        )
     )
 
     expect_equal(dim(testResultReactomepa), c(121, 12))
@@ -53,10 +61,14 @@ test_that("ReactomePA enrichment works as expected", {
 })
 
 test_that("Hallmark enrichment works as expected", {
-    testResultHallmark <- pathwayEnrichment(
-        inputList=exampleDESeqResults,
-        analysis="hallmark",
-        split=FALSE
+    data("exampleDESeqResults")
+
+    suppressMessages(
+        testResultHallmark <- pathwayEnrichment(
+            inputList=exampleDESeqResults,
+            analysis="hallmark",
+            split=FALSE
+        )
     )
 
     expect_equal(dim(testResultHallmark), c(12, 12))

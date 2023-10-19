@@ -108,6 +108,20 @@ pathwayEnrichment <- function(
     data("idmap", envir=data_env, package="sigora")
     idmap <- data_env[["idmap"]]
 
+    data(
+        "pathwayCategories",
+        "reactomeDatabase",
+        "hallmarkDatabase",
+        "mappingFile",
+        envir=data_env,
+        package = "pathlinkR"
+    )
+    pathwayCategories <- data_env[["pathwayCategories"]]
+    reactomeDatabase <- data_env[["reactomeDatabase"]]
+    hallmarkDatabase <- data_env[["hallmarkDatabase"]]
+    mappingFile <- data_env[["mappingFile"]]
+
+
     ## Iterate through each element of "inputList"
     resultList <- imap(inputList, function(x, comparison) {
         stopifnot(
