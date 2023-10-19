@@ -8,7 +8,7 @@
 A length 8 named vector of hex colour values
 }
 \usage{
-groupedPathwayColours
+data(groupedPathwayColours)
 }
 \value{
 An object of class "character"

@@ -18,7 +18,7 @@ Please refer to the Sigora package for more details:
 \url{https://cran.r-project.org/package=sigora}
 }
 \usage{
-sigoraDatabase
+data(sigoraDatabase)
 }
 \value{
 An object of class "tbl", "tbl.df", "data.frame"

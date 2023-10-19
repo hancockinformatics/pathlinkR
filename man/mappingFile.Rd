@@ -18,7 +18,7 @@ See \url{https://bioconductor.org/packages/biomaRt/} and
 each of the utilized packages and functions.
 }
 \usage{
-mappingFile
+data(mappingFile)
 }
 \value{
 An object of class "tbl", "tbl.df", "data.frame"

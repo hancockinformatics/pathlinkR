@@ -20,7 +20,7 @@ For details on DESeq2 and its data structures/methods, please see
 \url{https://bioconductor.org/packages/DESeq2/}
 }
 \usage{
-exampleDESeqResults
+data(exampleDESeqResults)
 }
 \value{
 An object of class "list"

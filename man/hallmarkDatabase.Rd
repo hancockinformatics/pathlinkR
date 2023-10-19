@@ -16,7 +16,7 @@ For more information on the MSigDB Hallmark gene sets, please see
 \url{https://www.gsea-msigdb.org/gsea/msigdb/collections.jsp}
 }
 \usage{
-hallmarkDatabase
+data(hallmarkDatabase)
 }
 \value{
 An object of class "tbl", "tbl.df", "data.frame"

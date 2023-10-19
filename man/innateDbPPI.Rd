@@ -18,7 +18,7 @@ For more details on the data sourced from InnateDB, please see
 their website: \url{https://www.innatedb.com}
 }
 \usage{
-innateDbPPI
+data(innateDbPPI)
 }
 \value{
 An object of class "tbl", "tbl.df", "data.frame"

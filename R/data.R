@@ -1,5 +1,6 @@
 #' List of example results from DESeq2
 #'
+#' @usage data(exampleDESeqResults)
 #' @return An object of class "list"
 #' @format A list of two data frames, each with 5000 rows and 6 columns:
 #' \describe{
@@ -18,6 +19,7 @@
 
 #' Colour assignments for grouped pathways
 #'
+#' @usage data(groupedPathwayColours)
 #' @return An object of class "character"
 #' @format A length 8 named vector of hex colour values
 #'
@@ -25,6 +27,7 @@
 
 #' Table of Hallmark gene sets and their genes
 #'
+#' @usage data(hallmarkDatabase)
 #' @return An object of class "tbl", "tbl.df", "data.frame"
 #' @format A data frame (tibble) with 8,209 rows and 2 columns
 #' \describe{
@@ -46,6 +49,7 @@
 #'   interactions, and removing interactions that have the same components but
 #'   are swapped between A and B.
 #'
+#' @usage data(innateDbPPI)
 #' @return An object of class "tbl", "tbl.df", "data.frame"
 #' @format A data frame (tibble) with 152,256 rows and 2 columns:
 #' \describe{
@@ -66,6 +70,7 @@
 #' formats, inclusing Ensembl IDs, HGNC symbols, and Entrez IDs. Mapping
 #' information was sourced using \code{biomaRt} and \code{AnnotationDbi}.
 #'
+#' @usage data(mappingFile)
 #' @return An object of class "tbl", "tbl.df", "data.frame"
 #' @format A data frame (tibble) with 43,993 rows and 3 columns
 #' \describe{
@@ -85,6 +90,7 @@
 #' @description A data frame containing all Reactome pathways and Hallmark
 #' terms, along with a manually-curated top-level category for each entry.
 #'
+#' @usage data(pathwayCategories)
 #' @return An object of class "tbl", "tbl.df", "data.frame"
 #' @format A data frame (tibble) with 2685 rows and 5 columns
 #' \describe{
@@ -103,6 +109,7 @@
 
 #' Table of all Reactome pathways and genes
 #'
+#' @usage data(reactomeDatabase)
 #' @return An object of class "tbl", "tbl.df", "data.frame"
 #' @format A data frame (tibble) with 123574 rows and 3 columns
 #' \describe{
@@ -118,6 +125,7 @@
 
 #' Table of all Sigora pathways and their constituent genes
 #'
+#' @usage data(sigoraDatabase)
 #' @return An object of class "tbl", "tbl.df", "data.frame"
 #' @format A data frame (tibble) with 60775 rows and 4 columns
 #' \describe{
@@ -137,6 +145,7 @@
 #' @description Example Sigora output from running `pathwayEnrichment()` on
 #'   "exampleDESeqResults"
 #'
+#' @usage data(sigoraExamples)
 #' @return An object of class "tbl", "tbl.df", "data.frame"
 #' @format A data frame (tibble) with 66 rows and 12 columns
 #' \describe{

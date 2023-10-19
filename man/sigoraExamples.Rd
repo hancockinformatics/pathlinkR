@@ -27,7 +27,7 @@ Please refer to the Sigora package for more details on that method:
 \url{https://cran.r-project.org/package=sigora}
 }
 \usage{
-sigoraExamples
+data(sigoraExamples)
 }
 \value{
 An object of class "tbl", "tbl.df", "data.frame"

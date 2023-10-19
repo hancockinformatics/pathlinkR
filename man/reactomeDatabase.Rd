@@ -17,7 +17,7 @@ See \url{https://reactome.org/} for information on each of this
 patwhay resource.
 }
 \usage{
-reactomeDatabase
+data(reactomeDatabase)
 }
 \value{
 An object of class "tbl", "tbl.df", "data.frame"

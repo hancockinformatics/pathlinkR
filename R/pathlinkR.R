@@ -25,8 +25,8 @@
 #' \code{vignette("pathlinkR")} into the console. Another document with more
 #' examples is linked near the top of the included vignette.
 #'
-#' Any software-related questions can be posted on the Bioconductor Support site:
-#' \url{https://support.bioconductor.org}
+#' Any software-related questions can be posted on the Bioconductor Support
+#' site: \url{https://support.bioconductor.org}
 #'
 #' The code is made publicly available on our Github page:
 #' \url{https://github.com/hancockinformatics/pathlinkR}

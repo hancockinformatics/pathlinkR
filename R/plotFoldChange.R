@@ -130,7 +130,12 @@ plotFoldChange <- function(
 ) {
 
     data_env <- new.env(parent = emptyenv())
-    data("sigoraDatabase", "mappingFile", envir = data_env, package = "pathlinkR")
+    data(
+        "sigoraDatabase",
+        "mappingFile",
+        envir = data_env,
+        package = "pathlinkR"
+    )
     sigoraDatabase <- data_env[["sigoraDatabase"]]
     mappingFile <- data_env[["mappingFile"]]
 

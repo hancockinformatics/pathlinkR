@@ -20,7 +20,7 @@ See \url{https://reactome.org/} and
 information on each of these databases.
 }
 \usage{
-pathwayCategories
+data(pathwayCategories)
 }
 \value{
 An object of class "tbl", "tbl.df", "data.frame"
