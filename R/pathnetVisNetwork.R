@@ -46,6 +46,8 @@
 #' @seealso <https://github.com/hancockinformatics/pathlinkR>
 #'
 #' @examples
+#' data("sigoraDatabase", "sigoraExamples")
+#'
 #' pathwayDistancesJaccard <- getPathwayDistances(
 #'     pathwayData=dplyr::slice_head(
 #'         dplyr::arrange(sigoraDatabase, pathwayId),
@@ -83,6 +85,10 @@ pathnetVisNetwork <- function(
         edgeWidthRange=c(5, 20),
         highlighting=TRUE
 ) {
+
+    data_env <- new.env(parent = emptyenv())
+    data("groupedPathwayColours", envir = data_env, package = "pathlinkR")
+    groupedPathwayColours <- data_env[["groupedPathwayColours"]]
 
     stopifnot("'nodeSizeRange' should be a length-two numeric vector" = {
         length(nodeSizeRange) == 2

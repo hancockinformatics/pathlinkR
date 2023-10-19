@@ -1,9 +1,19 @@
 test_that("pathVisNetwork returns the right plot", {
     set.seed(1)
 
+    data("sigoraDatabase", "sigoraExamples")
+
+    pathwayDistancesJaccard <- getPathwayDistances(
+        pathwayData=dplyr::slice_head(
+            dplyr::arrange(sigoraDatabase, pathwayId),
+            prop=0.1
+        ),
+        distMethod="jaccard"
+    )
+
     startingPathways <- pathnetFoundation(
-        mat = exGetPathwayDistances,
-        maxDistance = 0.8
+        mat=pathwayDistancesJaccard,
+        maxDistance=0.8
     )
 
     exPathnet <- pathnetCreate(

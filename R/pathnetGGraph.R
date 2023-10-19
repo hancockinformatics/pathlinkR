@@ -52,6 +52,8 @@
 #' @seealso <https://github.com/hancockinformatics/pathlinkR>
 #'
 #' @examples
+#' data("sigoraDatabase", "sigoraExamples")
+#'
 #' pathwayDistancesJaccard <- getPathwayDistances(
 #'     pathwayData=dplyr::slice_head(
 #'         dplyr::arrange(sigoraDatabase, pathwayId),
@@ -99,6 +101,11 @@ pathnetGGraph <- function(
         edgeAlpha=1,
         themeBaseSize=16
 ) {
+
+    data_env <- new.env(parent = emptyenv())
+    data("groupedPathwayColours", envir = data_env, package = "pathlinkR")
+    groupedPathwayColours <- data_env[["groupedPathwayColours"]]
+
     stopifnot(all(
         c("pathwayName", "pValueAdjusted", "groupedPathway")
         %in% colnames(tibble::as_tibble(network))
