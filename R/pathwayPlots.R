@@ -53,6 +53,7 @@
 #' @seealso <https://github.com/hancockinformatics/pathlinkR>
 #'
 #' @examples
+#' data("sigoraExamples")
 #' pathwayPlots(sigoraExamples, columns=2)
 #'
 pathwayPlots <- function(

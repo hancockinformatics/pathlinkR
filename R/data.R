@@ -1,7 +1,7 @@
 #' List of example results from DESeq2
 #'
 #' @return An object of class "list"
-#' @format  A list of two data frames, each with 5000 rows and 6 columns:
+#' @format A list of two data frames, each with 5000 rows and 6 columns:
 #' \describe{
 #'   \item{baseMean}{A combined score for the gene}
 #'   \item{log2FoldChange}{Fold change value for the gene}

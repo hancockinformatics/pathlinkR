@@ -84,6 +84,7 @@ results from multiple DE comparisons. Can automatically assign each
 pathway into an informative top-level category.
 }
 \examples{
+data("sigoraExamples")
 pathwayPlots(sigoraExamples, columns=2)
 
 }
