@@ -138,6 +138,8 @@ Node statistics (degree, betweenness, and hub score) are calculated using
 the respective functions from the \code{tidygraph} package.
 }
 \examples{
+data("exampleDESeqResults")
+
 exNetwork <- ppiBuildNetwork(
     deseqResults=exampleDESeqResults[[1]],
     filterInput=TRUE,

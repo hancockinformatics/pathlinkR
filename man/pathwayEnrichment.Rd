@@ -88,6 +88,8 @@ output by \code{DESeq2::results()} function, namely: padj and log2FoldChange.
 Rownames are assumed to contain the input Ensembl genes to be tested.
 }
 \examples{
+data("exampleDESeqResults")
+
 pathwayEnrichment(
     inputList=exampleDESeqResults[1],
     filterInput=TRUE,

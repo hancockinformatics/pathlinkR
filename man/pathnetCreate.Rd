@@ -58,6 +58,8 @@ and the optimal value will depend on the number of enriched pathways and
 the number of interacting pathways (i.e. number of rows in "foundation").
 }
 \examples{
+data("sigoraDatabase", "sigoraExamples")
+
 pathwayDistancesJaccard <- getPathwayDistances(
     pathwayData=dplyr::slice_head(
         dplyr::arrange(sigoraDatabase, pathwayId),

@@ -55,6 +55,8 @@ similar pathways}
 Test a PPI network for enriched pathways
 }
 \examples{
+data("exampleDESeqResults")
+
 exNetwork <- ppiBuildNetwork(
     deseqResults=exampleDESeqResults[[1]],
     filterInput=TRUE,

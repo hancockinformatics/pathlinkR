@@ -74,6 +74,8 @@
 #' @seealso <https://github.com/hancockinformatics/pathlinkR>
 #'
 #' @examples
+#' data("exampleDESeqResults")
+#'
 #' pathwayEnrichment(
 #'     inputList=exampleDESeqResults[1],
 #'     filterInput=TRUE,

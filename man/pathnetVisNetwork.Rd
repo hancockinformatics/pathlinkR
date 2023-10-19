@@ -63,6 +63,8 @@ highlighting nodes belonging to a larger group (e.g. top-level Reactome
 category).
 }
 \examples{
+data("sigoraDatabase", "sigoraExamples")
+
 pathwayDistancesJaccard <- getPathwayDistances(
     pathwayData=dplyr::slice_head(
         dplyr::arrange(sigoraDatabase, pathwayId),

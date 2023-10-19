@@ -142,6 +142,8 @@ could then specify \code{colSplit} as
 type and mutant results more visually distinct.
 }
 \examples{
+data("exampleDESeqResults")
+
 plotFoldChange(
     exampleDESeqResults,
     pathName="Generation of second messenger molecules"

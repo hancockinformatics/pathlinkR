@@ -74,6 +74,8 @@ implementation of the Kleinburg hub centrality score - details on this
 method can be found at \code{?igraph::hub_score}.
 }
 \examples{
+data("exampleDESeqResults")
+
 ppiBuildNetwork(
     deseqResults=exampleDESeqResults[[1]],
     filterInput=TRUE,

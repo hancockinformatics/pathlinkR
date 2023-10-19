@@ -28,6 +28,8 @@ common.
 }
 \examples{
 # Here we'll use a subset of all the pathways, to save time
+data("sigoraDatabase")
+
 getPathwayDistances(
     pathwayData=dplyr::slice_head(
         dplyr::arrange(sigoraDatabase, pathwayId),
