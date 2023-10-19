@@ -57,6 +57,8 @@
 #' @seealso <https://github.com/hancockinformatics/pathlinkR>
 #'
 #' @examples
+#' data("sigoraDatabase", "sigoraExamples")
+#'
 #' pathwayDistancesJaccard <- getPathwayDistances(
 #'     pathwayData=dplyr::slice_head(
 #'         dplyr::arrange(sigoraDatabase, pathwayId),
@@ -86,6 +88,10 @@ pathnetCreate <- function(
         trim=TRUE,
         trimOrder=1
 ) {
+
+    data_env <- new.env(parent = emptyenv())
+    data("pathwayCategories", envir = data_env, package = "pathlinkR")
+    pathwayCategories <- data_env[["pathwayCategories"]]
 
     stopifnot(is(pathwayEnrichmentResult, "data.frame"))
     stopifnot(all(
