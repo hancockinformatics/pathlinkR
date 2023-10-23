@@ -70,7 +70,9 @@ head(exampleDESeqResults[[1]])
 
 ## Generate a volcano plot from the first data frame, with default thresholds
 eruption(
-    deseqResult=exampleDESeqResults[[1]],
+    rnaseqResult=exampleDESeqResults[[1]],
+    columnFC="log2FoldChange",
+    columnP="padj",
     title=names(exampleDESeqResults[1])
 )
 ```

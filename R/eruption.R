@@ -1,7 +1,12 @@
 #' Create a volcano plot from an unfiltered DESeq2 results object
 #'
-#' @param deseqResult Data frame of DESeq2 results, with Ensembl gene IDs as
-#'   rownames, i.e. out from `DESeq2::results()`.
+#' @param rnaseqResult Data frame of RNASeq results, with Ensembl gene IDs as
+#'   rownames. Can be an object from `DESeq2`, `edgeR`, or a simple data frame.
+#'   See "Details" for more information.
+#' @param columnFC Character; Column to plot along the x-axis, typically log2
+#'   fold change values. Defaults to NA.
+#' @param columnP Character; Column to plot along the y-axis, typically nominal
+#'   or adjusted p values. Defaults to NA.
 #' @param pCutoff Adjusted p value cutoff, defaults to <0.05
 #' @param fcCutoff Absolute fold change cutoff, defaults to >1.5
 #' @param baseColour Colour of points for all significant DE genes
@@ -44,9 +49,18 @@
 #' @importFrom ggrepel geom_text_repel
 #' @importFrom tibble rownames_to_column
 #'
-#' @description Creates a volcano plot of genes output from `DESeq2::results()`,
-#'   with various options for tweaking the appearance. Ensembl gene IDs should
-#'   be the rownames of the input data frame.
+#' @description Creates a volcano plot of genes from RNA-Seq results, with
+#'   various options for tweaking the appearance. Ensembl gene IDs should be the
+#'   rownames of the input object.
+#'
+#' @details The input to `eruption()` can be of class "DESeqResults" (from
+#'   `DESeq2`), "TopTags" (`edgeR`), or a simple data frame. When not providing
+#'   a basic data frame, the columns to plot are automatically pulled
+#'   ("log2FoldChange" and "padj" for DESeqResults, or "logFC" and "FDR" for
+#'   TopTags). Otherwise, the arguments "columnFC" and "columnP" must be
+#'   specified. If one wishes to override the default behaviour for
+#'   "DESeqResults" or "TopTags" (e.g. plot nominal p values on the y-axis),
+#'   convert those objects to data frames, then supply "columnFC" and "columnP".
 #'
 #'   The argument `highlightGenes` can be used to draw attention to a specific
 #'   set of genes, e.g. those from a pathway of interest. Setting the argument
@@ -54,7 +68,8 @@
 #'   will be given labels, further emphasizing them in the volcano plot.
 #'
 #'   Since this function returns a ggplot object, further custom changes could
-#'   be applied using the standard ggplot2 functions.
+#'   be applied using the standard ggplot2 functions (`labs()`,
+#'   `theme()`, etc.).
 #'
 #' @references None.
 #'
@@ -62,10 +77,16 @@
 #'
 #' @examples
 #' data("exampleDESeqResults")
-#' eruption(deseqResult=exampleDESeqResults[[1]])
+#' eruption(
+#'     rnaseqResult=exampleDESeqResults[[1]],
+#'     columnFC="log2FoldChange",
+#'     columnP="padj"
+#' )
 #'
 eruption <- function(
-        deseqResult,
+        rnaseqResult,
+        columnFC=NA,
+        columnP=NA,
         pCutoff=0.05,
         fcCutoff=1.5,
         baseColour="steelblue4",
@@ -87,12 +108,32 @@ eruption <- function(
         pad=1.4
 ) {
 
-    data_env <- new.env(parent = emptyenv())
-    data("mappingFile", envir = data_env, package = "pathlinkR")
-    mappingFile <- data_env[["mappingFile"]]
+    if (is(rnaseqResult, "DESeqResults")) {
+        rnaseqResult <- rnaseqResult %>%
+            as.data.frame() %>%
+            rename("LogFoldChange" = log2FoldChange, "PAdjusted" = padj)
 
-    stopifnot(is(deseqResult, "data.frame"))
-    stopifnot(all(c("padj", "log2FoldChange") %in% colnames(deseqResult)))
+    } else if (is(rnaseqResult, "TopTags")) {
+        rnaseqResult <- rnaseqResult %>%
+            as.data.frame() %>%
+            rename("LogFoldChange" = logFC, "PAdjusted" = FDR)
+
+    } else {
+
+        stopifnot(
+            "If 'rnaseqResult' is a simple data frame, you must provide
+            'columnFC' and 'columnP'" = {
+                !any(is.na(columnFC), is.na(columnP))
+            }
+        )
+
+        rnaseqResult <- rnaseqResult %>%
+            as.data.frame() %>%
+            rename(
+                "LogFoldChange" = all_of(columnFC),
+                "PAdjusted" = all_of(columnP)
+            )
+    }
 
     if (!all(is.na(xaxis))) {
         stopifnot("'xaxis' must be a length-two numeric vector" = {
@@ -105,13 +146,20 @@ eruption <- function(
         })
     }
 
+
+    ## Load the data we need for gene mapping
+    data_env <- new.env(parent = emptyenv())
+    data("mappingFile", envir = data_env, package = "pathlinkR")
+    mappingFile <- data_env[["mappingFile"]]
+
+
     ## If Ensembl IDs are detected, annotate them with gene names from the
     ## mapping file if they exist, or just use the Ensembl ID. If rownames are
-    ## not Ensembl IDs, they will be used as is.
-    if (grepl(x=rownames(deseqResult)[1], pattern="^ENSG")) {
-        res <- deseqResult %>%
+    ## not Ensembl IDs, they will be used as-is.
+    if (grepl(x=rownames(rnaseqResult)[1], pattern="^ENSG")) {
+        res <- rnaseqResult %>%
             rownames_to_column("ensemblGeneId") %>%
-            filter(!is.na(padj)) %>%
+            filter(!is.na(PAdjusted)) %>%
             left_join(mappingFile, by="ensemblGeneId", multiple="all") %>%
             mutate(geneName=ifelse(
                 !is.na(hgncSymbol),
@@ -119,18 +167,18 @@ eruption <- function(
                 ensemblGeneId
             ))
     } else {
-        res <- deseqResult %>%
+        res <- rnaseqResult %>%
             rownames_to_column("ensemblGeneId") %>%
             mutate(geneName=ensemblGeneId)
     }
 
     res <- res %>% mutate(
         significant=case_when(
-            padj < pCutoff & abs(log2FoldChange) > log2(fcCutoff) ~ "SIG",
+            PAdjusted < pCutoff & abs(LogFoldChange) > log2(fcCutoff) ~ "SIG",
             TRUE ~ "NS"
         ),
         inList=case_when(ensemblGeneId %in% highlightGenes ~ "Y", TRUE ~ "N"),
-        negLogP=-log10(padj)
+        negLogP=-log10(PAdjusted)
     )
 
     ## If specifying x and y axis limits, remove any genes that fall outside the
@@ -138,7 +186,7 @@ eruption <- function(
     if (!is.na(xaxis[1])) {
         res <- filter(
             res,
-            log2FoldChange > xaxis[1] & log2FoldChange < xaxis[2]
+            LogFoldChange > xaxis[1] & LogFoldChange < xaxis[2]
         )
     }
     if (!is.na(yaxis[1])) {
@@ -153,27 +201,12 @@ eruption <- function(
 
     ## Identify up- and down-regulated genes
     upDf <- res %>%
-        filter(padj < pCutoff, log2FoldChange > log2(fcCutoff))
+        filter(PAdjusted < pCutoff, LogFoldChange > log2(fcCutoff))
 
     downDf <- res %>%
-        filter(padj < pCutoff, log2FoldChange < log2(1 / fcCutoff))
+        filter(PAdjusted < pCutoff, LogFoldChange < log2(1 / fcCutoff))
 
     numGenes <- c(nrow(upDf), nrow(downDf), nrow(upDf) + nrow(downDf))
-
-    # message(
-    #     "Creating volcano plot with ",
-    #     numGenes[3], " DEGs: ",
-    #     numGenes[2], " down-regulated and ",
-    #     numGenes[1], " up-regulated."
-    # )
-    #
-    # if (length(highlightGenes) > 0) {
-    #     message(
-    #         "An additional ",
-    #         length(highlightGenes),
-    #         " genes will be highlighted."
-    #     )
-    # }
 
     if (removeUnannotated) {
         possibleLabels <- res %>%
@@ -188,13 +221,13 @@ eruption <- function(
     ## smallest p-value.
     if (label == "auto") {
         upGenes <- upDf %>%
-            arrange(desc(log2FoldChange ^ 2 * log10(padj) ^ 2)) %>%
+            arrange(desc(LogFoldChange ^ 2 * log10(PAdjusted) ^ 2)) %>%
             filter(geneName %in% possibleLabels) %>%
             head(n) %>%
             pull(geneName)
 
         downGenes <- downDf %>%
-            arrange(desc(log2FoldChange ^ 2 * log10(padj) ^ 2)) %>%
+            arrange(desc(LogFoldChange ^ 2 * log10(PAdjusted) ^ 2)) %>%
             filter(geneName %in% possibleLabels) %>%
             head(n) %>%
             pull(geneName)
@@ -210,13 +243,13 @@ eruption <- function(
     if (label == "highlight") {
         upGenes <- upDf %>%
             filter(inList == "Y", geneName %in% possibleLabels) %>%
-            arrange(desc(log2FoldChange ^ 2 * log10(padj) ^ 2)) %>%
+            arrange(desc(LogFoldChange ^ 2 * log10(PAdjusted) ^ 2)) %>%
             head(n) %>%
             pull(geneName)
 
         downGenes <- downDf %>%
             filter(inList == "Y", geneName %in% possibleLabels) %>%
-            arrange(desc(log2FoldChange ^ 2 * log10(padj) ^ 2)) %>%
+            arrange(desc(LogFoldChange ^ 2 * log10(PAdjusted) ^ 2)) %>%
             head(n) %>%
             pull(geneName)
 
@@ -225,7 +258,7 @@ eruption <- function(
         )
     }
 
-    ## Manual labeling ("manual"): label the genes you provided in `manualGenes`
+    ## Manual labeling ("manual"): label the genes you provided in "manualGenes"
     if (label == "manual") {
         res <- res %>% mutate(label=case_when(
             ensemblGeneId %in% manualGenes |
@@ -234,7 +267,7 @@ eruption <- function(
     }
 
     ## Create the plot
-    p <- ggplot(res, aes(x=log2FoldChange, y=negLogP)) +
+    p <- ggplot(res, aes(x=LogFoldChange, y=negLogP)) +
 
         ## Plot the non-significant genes
         geom_point(
@@ -249,7 +282,7 @@ eruption <- function(
         ## `highlightGenes` plotted on top of the others for added emphasis
         geom_point(
             data=filter(res, significant == "SIG", inList == "N"),
-            mapping=aes(x=log2FoldChange, y=negLogP),
+            mapping=aes(x=LogFoldChange, y=negLogP),
             size=pointSize,
             alpha=alpha,
             colour=baseColour
@@ -257,7 +290,7 @@ eruption <- function(
 
         geom_point(
             data=filter(res, inList == "Y"),
-            mapping=aes(x=log2FoldChange, y=negLogP),
+            mapping=aes(x=LogFoldChange, y=negLogP),
             size=pointSize,
             alpha=alpha,
             colour=highlightColour
@@ -338,8 +371,8 @@ eruption <- function(
         ## If "xaxis" is not specified
         if (is.na(xaxis[1])) {
             xaxis <- c(
-                min(res$log2FoldChange) - 0.1,
-                max(res$log2FoldChange) + 0.1
+                min(res$LogFoldChange) - 0.1,
+                max(res$LogFoldChange) + 0.1
             )
         }
 

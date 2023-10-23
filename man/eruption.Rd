@@ -5,7 +5,9 @@
 \title{Create a volcano plot from an unfiltered DESeq2 results object}
 \usage{
 eruption(
-  deseqResult,
+  rnaseqResult,
+  columnFC = NA,
+  columnP = NA,
   pCutoff = 0.05,
   fcCutoff = 1.5,
   baseColour = "steelblue4",
@@ -28,8 +30,15 @@ eruption(
 )
 }
 \arguments{
-\item{deseqResult}{Data frame of DESeq2 results, with Ensembl gene IDs as
-rownames, i.e. out from \code{DESeq2::results()}.}
+\item{rnaseqResult}{Data frame of RNASeq results, with Ensembl gene IDs as
+rownames. Can be an object from \code{DESeq2}, \code{edgeR}, or a simple data frame.
+See "Details" for more information.}
+
+\item{columnFC}{Character; Column to plot along the x-axis, typically log2
+fold change values. Defaults to NA.}
+
+\item{columnP}{Character; Column to plot along the y-axis, typically nominal
+or adjusted p values. Defaults to NA.}
 
 \item{pCutoff}{Adjusted p value cutoff, defaults to <0.05}
 
@@ -86,9 +95,19 @@ specifically label. Can be HGNC symbols or Ensembl gene IDs.}
 Volcano plot of genes from an RNA-Seq experiment; a "ggplot" object
 }
 \description{
-Creates a volcano plot of genes output from \code{DESeq2::results()},
-with various options for tweaking the appearance. Ensembl gene IDs should
-be the rownames of the input data frame.
+Creates a volcano plot of genes from RNA-Seq results, with
+various options for tweaking the appearance. Ensembl gene IDs should be the
+rownames of the input object.
+}
+\details{
+The input to \code{eruption()} can be of class "DESeqResults" (from
+\code{DESeq2}), "TopTags" (\code{edgeR}), or a simple data frame. When not providing
+a basic data frame, the columns to plot are automatically pulled
+("log2FoldChange" and "padj" for DESeqResults, or "logFC" and "FDR" for
+TopTags). Otherwise, the arguments "columnFC" and "columnP" must be
+specified. If one wishes to override the default behaviour for
+"DESeqResults" or "TopTags" (e.g. plot nominal p values on the y-axis),
+convert those objects to data frames, then supply "columnFC" and "columnP".
 
 The argument \code{highlightGenes} can be used to draw attention to a specific
 set of genes, e.g. those from a pathway of interest. Setting the argument
@@ -96,11 +115,16 @@ set of genes, e.g. those from a pathway of interest. Setting the argument
 will be given labels, further emphasizing them in the volcano plot.
 
 Since this function returns a ggplot object, further custom changes could
-be applied using the standard ggplot2 functions.
+be applied using the standard ggplot2 functions (\code{labs()},
+\code{theme()}, etc.).
 }
 \examples{
 data("exampleDESeqResults")
-eruption(deseqResult=exampleDESeqResults[[1]])
+eruption(
+    rnaseqResult=exampleDESeqResults[[1]],
+    columnFC="log2FoldChange",
+    columnP="padj"
+)
 
 }
 \references{
