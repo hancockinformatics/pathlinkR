@@ -36,6 +36,6 @@
 #' @docType package
 #' @name pathlinkR-package
 #' @title pathlinkR
-#' @aliases pathlinkR-package
+#' @aliases pathlinkR
 #' @keywords package
 NULL

@@ -16,7 +16,7 @@ Description: pathlinkR is an R package designed to facilitate analysis of
 biocViews: GeneSetEnrichment, Network, Pathways, Reactome, RNASeq, 
     NetworkEnrichment
 BiocType: Software
-BugReports: https://github.com/hancockinformatics/pathlinkR
+BugReports: https://github.com/hancockinformatics/pathlinkR/issues
 License: GPL-3 + file LICENSE
 URL: https://github.com/hancockinformatics/pathlinkR
 Encoding: UTF-8
