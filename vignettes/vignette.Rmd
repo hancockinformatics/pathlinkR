@@ -97,7 +97,9 @@ just like `pathwayEnrichment()`, and creating a heatmap of fold changes for the
 constituent genes.
 ```{r plot_fold_changes_I, fig.height=8}
 plotFoldChange(
-    exampleDESeqResults,
+    inputList=exampleDESeqResults,
+    columnFC="log2FoldChange",
+    columnP="padj",
     pathName="Interferon alpha/beta signaling"
 )
 ```

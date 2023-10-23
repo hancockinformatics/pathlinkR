@@ -6,6 +6,8 @@
 \usage{
 plotFoldChange(
   inputList,
+  columnFC = NA,
+  columnP = NA,
   pathName = NA,
   pathId = NA,
   genesToPlot = NA,
@@ -33,10 +35,17 @@ plotFoldChange(
 )
 }
 \arguments{
-\item{inputList}{List of data frames, each the output from
-\code{DESeq2::results()}. The list names are used as the comparison name for
-each dataframe (e.g. "COVID vs Healthy"). Data frames should have Ensembl
-gene IDs as rownames.}
+\item{inputList}{A list, with each element containing RNA-Seq results as a
+"DESeqResults", "TopTags", or "data.frame" object. The list names are used
+as the comparison name for each dataframe (e.g. "COVID vs Healthy"). Data
+frames should have Ensembl gene IDs as rownames. See Details for more
+information on supported input types.}
+
+\item{columnFC}{Character; possible column containing fold changes to use in
+the plot. Defaults to NA.}
+
+\item{columnP}{Character; possible column containing p values to use for the
+plot. Defaults to NA.}
 
 \item{pathName}{The name of a Reactome pathway to pull genes from, also used
 for the plot title. Alternative to \code{pathID}.}
@@ -121,31 +130,40 @@ A heatmap of fold changes for genes of interest; an "ggplot" class
 object
 }
 \description{
-Creates a heatmap of fold changes values for results from the
-\code{DESeq2::results()} function, with various parameters to tweak the
-appearance.
+Creates a heatmap of fold changes values for results from
+RNA-Seq results, with various parameters to tweak the appearance.
 }
 \details{
+All elements of \code{inputList} should belong to one of the following
+classes: "DESeqResults" from \code{DESeq2}, "TopTags" from \code{edgeR}, or a simple
+"data.frame". In the first two cases, the proper columns for fold change
+and p values are detected automatically ("log2FoldChange" and "padj" for
+"DESeqResults", or "logFC" and "FDR" for "TopTags"). In the third case, the
+arguments \code{columnFC} and \code{columnP} must be supplied. Additionally, if one
+wished to override the default columns for either "DESeqResults" or
+"TopTags" objects, simply coerce the object to a simple "data.frame" and
+supply \code{columnFC} and \code{columnP} as desired.
+
 The \code{cellColours} argument is designed to map a range of negative
 and positive values to the three provided colours, with zero as the middle
 colour. If the plotted matrix contains only positive (or negative) values,
 then it will become a two-colour scale, white-to-red (or blue-to-white).
 
-The \code{colSplit} argument can be used to define larger groups represented
-in \code{inputList}. For example, consider an experiment comparing two
-different treatments to an untreated control, in both wild type and mutant
-cells. This would give the following comparisons:
+The \code{colSplit} argument can be used to define larger groups represented in
+\code{inputList}. For example, consider an experiment comparing two different
+treatments to an untreated control, in both wild type and mutant cells.
+This would give the following comparisons:
 "wildtype_treatment1_vs_untreated", "wildtype_treatment2_vs_untreated",
 "mutant_treatment1_vs_untreated", and "mutant_treatment2_vs_untreated". One
-could then specify \code{colSplit} as
-\code{c("Wild type", "Wild type", "Mutant", "Mutant")} to make the wild
-type and mutant results more visually distinct.
+could then specify \code{colSplit} as \code{c("Wild type", "Wild type", "Mutant", "Mutant")} to make the wild type and mutant results more visually distinct.
 }
 \examples{
 data("exampleDESeqResults")
 
 plotFoldChange(
     exampleDESeqResults,
+    columnFC="log2FoldChange",
+    columnP="padj",
     pathName="Generation of second messenger molecules"
 )
 

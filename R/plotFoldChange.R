@@ -1,9 +1,14 @@
 #' Create a heatmap of fold changes to visualize DESeq2 results
 #'
-#' @param inputList List of data frames, each the output from
-#'   `DESeq2::results()`. The list names are used as the comparison name for
-#'   each dataframe (e.g. "COVID vs Healthy"). Data frames should have Ensembl
-#'   gene IDs as rownames.
+#' @param inputList A list, with each element containing RNA-Seq results as a
+#'   "DESeqResults", "TopTags", or "data.frame" object. The list names are used
+#'   as the comparison name for each dataframe (e.g. "COVID vs Healthy"). Data
+#'   frames should have Ensembl gene IDs as rownames. See Details for more
+#'   information on supported input types.
+#' @param columnFC Character; possible column containing fold changes to use in
+#'   the plot. Defaults to NA.
+#' @param columnP Character; possible column containing p values to use for the
+#'   plot. Defaults to NA.
 #' @param pathName The name of a Reactome pathway to pull genes from, also used
 #'   for the plot title. Alternative to `pathID`.
 #' @param pathId ID of a Reactome pathway to pull genes from. Alternative to
@@ -70,24 +75,32 @@
 #' @importFrom purrr imap reduce
 #' @importFrom tibble rownames_to_column
 #'
-#' @description Creates a heatmap of fold changes values for results from the
-#'   `DESeq2::results()` function, with various parameters to tweak the
-#'   appearance.
+#' @description Creates a heatmap of fold changes values for results from
+#'   RNA-Seq results, with various parameters to tweak the appearance.
 #'
-#' @details The `cellColours` argument is designed to map a range of negative
+#' @details All elements of `inputList` should belong to one of the following
+#'   classes: "DESeqResults" from `DESeq2`, "TopTags" from `edgeR`, or a simple
+#'   "data.frame". In the first two cases, the proper columns for fold change
+#'   and p values are detected automatically ("log2FoldChange" and "padj" for
+#'   "DESeqResults", or "logFC" and "FDR" for "TopTags"). In the third case, the
+#'   arguments `columnFC` and `columnP` must be supplied. Additionally, if one
+#'   wished to override the default columns for either "DESeqResults" or
+#'   "TopTags" objects, simply coerce the object to a simple "data.frame" and
+#'   supply `columnFC` and `columnP` as desired.
+#'
+#'   The `cellColours` argument is designed to map a range of negative
 #'   and positive values to the three provided colours, with zero as the middle
 #'   colour. If the plotted matrix contains only positive (or negative) values,
 #'   then it will become a two-colour scale, white-to-red (or blue-to-white).
 #'
-#' The `colSplit` argument can be used to define larger groups represented
-#' in `inputList`. For example, consider an experiment comparing two
-#' different treatments to an untreated control, in both wild type and mutant
-#' cells. This would give the following comparisons:
-#' "wildtype_treatment1_vs_untreated", "wildtype_treatment2_vs_untreated",
-#' "mutant_treatment1_vs_untreated", and "mutant_treatment2_vs_untreated". One
-#' could then specify `colSplit` as
-#' `c("Wild type", "Wild type", "Mutant", "Mutant")` to make the wild
-#' type and mutant results more visually distinct.
+#'   The `colSplit` argument can be used to define larger groups represented in
+#'   `inputList`. For example, consider an experiment comparing two different
+#'   treatments to an untreated control, in both wild type and mutant cells.
+#'   This would give the following comparisons:
+#'   "wildtype_treatment1_vs_untreated", "wildtype_treatment2_vs_untreated",
+#'   "mutant_treatment1_vs_untreated", and "mutant_treatment2_vs_untreated". One
+#'   could then specify `colSplit` as `c("Wild type", "Wild type", "Mutant",
+#'   "Mutant")` to make the wild type and mutant results more visually distinct.
 #'
 #' @references <https://bioconductor.org/packages/ComplexHeatmap/>
 #'
@@ -98,11 +111,15 @@
 #'
 #' plotFoldChange(
 #'     exampleDESeqResults,
+#'     columnFC="log2FoldChange",
+#'     columnP="padj",
 #'     pathName="Generation of second messenger molecules"
 #' )
 #'
 plotFoldChange <- function(
         inputList,
+        columnFC=NA,
+        columnP=NA,
         pathName=NA,
         pathId=NA,
         genesToPlot=NA,
@@ -129,22 +146,11 @@ plotFoldChange <- function(
         rowCenter=FALSE
 ) {
 
-    data_env <- new.env(parent = emptyenv())
-    data(
-        "sigoraDatabase",
-        "mappingFile",
-        envir = data_env,
-        package = "pathlinkR"
-    )
-    sigoraDatabase <- data_env[["sigoraDatabase"]]
-    mappingFile <- data_env[["mappingFile"]]
-
     stopifnot(
-        "Provide a named list of data frames of results, with the name
-        of each item in the list as the comparison name."  = {
+        "Provide a named list of data frames of results, with the name of each
+        item in the list as the comparison name."  = {
             is.list(inputList)
             !is.null(names(inputList))
-            all(unlist(lapply(inputList, is.data.frame)))
         }
     )
 
@@ -155,6 +161,45 @@ plotFoldChange <- function(
     stopifnot("'geneFormat' must be either 'ensembl' or 'hgnc'" = {
         geneFormat %in% c("ensembl", "hgnc")}
     )
+
+    ## Coerce the input
+    if (is(inputList[[1]], "DESeqResults")) {
+        inputListCleaned <- lapply(inputList, function(x) {
+            as.data.frame(x) %>%
+                rename("LogFoldChange" = log2FoldChange, "PAdjusted" = padj)
+        })
+
+    } else if (is(inputList[[1]], "TopTags")) {
+        inputListCleaned <- lapply(inputList, function(x) {
+            as.data.frame(x) %>%
+                rename("LogFoldChange" = logFC, "PAdjusted" = FDR)
+        })
+
+    } else {
+        stopifnot(
+            "If elements of 'inputList' are data frames, you must provide
+            'columnFC' and 'columnP'" = !any(is.na(columnFC), is.na(columnP))
+        )
+
+        inputListCleaned <- lapply(inputList, function(x) {
+            as.data.frame(x) %>%
+                rename(
+                    "LogFoldChange" = all_of(columnFC),
+                    "PAdjusted" = all_of(columnP)
+                )
+        })
+    }
+
+    ## Load data, after passing the basic checks
+    data_env <- new.env(parent = emptyenv())
+    data(
+        "sigoraDatabase",
+        "mappingFile",
+        envir = data_env,
+        package = "pathlinkR"
+    )
+    sigoraDatabase <- data_env[["sigoraDatabase"]]
+    mappingFile <- data_env[["mappingFile"]]
 
     if (!is.na(pathName)) {
         pathId <- sigoraDatabase %>%
@@ -211,36 +256,36 @@ plotFoldChange <- function(
         }
     }
 
-    dfFC <- imap(inputList, function(listItem, itemName) {
+    dfFC <- imap(inputListCleaned, function(listItem, itemName) {
         stopifnot(
             "Rownames of data frames in 'inputList' must be Ensembl gene IDs" =
                 grepl(pattern = "^ENSG", x = rownames(listItem)[1])
         )
 
         listItem %>%
-            filter(rownames(.) %in% genes, !is.na(log2FoldChange)) %>%
+            filter(rownames(.) %in% genes, !is.na(LogFoldChange)) %>%
             rownames_to_column("ensemblGeneId") %>%
-            select(ensemblGeneId, {{itemName}} := log2FoldChange)
+            select(ensemblGeneId, {{itemName}} := LogFoldChange)
 
     }) %>% reduce(full_join, by="ensemblGeneId")
 
 
-    dfP <- imap(inputList, function(listItem, itemName) {
+    dfP <- imap(inputListCleaned, function(listItem, itemName) {
         listItem %>%
-            filter(rownames(.) %in% genes, !is.na(padj)) %>%
+            filter(rownames(.) %in% genes, !is.na(PAdjusted)) %>%
             rownames_to_column("ensemblGeneId") %>%
-            select(ensemblGeneId, {{itemName}} := padj)
+            select(ensemblGeneId, {{itemName}} := PAdjusted)
 
     }) %>% reduce(full_join, by="ensemblGeneId")
 
     ## From all the data frames, get the genes that were significant in any of
     ## them
-    sigGenes <- inputList %>% map(
+    sigGenes <- inputListCleaned %>% map(
         ~rownames_to_column(.x, "ensemblGeneId") %>%
             filter(
                 ensemblGeneId %in% genes,
-                padj < pCutoff,
-                abs(log2FoldChange) > log2(fcCutoff)
+                PAdjusted < pCutoff,
+                abs(LogFoldChange) > log2(fcCutoff)
             ) %>%
             pull(ensemblGeneId)
     ) %>%
@@ -286,7 +331,7 @@ plotFoldChange <- function(
 
     ## If columns aren't being split
     if (is.na(colSplit[1])) {
-        colSplit <- rep(NA, length(inputList))
+        colSplit <- rep(NA, length(inputListCleaned))
         columnTitle <- NULL
     } else {
         ## This orders the splitting into the order the data frames are in the

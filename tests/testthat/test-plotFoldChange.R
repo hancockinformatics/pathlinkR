@@ -6,7 +6,9 @@ test_that("fold change heatmaps are working", {
     vdiffr::expect_doppelganger(
         "plotFoldChangeExample",
         plotFoldChange(
-            exampleDESeqResults,
+            inputList=exampleDESeqResults,
+            columnFC="log2FoldChange",
+            columnP="padj",
             pathName="Generation of second messenger molecules"
         )
     )
@@ -20,7 +22,9 @@ test_that("customization options work correctly", {
     vdiffr::expect_doppelganger(
         "plotFoldChangeExample2",
         plotFoldChange(
-            exampleDESeqResults,
+            inputList=exampleDESeqResults,
+            columnFC="log2FoldChange",
+            columnP="padj",
             pathName="Interferon alpha/beta signaling",
             hideNonsigFC=FALSE,
             invert=TRUE,
