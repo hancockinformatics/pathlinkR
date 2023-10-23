@@ -2,8 +2,11 @@
 #' interaction foundation
 #'
 #' @param pathwayEnrichmentResult Data frame of results from Sigora or
-#'   ReactomePA (should be based on Reactome data). Must minimally contain the
-#'   columns "pathwayId" and "pValueAdjusted".
+#'   ReactomePA (should be based on Reactome data)
+#' @param columnId Character; column containing the Reactome pathway IDs.
+#'   Defaults to "pathwayID".
+#' @param columnP Character; column containing the adjusted p values. Defaults
+#'   to "pValueAdjusted".
 #' @param foundation List of pathway pairs to use in constructing a network.
 #'   Typically this will be the output from `createFoundation`.
 #' @param trim Remove independent subgraphs which don't contain any enriched
@@ -84,18 +87,17 @@
 #'
 pathnetCreate <- function(
         pathwayEnrichmentResult,
+        columnId="pathwayId",
+        columnP="pValueAdjusted",
         foundation,
         trim=TRUE,
         trimOrder=1
 ) {
 
-    data_env <- new.env(parent = emptyenv())
-    data("pathwayCategories", envir = data_env, package = "pathlinkR")
-    pathwayCategories <- data_env[["pathwayCategories"]]
-
     stopifnot(is(pathwayEnrichmentResult, "data.frame"))
+
     stopifnot(all(
-        c("pathwayId", "pValueAdjusted") %in% colnames(pathwayEnrichmentResult)
+        c(columnId, columnP) %in% colnames(pathwayEnrichmentResult)
     ))
 
     stopifnot(is(foundation, "data.frame"))
@@ -103,6 +105,20 @@ pathnetCreate <- function(
         c("pathwayName1", "pathwayName2", "distance", "pathway1", "pathway2")
         %in% colnames(foundation)
     ))
+
+    data_env <- new.env(parent = emptyenv())
+    data("pathwayCategories", envir = data_env, package = "pathlinkR")
+    pathwayCategories <- data_env[["pathwayCategories"]]
+
+    if (columnId != "pathwayId") {
+        pathwayEnrichmentResult <- pathwayEnrichmentResult %>%
+            rename("pathwayId"=all_of(columnId))
+    }
+
+    if (columnP != "pValueAdjusted") {
+        pathwayEnrichmentResult <- pathwayEnrichmentResult %>%
+            rename("pValueAdjusted"=all_of(columnP))
+    }
 
     startingNodes <- foundation %>%
         distinct(pathway1, pathwayName1) %>%

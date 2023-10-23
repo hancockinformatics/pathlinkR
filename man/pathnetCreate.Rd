@@ -5,12 +5,24 @@
 \title{Create a pathway network from enrichment results and a pathway
 interaction foundation}
 \usage{
-pathnetCreate(pathwayEnrichmentResult, foundation, trim = TRUE, trimOrder = 1)
+pathnetCreate(
+  pathwayEnrichmentResult,
+  columnId = "pathwayId",
+  columnP = "pValueAdjusted",
+  foundation,
+  trim = TRUE,
+  trimOrder = 1
+)
 }
 \arguments{
 \item{pathwayEnrichmentResult}{Data frame of results from Sigora or
-ReactomePA (should be based on Reactome data). Must minimally contain the
-columns "pathwayId" and "pValueAdjusted".}
+ReactomePA (should be based on Reactome data)}
+
+\item{columnId}{Character; column containing the Reactome pathway IDs.
+Defaults to "pathwayID".}
+
+\item{columnP}{Character; column containing the adjusted p values. Defaults
+to "pValueAdjusted".}
 
 \item{foundation}{List of pathway pairs to use in constructing a network.
 Typically this will be the output from \code{createFoundation}.}
