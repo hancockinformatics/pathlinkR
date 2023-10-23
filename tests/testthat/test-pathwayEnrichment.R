@@ -4,6 +4,8 @@ test_that("Sigora enrichment works as expected", {
     suppressMessages(
         testResultSigora <- pathwayEnrichment(
             inputList=exampleDESeqResults[1],
+            columnFC="log2FoldChange",
+            columnP="padj",
             analysis="sigora"
         )
     )
@@ -35,6 +37,8 @@ test_that("ReactomePA enrichment works as expected", {
     suppressMessages(
         testResultReactomepa <- pathwayEnrichment(
             inputList=exampleDESeqResults,
+            columnFC="log2FoldChange",
+            columnP="padj",
             analysis="reactomepa"
         )
     )
@@ -66,6 +70,8 @@ test_that("Hallmark enrichment works as expected", {
     suppressMessages(
         testResultHallmark <- pathwayEnrichment(
             inputList=exampleDESeqResults,
+            columnFC="log2FoldChange",
+            columnP="padj",
             analysis="hallmark",
             split=FALSE
         )

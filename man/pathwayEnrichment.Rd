@@ -6,6 +6,8 @@
 \usage{
 pathwayEnrichment(
   inputList,
+  columnFC = NA,
+  columnP = NA,
   filterInput = TRUE,
   pCutoff = 0.05,
   fcCutoff = 1.5,
@@ -17,10 +19,17 @@ pathwayEnrichment(
 )
 }
 \arguments{
-\item{inputList}{A list of data frames, each the output of
-\code{DESeq2::results()}. The list names are used as the comparison for each
-dataframe (e.g. "COVID vs Healthy"). Each data frame must have Ensembl gene
-IDs as the rownames.}
+\item{inputList}{A list, with each element containing RNA-Seq results as a
+"DESeqResults", "TopTags", or "data.frame" object. Rownames of each table
+must contain Ensembl Gene IDs. The list names are used as the comparison
+name for each element (e.g. "COVID vs Healthy"). See Details for more
+information on supported input types.}
+
+\item{columnFC}{Character; optional column name containing fold change
+values. Defaults to NA.}
+
+\item{columnP}{Character; optional column name containing p values. Defaults
+to NA.}
 
 \item{filterInput}{When providing list of data frames containing the
 unfiltered output from \code{DESeq2::results()} (default format), set this to
@@ -34,8 +43,8 @@ more filtering will be done.}
 \item{fcCutoff}{Minimum absolute fold change, defaults to >1.5}
 
 \item{split}{Boolean (TRUE); Split into up and down-regulated DE genes using
-the requisite column "log2FoldChange", and do enrichment independently.
-Results are combined at the end, with an added "direction" column.}
+the requisite column \code{columnFC}, and do enrichment independently. Results
+are combined at the end, with an added "direction" column.}
 
 \item{analysis}{Default is "sigora", but can also be "reactomepa" or
 "hallmark"}
@@ -81,21 +90,29 @@ three different pathway enrichment tools: Sigora and ReactomePA (which both
 test for Reactome pathways), and MSigDB Hallmark gene set enrichment.
 }
 \details{
-The input must be a named list of data frames, which can be
-pre-filtered or unfiltered. In the latter case, the function can filter
-with user-defined cutoffs. Column names are expected to comply with those
-output by \code{DESeq2::results()} function, namely: padj and log2FoldChange.
-Rownames are assumed to contain the input Ensembl genes to be tested.
+\code{inputList} must be a named list of RNA-Seq results, with each
+element being of class "DESeqResults" from \code{DESeq2}, "TopTags" from
+\code{edgeR}, or a simple data frame. For the first two cases, column names are
+expected to be the standard defined by each class ("log2FoldChange" and
+"padj" for "DESeqResults", and "logFC" and "FDR" for "TopTags"). Hence for
+these two cases the arguments \code{columnFC} and \code{columnP}
+can be left as \code{NA}.
+
+In the last case (elements are "data.frame"), \code{columnFC} and
+\code{columnP} must be supplied when \code{filterInput=TRUE}, and
+\code{columnFC} must be given if \code{split=TRUE}.
 }
 \examples{
 data("exampleDESeqResults")
 
 pathwayEnrichment(
     inputList=exampleDESeqResults[1],
+    columnFC="log2FoldChange",
+    columnP="padj",
     filterInput=TRUE,
     split=TRUE,
     analysis="hallmark",
-    filterResults="default",
+    filterResults="default"
 )
 
 }

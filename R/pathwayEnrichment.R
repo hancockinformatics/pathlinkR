@@ -1,9 +1,14 @@
 #' Test significant DE genes from DESeq2 for enriched pathways
 #'
-#' @param inputList A list of data frames, each the output of
-#'   `DESeq2::results()`. The list names are used as the comparison for each
-#'   dataframe (e.g. "COVID vs Healthy"). Each data frame must have Ensembl gene
-#'   IDs as the rownames.
+#' @param inputList A list, with each element containing RNA-Seq results as a
+#'   "DESeqResults", "TopTags", or "data.frame" object. Rownames of each table
+#'   must contain Ensembl Gene IDs. The list names are used as the comparison
+#'   name for each element (e.g. "COVID vs Healthy"). See Details for more
+#'   information on supported input types.
+#' @param columnFC Character; optional column name containing fold change
+#'   values. Defaults to NA.
+#' @param columnP Character; optional column name containing p values. Defaults
+#'   to NA.
 #' @param filterInput When providing list of data frames containing the
 #'   unfiltered output from `DESeq2::results()` (default format), set this to
 #'   `TRUE` to filter for significant genes using the thresholds set by the
@@ -13,8 +18,8 @@
 #' @param pCutoff Adjusted p value cutoff, defaults to <0.05
 #' @param fcCutoff Minimum absolute fold change, defaults to >1.5
 #' @param split Boolean (TRUE); Split into up and down-regulated DE genes using
-#'   the requisite column "log2FoldChange", and do enrichment independently.
-#'   Results are combined at the end, with an added "direction" column.
+#'   the requisite column `columnFC`, and do enrichment independently. Results
+#'   are combined at the end, with an added "direction" column.
 #' @param analysis Default is "sigora", but can also be "reactomepa" or
 #'   "hallmark"
 #' @param filterResults Should the output be filtered for significance? Use
@@ -60,11 +65,17 @@
 #'   three different pathway enrichment tools: Sigora and ReactomePA (which both
 #'   test for Reactome pathways), and MSigDB Hallmark gene set enrichment.
 #'
-#' @details The input must be a named list of data frames, which can be
-#'   pre-filtered or unfiltered. In the latter case, the function can filter
-#'   with user-defined cutoffs. Column names are expected to comply with those
-#'   output by `DESeq2::results()` function, namely: padj and log2FoldChange.
-#'   Rownames are assumed to contain the input Ensembl genes to be tested.
+#' @details `inputList` must be a named list of RNA-Seq results, with each
+#'   element being of class "DESeqResults" from `DESeq2`, "TopTags" from
+#'   `edgeR`, or a simple data frame. For the first two cases, column names are
+#'   expected to be the standard defined by each class ("log2FoldChange" and
+#'   "padj" for "DESeqResults", and "logFC" and "FDR" for "TopTags"). Hence for
+#'   these two cases the arguments `columnFC` and `columnP`
+#'   can be left as `NA`.
+#'
+#'   In the last case (elements are "data.frame"), `columnFC` and
+#'   `columnP` must be supplied when `filterInput=TRUE`, and
+#'   `columnFC` must be given if `split=TRUE`.
 #'
 #' @references
 #'   Sigora: <https://cran.r-project.org/package=sigora>
@@ -78,14 +89,18 @@
 #'
 #' pathwayEnrichment(
 #'     inputList=exampleDESeqResults[1],
+#'     columnFC="log2FoldChange",
+#'     columnP="padj",
 #'     filterInput=TRUE,
 #'     split=TRUE,
 #'     analysis="hallmark",
-#'     filterResults="default",
+#'     filterResults="default"
 #' )
 #'
 pathwayEnrichment <- function(
         inputList,
+        columnFC=NA,
+        columnP=NA,
         filterInput=TRUE,
         pCutoff=0.05,
         fcCutoff=1.5,
@@ -102,9 +117,50 @@ pathwayEnrichment <- function(
         of each item in the list as the comparison name."  = {
             is.list(inputList)
             !is.null(names(inputList))
-            all(unlist(lapply(inputList, is.data.frame)))
         }
     )
+
+    ## Coerce the input
+    if (is(inputList[[1]], "DESeqResults")) {
+        inputListCleaned <- lapply(inputList, function(x) {
+            as.data.frame(x) %>%
+                rename("LogFoldChange"=log2FoldChange, "PAdjusted"=padj)
+        })
+
+    } else if (is(inputList[[1]], "TopTags")) {
+        inputListCleaned <- lapply(inputList, function(x) {
+            as.data.frame(x) %>%
+                rename("LogFoldChange"=logFC, "PAdjusted"=FDR)
+        })
+
+    } else {
+
+        if (filterInput) {
+            stopifnot(
+                "Must provide 'columnFC' and 'columnP' when filtering input" = {
+                    !any(is.na(columnFC), is.na(columnP))
+                }
+            )
+            inputList <- lapply(inputList, function(x) {
+                rename(
+                    x,
+                    "LogFoldChange"=any_of(columnFC),
+                    "PAdjusted"=any_of(columnP)
+                )
+            })
+        }
+        if (split) {
+            stopifnot(
+                "Must provide 'columnFC' when splitting input" = {
+                    !is.na(columnFC)
+                }
+            )
+            inputList <- lapply(inputList, function(x) {
+                rename(x, "LogFoldChange"=any_of(columnFC))
+            })
+        }
+        inputListCleaned <- inputList
+    }
 
     data_env <- new.env(parent=emptyenv())
     data("idmap", envir=data_env, package="sigora")
@@ -124,8 +180,8 @@ pathwayEnrichment <- function(
     mappingFile <- data_env[["mappingFile"]]
 
 
-    ## Iterate through each element of "inputList"
-    resultList <- imap(inputList, function(x, comparison) {
+    ## Iterate through each element of "inputListCleaned"
+    resultList <- imap(inputListCleaned, function(x, comparison) {
         stopifnot(
             "Elements of 'inputList' should be named" = !is.null(comparison)
         )
@@ -140,11 +196,11 @@ pathwayEnrichment <- function(
         message("Comparison being analyzed: ", comparison)
 
         ## Filter the input genes if specified
-        deseqResults <-
+        rnaseqResults <-
             if (filterInput) {
-                stopifnot(c("padj", "log2FoldChange") %in% colnames(x))
+                # stopifnot(c("padj", "log2FoldChange") %in% colnames(x))
                 message("\tFiltering the results before testing...")
-                filter(x, padj < pCutoff, abs(log2FoldChange) > log2(fcCutoff))
+                filter(x, PAdjusted < pCutoff, abs(LogFoldChange) > log2(fcCutoff))
             } else {
                 x
             }
@@ -152,8 +208,8 @@ pathwayEnrichment <- function(
         ## Turn the input into a list of gene IDs, split by direction or not
         if (split) {
             preppedGenes <- list(
-                "Up"=rownames(filter(deseqResults, log2FoldChange > 0)),
-                "Down"=rownames(filter(deseqResults, log2FoldChange < 0))
+                "Up"=rownames(filter(rnaseqResults, LogFoldChange > 0)),
+                "Down"=rownames(filter(rnaseqResults, LogFoldChange < 0))
             )
             message(
                 "\tDEGs used: ",
@@ -161,7 +217,7 @@ pathwayEnrichment <- function(
                 length(preppedGenes$Down), " Down..."
             )
         } else {
-            preppedGenes <- list("All"=rownames(deseqResults))
+            preppedGenes <- list("All"=rownames(rnaseqResults))
             message("\tDEGs used: ", length(preppedGenes$All), "...")
         }
 
@@ -186,7 +242,7 @@ pathwayEnrichment <- function(
                     )
                 }
             )
-            resultFinal$totalGenes <- nrow(deseqResults)
+            resultFinal$totalGenes <- nrow(rnaseqResults)
 
             message(
                 "\tDone, found ", nrow(resultFinal), " enriched pathways.\n"
@@ -301,7 +357,7 @@ pathwayEnrichment <- function(
                 mutate(
                     across(c(numCandidateGenes, numBgGenes), as.numeric),
                     geneRatio=numCandidateGenes / numBgGenes,
-                    totalGenes=nrow(deseqResults)
+                    totalGenes=nrow(rnaseqResults)
                 ) %>%
                 select(
                     direction,

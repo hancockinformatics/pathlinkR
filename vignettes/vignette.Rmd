@@ -161,7 +161,7 @@ Reactome pathways or Hallmark gene sets (see the next section for more detail on
 the pathway enrichment methods):
 ```{r ppiEnrichNetwork}
 exNetworkPathways <- ppiEnrichNetwork(
-    network=exNetwork, 
+    network=exNetwork,
     analysis="hallmark",
     filterResults="default",
     geneUniverse = rownames(exampleDESeqResults[[1]])
@@ -233,6 +233,8 @@ make one.
 ```{r sigora_enrichment}
 enrichedResultsSigora <- pathwayEnrichment(
     inputList=exampleDESeqResults,
+    columnFC="log2FoldChange",
+    columnP="padj",
     analysis="sigora",
     filterInput=TRUE,
     gpsRepo="default"
@@ -257,6 +259,8 @@ exGeneUniverse <- mappingFile %>%
 
 enrichedResultsRpa <- pathwayEnrichment(
     inputList=exampleDESeqResults,
+    columnFC="log2FoldChange",
+    columnP="padj",
     analysis="reactomepa",
     filterInput=TRUE,
     split=TRUE,
@@ -277,6 +281,8 @@ pathways.
 ```{r hallmark_enrichment}
 enrichedResultsHm <- pathwayEnrichment(
     inputList=exampleDESeqResults,
+    columnFC="log2FoldChange",
+    columnP="padj",
     analysis="hallmark",
     filterInput=TRUE,
     split=TRUE
