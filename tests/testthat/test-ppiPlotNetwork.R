@@ -5,8 +5,10 @@ test_that("we get the right plot output", {
     set.seed(1)
 
     exNetwork <- ppiBuildNetwork(
-        deseqResults=exampleDESeqResults[[1]],
+        rnaseqResult=exampleDESeqResults[[1]],
         filterInput=TRUE,
+        columnFC="log2FoldChange",
+        columnP="padj",
         order="zero"
     )
 
@@ -14,7 +16,7 @@ test_that("we get the right plot output", {
         "example-network",
         ppiPlotNetwork(
             exNetwork,
-            fillColumn=log2FoldChange,
+            fillColumn=LogFoldChange,
             fillType="foldChange",
             legend=TRUE,
             label=FALSE
@@ -26,8 +28,10 @@ test_that("plotting subnetworks works as expected", {
     set.seed(1)
 
     exNetwork2 <- ppiBuildNetwork(
-        deseqResults=exampleDESeqResults[[1]],
+        rnaseqResult=exampleDESeqResults[[1]],
         filterInput=TRUE,
+        columnFC="log2FoldChange",
+        columnP="padj",
         order="zero"
     )
 
@@ -46,8 +50,8 @@ test_that("plotting subnetworks works as expected", {
         "example-subnetwork",
         ppiPlotNetwork(
             network=exSubnetwork,
-            fillType="oneSided",
             fillColumn=degree,
+            fillType="oneSided",
             label=TRUE,
             labelColumn=hgncSymbol
         )

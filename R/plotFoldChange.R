@@ -148,17 +148,17 @@ plotFoldChange <- function(
 
     stopifnot(
         "Provide a named list of data frames of results, with the name of each
-        item in the list as the comparison name."  = {
+        item in the list as the comparison name." ={
             is.list(inputList)
             !is.null(names(inputList))
         }
     )
 
-    stopifnot("One of 'pathName', 'pathId', 'genesToPlot' must b provided" = {
+    stopifnot("One of 'pathName', 'pathId', 'genesToPlot' must b provided"={
         any(!is.na(c(pathName, pathId, genesToPlot)))
     })
 
-    stopifnot("'geneFormat' must be either 'ensembl' or 'hgnc'" = {
+    stopifnot("'geneFormat' must be either 'ensembl' or 'hgnc'"={
         geneFormat %in% c("ensembl", "hgnc")}
     )
 
@@ -166,37 +166,37 @@ plotFoldChange <- function(
     if (is(inputList[[1]], "DESeqResults")) {
         inputListCleaned <- lapply(inputList, function(x) {
             as.data.frame(x) %>%
-                rename("LogFoldChange" = log2FoldChange, "PAdjusted" = padj)
+                rename("LogFoldChange"=log2FoldChange, "PAdjusted"=padj)
         })
 
     } else if (is(inputList[[1]], "TopTags")) {
         inputListCleaned <- lapply(inputList, function(x) {
             as.data.frame(x) %>%
-                rename("LogFoldChange" = logFC, "PAdjusted" = FDR)
+                rename("LogFoldChange"=logFC, "PAdjusted"=FDR)
         })
 
     } else {
         stopifnot(
             "If elements of 'inputList' are data frames, you must provide
-            'columnFC' and 'columnP'" = !any(is.na(columnFC), is.na(columnP))
+            'columnFC' and 'columnP'"=!any(is.na(columnFC), is.na(columnP))
         )
 
         inputListCleaned <- lapply(inputList, function(x) {
             as.data.frame(x) %>%
                 rename(
-                    "LogFoldChange" = all_of(columnFC),
-                    "PAdjusted" = all_of(columnP)
+                    "LogFoldChange"=all_of(columnFC),
+                    "PAdjusted"=all_of(columnP)
                 )
         })
     }
 
     ## Load data, after passing the basic checks
-    data_env <- new.env(parent = emptyenv())
+    data_env <- new.env(parent=emptyenv())
     data(
         "sigoraDatabase",
         "mappingFile",
-        envir = data_env,
-        package = "pathlinkR"
+        envir=data_env,
+        package="pathlinkR"
     )
     sigoraDatabase <- data_env[["sigoraDatabase"]]
     mappingFile <- data_env[["mappingFile"]]
@@ -259,7 +259,7 @@ plotFoldChange <- function(
     dfFC <- imap(inputListCleaned, function(listItem, itemName) {
         stopifnot(
             "Rownames of data frames in 'inputList' must be Ensembl gene IDs" =
-                grepl(pattern = "^ENSG", x = rownames(listItem)[1])
+                grepl(pattern="^ENSG", x=rownames(listItem)[1])
         )
 
         listItem %>%
@@ -323,9 +323,9 @@ plotFoldChange <- function(
     ## - If we're plotting log2 or standard fold changes
     ## - If the values are one sided i.e. all greater or less than 0
     heatmapLegendInfo <- .plotFoldChangeLegend(
-        .matFC = matFC,
-        .log2FoldChange = log2FoldChange,
-        .cellColours = cellColours
+        .matFC=matFC,
+        .log2FoldChange=log2FoldChange,
+        .cellColours=cellColours
     )
 
 
@@ -361,11 +361,11 @@ plotFoldChange <- function(
 
     draw(
         Heatmap(
-            matrix = matFC,
-            border = TRUE,
-            col = heatmapLegendInfo[[2]],
-            rect_gp = cellBorder,
-            cell_fun = function(j, i, x, y, w, h, fill) {
+            matrix=matFC,
+            border=TRUE,
+            col=heatmapLegendInfo[[2]],
+            rect_gp=cellBorder,
+            cell_fun=function(j, i, x, y, w, h, fill) {
                 if (showStars) {
 
                     cellLabel <- if (matP[i, j] < 0.001) {

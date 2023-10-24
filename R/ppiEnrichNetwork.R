@@ -45,8 +45,10 @@
 #' data("exampleDESeqResults")
 #'
 #' exNetwork <- ppiBuildNetwork(
-#'     deseqResults=exampleDESeqResults[[1]],
+#'     rnaseqResult=exampleDESeqResults[[1]],
 #'     filterInput=TRUE,
+#'     columnFC="log2FoldChange",
+#'     columnP="padj",
 #'     order="zero"
 #' )
 #'
@@ -67,7 +69,7 @@ ppiEnrichNetwork <- function(
         tibble::as_tibble() %>%
         column_to_rownames("name")
 
-    newList <- list("network" = networkTable)
+    newList <- list("network"=networkTable)
 
     pathwayEnrichment(
         inputList=newList,

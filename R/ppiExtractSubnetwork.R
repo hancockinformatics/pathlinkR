@@ -49,8 +49,10 @@
 #' data("exampleDESeqResults")
 #'
 #' exNetwork <- ppiBuildNetwork(
-#'     deseqResults=exampleDESeqResults[[1]],
+#'     rnaseqResult=exampleDESeqResults[[1]],
 #'     filterInput=TRUE,
+#'     columnFC="log2FoldChange",
+#'     columnP="padj",
 #'     order="zero"
 #' )
 #'
@@ -72,21 +74,21 @@ ppiExtractSubnetwork <- function(
         pathwayToExtract
 ) {
 
-    data_env <- new.env(parent = emptyenv())
-    data("mappingFile", envir = data_env, package = "pathlinkR")
+    data_env <- new.env(parent=emptyenv())
+    data("mappingFile", envir=data_env, package="pathlinkR")
     mappingFile <- data_env[["mappingFile"]]
 
     stopifnot(
         "You must specify either 'genes' or 'pathwayEnrichmentResult' to
-        provide genes to extract from the initial network" = {
+        provide genes to extract from the initial network"={
             !all(is.null(genes), is.null(pathwayEnrichmentResult))
         }
     )
 
     if (!is.null(genes)) {
         stopifnot(
-            "Argument 'genes' must be a list of Ensembl gene IDs" = {
-                grepl(x = genes[[1]], pattern = "^ENSG[0-9]+$")
+            "Argument 'genes' must be a list of Ensembl gene IDs"={
+                grepl(x=genes[[1]], pattern="^ENSG[0-9]+$")
             }
         )
     }
@@ -94,7 +96,7 @@ ppiExtractSubnetwork <- function(
     if (!is.null(pathwayEnrichmentResult)) {
         stopifnot(
             "Argument 'pathwayEnrichmentResult' must contain the columns
-            'pathwayName' and 'genes'" = {
+            'pathwayName' and 'genes'"={
                 all(c("pathwayName", "genes") %in%
                         colnames(pathwayEnrichmentResult))
             }
@@ -102,14 +104,14 @@ ppiExtractSubnetwork <- function(
 
         stopifnot(
             "Provided 'pathwayToExtract' must be present in
-            'pathwayEnrichmentResult" = {
+            'pathwayEnrichmentResult"={
                 pathwayToExtract %in% pathwayEnrichmentResult[["pathwayName"]]
             }
         )
 
         stopifnot(
             "The 'genes' column must contain HGNC symbols separated
-            with a ';'" = {
+            with a ';'"={
                 grepl(
                     x=pathwayEnrichmentResult[["genes"]][1],
                     pattern="\\w+;"
@@ -120,11 +122,11 @@ ppiExtractSubnetwork <- function(
 
 
     if (!is.null(genes)) {
-        message("Using provided list of Ensembl genes...", appendLF = FALSE)
+        message("Using provided list of Ensembl genes...", appendLF=FALSE)
         genesToExtract <- genes
 
     } else if (!is.null(pathwayEnrichmentResult)) {
-        message("Pulling genes for given pathway...", appendLF = FALSE)
+        message("Pulling genes for given pathway...", appendLF=FALSE)
 
         pathwayGenesHGNC <- pathwayEnrichmentResult %>%
             filter(pathwayName == pathwayToExtract) %>%

@@ -93,15 +93,17 @@
 #' data("exampleDESeqResults")
 #'
 #' exNetwork <- ppiBuildNetwork(
-#'     deseqResults=exampleDESeqResults[[1]],
+#'     rnaseqResult=exampleDESeqResults[[1]],
 #'     filterInput=TRUE,
+#'     columnFC="log2FoldChange",
+#'     columnP="padj",
 #'     order="zero"
 #' )
 #'
 #' ppiPlotNetwork(
 #'     network=exNetwork,
 #'     title="COVID positive over time",
-#'     fillColumn=log2FoldChange,
+#'     fillColumn=LogFoldChange,
 #'     fillType="foldChange",
 #'     legend=TRUE,
 #'     label=TRUE,
@@ -243,18 +245,18 @@ ppiPlotNetwork <- function(
 
         network <- network %>%
             mutate(
-                nodeLabel = case_when(
+                nodeLabel=case_when(
                     degree > labelFilter ~ {{labelColumn}},
                     TRUE ~ NA_character_
                 ),
-                isStarter = if_else(name %in% starterNodes, "y", "n")
+                isStarter=if_else(name %in% starterNodes, "y", "n")
             )
 
         if (hubColour == "blue2") {
             hubColour <- "red"
         }
 
-        ggraph(network, layout = layoutObject) +
+        ggraph(network, layout=layoutObject) +
             geom_edge_link(
                 show.legend=FALSE,
                 edge_alpha=edgeAlpha,

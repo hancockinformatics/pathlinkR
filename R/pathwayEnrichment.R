@@ -114,7 +114,7 @@ pathwayEnrichment <- function(
 
     stopifnot(
         "Provide a named list of data frames of results, with the name
-        of each item in the list as the comparison name."  = {
+        of each item in the list as the comparison name." ={
             is.list(inputList)
             !is.null(names(inputList))
         }
@@ -137,7 +137,7 @@ pathwayEnrichment <- function(
 
         if (filterInput) {
             stopifnot(
-                "Must provide 'columnFC' and 'columnP' when filtering input" = {
+                "Must provide 'columnFC' and 'columnP' when filtering input"={
                     !any(is.na(columnFC), is.na(columnP))
                 }
             )
@@ -151,7 +151,7 @@ pathwayEnrichment <- function(
         }
         if (split) {
             stopifnot(
-                "Must provide 'columnFC' when splitting input" = {
+                "Must provide 'columnFC' when splitting input"={
                     !is.na(columnFC)
                 }
             )
@@ -172,7 +172,7 @@ pathwayEnrichment <- function(
         "hallmarkDatabase",
         "mappingFile",
         envir=data_env,
-        package = "pathlinkR"
+        package="pathlinkR"
     )
     pathwayCategories <- data_env[["pathwayCategories"]]
     reactomeDatabase <- data_env[["reactomeDatabase"]]
@@ -183,7 +183,7 @@ pathwayEnrichment <- function(
     ## Iterate through each element of "inputListCleaned"
     resultList <- imap(inputListCleaned, function(x, comparison) {
         stopifnot(
-            "Elements of 'inputList' should be named" = !is.null(comparison)
+            "Elements of 'inputList' should be named"=!is.null(comparison)
         )
 
         if (all(rownames(x) == seq_len(nrow(x)))) {

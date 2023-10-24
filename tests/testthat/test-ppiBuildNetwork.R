@@ -2,8 +2,10 @@ test_that("zero order network behave as expected", {
     data("exampleDESeqResults")
 
     exNetworkZero <- ppiBuildNetwork(
-        deseqResults=exampleDESeqResults[[1]],
+        rnaseqResult=exampleDESeqResults[[1]],
         filterInput=TRUE,
+        columnFC="log2FoldChange",
+        columnP="padj",
         order="zero"
     )
 
@@ -14,7 +16,7 @@ test_that("zero order network behave as expected", {
         997
     )
 
-    expect_equal(
+    expect_contains(
         colnames(as_tibble(exNetworkZero)),
         c(
             "name",
@@ -22,13 +24,7 @@ test_that("zero order network behave as expected", {
             "betweenness",
             "seed",
             "hubScoreBtw",
-            "hgncSymbol",
-            "baseMean",
-            "log2FoldChange",
-            "lfcSE",
-            "stat",
-            "pvalue",
-            "padj"
+            "hgncSymbol"
         )
     )
 })
@@ -36,10 +32,14 @@ test_that("zero order network behave as expected", {
 test_that("simple minimum order networks behave as expected", {
     data("exampleDESeqResults")
 
-    exNetworkSimple <- ppiBuildNetwork(
-        deseqResults=exampleDESeqResults[[1]],
-        filterInput=TRUE,
-        order="minSimple"
+    suppressMessages(
+        exNetworkSimple <- ppiBuildNetwork(
+            rnaseqResult=exampleDESeqResults[[1]],
+            filterInput=TRUE,
+            columnFC="log2FoldChange",
+            columnP="padj",
+            order="minSimple"
+        )
     )
 
     expect_length(exNetworkSimple, 3960)
@@ -49,7 +49,7 @@ test_that("simple minimum order networks behave as expected", {
         15822
     )
 
-    expect_equal(
+    expect_contains(
         colnames(as_tibble(exNetworkSimple)),
         c(
             "name",
@@ -57,13 +57,7 @@ test_that("simple minimum order networks behave as expected", {
             "betweenness",
             "seed",
             "hubScoreBtw",
-            "hgncSymbol",
-            "baseMean",
-            "log2FoldChange",
-            "lfcSE",
-            "stat",
-            "pvalue",
-            "padj"
+            "hgncSymbol"
         )
     )
 })
@@ -74,8 +68,10 @@ test_that("Steinder-trimmed networks behave as expected", {
     data("exampleDESeqResults")
 
     exNetworkSteiner <- ppiBuildNetwork(
-        deseqResults=exampleDESeqResults[[1]],
+        rnaseqResult=exampleDESeqResults[[1]],
         filterInput=TRUE,
+        columnFC="log2FoldChange",
+        columnP="padj",
         order="minSteiner"
     )
 
@@ -86,7 +82,7 @@ test_that("Steinder-trimmed networks behave as expected", {
         1375
     )
 
-    expect_equal(
+    expect_contains(
         colnames(as_tibble(exNetworkSteiner)),
         c(
             "name",
@@ -94,13 +90,7 @@ test_that("Steinder-trimmed networks behave as expected", {
             "betweenness",
             "seed",
             "hubScoreBtw",
-            "hgncSymbol",
-            "baseMean",
-            "log2FoldChange",
-            "lfcSE",
-            "stat",
-            "pvalue",
-            "padj"
+            "hgncSymbol"
         )
     )
 })

@@ -26,14 +26,14 @@
 ) {
 
     stopifnot(
-        "Input must be a character vector" = { is(enrichGenes, "character") }
+        "Input must be a character vector"={ is(enrichGenes, "character") }
     )
     stopifnot(
-        "Input must be a character vector" = { is(enrichGenes, "vector") }
+        "Input must be a character vector"={ is(enrichGenes, "vector") }
     )
 
     stopifnot(
-        "Your input vector doesn't look like Ensembl genes." = {
+        "Your input vector doesn't look like Ensembl genes."={
             any(grepl(pattern="^ENSG", enrichGenes))
         }
     )

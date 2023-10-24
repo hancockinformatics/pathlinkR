@@ -102,8 +102,8 @@ pathnetGGraph <- function(
         themeBaseSize=16
 ) {
 
-    data_env <- new.env(parent = emptyenv())
-    data("groupedPathwayColours", envir = data_env, package = "pathlinkR")
+    data_env <- new.env(parent=emptyenv())
+    data("groupedPathwayColours", envir=data_env, package="pathlinkR")
     groupedPathwayColours <- data_env[["groupedPathwayColours"]]
 
     stopifnot(all(
@@ -117,11 +117,11 @@ pathnetGGraph <- function(
         )
     ))
 
-    stopifnot("'nodeSizeRange' should be a length-two numeric vector" = {
+    stopifnot("'nodeSizeRange' should be a length-two numeric vector"={
         length(nodeSizeRange) == 2
     })
 
-    stopifnot("'edgeWidthRange' should be a length-two numeric vector" = {
+    stopifnot("'edgeWidthRange' should be a length-two numeric vector"={
         length(edgeWidthRange) == 2
     })
 

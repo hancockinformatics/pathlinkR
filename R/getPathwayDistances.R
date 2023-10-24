@@ -65,11 +65,6 @@ getPathwayDistances <- function(
         "Couldn't find a column of pathway IDs" = length(pathwayIdCol) > 0
     )
 
-    # message(
-    #     "Using '", geneIdCol,"' for gene IDs and '",
-    #     pathwayIdCol, "' for pathway IDs..."
-    # )
-
     identityTable <- pathwayData %>%
         select(all_of(c(geneIdCol, pathwayIdCol))) %>%
         distinct() %>%
@@ -94,6 +89,5 @@ getPathwayDistances <- function(
         diag=TRUE
     ))
 
-    # message("Done!\n")
     return(distanceMatrix)
 }

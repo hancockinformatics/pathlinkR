@@ -106,8 +106,8 @@ pathnetCreate <- function(
         %in% colnames(foundation)
     ))
 
-    data_env <- new.env(parent = emptyenv())
-    data("pathwayCategories", envir = data_env, package = "pathlinkR")
+    data_env <- new.env(parent=emptyenv())
+    data("pathwayCategories", envir=data_env, package="pathlinkR")
     pathwayCategories <- data_env[["pathwayCategories"]]
 
     if (columnId != "pathwayId") {
@@ -124,12 +124,12 @@ pathnetCreate <- function(
         distinct(pathway1, pathwayName1) %>%
         left_join(
             pathwayEnrichmentResult,
-            by=c("pathway1" = "pathwayId"),
+            by=c("pathway1"="pathwayId"),
             multiple="all"
         )
 
     startingEdges <- foundation %>%
-        mutate(similarity = 1 / distance) %>%
+        mutate(similarity=1 / distance) %>%
         select(pathway1, pathway2, similarity, distance)
 
     pathwaysAsNetwork <- tbl_graph(

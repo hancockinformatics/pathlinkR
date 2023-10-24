@@ -111,18 +111,18 @@ eruption <- function(
     if (is(rnaseqResult, "DESeqResults")) {
         rnaseqResult <- rnaseqResult %>%
             as.data.frame() %>%
-            rename("LogFoldChange" = log2FoldChange, "PAdjusted" = padj)
+            rename("LogFoldChange"=log2FoldChange, "PAdjusted"=padj)
 
     } else if (is(rnaseqResult, "TopTags")) {
         rnaseqResult <- rnaseqResult %>%
             as.data.frame() %>%
-            rename("LogFoldChange" = logFC, "PAdjusted" = FDR)
+            rename("LogFoldChange"=logFC, "PAdjusted"=FDR)
 
     } else {
 
         stopifnot(
             "If 'rnaseqResult' is a simple data frame, you must provide
-            'columnFC' and 'columnP'" = {
+            'columnFC' and 'columnP'"={
                 !any(is.na(columnFC), is.na(columnP))
             }
         )
@@ -130,26 +130,26 @@ eruption <- function(
         rnaseqResult <- rnaseqResult %>%
             as.data.frame() %>%
             rename(
-                "LogFoldChange" = all_of(columnFC),
-                "PAdjusted" = all_of(columnP)
+                "LogFoldChange"=all_of(columnFC),
+                "PAdjusted"=all_of(columnP)
             )
     }
 
     if (!all(is.na(xaxis))) {
-        stopifnot("'xaxis' must be a length-two numeric vector" = {
+        stopifnot("'xaxis' must be a length-two numeric vector"={
             length(xaxis) == 2
         })
     }
     if (!all(is.na(yaxis))) {
-        stopifnot("'yaxis' must be a length-two numeric vector" = {
+        stopifnot("'yaxis' must be a length-two numeric vector"={
             length(yaxis) == 2
         })
     }
 
 
     ## Load the data we need for gene mapping
-    data_env <- new.env(parent = emptyenv())
-    data("mappingFile", envir = data_env, package = "pathlinkR")
+    data_env <- new.env(parent=emptyenv())
+    data("mappingFile", envir=data_env, package="pathlinkR")
     mappingFile <- data_env[["mappingFile"]]
 
 

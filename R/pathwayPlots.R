@@ -142,7 +142,7 @@ pathwayPlots <- function(
     plotDataNoDups <- plotDataGraph %>%
         group_by(pathwayName, comparison) %>%
         arrange(pValueAdjusted) %>%
-        distinct(pathwayName, comparison, .keep_all = TRUE)
+        distinct(pathwayName, comparison, .keep_all=TRUE)
 
     ## The n largest top pathways are chosen to start off the columns. For cases
     ## when you specify specific pathways, make sure that there are more

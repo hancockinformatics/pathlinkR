@@ -133,15 +133,17 @@ of their dysregulation (i.e. up- or down-regulated) by specifying
 `fillType="foldChange"`.
 ```{r ppi_networks, fig.width=10, fig.height=8, warning=FALSE}
 exNetwork <- ppiBuildNetwork(
-    deseqResults=exampleDESeqResults[[1]],
+    rnaseqResult=exampleDESeqResults[[1]],
     filterInput=TRUE,
+    columnFC="log2FoldChange",
+    columnP="padj",
     order="zero"
 )
 
 ppiPlotNetwork(
     network=exNetwork,
     title=names(exampleDESeqResults)[1],
-    fillColumn=log2FoldChange,
+    fillColumn=LogFoldChange,
     fillType="foldChange",
     label=TRUE,
     labelColumn=hgncSymbol,

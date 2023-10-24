@@ -5,8 +5,10 @@
 \title{Construct a PPI network from input genes and InnateDB's database}
 \usage{
 ppiBuildNetwork(
-  deseqResults,
+  rnaseqResult,
   filterInput = TRUE,
+  columnFC = NA,
+  columnP = NA,
   pCutoff = 0.05,
   fcCutoff = 1.5,
   order = "zero",
@@ -15,14 +17,20 @@ ppiBuildNetwork(
 )
 }
 \arguments{
-\item{deseqResults}{Data frame of DESeq2 results with Ensembl gene IDs as
-rownames}
+\item{rnaseqResult}{An object of class "DESeqResults", "TopTags", or a simple
+data frame. See Details for more information on input types.}
 
 \item{filterInput}{If providing list of data frames containing the
 unfiltered output from \code{DESeq2::results()}, set this to TRUE to filter for
 DE genes using the thresholds set by the \code{pCutoff} and \code{fcCutoff}
 arguments. When FALSE it's assumed your passing the filtered
 results into \code{inputList} and no more filtering will be done.}
+
+\item{columnFC}{Character; optional column containing fold change values,
+used only when \code{filterInput=TRUE} and the input is a data frame.}
+
+\item{columnP}{Character; optional column containing p values, used only
+when \code{filterInput=TRUE} and the input is a data frame.}
 
 \item{pCutoff}{Adjusted p value cutoff, defaults to <0.05}
 
@@ -63,8 +71,14 @@ Creates a protein-protein interaction (PPI) network using
 data from InnateDB, with options for network order, and filtering input.
 }
 \details{
-The "minSteiner" method is implemented with the \code{SteinerNet}
-package.
+The input to \code{ppiBuildNetwork()} can be a "DESeqResults" object
+(from \code{DESeq2}), "TopTags" (\code{edgeR}), or a simple data frame.
+When not providing a basic data frame, the columns for filtering are
+automatically pulled ("log2FoldChange" and "padj" for DESeqResults, or
+"logFC" and "FDR" for TopTags). Otherwise, the arguments "columnFC" and
+"columnP" must be specified.
+
+The "minSteiner" method is implemented with the \code{SteinerNet} package.
 
 The "hubMeasure" argument determines how \code{ppiBuildNetwork} assesses
 connectedness of nodes in the network, which will be used to highlight
@@ -77,7 +91,9 @@ method can be found at \code{?igraph::hub_score}.
 data("exampleDESeqResults")
 
 ppiBuildNetwork(
-    deseqResults=exampleDESeqResults[[1]],
+    rnaseqResult=exampleDESeqResults[[1]],
+    columnFC="log2FoldChange",
+    columnP="padj",
     filterInput=TRUE,
     order="zero"
 )

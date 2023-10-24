@@ -1,12 +1,16 @@
 #' Construct a PPI network from input genes and InnateDB's database
 #'
-#' @param deseqResults Data frame of DESeq2 results with Ensembl gene IDs as
-#'   rownames
+#' @param rnaseqResult An object of class "DESeqResults", "TopTags", or a simple
+#' data frame. See Details for more information on input types.
 #' @param filterInput If providing list of data frames containing the
 #'   unfiltered output from `DESeq2::results()`, set this to TRUE to filter for
 #'   DE genes using the thresholds set by the `pCutoff` and `fcCutoff`
 #'   arguments. When FALSE it's assumed your passing the filtered
 #'   results into `inputList` and no more filtering will be done.
+#' @param columnFC Character; optional column containing fold change values,
+#'   used only when `filterInput=TRUE` and the input is a data frame.
+#' @param columnP Character; optional column containing p values, used only
+#'   when `filterInput=TRUE` and the input is a data frame.
 #' @param pCutoff Adjusted p value cutoff, defaults to <0.05
 #' @param fcCutoff Absolute fold change cutoff, defaults to an absolute value
 #'   of >1.5
@@ -49,8 +53,14 @@
 #' @description Creates a protein-protein interaction (PPI) network using
 #'   data from InnateDB, with options for network order, and filtering input.
 #'
-#' @details The "minSteiner" method is implemented with the `SteinerNet`
-#'   package.
+#' @details The input to `ppiBuildNetwork()` can be a "DESeqResults" object
+#'   (from `DESeq2`), "TopTags" (`edgeR`), or a simple data frame.
+#'   When not providing a basic data frame, the columns for filtering are
+#'   automatically pulled ("log2FoldChange" and "padj" for DESeqResults, or
+#'   "logFC" and "FDR" for TopTags). Otherwise, the arguments "columnFC" and
+#'   "columnP" must be specified.
+#'
+#'   The "minSteiner" method is implemented with the `SteinerNet` package.
 #'
 #'   The "hubMeasure" argument determines how `ppiBuildNetwork` assesses
 #'   connectedness of nodes in the network, which will be used to highlight
@@ -69,14 +79,18 @@
 #' data("exampleDESeqResults")
 #'
 #' ppiBuildNetwork(
-#'     deseqResults=exampleDESeqResults[[1]],
+#'     rnaseqResult=exampleDESeqResults[[1]],
+#'     columnFC="log2FoldChange",
+#'     columnP="padj",
 #'     filterInput=TRUE,
 #'     order="zero"
 #' )
 #'
 ppiBuildNetwork <- function(
-        deseqResults,
+        rnaseqResult,
         filterInput=TRUE,
+        columnFC=NA,
+        columnP=NA,
         pCutoff=0.05,
         fcCutoff=1.5,
         order="zero",
@@ -84,14 +98,16 @@ ppiBuildNetwork <- function(
         ppiData=innateDbPPI
 ) {
 
-    data_env <- new.env(parent = emptyenv())
-    data("innateDbPPI", "mappingFile", envir = data_env, package = "pathlinkR")
+    data_env <- new.env(parent=emptyenv())
+    data("innateDbPPI", "mappingFile", envir=data_env, package="pathlinkR")
     innateDbPPI <- data_env[["innateDbPPI"]]
     mappingFile <- data_env[["mappingFile"]]
 
-    stopifnot(is(deseqResults, "data.frame"))
-    stopifnot(grepl(pattern="ENSG", x=rownames(deseqResults)[1]))
-    stopifnot(all(c("padj", "log2FoldChange") %in% colnames(deseqResults)))
+    stopifnot(
+        "Rownames of 'rnaseqResult` must contain Ensembl gene IDs"={
+            grepl(pattern="ENSG", x=rownames(rnaseqResult)[1])
+        }
+    )
     stopifnot(order %in% c("zero", "first", "minSimple", "minSteiner"))
     stopifnot(hubMeasure %in% c("betweenness", "degree", "hubscore"))
     stopifnot(
@@ -100,19 +116,43 @@ ppiBuildNetwork <- function(
         )
     )
 
-    df <- tibble::as_tibble(rownames_to_column(deseqResults, "gene"))
+    if (is(rnaseqResult, "DESeqResults")) {
+        rnaseqResult <- rnaseqResult %>%
+            as.data.frame() %>%
+            rename("LogFoldChange"=log2FoldChange, "PAdjusted"=padj)
+
+    } else if (is(rnaseqResult, "TopTags")) {
+        rnaseqResult <- rnaseqResult %>%
+            as.data.frame() %>%
+            rename("LogFoldChange"=logFC, "PAdjusted"=FDR)
+
+    } else {
+
+        if (filterInput) {
+            stopifnot(
+                "If 'rnaseqResult' is a simple data frame, and
+                'filterInput=TRUE', you must provide 'columnFC' and
+                'columnP'"= {
+                    !any(is.na(columnFC), is.na(columnP))
+                }
+            )
+            rnaseqResult <- rnaseqResult %>%
+                rename(
+                    "LogFoldChange"=all_of(columnFC),
+                    "PAdjusted"=all_of(columnP)
+                )
+        }
+    }
+
+    df <- tibble::as_tibble(rownames_to_column(rnaseqResult, "gene"))
 
     if (filterInput) {
         df <- filter(
             df,
-            padj < pCutoff,
-            abs(log2FoldChange) > log2(fcCutoff)
+            PAdjusted < pCutoff,
+            abs(LogFoldChange) > log2(fcCutoff)
         )
     }
-
-    message(
-        "ppiBuildNetwork will use ", nrow(df), " DEGs for network construction"
-    )
 
     ## Check for and remove any duplicate IDs, warning the user when this occurs
     dfClean <- distinct(df, gene, .keep_all=TRUE)
@@ -169,7 +209,6 @@ ppiBuildNetwork <- function(
     ## Perform node filtering/trimming for minimum order networks, and
     ## recalculate degree and betweenness
     if (order == "minSimple") {
-        message("Performing 'simple' minimum network trimming...")
 
         networkOut1 <- networkInit %>%
             filter(!(degree == 1 & !seed), !(betweenness == 0 & !seed)) %>%
@@ -179,7 +218,6 @@ ppiBuildNetwork <- function(
             )
 
     } else if (order == "minSteiner") {
-        message("Performing 'Steiner' minimum network trimming...")
 
         terminals <- networkInit %>%
             activate(nodes) %>%

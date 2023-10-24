@@ -141,15 +141,17 @@ the respective functions from the \code{tidygraph} package.
 data("exampleDESeqResults")
 
 exNetwork <- ppiBuildNetwork(
-    deseqResults=exampleDESeqResults[[1]],
+    rnaseqResult=exampleDESeqResults[[1]],
     filterInput=TRUE,
+    columnFC="log2FoldChange",
+    columnP="padj",
     order="zero"
 )
 
 ppiPlotNetwork(
     network=exNetwork,
     title="COVID positive over time",
-    fillColumn=log2FoldChange,
+    fillColumn=LogFoldChange,
     fillType="foldChange",
     legend=TRUE,
     label=TRUE,
