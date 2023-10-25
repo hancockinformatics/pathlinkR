@@ -21,7 +21,7 @@ Internal wrapper function to run Sigora and return the results
 with desired columns
 }
 \references{
-None.
+\url{https://cran.r-project.org/package=sigora}
 }
 \seealso{
 \url{https://github.com/hancockinformatics/pathlinkR}

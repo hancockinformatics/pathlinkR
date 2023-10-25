@@ -7,8 +7,6 @@ test_that("we get the right plot output", {
     exNetwork <- ppiBuildNetwork(
         rnaseqResult=exampleDESeqResults[[1]],
         filterInput=TRUE,
-        columnFC="log2FoldChange",
-        columnP="padj",
         order="zero"
     )
 
@@ -30,8 +28,6 @@ test_that("plotting subnetworks works as expected", {
     exNetwork2 <- ppiBuildNetwork(
         rnaseqResult=exampleDESeqResults[[1]],
         filterInput=TRUE,
-        columnFC="log2FoldChange",
-        columnP="padj",
         order="zero"
     )
 

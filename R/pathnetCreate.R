@@ -1,8 +1,9 @@
 #' Create a pathway network from enrichment results and a pathway
 #' interaction foundation
 #'
-#' @param pathwayEnrichmentResult Data frame of results from Sigora or
-#'   ReactomePA (should be based on Reactome data)
+#' @param pathwayEnrichmentResult Data frame of results from
+#'   `pathwayEnrichment` run with Sigora or ReactomePA (should be based on
+#'   Reactome data).
 #' @param columnId Character; column containing the Reactome pathway IDs.
 #'   Defaults to "pathwayID".
 #' @param columnP Character; column containing the adjusted p values. Defaults
@@ -54,8 +55,6 @@
 #'   aggressively this is done can be controlled via the `trimOrder` argument,
 #'   and the optimal value will depend on the number of enriched pathways and
 #'   the number of interacting pathways (i.e. number of rows in "foundation").
-#'
-#' @references None.
 #'
 #' @seealso <https://github.com/hancockinformatics/pathlinkR>
 #'

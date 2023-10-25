@@ -14,8 +14,6 @@
 #'   in the middle of a word (i.e. chops at the nearest space). Appends an
 #'   ellipsis at the end to indicate some text has been removed.
 #'
-#' @references None.
-#'
 #' @seealso <https://github.com/hancockinformatics/pathlinkR>
 #'
 .truncNeatly <- function(x, l=60) {

@@ -15,7 +15,7 @@
 #' @description Internal wrapper function to run Sigora and return the results
 #'   with desired columns
 #'
-#' @references None.
+#' @references <https://cran.r-project.org/package=sigora>
 #'
 #' @seealso <https://github.com/hancockinformatics/pathlinkR>
 #'

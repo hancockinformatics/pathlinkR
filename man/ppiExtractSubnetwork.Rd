@@ -58,8 +58,6 @@ data("exampleDESeqResults")
 exNetwork <- ppiBuildNetwork(
     rnaseqResult=exampleDESeqResults[[1]],
     filterInput=TRUE,
-    columnFC="log2FoldChange",
-    columnP="padj",
     order="zero"
 )
 

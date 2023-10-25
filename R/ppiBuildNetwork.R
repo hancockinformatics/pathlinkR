@@ -73,6 +73,8 @@
 #'   <https://cran.r-project.org/web/packages/SteinerNet/index.html> for details
 #'   on the Steiner network trimming.
 #'
+#'   InnateDB: <https://www.innatedb.com/>
+#'
 #' @seealso <https://github.com/hancockinformatics/pathlinkR/>
 #'
 #' @examples
@@ -80,8 +82,6 @@
 #'
 #' ppiBuildNetwork(
 #'     rnaseqResult=exampleDESeqResults[[1]],
-#'     columnFC="log2FoldChange",
-#'     columnP="padj",
 #'     filterInput=TRUE,
 #'     order="zero"
 #' )

@@ -19,9 +19,6 @@ Trims a character string to the desired length, without breaking
 in the middle of a word (i.e. chops at the nearest space). Appends an
 ellipsis at the end to indicate some text has been removed.
 }
-\references{
-None.
-}
 \seealso{
 \url{https://github.com/hancockinformatics/pathlinkR}
 }

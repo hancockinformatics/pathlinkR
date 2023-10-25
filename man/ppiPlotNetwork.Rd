@@ -143,8 +143,6 @@ data("exampleDESeqResults")
 exNetwork <- ppiBuildNetwork(
     rnaseqResult=exampleDESeqResults[[1]],
     filterInput=TRUE,
-    columnFC="log2FoldChange",
-    columnP="padj",
     order="zero"
 )
 
@@ -159,9 +157,6 @@ ppiPlotNetwork(
     labelFilter=5
 )
 
-}
-\references{
-None.
 }
 \seealso{
 \url{https://github.com/hancockinformatics/pathlinkR/}

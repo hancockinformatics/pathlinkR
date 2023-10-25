@@ -18,9 +18,6 @@ ggplot scale object
 Internal function which is used to create even breaks for
 volcano plots produced by \code{eruption}.
 }
-\references{
-None.
-}
 \seealso{
 \url{https://github.com/hancockinformatics/pathlinkR}
 }

@@ -60,8 +60,6 @@ data("exampleDESeqResults")
 exNetwork <- ppiBuildNetwork(
     rnaseqResult=exampleDESeqResults[[1]],
     filterInput=TRUE,
-    columnFC="log2FoldChange",
-    columnP="padj",
     order="zero"
 )
 
@@ -70,6 +68,11 @@ ppiEnrichNetwork(
     analysis="hallmark"
 )
 
+}
+\references{
+Sigora: \url{https://cran.r-project.org/package=sigora}
+ReactomePA: \url{https://www.bioconductor.org/packages/ReactomePA/}
+MSigDB/Hallmark: \url{https://www.gsea-msigdb.org/gsea/msigdb/collections.jsp}
 }
 \seealso{
 \url{https://github.com/hancockinformatics/pathlinkR}

@@ -39,6 +39,11 @@
 #'
 #' @importFrom tibble column_to_rownames
 #'
+#' @references
+#'   Sigora: <https://cran.r-project.org/package=sigora>
+#'   ReactomePA: <https://www.bioconductor.org/packages/ReactomePA/>
+#'   MSigDB/Hallmark: <https://www.gsea-msigdb.org/gsea/msigdb/collections.jsp>
+#'
 #' @seealso <https://github.com/hancockinformatics/pathlinkR>
 #'
 #' @examples
@@ -47,8 +52,6 @@
 #' exNetwork <- ppiBuildNetwork(
 #'     rnaseqResult=exampleDESeqResults[[1]],
 #'     filterInput=TRUE,
-#'     columnFC="log2FoldChange",
-#'     columnP="padj",
 #'     order="zero"
 #' )
 #'

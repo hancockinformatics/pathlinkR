@@ -1,14 +1,16 @@
-#' Create a volcano plot from an unfiltered DESeq2 results object
+#' Create a volcano plot of RNA-Seq results
 #'
 #' @param rnaseqResult Data frame of RNASeq results, with Ensembl gene IDs as
-#'   rownames. Can be an object from `DESeq2`, `edgeR`, or a simple data frame.
-#'   See "Details" for more information.
+#'   rownames. Can be a "DESeqResults" or "TopTags" object, or a simple data
+#'   frame. See "Details" for more information.
 #' @param columnFC Character; Column to plot along the x-axis, typically log2
-#'   fold change values. Defaults to NA.
+#'   fold change values. Only required when `rnaseqResult` is a simple data
+#'   frame. Defaults to NA.
 #' @param columnP Character; Column to plot along the y-axis, typically nominal
-#'   or adjusted p values. Defaults to NA.
-#' @param pCutoff Adjusted p value cutoff, defaults to <0.05
-#' @param fcCutoff Absolute fold change cutoff, defaults to >1.5
+#'   or adjusted p values. Only required when `rnaseqResult` is a simple data
+#'   frame. Defaults to NA.
+#' @param pCutoff Adjusted p value cutoff, defaults to < 0.05
+#' @param fcCutoff Absolute fold change cutoff, defaults to > 1.5
 #' @param baseColour Colour of points for all significant DE genes
 #'   ("steelblue4")
 #' @param nonsigColour Colour of non-significant DE genes ("lightgrey")
@@ -54,8 +56,8 @@
 #'   rownames of the input object.
 #'
 #' @details The input to `eruption()` can be of class "DESeqResults" (from
-#'   `DESeq2`), "TopTags" (`edgeR`), or a simple data frame. When not providing
-#'   a basic data frame, the columns to plot are automatically pulled
+#'   `DESeq2`), "TopTags" (`edgeR`), or a simple data frame. When providing
+#'   either of the former, the columns to plot are automatically pulled
 #'   ("log2FoldChange" and "padj" for DESeqResults, or "logFC" and "FDR" for
 #'   TopTags). Otherwise, the arguments "columnFC" and "columnP" must be
 #'   specified. If one wishes to override the default behaviour for
@@ -71,17 +73,11 @@
 #'   be applied using the standard ggplot2 functions (`labs()`,
 #'   `theme()`, etc.).
 #'
-#' @references None.
-#'
 #' @seealso <https://github.com/hancockinformatics/pathlinkR>
 #'
 #' @examples
 #' data("exampleDESeqResults")
-#' eruption(
-#'     rnaseqResult=exampleDESeqResults[[1]],
-#'     columnFC="log2FoldChange",
-#'     columnP="padj"
-#' )
+#' eruption(rnaseqResult=exampleDESeqResults[[1]])
 #'
 eruption <- function(
         rnaseqResult,
@@ -121,14 +117,13 @@ eruption <- function(
     } else {
 
         stopifnot(
-            "If 'rnaseqResult' is a simple data frame, you must provide
+            "If 'rnaseqResult' is a data frame, you must provide
             'columnFC' and 'columnP'"={
                 !any(is.na(columnFC), is.na(columnP))
             }
         )
 
         rnaseqResult <- rnaseqResult %>%
-            as.data.frame() %>%
             rename(
                 "LogFoldChange"=all_of(columnFC),
                 "PAdjusted"=all_of(columnP)
@@ -154,8 +149,7 @@ eruption <- function(
 
 
     ## If Ensembl IDs are detected, annotate them with gene names from the
-    ## mapping file if they exist, or just use the Ensembl ID. If rownames are
-    ## not Ensembl IDs, they will be used as-is.
+    ## mapping file. If rownames are not Ensembl IDs, they will be used as-is.
     if (grepl(x=rownames(rnaseqResult)[1], pattern="^ENSG")) {
         res <- rnaseqResult %>%
             rownames_to_column("ensemblGeneId") %>%
@@ -196,7 +190,7 @@ eruption <- function(
         )
     }
 
-    ## Make sure `highlightGenes`, if used, are in the data frame
+    ## Make sure `highlightGenes` are in the input
     highlightGenes <- highlightGenes[highlightGenes %in% res$ensemblGeneId]
 
     ## Identify up- and down-regulated genes
@@ -279,7 +273,7 @@ eruption <- function(
         ) +
 
         ## Plot the significant genes and genes of interest, with those in
-        ## `highlightGenes` plotted on top of the others for added emphasis
+        ## "highlightGenes" plotted on top of the others for added emphasis
         geom_point(
             data=filter(res, significant == "SIG", inList == "N"),
             mapping=aes(x=LogFoldChange, y=negLogP),

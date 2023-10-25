@@ -92,8 +92,6 @@ data("exampleDESeqResults")
 
 ppiBuildNetwork(
     rnaseqResult=exampleDESeqResults[[1]],
-    columnFC="log2FoldChange",
-    columnP="padj",
     filterInput=TRUE,
     order="zero"
 )
@@ -103,6 +101,8 @@ ppiBuildNetwork(
 See
 \url{https://cran.r-project.org/web/packages/SteinerNet/index.html} for details
 on the Steiner network trimming.
+
+InnateDB: \url{https://www.innatedb.com/}
 }
 \seealso{
 \url{https://github.com/hancockinformatics/pathlinkR/}

@@ -1,14 +1,16 @@
-#' Create a heatmap of fold changes to visualize DESeq2 results
+#' Create a heatmap of fold changes to visualize RNA-Seq results
 #'
 #' @param inputList A list, with each element containing RNA-Seq results as a
-#'   "DESeqResults", "TopTags", or "data.frame" object. The list names are used
-#'   as the comparison name for each dataframe (e.g. "COVID vs Healthy"). Data
-#'   frames should have Ensembl gene IDs as rownames. See Details for more
-#'   information on supported input types.
-#' @param columnFC Character; possible column containing fold changes to use in
-#'   the plot. Defaults to NA.
-#' @param columnP Character; possible column containing p values to use for the
-#'   plot. Defaults to NA.
+#'   "DESeqResults", "TopTags", or "data.frame" object, with Ensembl gene IDs in
+#'   the rownames. The list names are used as the comparison name for each
+#'   dataframe (e.g. "COVID vs Healthy").  See Details for more information on
+#'   supported input types.
+#' @param columnFC Character; Column to plot along the x-axis, typically log2
+#'   fold change values. Only required when `rnaseqResult` is a simple data
+#'   frame. Defaults to NA.
+#' @param columnP Character; Column to plot along the y-axis, typically nominal
+#'   or adjusted p values. Only required when `rnaseqResult` is a simple data
+#'   frame. Defaults to NA.
 #' @param pathName The name of a Reactome pathway to pull genes from, also used
 #'   for the plot title. Alternative to `pathID`.
 #' @param pathId ID of a Reactome pathway to pull genes from. Alternative to
@@ -111,8 +113,6 @@
 #'
 #' plotFoldChange(
 #'     exampleDESeqResults,
-#'     columnFC="log2FoldChange",
-#'     columnP="padj",
 #'     pathName="Generation of second messenger molecules"
 #' )
 #'
@@ -182,11 +182,11 @@ plotFoldChange <- function(
         )
 
         inputListCleaned <- lapply(inputList, function(x) {
-            as.data.frame(x) %>%
-                rename(
-                    "LogFoldChange"=all_of(columnFC),
-                    "PAdjusted"=all_of(columnP)
-                )
+            rename(
+                x,
+                "LogFoldChange"=all_of(columnFC),
+                "PAdjusted"=all_of(columnP)
+            )
         })
     }
 

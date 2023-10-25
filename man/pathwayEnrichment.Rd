@@ -2,7 +2,7 @@
 % Please edit documentation in R/pathwayEnrichment.R
 \name{pathwayEnrichment}
 \alias{pathwayEnrichment}
-\title{Test significant DE genes from DESeq2 for enriched pathways}
+\title{Test significant DE genes for enriched pathways}
 \usage{
 pathwayEnrichment(
   inputList,
@@ -15,7 +15,8 @@ pathwayEnrichment(
   analysis = "sigora",
   filterResults = "default",
   gpsRepo = "default",
-  geneUniverse = NULL
+  geneUniverse = NULL,
+  verbose = FALSE
 )
 }
 \arguments{
@@ -25,34 +26,37 @@ must contain Ensembl Gene IDs. The list names are used as the comparison
 name for each element (e.g. "COVID vs Healthy"). See Details for more
 information on supported input types.}
 
-\item{columnFC}{Character; optional column name containing fold change
-values. Defaults to NA.}
+\item{columnFC}{Character; Column to plot along the x-axis, typically log2
+fold change values. Only required when \code{rnaseqResult} is a simple data
+frame. Defaults to NA.}
 
-\item{columnP}{Character; optional column name containing p values. Defaults
-to NA.}
+\item{columnP}{Character; Column to plot along the y-axis, typically nominal
+or adjusted p values. Only required when \code{rnaseqResult} is a simple data
+frame. Defaults to NA.}
 
 \item{filterInput}{When providing list of data frames containing the
-unfiltered output from \code{DESeq2::results()} (default format), set this to
-\code{TRUE} to filter for significant genes using the thresholds set by the
-\code{pCutoff} and \code{fcCutoff}. When this argument is \code{FALSE} it's
-assumed your passing a pre-filtered data frame to \code{inputList}, and no
-more filtering will be done.}
+unfiltered RNA-Seq results (i.e. not all genes are significant), set this
+to \code{TRUE} to remove non-significant genes using the thresholds set by the
+\code{pCutoff} and \code{fcCutoff}. When this argument is \code{FALSE} its assumed your
+passing a pre-filtered data in \code{inputList}, and no more filtering will be
+done.}
 
-\item{pCutoff}{Adjusted p value cutoff, defaults to <0.05}
+\item{pCutoff}{Adjusted p value cutoff when filtering. Defaults to < 0.05.}
 
-\item{fcCutoff}{Minimum absolute fold change, defaults to >1.5}
+\item{fcCutoff}{Minimum absolute fold change value when filtering. Defaults
+to > 1.5}
 
-\item{split}{Boolean (TRUE); Split into up and down-regulated DE genes using
-the requisite column \code{columnFC}, and do enrichment independently. Results
+\item{split}{Boolean (TRUE); Split into up- and down-regulated DE genes using
+the fold change column, and do enrichment independently on each. Results
 are combined at the end, with an added "direction" column.}
 
-\item{analysis}{Default is "sigora", but can also be "reactomepa" or
-"hallmark"}
+\item{analysis}{Method/database to use for enrichment analysis. The default
+is "sigora", but can also be "reactomepa" or "hallmark"}
 
-\item{filterResults}{Should the output be filtered for significance? Use
-\code{1} to return the unfiltered results, or any number less than 1 for a
-custom p-value cutoff. If left as \code{default}, the significance cutoff
-for Sigora is 0.001, or 0.05 for ReactomePA and Hallmark.}
+\item{filterResults}{Should the output be filtered for significance? Use \code{1}
+to return the unfiltered results, or any number less than 1 for a custom
+p-value cutoff. If left as \code{default}, the significance cutoff for Sigora is
+0.001, or 0.05 for ReactomePA and Hallmark.}
 
 \item{gpsRepo}{Only applies to \code{analysis="sigora"}. Gene Pair Signature
 object for Sigora to use to test for enriched pathways. Leaving this set
@@ -63,6 +67,9 @@ provide your own custom GPS repository.}
 "hallmark". The set of background genes to use when testing with ReactomePA
 or Hallmark gene sets. For ReactomePA this must be a character vector of
 Entrez genes. For Hallmark, it must be Ensembl IDs.}
+
+\item{verbose}{Logical; If FALSE (the default), don't print info/progress
+mesages.}
 }
 \value{
 A "data.frame" (tibble) of pathway enrichment results for all input
@@ -73,7 +80,7 @@ comparisons, with the following columns:
 \item{pathwayId}{Pathway identifier}
 \item{pathwayName}{Pathway name}
 \item{pValue}{Nominal p value for the pathway}
-\item{pValueAdjusted}{p value corrected for multiple testing}
+\item{pValueAdjusted}{p value, corrected for multiple testing}
 \item{genes}{Candidate genes, which were DE for the comparison and also in
 the pathway}
 \item{numCandidateGenes}{Number of candidate genes}
@@ -98,17 +105,15 @@ expected to be the standard defined by each class ("log2FoldChange" and
 these two cases the arguments \code{columnFC} and \code{columnP}
 can be left as \code{NA}.
 
-In the last case (elements are "data.frame"), \code{columnFC} and
-\code{columnP} must be supplied when \code{filterInput=TRUE}, and
-\code{columnFC} must be given if \code{split=TRUE}.
+In the last case (elements are "data.frame"), both \code{columnFC} and
+\code{columnP} must be supplied when \code{filterInput=TRUE}, and \code{columnFC}
+must be given if \code{split=TRUE}.
 }
 \examples{
 data("exampleDESeqResults")
 
 pathwayEnrichment(
     inputList=exampleDESeqResults[1],
-    columnFC="log2FoldChange",
-    columnP="padj",
     filterInput=TRUE,
     split=TRUE,
     analysis="hallmark",

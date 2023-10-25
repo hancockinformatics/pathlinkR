@@ -1,4 +1,4 @@
-#' Plot Reactome pathway enrichment results
+#' Plot pathway enrichment results
 #'
 #' @param pathwayEnrichmentResults Data frame of results from the function
 #'   `enrichPathway`
@@ -45,10 +45,8 @@
 #' @importFrom stringr str_remove_all str_split str_wrap
 #'
 #' @description Creates a plot to visualize and compare pathway enrichment
-#'   results from multiple DE comparisons. Can automatically assign each
-#'   pathway into an informative top-level category.
-#'
-#' @references None.
+#'   results from multiple DE comparisons. Can automatically assign each pathway
+#'   into an informative top-level category.
 #'
 #' @seealso <https://github.com/hancockinformatics/pathlinkR>
 #'

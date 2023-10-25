@@ -15,8 +15,9 @@ pathnetCreate(
 )
 }
 \arguments{
-\item{pathwayEnrichmentResult}{Data frame of results from Sigora or
-ReactomePA (should be based on Reactome data)}
+\item{pathwayEnrichmentResult}{Data frame of results from
+\code{pathwayEnrichment} run with Sigora or ReactomePA (should be based on
+Reactome data).}
 
 \item{columnId}{Character; column containing the Reactome pathway IDs.
 Defaults to "pathwayID".}
@@ -95,9 +96,6 @@ pathnetCreate(
     trimOrder=1
 )
 
-}
-\references{
-None.
 }
 \seealso{
 \url{https://github.com/hancockinformatics/pathlinkR}

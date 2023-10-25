@@ -1,31 +1,34 @@
-#' Test significant DE genes from DESeq2 for enriched pathways
+#' Test significant DE genes for enriched pathways
 #'
 #' @param inputList A list, with each element containing RNA-Seq results as a
 #'   "DESeqResults", "TopTags", or "data.frame" object. Rownames of each table
 #'   must contain Ensembl Gene IDs. The list names are used as the comparison
 #'   name for each element (e.g. "COVID vs Healthy"). See Details for more
 #'   information on supported input types.
-#' @param columnFC Character; optional column name containing fold change
-#'   values. Defaults to NA.
-#' @param columnP Character; optional column name containing p values. Defaults
-#'   to NA.
+#' @param columnFC Character; Column to plot along the x-axis, typically log2
+#'   fold change values. Only required when `rnaseqResult` is a simple data
+#'   frame. Defaults to NA.
+#' @param columnP Character; Column to plot along the y-axis, typically nominal
+#'   or adjusted p values. Only required when `rnaseqResult` is a simple data
+#'   frame. Defaults to NA.
 #' @param filterInput When providing list of data frames containing the
-#'   unfiltered output from `DESeq2::results()` (default format), set this to
-#'   `TRUE` to filter for significant genes using the thresholds set by the
-#'   `pCutoff` and `fcCutoff`. When this argument is `FALSE` it's
-#'   assumed your passing a pre-filtered data frame to `inputList`, and no
-#'   more filtering will be done.
-#' @param pCutoff Adjusted p value cutoff, defaults to <0.05
-#' @param fcCutoff Minimum absolute fold change, defaults to >1.5
-#' @param split Boolean (TRUE); Split into up and down-regulated DE genes using
-#'   the requisite column `columnFC`, and do enrichment independently. Results
+#'   unfiltered RNA-Seq results (i.e. not all genes are significant), set this
+#'   to `TRUE` to remove non-significant genes using the thresholds set by the
+#'   `pCutoff` and `fcCutoff`. When this argument is `FALSE` its assumed your
+#'   passing a pre-filtered data in `inputList`, and no more filtering will be
+#'   done.
+#' @param pCutoff Adjusted p value cutoff when filtering. Defaults to < 0.05.
+#' @param fcCutoff Minimum absolute fold change value when filtering. Defaults
+#'   to > 1.5
+#' @param split Boolean (TRUE); Split into up- and down-regulated DE genes using
+#'   the fold change column, and do enrichment independently on each. Results
 #'   are combined at the end, with an added "direction" column.
-#' @param analysis Default is "sigora", but can also be "reactomepa" or
-#'   "hallmark"
-#' @param filterResults Should the output be filtered for significance? Use
-#'   `1` to return the unfiltered results, or any number less than 1 for a
-#'   custom p-value cutoff. If left as `default`, the significance cutoff
-#'   for Sigora is 0.001, or 0.05 for ReactomePA and Hallmark.
+#' @param analysis Method/database to use for enrichment analysis. The default
+#'   is "sigora", but can also be "reactomepa" or "hallmark"
+#' @param filterResults Should the output be filtered for significance? Use `1`
+#'   to return the unfiltered results, or any number less than 1 for a custom
+#'   p-value cutoff. If left as `default`, the significance cutoff for Sigora is
+#'   0.001, or 0.05 for ReactomePA and Hallmark.
 #' @param gpsRepo Only applies to `analysis="sigora"`. Gene Pair Signature
 #'   object for Sigora to use to test for enriched pathways. Leaving this set
 #'   as "default" will use the "reaH" GPS object from `Sigora`, or you can
@@ -34,6 +37,8 @@
 #'   "hallmark". The set of background genes to use when testing with ReactomePA
 #'   or Hallmark gene sets. For ReactomePA this must be a character vector of
 #'   Entrez genes. For Hallmark, it must be Ensembl IDs.
+#' @param verbose Logical; If FALSE (the default), don't print info/progress
+#'   mesages.
 #'
 #' @return A "data.frame" (tibble) of pathway enrichment results for all input
 #'   comparisons, with the following columns:
@@ -43,7 +48,7 @@
 #'   \item{pathwayId}{Pathway identifier}
 #'   \item{pathwayName}{Pathway name}
 #'   \item{pValue}{Nominal p value for the pathway}
-#'   \item{pValueAdjusted}{p value corrected for multiple testing}
+#'   \item{pValueAdjusted}{p value, corrected for multiple testing}
 #'   \item{genes}{Candidate genes, which were DE for the comparison and also in
 #'   the pathway}
 #'   \item{numCandidateGenes}{Number of candidate genes}
@@ -73,9 +78,9 @@
 #'   these two cases the arguments `columnFC` and `columnP`
 #'   can be left as `NA`.
 #'
-#'   In the last case (elements are "data.frame"), `columnFC` and
-#'   `columnP` must be supplied when `filterInput=TRUE`, and
-#'   `columnFC` must be given if `split=TRUE`.
+#'   In the last case (elements are "data.frame"), both `columnFC` and
+#'   `columnP` must be supplied when `filterInput=TRUE`, and `columnFC`
+#'   must be given if `split=TRUE`.
 #'
 #' @references
 #'   Sigora: <https://cran.r-project.org/package=sigora>
@@ -89,8 +94,6 @@
 #'
 #' pathwayEnrichment(
 #'     inputList=exampleDESeqResults[1],
-#'     columnFC="log2FoldChange",
-#'     columnP="padj",
 #'     filterInput=TRUE,
 #'     split=TRUE,
 #'     analysis="hallmark",
@@ -108,7 +111,8 @@ pathwayEnrichment <- function(
         analysis="sigora",
         filterResults="default",
         gpsRepo="default",
-        geneUniverse=NULL
+        geneUniverse=NULL,
+        verbose=FALSE
 ) {
     stopifnot(analysis %in% c("sigora", "reactomepa", "hallmark"))
 
@@ -151,7 +155,8 @@ pathwayEnrichment <- function(
         }
         if (split) {
             stopifnot(
-                "Must provide 'columnFC' when splitting input"={
+                "Must provide 'columnFC' when splitting input of class
+                'data.frame'"={
                     !is.na(columnFC)
                 }
             )
@@ -193,13 +198,14 @@ pathwayEnrichment <- function(
             )
         }
 
-        message("Comparison being analyzed: ", comparison)
+        if (verbose) message("Comparison being analyzed: ", comparison)
 
         ## Filter the input genes if specified
         rnaseqResults <-
             if (filterInput) {
-                # stopifnot(c("padj", "log2FoldChange") %in% colnames(x))
-                message("\tFiltering the results before testing...")
+                if (verbose) {
+                    message("\tFiltering the results before testing...")
+                }
                 filter(x, PAdjusted < pCutoff, abs(LogFoldChange) > log2(fcCutoff))
             } else {
                 x
@@ -211,19 +217,24 @@ pathwayEnrichment <- function(
                 "Up"=rownames(filter(rnaseqResults, LogFoldChange > 0)),
                 "Down"=rownames(filter(rnaseqResults, LogFoldChange < 0))
             )
-            message(
-                "\tDEGs used: ",
-                length(preppedGenes$Up), " Up, ",
-                length(preppedGenes$Down), " Down..."
-            )
+
+            if (verbose) {
+                message(
+                    "\tDEGs used: ",
+                    length(preppedGenes$Up), " Up, ",
+                    length(preppedGenes$Down), " Down..."
+                )
+            }
         } else {
             preppedGenes <- list("All"=rownames(rnaseqResults))
-            message("\tDEGs used: ", length(preppedGenes$All), "...")
+            if (verbose) {
+                message("\tDEGs used: ", length(preppedGenes$All), "...")
+            }
         }
 
         ## Sigora
         if (analysis == "sigora") {
-            message("\tRunning enrichment using Sigora...")
+            if (verbose) message("\tRunning enrichment using Sigora...")
 
             runSigoraSafely <- possibly(.runSigora)
 
@@ -244,9 +255,11 @@ pathwayEnrichment <- function(
             )
             resultFinal$totalGenes <- nrow(rnaseqResults)
 
-            message(
-                "\tDone, found ", nrow(resultFinal), " enriched pathways.\n"
-            )
+            if (verbose) {
+                message(
+                    "\tDone, found ", nrow(resultFinal), " enriched pathways.\n"
+                )
+            }
             return(resultFinal)
         }
 
@@ -256,7 +269,7 @@ pathwayEnrichment <- function(
 
             ## ReactomePA
             if (analysis == "reactomepa") {
-                message("\tRunning enrichment using ReactomePA")
+                if (verbose) message("\tRunning enrichment using ReactomePA")
 
                 rpaHallResult <- imap_dfr(
                     .x =preppedGenes,
@@ -311,7 +324,7 @@ pathwayEnrichment <- function(
 
             ## Hallmark
             if (analysis == "hallmark") {
-                message("\tRunning enrichment using Hallmark...")
+                if (verbose) message("\tRunning enrichment using Hallmark...")
 
                 rpaHallResult <- imap_dfr(
                     .x =preppedGenes,
@@ -372,9 +385,11 @@ pathwayEnrichment <- function(
                     totalGenes
                 )
 
-            message(
-                "\tDone, found ", nrow(resultFinal), " enriched pathways.\n"
-            )
+            if (verbose) {
+                message(
+                    "\tDone, found ", nrow(resultFinal), " enriched pathways.\n"
+                )
+            }
             return(resultFinal)
         }
     })

@@ -85,8 +85,6 @@
 #'   Node statistics (degree, betweenness, and hub score) are calculated using
 #'   the respective functions from the `tidygraph` package.
 #'
-#' @references None.
-#'
 #' @seealso <https://github.com/hancockinformatics/pathlinkR/>
 #'
 #' @examples
@@ -95,8 +93,6 @@
 #' exNetwork <- ppiBuildNetwork(
 #'     rnaseqResult=exampleDESeqResults[[1]],
 #'     filterInput=TRUE,
-#'     columnFC="log2FoldChange",
-#'     columnP="padj",
 #'     order="zero"
 #' )
 #'

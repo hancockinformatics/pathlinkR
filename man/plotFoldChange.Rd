@@ -2,7 +2,7 @@
 % Please edit documentation in R/plotFoldChange.R
 \name{plotFoldChange}
 \alias{plotFoldChange}
-\title{Create a heatmap of fold changes to visualize DESeq2 results}
+\title{Create a heatmap of fold changes to visualize RNA-Seq results}
 \usage{
 plotFoldChange(
   inputList,
@@ -36,16 +36,18 @@ plotFoldChange(
 }
 \arguments{
 \item{inputList}{A list, with each element containing RNA-Seq results as a
-"DESeqResults", "TopTags", or "data.frame" object. The list names are used
-as the comparison name for each dataframe (e.g. "COVID vs Healthy"). Data
-frames should have Ensembl gene IDs as rownames. See Details for more
-information on supported input types.}
+"DESeqResults", "TopTags", or "data.frame" object, with Ensembl gene IDs in
+the rownames. The list names are used as the comparison name for each
+dataframe (e.g. "COVID vs Healthy").  See Details for more information on
+supported input types.}
 
-\item{columnFC}{Character; possible column containing fold changes to use in
-the plot. Defaults to NA.}
+\item{columnFC}{Character; Column to plot along the x-axis, typically log2
+fold change values. Only required when \code{rnaseqResult} is a simple data
+frame. Defaults to NA.}
 
-\item{columnP}{Character; possible column containing p values to use for the
-plot. Defaults to NA.}
+\item{columnP}{Character; Column to plot along the y-axis, typically nominal
+or adjusted p values. Only required when \code{rnaseqResult} is a simple data
+frame. Defaults to NA.}
 
 \item{pathName}{The name of a Reactome pathway to pull genes from, also used
 for the plot title. Alternative to \code{pathID}.}
@@ -162,8 +164,6 @@ data("exampleDESeqResults")
 
 plotFoldChange(
     exampleDESeqResults,
-    columnFC="log2FoldChange",
-    columnP="padj",
     pathName="Generation of second messenger molecules"
 )
 

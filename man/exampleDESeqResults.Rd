@@ -5,7 +5,8 @@
 \alias{exampleDESeqResults}
 \title{List of example results from DESeq2}
 \format{
-A list of two data frames, each with 5000 rows and 6 columns:
+A list of two "DESeqResults" objects, each with 5000 rows and 6
+columns:
 \describe{
 \item{baseMean}{A combined score for the gene}
 \item{log2FoldChange}{Fold change value for the gene}

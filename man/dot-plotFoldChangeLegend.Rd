@@ -20,9 +20,6 @@ A list containing heatmap legend parameters and colour function
 Helper function to handle heatmap legends without clutteing up
 the main function.
 }
-\references{
-None.
-}
 \seealso{
 \url{https://github.com/hancockinformatics/pathlinkR}
 }

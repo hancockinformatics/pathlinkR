@@ -4,8 +4,6 @@ test_that("network enrichment works properly", {
     exNetwork <- ppiBuildNetwork(
         rnaseqResult=exampleDESeqResults[[1]],
         filterInput=TRUE,
-        columnFC="log2FoldChange",
-        columnP="padj",
         order="zero"
     )
 

@@ -22,6 +22,10 @@ URL: https://github.com/hancockinformatics/pathlinkR
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
+VignetteBuilder: knitr
+Config/testthat/edition: 3
+Depends: 
+    R (>= 4.3.0)
 Imports:
     circlize,
     clusterProfiler,
@@ -43,13 +47,12 @@ Imports:
     tidyr,
     vegan,
     visNetwork
-Depends: 
-    R (>= 4.3.0)
 Suggests: 
     AnnotationDbi,
     BiocStyle,
     biomaRt,
     covr,
+    DESeq2,
     jsonlite,
     knitr,
     org.Hs.eg.db,
@@ -57,5 +60,3 @@ Suggests:
     scales,
     testthat (>= 3.0.0),
     vdiffr
-VignetteBuilder: knitr
-Config/testthat/edition: 3

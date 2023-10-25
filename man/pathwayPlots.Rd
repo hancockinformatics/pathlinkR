@@ -2,7 +2,7 @@
 % Please edit documentation in R/pathwayPlots.R
 \name{pathwayPlots}
 \alias{pathwayPlots}
-\title{Plot Reactome pathway enrichment results}
+\title{Plot pathway enrichment results}
 \usage{
 pathwayPlots(
   pathwayEnrichmentResults,
@@ -80,16 +80,13 @@ A plot of enriched pathways; a "ggplot" object
 }
 \description{
 Creates a plot to visualize and compare pathway enrichment
-results from multiple DE comparisons. Can automatically assign each
-pathway into an informative top-level category.
+results from multiple DE comparisons. Can automatically assign each pathway
+into an informative top-level category.
 }
 \examples{
 data("sigoraExamples")
 pathwayPlots(sigoraExamples, columns=2)
 
-}
-\references{
-None.
 }
 \seealso{
 \url{https://github.com/hancockinformatics/pathlinkR}

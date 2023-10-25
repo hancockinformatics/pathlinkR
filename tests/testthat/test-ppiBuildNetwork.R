@@ -4,8 +4,6 @@ test_that("zero order network behave as expected", {
     exNetworkZero <- ppiBuildNetwork(
         rnaseqResult=exampleDESeqResults[[1]],
         filterInput=TRUE,
-        columnFC="log2FoldChange",
-        columnP="padj",
         order="zero"
     )
 
@@ -36,8 +34,6 @@ test_that("simple minimum order networks behave as expected", {
         exNetworkSimple <- ppiBuildNetwork(
             rnaseqResult=exampleDESeqResults[[1]],
             filterInput=TRUE,
-            columnFC="log2FoldChange",
-            columnP="padj",
             order="minSimple"
         )
     )
@@ -70,8 +66,6 @@ test_that("Steinder-trimmed networks behave as expected", {
     exNetworkSteiner <- ppiBuildNetwork(
         rnaseqResult=exampleDESeqResults[[1]],
         filterInput=TRUE,
-        columnFC="log2FoldChange",
-        columnP="padj",
         order="minSteiner"
     )
 

@@ -11,8 +11,6 @@
 #' @description Helper function to handle heatmap legends without clutteing up
 #'   the main function.
 #'
-#' @references None.
-#'
 #' @seealso <https://github.com/hancockinformatics/pathlinkR>
 #'
 .plotFoldChangeLegend <- function(.matFC, .log2FoldChange, .cellColours) {

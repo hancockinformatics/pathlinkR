@@ -2,7 +2,7 @@
 % Please edit documentation in R/eruption.R
 \name{eruption}
 \alias{eruption}
-\title{Create a volcano plot from an unfiltered DESeq2 results object}
+\title{Create a volcano plot of RNA-Seq results}
 \usage{
 eruption(
   rnaseqResult,
@@ -31,18 +31,20 @@ eruption(
 }
 \arguments{
 \item{rnaseqResult}{Data frame of RNASeq results, with Ensembl gene IDs as
-rownames. Can be an object from \code{DESeq2}, \code{edgeR}, or a simple data frame.
-See "Details" for more information.}
+rownames. Can be a "DESeqResults" or "TopTags" object, or a simple data
+frame. See "Details" for more information.}
 
 \item{columnFC}{Character; Column to plot along the x-axis, typically log2
-fold change values. Defaults to NA.}
+fold change values. Only required when \code{rnaseqResult} is a simple data
+frame. Defaults to NA.}
 
 \item{columnP}{Character; Column to plot along the y-axis, typically nominal
-or adjusted p values. Defaults to NA.}
+or adjusted p values. Only required when \code{rnaseqResult} is a simple data
+frame. Defaults to NA.}
 
-\item{pCutoff}{Adjusted p value cutoff, defaults to <0.05}
+\item{pCutoff}{Adjusted p value cutoff, defaults to < 0.05}
 
-\item{fcCutoff}{Absolute fold change cutoff, defaults to >1.5}
+\item{fcCutoff}{Absolute fold change cutoff, defaults to > 1.5}
 
 \item{baseColour}{Colour of points for all significant DE genes
 ("steelblue4")}
@@ -101,8 +103,8 @@ rownames of the input object.
 }
 \details{
 The input to \code{eruption()} can be of class "DESeqResults" (from
-\code{DESeq2}), "TopTags" (\code{edgeR}), or a simple data frame. When not providing
-a basic data frame, the columns to plot are automatically pulled
+\code{DESeq2}), "TopTags" (\code{edgeR}), or a simple data frame. When providing
+either of the former, the columns to plot are automatically pulled
 ("log2FoldChange" and "padj" for DESeqResults, or "logFC" and "FDR" for
 TopTags). Otherwise, the arguments "columnFC" and "columnP" must be
 specified. If one wishes to override the default behaviour for
@@ -120,15 +122,8 @@ be applied using the standard ggplot2 functions (\code{labs()},
 }
 \examples{
 data("exampleDESeqResults")
-eruption(
-    rnaseqResult=exampleDESeqResults[[1]],
-    columnFC="log2FoldChange",
-    columnP="padj"
-)
+eruption(rnaseqResult=exampleDESeqResults[[1]])
 
-}
-\references{
-None.
 }
 \seealso{
 \url{https://github.com/hancockinformatics/pathlinkR}

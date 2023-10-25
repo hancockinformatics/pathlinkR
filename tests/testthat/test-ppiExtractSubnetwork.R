@@ -4,8 +4,6 @@ test_that("subnetwork extraction works with a pathway name", {
     exNetwork <- ppiBuildNetwork(
         rnaseqResult=exampleDESeqResults[[1]],
         filterInput=TRUE,
-        columnFC="log2FoldChange",
-        columnP="padj",
         order="zero"
     )
 
@@ -29,8 +27,6 @@ test_that("subnetwork extraction works with a list of genes", {
     exNetwork2 <- ppiBuildNetwork(
         rnaseqResult=exampleDESeqResults[[1]],
         filterInput=TRUE,
-        columnFC="log2FoldChange",
-        columnP="padj",
         order="zero"
     )
 

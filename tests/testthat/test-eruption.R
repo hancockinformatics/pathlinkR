@@ -5,11 +5,7 @@ test_that("a basic volcano plot is correct", {
 
     vdiffr::expect_doppelganger(
         "volcanoPlotExample",
-        eruption(
-            rnaseqResult=exampleDESeqResults[[1]],
-            columnFC="log2FoldChange",
-            columnP="padj"
-        )
+        eruption(rnaseqResult=exampleDESeqResults[[1]])
     )
 })
 
@@ -29,8 +25,6 @@ test_that("some of the options are working as expected", {
         "volcanoPlotExample2",
         eruption(
             rnaseqResult=exampleDESeqResults[[1]],
-            columnFC="log2FoldChange",
-            columnP="padj",
             xaxis=c(-4, 4),
             yaxis=c(0, 8),
             highlightGenes=interferonGenes
