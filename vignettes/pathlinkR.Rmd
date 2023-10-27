@@ -50,7 +50,7 @@ T2 vs T1) (An et al. 2023).
 To install and load the package:
 ```{r load_library, message=FALSE}
 # We'll also be using some functions from dplyr
-# BiocManager::install("pathlinkR")
+# BiocManager::install("pathlinkR", version="devel")
 library(dplyr)
 library(pathlinkR)
 ```
@@ -63,10 +63,10 @@ cutoffs for both fold change and statistical significance. Thresholds of
 adjusted p-value <0.05 and absolute fold change >1.5 are used as the default,
 though any value can be specified. **pathlinkR** includes the function
 `eruption()` to create a volcano plot.
-```{r datasets_and_preliminary_volcano_plot}
+```{r datasets_and_preliminary_volcano_plot, message=FALSE}
 ## A quick look at the DESeq2 results table
 data("exampleDESeqResults")
-head(exampleDESeqResults[[1]])
+knitr::kable(head(exampleDESeqResults[[1]]))
 
 ## Generate a volcano plot from the first data frame, with default thresholds
 eruption(
@@ -155,7 +155,7 @@ used to determine hub nodes can be set in `ppiBuildNetwork()` with the
 `ppiEnrichNetwork()` will use the node table from a network to test for enriched
 Reactome pathways or Hallmark gene sets (see the next section for more detail on
 the pathway enrichment methods):
-```{r ppiEnrichNetwork}
+```{r ppiEnrichNetwork, message=FALSE}
 exNetworkPathways <- ppiEnrichNetwork(
     network=exNetwork,
     analysis="hallmark",
@@ -170,7 +170,7 @@ the "starting" nodes for extraction. For example, below we use the results from
 the Hallmark enrichment above to pull out a subnetwork of genes from the
 "Interferon Gamma Response" term, then plot this reduced network while
 highlighting the genes from the pathway:
-```{r ppiExtractSubnetwork}
+```{r ppiExtractSubnetwork, warning=FALSE, message=FALSE}
 exSubnetwork <- ppiExtractSubnetwork(
     network=exNetwork,
     pathwayEnrichmentResult=exNetworkPathways,
@@ -337,7 +337,7 @@ We provide a pre-computed distance matrix of Reactome pathways, generated using
 Jaccard distance, but there is support for multiple distance measures to be
 used. Once this "foundation" of pathway interactions is created, a pathway
 network can be built using the `createPathnet()` function:
-```{r pathway_network_I, fig.width=12, fig.height=10, warning=FALSE}
+```{r pathway_network_I, fig.width=12, fig.height=10, warning=FALSE, message=FALSE}
 data("sigoraDatabase")
 
 pathwayDistancesJaccard <- getPathwayDistances(pathwayData = sigoraDatabase)
@@ -358,14 +358,14 @@ myPathwayNetwork <- pathnetCreate(
 ```
 
 There are two options for visualization, the first being a static network:
-```{r plot_pathnet_I}
+```{r plot_pathnet_I, warning=FALSE, fig.height=7}
 pathnetGGraph(
     myPathwayNetwork,
     labelProp=0.1,
     nodeLabelSize=3,
     nodeLabelOverlaps=8,
     segColour="red",
-    themeBaseSize = 14
+    themeBaseSize = 12
 )
 ```
 
