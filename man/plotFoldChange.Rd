@@ -137,14 +137,15 @@ RNA-Seq results, with various parameters to tweak the appearance.
 }
 \details{
 All elements of \code{inputList} should belong to one of the following
-classes: "DESeqResults" from \code{DESeq2}, "TopTags" from \code{edgeR}, or a simple
-"data.frame". In the first two cases, the proper columns for fold change
-and p values are detected automatically ("log2FoldChange" and "padj" for
-"DESeqResults", or "logFC" and "FDR" for "TopTags"). In the third case, the
-arguments \code{columnFC} and \code{columnP} must be supplied. Additionally, if one
-wished to override the default columns for either "DESeqResults" or
-"TopTags" objects, simply coerce the object to a simple "data.frame" and
-supply \code{columnFC} and \code{columnP} as desired.
+classes: "DESeqResults" from \code{DESeq2}, "TopTags" from \code{edgeR},
+or a simple "data.frame". In the first two cases, the proper columns for
+fold change and p values are detected automatically ("log2FoldChange" and
+"padj" for "DESeqResults", or "logFC" and "FDR" for "TopTags"). In the
+third case, the arguments \code{columnFC} and \code{columnP} must be
+supplied. Additionally, if one wished to override the default columns for
+either "DESeqResults" or "TopTags" objects, simply coerce the object to a
+simple "data.frame" and supply \code{columnFC} and \code{columnP}
+as desired.
 
 The \code{cellColours} argument is designed to map a range of negative
 and positive values to the three provided colours, with zero as the middle
@@ -156,8 +157,10 @@ The \code{colSplit} argument can be used to define larger groups represented in
 treatments to an untreated control, in both wild type and mutant cells.
 This would give the following comparisons:
 "wildtype_treatment1_vs_untreated", "wildtype_treatment2_vs_untreated",
-"mutant_treatment1_vs_untreated", and "mutant_treatment2_vs_untreated". One
-could then specify \code{colSplit} as \code{c("Wild type", "Wild type", "Mutant", "Mutant")} to make the wild type and mutant results more visually distinct.
+"mutant_treatment1_vs_untreated", and "mutant_treatment2_vs_untreated".
+One could then specify \code{colSplit} as
+\code{c("Wild type", "Wild type", "Mutant", "Mutant")} to make the wild type
+and mutant results more visually distinct.
 }
 \examples{
 data("exampleDESeqResults")

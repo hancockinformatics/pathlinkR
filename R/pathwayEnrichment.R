@@ -14,9 +14,9 @@
 #' @param filterInput When providing list of data frames containing the
 #'   unfiltered RNA-Seq results (i.e. not all genes are significant), set this
 #'   to `TRUE` to remove non-significant genes using the thresholds set by the
-#'   `pCutoff` and `fcCutoff`. When this argument is `FALSE` its assumed your
-#'   passing a pre-filtered data in `inputList`, and no more filtering will be
-#'   done.
+#'   `pCutoff` and `fcCutoff`. When this argument is `FALSE`
+#'   its assumed your passing a pre-filtered data in `inputList`, and no
+#'   more filtering will be done.
 #' @param pCutoff Adjusted p value cutoff when filtering. Defaults to < 0.05.
 #' @param fcCutoff Minimum absolute fold change value when filtering. Defaults
 #'   to > 1.5
@@ -25,10 +25,10 @@
 #'   are combined at the end, with an added "direction" column.
 #' @param analysis Method/database to use for enrichment analysis. The default
 #'   is "sigora", but can also be "reactomepa" or "hallmark"
-#' @param filterResults Should the output be filtered for significance? Use `1`
-#'   to return the unfiltered results, or any number less than 1 for a custom
-#'   p-value cutoff. If left as `default`, the significance cutoff for Sigora is
-#'   0.001, or 0.05 for ReactomePA and Hallmark.
+#' @param filterResults Should the output be filtered for significance?
+#'   Use `1` to return the unfiltered results, or any number less than 1
+#'   for a custom p-value cutoff. If left as `default`, the significance cutoff
+#'   for Sigora is 0.001, or 0.05 for ReactomePA and Hallmark.
 #' @param gpsRepo Only applies to `analysis="sigora"`. Gene Pair Signature
 #'   object for Sigora to use to test for enriched pathways. Leaving this set
 #'   as "default" will use the "reaH" GPS object from `Sigora`, or you can
@@ -79,8 +79,8 @@
 #'   can be left as `NA`.
 #'
 #'   In the last case (elements are "data.frame"), both `columnFC` and
-#'   `columnP` must be supplied when `filterInput=TRUE`, and `columnFC`
-#'   must be given if `split=TRUE`.
+#'   `columnP` must be supplied when `filterInput=TRUE`,
+#'   and `columnFC` must be given if `split=TRUE`.
 #'
 #' @references
 #'   Sigora: <https://cran.r-project.org/package=sigora>
@@ -206,7 +206,11 @@ pathwayEnrichment <- function(
                 if (verbose) {
                     message("\tFiltering the results before testing...")
                 }
-                filter(x, PAdjusted < pCutoff, abs(LogFoldChange) > log2(fcCutoff))
+                filter(
+                    x,
+                    PAdjusted < pCutoff,
+                    abs(LogFoldChange) > log2(fcCutoff)
+                )
             } else {
                 x
             }

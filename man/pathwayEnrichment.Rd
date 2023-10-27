@@ -37,9 +37,9 @@ frame. Defaults to NA.}
 \item{filterInput}{When providing list of data frames containing the
 unfiltered RNA-Seq results (i.e. not all genes are significant), set this
 to \code{TRUE} to remove non-significant genes using the thresholds set by the
-\code{pCutoff} and \code{fcCutoff}. When this argument is \code{FALSE} its assumed your
-passing a pre-filtered data in \code{inputList}, and no more filtering will be
-done.}
+\code{pCutoff} and \code{fcCutoff}. When this argument is \code{FALSE}
+its assumed your passing a pre-filtered data in \code{inputList}, and no
+more filtering will be done.}
 
 \item{pCutoff}{Adjusted p value cutoff when filtering. Defaults to < 0.05.}
 
@@ -53,10 +53,10 @@ are combined at the end, with an added "direction" column.}
 \item{analysis}{Method/database to use for enrichment analysis. The default
 is "sigora", but can also be "reactomepa" or "hallmark"}
 
-\item{filterResults}{Should the output be filtered for significance? Use \code{1}
-to return the unfiltered results, or any number less than 1 for a custom
-p-value cutoff. If left as \code{default}, the significance cutoff for Sigora is
-0.001, or 0.05 for ReactomePA and Hallmark.}
+\item{filterResults}{Should the output be filtered for significance?
+Use \code{1} to return the unfiltered results, or any number less than 1
+for a custom p-value cutoff. If left as \code{default}, the significance cutoff
+for Sigora is 0.001, or 0.05 for ReactomePA and Hallmark.}
 
 \item{gpsRepo}{Only applies to \code{analysis="sigora"}. Gene Pair Signature
 object for Sigora to use to test for enriched pathways. Leaving this set
@@ -106,8 +106,8 @@ these two cases the arguments \code{columnFC} and \code{columnP}
 can be left as \code{NA}.
 
 In the last case (elements are "data.frame"), both \code{columnFC} and
-\code{columnP} must be supplied when \code{filterInput=TRUE}, and \code{columnFC}
-must be given if \code{split=TRUE}.
+\code{columnP} must be supplied when \code{filterInput=TRUE},
+and \code{columnFC} must be given if \code{split=TRUE}.
 }
 \examples{
 data("exampleDESeqResults")
