@@ -181,7 +181,9 @@ ppiPlotNetwork(
     network=exSubnetwork,
     fillType="oneSided",
     fillColumn=degree,
-    labelColumn=hgncSymbol
+    label=TRUE,
+    labelColumn=hgncSymbol,
+    legendTitle="Degree"
 )
 ```
 
