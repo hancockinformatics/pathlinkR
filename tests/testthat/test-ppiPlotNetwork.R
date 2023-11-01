@@ -2,6 +2,8 @@
 ## of the labels varies enough (though slightly) between runs to constantly fail
 ## the test
 test_that("we get the right plot output", {
+    data("exampleDESeqResults")
+
     set.seed(1)
 
     exNetwork <- ppiBuildNetwork(
@@ -23,6 +25,8 @@ test_that("we get the right plot output", {
 })
 
 test_that("plotting subnetworks works as expected", {
+    data("exampleDESeqResults")
+
     set.seed(1)
 
     exNetwork2 <- ppiBuildNetwork(
@@ -48,8 +52,8 @@ test_that("plotting subnetworks works as expected", {
             network=exSubnetwork,
             fillColumn=degree,
             fillType="oneSided",
-            label=TRUE,
-            labelColumn=hgncSymbol
+            legendTitle = "Degree",
+            label=FALSE
         )
     )
 })
