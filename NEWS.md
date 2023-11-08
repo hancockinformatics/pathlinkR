@@ -1,3 +1,14 @@
+CHANGES IN VERSION 0.99.380
+----------------------------
+
+Lots of updates, including:
+
+* Updated documentation for data and functions
+* Cleaner vignette
+* Better support for Bioconductor classes
+* Better handling of data loading
+
+
 CHANGES IN VERSION 0.99.352
 ----------------------------
 
