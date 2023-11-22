@@ -17,7 +17,7 @@ figures to summarize these findings.
 
 ## Installation
 **pathlinkR** can be installed from this Github repository via devtools, or 
-from Bioconductor as follows (currently unreleased):
+from Bioconductor as follows:
 ```r
 # devtools
 devtools::install_github("https://github.com/hancockinformatics/pathlinkR")
