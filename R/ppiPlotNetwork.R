@@ -172,8 +172,7 @@ ppiPlotNetwork <- function(
             mid="white",
             high="#a50026",
             midpoint=0,
-            na.value=intColour,
-            guide=ifelse(legend, "colourbar", "none")
+            na.value=intColour
         )
         networkFillGuide <- NULL
 
@@ -191,9 +190,8 @@ ppiPlotNetwork <- function(
 
         if (all(catFillColours == "Set1")) {
             networkFillGeom <- scale_fill_brewer(
-                palette ="Set1",
-                na.value=intColour,
-                guide   =ifelse(legend, "legend", "none")
+                palette="Set1",
+                na.value=intColour
             )
         } else {
             networkFillGeom <- scale_fill_manual(values=catFillColours)
@@ -222,11 +220,18 @@ ppiPlotNetwork <- function(
     set_graph_style(foreground="white", family="sans")
 
     ## Theme tweaks for all plot types
-    themeTweaks <- theme(
-        plot.margin=unit(c(0.5, 0, 0, 0.5), "cm"),
-        legend.title=element_text(size=16),
-        legend.text=element_text(size=14)
-    )
+    themeTweaks <- if (legend) {
+        theme(
+            plot.margin=unit(c(0.5, 0, 0, 0.5), "cm"),
+            legend.title=element_text(size=16),
+            legend.text=element_text(size=14)
+        )
+    } else {
+        theme(
+            plot.margin=unit(c(0.5, 0, 0, 0.5), "cm"),
+            legend.position = "none"
+        )
+    }
 
 
     ## Subnetwork stuff

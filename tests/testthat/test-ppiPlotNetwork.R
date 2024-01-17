@@ -57,3 +57,26 @@ test_that("plotting subnetworks works as expected", {
         )
     )
 })
+
+test_that("legend toggle is working", {
+    data("exampleDESeqResults")
+
+    set.seed(1)
+
+    exNetwork <- ppiBuildNetwork(
+        rnaseqResult=exampleDESeqResults[[1]],
+        filterInput=TRUE,
+        order="zero"
+    )
+
+    vdiffr::expect_doppelganger(
+        "example-network-no-legend",
+        ppiPlotNetwork(
+            exNetwork,
+            fillColumn=LogFoldChange,
+            fillType="foldChange",
+            legend=FALSE,
+            label=FALSE
+        )
+    )
+})
