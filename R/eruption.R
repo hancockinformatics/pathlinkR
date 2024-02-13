@@ -70,8 +70,8 @@
 #'   will be given labels, further emphasizing them in the volcano plot.
 #'
 #'   Since this function returns a ggplot object, further custom changes could
-#'   be applied using the standard ggplot2 functions (`labs()`,
-#'   `theme()`, etc.).
+#'   be applied using the standard ggplot2 functions (`labs()`, `theme()`,
+#'   etc.).
 #'
 #' @seealso <https://github.com/hancockinformatics/pathlinkR>
 #'

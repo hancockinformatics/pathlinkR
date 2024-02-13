@@ -12,10 +12,7 @@ test_that("a basic volcano plot is correct", {
 test_that("some of the options are working as expected", {
     set.seed(1)
 
-    data(
-        list = c("exampleDESeqResults", "sigoraDatabase"),
-        package = "pathlinkR"
-    )
+    data("sigoraDatabase", package = "pathlinkR")
 
     interferonGenes <- sigoraDatabase %>%
         filter(pathwayName == "Interferon Signaling") %>%
