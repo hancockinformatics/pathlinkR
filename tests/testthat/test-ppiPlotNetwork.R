@@ -64,12 +64,10 @@ test_that("plotting subnetworks works as expected", {
         analysis="hallmark"
     )
 
-    suppressMessages(
-        exSubnetwork <- ppiExtractSubnetwork(
-            network=exNetwork2,
-            pathwayEnrichmentResult=exPathways,
-            pathwayToExtract="INTERFERON ALPHA RESPONSE"
-        )
+    exSubnetwork <- ppiExtractSubnetwork(
+        network=exNetwork2,
+        pathwayEnrichmentResult=exPathways,
+        pathwayToExtract="INTERFERON ALPHA RESPONSE"
     )
 
     vdiffr::expect_doppelganger(
