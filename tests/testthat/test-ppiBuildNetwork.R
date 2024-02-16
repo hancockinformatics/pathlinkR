@@ -57,34 +57,3 @@ test_that("simple minimum order networks behave as expected", {
         )
     )
 })
-
-test_that("Steinder-trimmed networks behave as expected", {
-    set.seed(1)
-
-    data("exampleDESeqResults")
-
-    exNetworkSteiner <- ppiBuildNetwork(
-        rnaseqResult=exampleDESeqResults[[1]],
-        filterInput=TRUE,
-        order="minSteiner"
-    )
-
-    expect_length(exNetworkSteiner, 1376)
-
-    expect_equal(
-        nrow(as_tibble(tidygraph::activate(exNetworkSteiner, "edges"))),
-        1375
-    )
-
-    expect_contains(
-        colnames(as_tibble(exNetworkSteiner)),
-        c(
-            "name",
-            "degree",
-            "betweenness",
-            "seed",
-            "hubScoreBtw",
-            "hgncSymbol"
-        )
-    )
-})

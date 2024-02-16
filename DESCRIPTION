@@ -21,7 +21,7 @@ License: GPL-3 + file LICENSE
 URL: https://github.com/hancockinformatics/pathlinkR
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.0
+RoxygenNote: 7.3.1
 VignetteBuilder: knitr
 Config/testthat/edition: 3
 Depends: 
@@ -40,7 +40,6 @@ Imports:
     igraph,
     purrr,
     sigora,
-    SteinerNet,
     stringr,
     tibble,
     tidygraph,

@@ -38,7 +38,7 @@ when \code{filterInput=TRUE} and the input is a data frame.}
 of >1.5}
 
 \item{order}{Desired network order. Possible options are "zero" (default),
-"first," "minSimple," or "minSteiner."}
+"first," "minSimple."}
 
 \item{hubMeasure}{Character denoting what measure should be used in
 determining which nodes to highlight as hubs when plotting the network.
@@ -78,8 +78,6 @@ automatically pulled ("log2FoldChange" and "padj" for DESeqResults, or
 "logFC" and "FDR" for TopTags). Otherwise, the arguments "columnFC" and
 "columnP" must be specified.
 
-The "minSteiner" method is implemented with the \code{SteinerNet} package.
-
 The "hubMeasure" argument determines how \code{ppiBuildNetwork} assesses
 connectedness of nodes in the network, which will be used to highlight
 nodes when visualizing with \code{ppiPlotNetwork}. The options are "degree",
@@ -98,10 +96,6 @@ ppiBuildNetwork(
 
 }
 \references{
-See
-\url{https://cran.r-project.org/web/packages/SteinerNet/index.html} for details
-on the Steiner network trimming.
-
 InnateDB: \url{https://www.innatedb.com/}
 }
 \seealso{

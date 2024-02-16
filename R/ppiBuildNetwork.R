@@ -15,7 +15,7 @@
 #' @param fcCutoff Absolute fold change cutoff, defaults to an absolute value
 #'   of >1.5
 #' @param order Desired network order. Possible options are "zero" (default),
-#'   "first," "minSimple," or "minSteiner."
+#'   "first," "minSimple."
 #' @param hubMeasure Character denoting what measure should be used in
 #'   determining which nodes to highlight as hubs when plotting the network.
 #'   Options include "betweenness" (default), "degree", and "hubscore". These
@@ -44,7 +44,6 @@
 #'
 #' @import dplyr
 #'
-#' @importFrom SteinerNet steinertree
 #' @importFrom stringr str_wrap
 #' @importFrom tibble rownames_to_column
 #' @importFrom tidygraph activate as_tbl_graph centrality_betweenness
@@ -60,8 +59,6 @@
 #'   "logFC" and "FDR" for TopTags). Otherwise, the arguments "columnFC" and
 #'   "columnP" must be specified.
 #'
-#'   The "minSteiner" method is implemented with the `SteinerNet` package.
-#'
 #'   The "hubMeasure" argument determines how `ppiBuildNetwork` assesses
 #'   connectedness of nodes in the network, which will be used to highlight
 #'   nodes when visualizing with `ppiPlotNetwork`. The options are "degree",
@@ -69,11 +66,7 @@
 #'   implementation of the Kleinburg hub centrality score - details on this
 #'   method can be found at `?igraph::hub_score`.
 #'
-#' @references See
-#'   <https://cran.r-project.org/web/packages/SteinerNet/index.html> for details
-#'   on the Steiner network trimming.
-#'
-#'   InnateDB: <https://www.innatedb.com/>
+#' @references InnateDB: <https://www.innatedb.com/>
 #'
 #' @seealso <https://github.com/hancockinformatics/pathlinkR/>
 #'
@@ -108,7 +101,7 @@ ppiBuildNetwork <- function(
             grepl(pattern="ENSG", x=rownames(rnaseqResult)[1])
         }
     )
-    stopifnot(order %in% c("zero", "first", "minSimple", "minSteiner"))
+    stopifnot(order %in% c("zero", "first", "minSimple"))
     stopifnot(hubMeasure %in% c("betweenness", "degree", "hubscore"))
     stopifnot(
         "'ppiData' must have columns 'ensemblGeneA', 'ensemblGeneB'"=all(
@@ -212,27 +205,6 @@ ppiBuildNetwork <- function(
 
         networkOut1 <- networkInit %>%
             filter(!(degree == 1 & !seed), !(betweenness == 0 & !seed)) %>%
-            mutate(
-                degree=centrality_degree(),
-                betweenness=centrality_betweenness()
-            )
-
-    } else if (order == "minSteiner") {
-
-        terminals <- networkInit %>%
-            activate(nodes) %>%
-            pull(name) %>%
-            intersect(geneVector)
-
-        networkOut1 <- steinertree(
-            type="SP",
-            terminals=terminals,
-            graph=networkInit,
-            color=FALSE
-        ) %>%
-            .[[1]] %>%
-            as_tbl_graph(directed=FALSE) %>%
-            select(-color) %>%
             mutate(
                 degree=centrality_degree(),
                 betweenness=centrality_betweenness()

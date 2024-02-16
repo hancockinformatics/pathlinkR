@@ -117,8 +117,8 @@ set of genes, e.g. those from a pathway of interest. Setting the argument
 will be given labels, further emphasizing them in the volcano plot.
 
 Since this function returns a ggplot object, further custom changes could
-be applied using the standard ggplot2 functions (\code{labs()},
-\code{theme()}, etc.).
+be applied using the standard ggplot2 functions (\code{labs()}, \code{theme()},
+etc.).
 }
 \examples{
 data("exampleDESeqResults")
