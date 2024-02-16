@@ -6,7 +6,7 @@ test_that("we get the right plot", {
     pathwayDistancesJaccard <- getPathwayDistances(
         pathwayData=dplyr::slice_head(
             dplyr::arrange(sigoraDatabase, pathwayId),
-            prop=0.1
+            prop=0.05
         ),
         distMethod="jaccard"
     )

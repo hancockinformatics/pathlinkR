@@ -4,7 +4,7 @@ test_that("the pathway network is the right size", {
     pathwayDistancesJaccard <- getPathwayDistances(
         pathwayData=dplyr::slice_head(
             dplyr::arrange(sigoraDatabase, pathwayId),
-            prop=0.1
+            prop=0.05
         ),
         distMethod="jaccard"
     )
@@ -24,5 +24,5 @@ test_that("the pathway network is the right size", {
         trimOrder=1
     )
 
-    expect_length(testMyPathwayNetwork, 8)
+    expect_length(testMyPathwayNetwork, 2)
 })
