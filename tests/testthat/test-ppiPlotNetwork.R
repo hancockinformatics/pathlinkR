@@ -1,6 +1,30 @@
 ## Note we don't test with `label=TRUE` because even with a seed, the placement
-## of the labels varies enough (though slightly) between runs to constantly fail
-## the test
+## of the labels varies enough (though slightly) between runs to consistently
+## fail the test
+test_that("legend toggle is working", {
+    data("exampleDESeqResults")
+
+    set.seed(1)
+
+    exNetwork <- ppiBuildNetwork(
+        rnaseqResult=exampleDESeqResults[[1]],
+        filterInput=TRUE,
+        order="zero"
+    )
+
+    vdiffr::expect_doppelganger(
+        "example-network-no-legend",
+        ppiPlotNetwork(
+            exNetwork,
+            fillColumn=LogFoldChange,
+            fillType="foldChange",
+            legend=FALSE,
+            label=FALSE
+        )
+    )
+})
+
+
 test_that("we get the right plot output", {
     data("exampleDESeqResults")
 
@@ -53,29 +77,6 @@ test_that("plotting subnetworks works as expected", {
             fillColumn=degree,
             fillType="oneSided",
             legendTitle = "Degree",
-            label=FALSE
-        )
-    )
-})
-
-test_that("legend toggle is working", {
-    data("exampleDESeqResults")
-
-    set.seed(1)
-
-    exNetwork <- ppiBuildNetwork(
-        rnaseqResult=exampleDESeqResults[[1]],
-        filterInput=TRUE,
-        order="zero"
-    )
-
-    vdiffr::expect_doppelganger(
-        "example-network-no-legend",
-        ppiPlotNetwork(
-            exNetwork,
-            fillColumn=LogFoldChange,
-            fillType="foldChange",
-            legend=FALSE,
             label=FALSE
         )
     )

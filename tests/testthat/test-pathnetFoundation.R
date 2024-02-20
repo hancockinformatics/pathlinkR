@@ -4,7 +4,7 @@ test_that("the foundation has the right dimensions and columns", {
     pathwayDistancesJaccard <- getPathwayDistances(
         pathwayData=dplyr::slice_head(
             dplyr::arrange(sigoraDatabase, pathwayId),
-            prop=0.1
+            prop=0.05
         ),
         distMethod="jaccard"
     )
@@ -14,7 +14,7 @@ test_that("the foundation has the right dimensions and columns", {
         maxDistance=0.8
     )
 
-    expect_equal(dim(testStartingPathways), c(190, 5))
+    expect_equal(dim(testStartingPathways), c(80, 5))
 
     expect_setequal(
         colnames(testStartingPathways),

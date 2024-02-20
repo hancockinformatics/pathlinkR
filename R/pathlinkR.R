@@ -4,7 +4,7 @@
 #' analysis and visualization of RNA-Seq results. The main functions are:
 #'
 #' \itemize{
-#' \item \code{\link{eruption}} - Create volano plots from RNA-Seq results
+#' \item \code{\link{eruption}} - Create volcano plots from RNA-Seq results
 #' \item \code{\link{plotFoldChange}} - Heatmaps to visualize and compare gene
 #' expression across multiple conditions
 #' \item \code{\link{pathwayEnrichment}} - Test DE genes for enriched Reactome
@@ -15,7 +15,7 @@
 #' \code{\link{ppiPlotNetwork}}, tested for enriched pathways with
 #' \code{\link{ppiEnrichNetwork}}, or subnetworks extracted using
 #' \code{\link{ppiExtractSubnetwork}}
-#' \item \code{\link{pathnetCreate}} - Turn pathway enricment results into a
+#' \item \code{\link{pathnetCreate}} - Turn pathway enrichment results into a
 #' network of connected pathways, and create static plots with
 #' \code{\link{pathnetGGraph}} or interactive plots with
 #' \code{\link{pathnetVisNetwork}}

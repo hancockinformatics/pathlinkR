@@ -152,9 +152,7 @@ ppiPlotNetwork(
     fillColumn=LogFoldChange,
     fillType="foldChange",
     legend=TRUE,
-    label=TRUE,
-    labelColumn=hgncSymbol,
-    labelFilter=5
+    label=FALSE
 )
 
 }

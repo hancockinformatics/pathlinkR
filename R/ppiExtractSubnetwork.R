@@ -30,8 +30,8 @@
 #'
 #' @import dplyr
 #'
-#' @importFrom igraph as.igraph decompose.graph delete.vertices
-#'   get.shortest.paths induced.subgraph simplify V
+#' @importFrom igraph as.igraph decompose delete_vertices
+#'   shortest_paths induced_subgraph simplify V
 #' @importFrom tidygraph as_tbl_graph
 #'
 #' @details Uses functions from the igraph package to extract a minimally
@@ -120,12 +120,9 @@ ppiExtractSubnetwork <- function(
 
 
     if (!is.null(genes)) {
-        message("Using provided list of Ensembl genes...", appendLF=FALSE)
         genesToExtract <- genes
 
     } else if (!is.null(pathwayEnrichmentResult)) {
-        message("Pulling genes for given pathway...", appendLF=FALSE)
-
         pathwayGenesHGNC <- pathwayEnrichmentResult %>%
             filter(pathwayName == pathwayToExtract) %>%
             pull(genes) %>%
@@ -138,37 +135,30 @@ ppiExtractSubnetwork <- function(
             unique()
     }
 
-    message("found ", length(genesToExtract), " genes.")
-
-
     geneNodeIds <- tibble::as_tibble(network) %>%
         mutate(rn=row_number()) %>%
         filter(name %in% genesToExtract) %>%
         pull(rn)
 
     # Get subgraphs, which will only contain the specified nodes
-    message("Calculating subgraphs from specified nodes...")
-    allSubgraphs <- induced.subgraph(
+    allSubgraphs <- induced_subgraph(
         graph=as.igraph(network),
         vids=geneNodeIds
     )
 
     # Decompose each subgraph
-    allComponents <- decompose.graph(graph=allSubgraphs, min.vertices=1)
+    allComponents <- decompose(graph=allSubgraphs, min.vertices=1)
 
     # If all the specified nodes form a single, connected network, pull that...
     if (length(allComponents) == 1) {
-        message("All nodes form a single network...")
         moduleNetwork <- allComponents[[1]]
 
         # ...or we need to minimally connect each subgraph we've identified
     } else {
-        message("Determining shortest paths between nodes...")
-
         moduleShortestPaths <- list()
 
         for (i in seq(length(geneNodeIds))) {
-            moduleShortestPaths[[i]] <- get.shortest.paths(
+            moduleShortestPaths[[i]] <- shortest_paths(
                 as.igraph(network),
                 geneNodeIds[i],
                 geneNodeIds[-seq(i)]
@@ -177,16 +167,10 @@ ppiExtractSubnetwork <- function(
 
         moduleNodes <- unique(unlist(moduleShortestPaths))
         NodesToRemove <- igraph::V(network)$name[-moduleNodes]
-        moduleNetwork <- simplify(delete.vertices(network, NodesToRemove))
+        moduleNetwork <- simplify(delete_vertices(network, NodesToRemove))
     }
 
     moduleNetworkTidygraph <- as_tbl_graph(moduleNetwork)
-
-    message(
-        "Done, new subnetwork contains ",
-        nrow(tibble::as_tibble(moduleNetworkTidygraph)),
-        " nodes.\n"
-    )
 
     attr(moduleNetworkTidygraph, "starters") <- genesToExtract
     return(moduleNetworkTidygraph)

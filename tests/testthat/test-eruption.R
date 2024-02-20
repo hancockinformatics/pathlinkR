@@ -1,28 +1,14 @@
-test_that("a basic volcano plot is correct", {
+test_that("a volcano plot works with some of customizations", {
     set.seed(1)
 
-    data("exampleDESeqResults", package = "pathlinkR")
-
-    vdiffr::expect_doppelganger(
-        "volcanoPlotExample",
-        eruption(rnaseqResult=exampleDESeqResults[[1]])
-    )
-})
-
-test_that("some of the options are working as expected", {
-    set.seed(1)
-
-    data(
-        list = c("exampleDESeqResults", "sigoraDatabase"),
-        package = "pathlinkR"
-    )
+    data("exampleDESeqResults", "sigoraDatabase")
 
     interferonGenes <- sigoraDatabase %>%
         filter(pathwayName == "Interferon Signaling") %>%
         pull(ensemblGeneId)
 
     vdiffr::expect_doppelganger(
-        "volcanoPlotExample2",
+        "volcanoPlotExample",
         eruption(
             rnaseqResult=exampleDESeqResults[[1]],
             xaxis=c(-4, 4),

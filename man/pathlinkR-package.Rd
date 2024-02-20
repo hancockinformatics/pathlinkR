@@ -13,7 +13,7 @@ The pathlinkR package is a suite of functions designed to facilitate the
 analysis and visualization of RNA-Seq results. The main functions are:
 
 \itemize{
-\item \code{\link{eruption}} - Create volano plots from RNA-Seq results
+\item \code{\link{eruption}} - Create volcano plots from RNA-Seq results
 \item \code{\link{plotFoldChange}} - Heatmaps to visualize and compare gene
 expression across multiple conditions
 \item \code{\link{pathwayEnrichment}} - Test DE genes for enriched Reactome
@@ -24,7 +24,7 @@ using interaction data from InnateDB. Networks can be plotted with
 \code{\link{ppiPlotNetwork}}, tested for enriched pathways with
 \code{\link{ppiEnrichNetwork}}, or subnetworks extracted using
 \code{\link{ppiExtractSubnetwork}}
-\item \code{\link{pathnetCreate}} - Turn pathway enricment results into a
+\item \code{\link{pathnetCreate}} - Turn pathway enrichment results into a
 network of connected pathways, and create static plots with
 \code{\link{pathnetGGraph}} or interactive plots with
 \code{\link{pathnetVisNetwork}}
@@ -39,6 +39,14 @@ site: \url{https://support.bioconductor.org}
 
 The code is made publicly available on our Github page:
 \url{https://github.com/hancockinformatics/pathlinkR}
+}
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/hancockinformatics/pathlinkR}
+  \item Report bugs at \url{https://github.com/hancockinformatics/pathlinkR/issues}
+}
+
 }
 \author{
 Travis Blimkie, Andy An
