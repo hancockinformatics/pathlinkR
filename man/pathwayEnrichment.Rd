@@ -69,7 +69,7 @@ or Hallmark gene sets. For ReactomePA this must be a character vector of
 Entrez genes. For Hallmark, it must be Ensembl IDs.}
 
 \item{verbose}{Logical; If FALSE (the default), don't print info/progress
-mesages.}
+messages.}
 }
 \value{
 A "data.frame" (tibble) of pathway enrichment results for all input

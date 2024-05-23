@@ -13,6 +13,9 @@
 #' @param fcCutoff Absolute fold change cutoff, defaults to > 1.5
 #' @param baseColour Colour of points for all significant DE genes
 #'   ("steelblue4")
+#' @param labelCutoffs Logical; Should cutoff lines for p value and fold change
+#'   be labeled? Size of the label is controlled by `labelSize`. Defaults to
+#'   FALSE.
 #' @param nonsigColour Colour of non-significant DE genes ("lightgrey")
 #' @param alpha Transparency of the points (0.5)
 #' @param pointSize Size of the points (1)
@@ -39,7 +42,7 @@
 #'   specifically label. Can be HGNC symbols or Ensembl gene IDs.
 #' @param removeUnannotated Boolean (TRUE): Remove genes without annotations
 #'   (no HGNC symbol).
-#' @param labelSize Size of font for labels
+#' @param labelSize Size of font for labels (3.5)
 #' @param pad Padding of labels; adjust this if the labels overlap
 #'
 #' @return Volcano plot of genes from an RNA-Seq experiment; a "ggplot" object
@@ -85,6 +88,7 @@ eruption <- function(
         columnP=NA,
         pCutoff=0.05,
         fcCutoff=1.5,
+        labelCutoffs=FALSE,
         baseColour="steelblue4",
         nonsigColour="lightgrey",
         alpha=0.5,
@@ -320,6 +324,26 @@ eruption <- function(
         ## Set axes
         {if (!is.na(yaxis[1])) ylim(yaxis)} +
         {if (!is.na(xaxis[1])) xlim(xaxis)} +
+
+        ## Optional labeling of cutoff lines (hline and vline)
+        {if (labelCutoffs) {
+            annotate(
+                geom="label",
+                x=max(res$LogFoldChange) / 2,
+                y=-log10(pCutoff),
+                label=paste0("p=", pCutoff),
+                size=labelSize
+            )
+        }} +
+        {if (labelCutoffs) {
+            annotate(
+                geom="label",
+                x=log2(fcCutoff),
+                y=-log10(pCutoff) * 0.5,
+                label=paste0("fc=+/-", fcCutoff),
+                size=labelSize
+            )
+        }} +
 
         ## Add in labels to the genes
         geom_text_repel(

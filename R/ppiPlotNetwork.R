@@ -135,6 +135,13 @@ ppiPlotNetwork <- function(
 
     stopifnot(is(network, "tbl_graph"))
 
+    if (label) {
+        stopifnot(
+            "Argument 'labelColumn' must be given when 'label=TRUE'" =
+                !missing(labelColumn)
+        )
+    }
+
     ## Set up fill scaling based on argument `fillType`
     if (fillType == "foldChange") {
         stopifnot(is.numeric(pull(network, {{fillColumn}})))
@@ -227,7 +234,7 @@ ppiPlotNetwork <- function(
     } else {
         theme(
             plot.margin=unit(c(0.5, 0, 0, 0.5), "cm"),
-            legend.position = "none"
+            legend.position="none"
         )
     }
 
@@ -264,7 +271,6 @@ ppiPlotNetwork <- function(
             ) +
             networkFillGeom +
             scale_size_continuous(range=nodeSize, guide="none") +
-            scale_colour_manual(values=c("y"=hubColour, "n"=labelColour)) +
             labs(fill=legendTitle) +
             { if (!is.na(title)) labs(title=title) } +
             themeTweaks +
@@ -281,8 +287,10 @@ ppiPlotNetwork <- function(
                     check_overlap=TRUE,
                     show.legend=FALSE,
                     box.padding=labelPadding,
-                    min.segment.length=minSegLength
-                )
+                    min.segment.length=minSegLength,
+                    na.rm=TRUE
+                ) +
+                scale_colour_manual(values=c("y"=hubColour, "n"=labelColour))
         } else {
             subnetworkPlot
         }

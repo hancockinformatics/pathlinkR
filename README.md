@@ -22,7 +22,10 @@ from Bioconductor as follows:
 # devtools
 devtools::install_github("https://github.com/hancockinformatics/pathlinkR")
 
-# Bioconductor
+# Bioconductor release
+BiocManager::install("pathlinkR")
+
+# Bioconductor devel
 BiocManager::install("pathlinkR", version="devel")
 ```
 

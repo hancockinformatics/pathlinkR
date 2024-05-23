@@ -38,7 +38,7 @@
 #'   or Hallmark gene sets. For ReactomePA this must be a character vector of
 #'   Entrez genes. For Hallmark, it must be Ensembl IDs.
 #' @param verbose Logical; If FALSE (the default), don't print info/progress
-#'   mesages.
+#'   messages.
 #'
 #' @return A "data.frame" (tibble) of pathway enrichment results for all input
 #'   comparisons, with the following columns:

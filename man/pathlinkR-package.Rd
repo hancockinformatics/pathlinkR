@@ -51,4 +51,4 @@ Useful links:
 \author{
 Travis Blimkie, Andy An
 }
-\keyword{package}
+\keyword{internal}
