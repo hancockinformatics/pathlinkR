@@ -237,8 +237,13 @@ pathwayPlots <- function(
                 space="free"
             ) +
 
-            {if (includeGeneRatio) geom_point(aes(size=geneRatio))} +
-            {if (!includeGeneRatio) geom_point(size=size)} +
+            {
+                if (includeGeneRatio) {
+                    geom_point(aes(size=geneRatio))
+                } else {
+                    geom_point(size=size)
+                }
+            } +
 
             geom_point(
                 data=filter(
@@ -247,7 +252,7 @@ pathwayPlots <- function(
                 ),
                 mapping=aes(x=comparison, y=pathwayName),
                 shape=8,
-                size=2,
+                size=ifelse(size - 3 > 0, size - 3, 1),
                 colour="white",
                 show.legend=FALSE
             ) +
