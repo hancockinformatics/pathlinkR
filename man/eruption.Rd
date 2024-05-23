@@ -10,6 +10,7 @@ eruption(
   columnP = NA,
   pCutoff = 0.05,
   fcCutoff = 1.5,
+  labelCutoffs = FALSE,
   baseColour = "steelblue4",
   nonsigColour = "lightgrey",
   alpha = 0.5,
@@ -45,6 +46,10 @@ frame. Defaults to NA.}
 \item{pCutoff}{Adjusted p value cutoff, defaults to < 0.05}
 
 \item{fcCutoff}{Absolute fold change cutoff, defaults to > 1.5}
+
+\item{labelCutoffs}{Logical; Should cutoff lines for p value and fold change
+be labeled? Size of the label is controlled by \code{labelSize}. Defaults to
+FALSE.}
 
 \item{baseColour}{Colour of points for all significant DE genes
 ("steelblue4")}
@@ -89,7 +94,7 @@ specifically label. Can be HGNC symbols or Ensembl gene IDs.}
 \item{removeUnannotated}{Boolean (TRUE): Remove genes without annotations
 (no HGNC symbol).}
 
-\item{labelSize}{Size of font for labels}
+\item{labelSize}{Size of font for labels (3.5)}
 
 \item{pad}{Padding of labels; adjust this if the labels overlap}
 }

@@ -33,7 +33,7 @@
 #'
 #' @author Travis Blimkie, Andy An
 #'
-#' @docType package
+#' @docType _PACKAGE
 #' @name pathlinkR-package
 #' @title pathlinkR
 #' @aliases pathlinkR
