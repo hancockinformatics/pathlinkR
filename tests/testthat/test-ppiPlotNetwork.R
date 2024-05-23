@@ -76,7 +76,7 @@ test_that("plotting subnetworks works as expected", {
             network=exSubnetwork,
             fillColumn=degree,
             fillType="oneSided",
-            legendTitle = "Degree",
+            legendTitle="Degree",
             label=FALSE
         )
     )

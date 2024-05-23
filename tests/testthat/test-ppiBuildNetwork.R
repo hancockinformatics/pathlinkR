@@ -30,11 +30,14 @@ test_that("zero order network behave as expected", {
 test_that("simple minimum order networks behave as expected", {
     data("exampleDESeqResults")
 
-    exNetworkSimple <- ppiBuildNetwork(
-        rnaseqResult=exampleDESeqResults[[1]],
-        filterInput=TRUE,
-        order="minSimple"
+    suppressMessages(
+        exNetworkSimple <- ppiBuildNetwork(
+            rnaseqResult=exampleDESeqResults[[1]],
+            filterInput=TRUE,
+            order="minSimple"
+        )
     )
+
 
     expect_length(exNetworkSimple, 3960)
 
