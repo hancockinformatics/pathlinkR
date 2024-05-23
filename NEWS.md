@@ -1,7 +1,10 @@
-CHANGES IN VERSION 1.1.z
+CHANGES IN VERSION 1.1.6
 -------------------------
 
 * Updated installation information in README
+* "eruption" gained argument "labelCutoffs" to add labels to p value and fold change cutoff lines
+* "ppiPlotNetwork" checks for argument "labelColumn" when "label=TRUE"
+* Fixed some tests
 
 
 CHANGES IN VERSION 0.99.380

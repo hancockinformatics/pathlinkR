@@ -210,7 +210,10 @@ pathnetGGraph <- function(
         ## Misc
         labs(size="Bonferroni\np-value", colour="Pathway type") +
         theme_void(base_size=themeBaseSize) +
-        theme(legend.text=element_text(hjust=0), plot.margin=unit(rep(5, 4), "mm")) +
+        theme(
+            legend.text=element_text(hjust=0),
+            plot.margin=unit(rep(5, 4), "mm")
+        ) +
         guides(
             colour=guide_legend(override.aes=list(size=5, pch=19)),
             size=guide_legend(override.aes=list(
