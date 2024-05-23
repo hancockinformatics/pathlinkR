@@ -1,3 +1,9 @@
+CHANGES IN VERSION 1.1.z
+-------------------------
+
+* Updated installation information in README
+
+
 CHANGES IN VERSION 0.99.380
 ----------------------------
 
