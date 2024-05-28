@@ -1,7 +1,8 @@
 #' Plot pathway enrichment results
 #'
 #' @param pathwayEnrichmentResults Data frame of results from the function
-#'   `enrichPathway`
+#'   `enrichPathway`. Or output from fgsea, using Reactome pathways (see Details
+#'   for more information).
 #' @param columns Number of columns to split the pathways across, particularly
 #'   relevant if there are many significant pathways. Can specify up to 3
 #'   columns, with a default of 1.
@@ -48,7 +49,17 @@
 #'   results from multiple DE comparisons. Can automatically assign each pathway
 #'   into an informative top-level category.
 #'
+#' @details The input may also be results from the function `fgsea` from that
+#'   package. These results will formatted for plotting, including being joined
+#'   to `reactomeCategories` - so only Reactome results will work. No filtering
+#'   is applied to this input, so results should be pre-filtered prior to
+#'   plotting. Each pathway is assigned a direction based on the sign of the
+#'   "NES" column. Users must also add a "comparison" column which will be
+#'   plotted as the x axis. This allows for plotting results from either a
+#'   single or multiple analysis.
+#'
 #' @seealso <https://github.com/hancockinformatics/pathlinkR>
+#'          <https://bioconductor.org/packages/fgsea/>
 #'
 #' @examples
 #' data("sigoraExamples")
@@ -77,16 +88,65 @@ pathwayPlots <- function(
 
     plotData <- pathwayEnrichmentResults
 
+    fgseaColumns <- c(
+        "pathway",
+        "pval",
+        "padj",
+        "log2err",
+        "ES",
+        "NES",
+        "size",
+        "leadingEdge"
+    )
+
+    if (all(fgseaColumns %in% colnames(plotData))) {
+
+        stopifnot(
+            "You must add a 'comparison' column for fgsea results."=
+                "comparison" %in% colnames(plotData)
+        )
+
+        stopifnot(
+            "Option 'includeGeneRatio' is not supported for fgsea results."=
+                !includeGeneRatio
+        )
+
+        stopifnot(
+            "Option 'showNumGenes' is not supported for fgsea results."=
+                !showNumGenes
+        )
+
+        data_env <- new.env(parent=emptyenv())
+        data("pathwayCategories", envir=data_env, package="pathlinkR")
+        pathwayCategories <- data_env[["pathwayCategories"]]
+
+        plotData <- plotData %>%
+            rename("pathwayName"=pathway, "pValueAdjusted"=padj) %>%
+            mutate(
+                direction=ifelse(NES > 0, "Up", "Down"),
+                joinCol=trimws(pathwayName)
+            )
+
+        pathwayCategoriesJoin <-
+            mutate(pathwayCategories, joinCol=trimws(pathwayName)) %>%
+            select(!pathwayName)
+
+        plotData <- select(
+            left_join(plotData, pathwayCategoriesJoin, by="joinCol"),
+            !joinCol
+        )
+    }
+
     ## If new group names are to be used, add them in
     if (!is.na(newGroupNames[1])) {
-        plotData <- plotData %>%
-            left_join(
-                tibble::tibble(
-                    comparison=unique(plotData$comparison),
-                    newNames=newGroupNames
-                ),
-                multiple="all"
-            ) %>%
+        plotData <- left_join(
+            plotData,
+            tibble::tibble(
+                comparison=unique(plotData$comparison),
+                newNames=newGroupNames
+            ),
+            multiple="all"
+        ) %>%
             select(-comparison) %>%
             rename("comparison"=newNames)
     }
@@ -205,7 +265,10 @@ pathwayPlots <- function(
         theme(
             strip.text.x=element_text(size=12, face="bold", colour="black"),
             legend.text=element_text(size=12 * legendMultiply),
-            legend.title=element_text(size=13 * legendMultiply),
+            legend.title=element_text(
+                size=13 * legendMultiply,
+                margin = margin(r=10)
+            ),
             axis.text.y=element_text(colour="black", size=12),
             axis.text.x=element_text(
                 colour="black",
@@ -276,21 +339,22 @@ pathwayPlots <- function(
                 drop=FALSE # Keep both up/down if only one direction enriched
             ) +
 
-            scale_fill_continuous(
-                name=expression(P[adjusted]),
-                limits=c(0, 50),
-                breaks=c(10, 20, 30, 40, 50),
-                labels=c(
-                    expression(10 ^ -10),
-                    expression(10 ^ -20),
-                    expression(10 ^ -30),
-                    expression(10 ^ -40),
-                    expression(10 ^ -50)
-                ),
-                low=colourValues[1],
-                high=colourValues[2],
-                na.value=NA
-            ) +
+            { if (requireNamespace("scales", quietly=TRUE)) {
+                scale_fill_continuous(
+                    name=expression(P[adjusted]),
+                    labels=scales::label_math(10^-.x),
+                    low=colourValues[1],
+                    high=colourValues[2],
+                    na.value=NA
+                )
+            } else {
+                scale_fill_continuous(
+                    name=expression(-log10(P[adjusted])),
+                    low=colourValues[1],
+                    high=colourValues[2],
+                    na.value=NA
+                )
+            }} +
 
             ## Add optional lines to separate different groups
             {if (!is.na(intercepts[1])) geom_vline(xintercept=intercepts)} +
@@ -312,6 +376,6 @@ pathwayPlots <- function(
             align="v"
         )
     } else {
-        plotList
+        plotList[[1]]
     }
 }

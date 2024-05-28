@@ -1,6 +1,7 @@
 utils::globalVariables(c(
         ":=",
         ".",
+        ".x",
         "background",
         "betweenness",
         "Bonferroni",
@@ -44,6 +45,7 @@ utils::globalVariables(c(
         "is",
         "isHub",
         "isStarter",
+        "joinCol",
         "label",
         "logFC",
         "LogFoldChange",
@@ -55,6 +57,7 @@ utils::globalVariables(c(
         "new",
         "newFillCol",
         "newNames",
+        "NES",
         "nodeFill",
         "nodeLabel",
         "nodes",
