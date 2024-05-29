@@ -65,4 +65,4 @@ This project uses the GNU General Public License v3.0, available
 
 <br>
 
-[<img src="man/figures/hancock_lab_logo.svg" height="40px">](http://cmdr.ubc.ca/bobh/)
+[<img src="man/figures/hancock_lab_logo.svg" height="40px">](https://cmdr.ubc.ca/bobh/)
