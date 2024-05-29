@@ -14,7 +14,8 @@ pathwayEnrichment(
   split = TRUE,
   analysis = "sigora",
   filterResults = "default",
-  gpsRepo = "default",
+  gpsRepo = "reaH",
+  gpsLevel = "default",
   geneUniverse = NULL,
   verbose = FALSE
 )
@@ -51,22 +52,30 @@ the fold change column, and do enrichment independently on each. Results
 are combined at the end, with an added "direction" column.}
 
 \item{analysis}{Method/database to use for enrichment analysis. The default
-is "sigora", but can also be "reactomepa" or "hallmark"}
+is "sigora", but can also be "reactome"/"reactomepa", "hallmark" or "kegg".}
 
-\item{filterResults}{Should the output be filtered for significance?
-Use \code{1} to return the unfiltered results, or any number less than 1
-for a custom p-value cutoff. If left as \code{default}, the significance cutoff
-for Sigora is 0.001, or 0.05 for ReactomePA and Hallmark.}
+\item{filterResults}{Should the output be filtered for significance? Use \code{1}
+to return the unfiltered results, or any number less than 1 for a custom
+p-value cutoff. If left as \code{default}, the significance cutoff for
+\code{analysis="sigora"} is 0.001, or 0.05 for "reactome", "hallmark", and
+"kegg".}
 
-\item{gpsRepo}{Only applies to \code{analysis="sigora"}. Gene Pair Signature
-object for Sigora to use to test for enriched pathways. Leaving this set
-as "default" will use the "reaH" GPS object from \code{Sigora}, or you can
-provide your own custom GPS repository.}
+\item{gpsRepo}{Only applies to \code{analysis="sigora"}. Gene Pair Signature (GPS)
+object for Sigora to use to test for enriched pathways. "reaH" (default)
+will use the Reactome GPS object from \code{Sigora}; "kegH" will use the KEGG
+GPS. One can also provide their own GPS object; see Sigora's documentation
+for details.}
 
-\item{geneUniverse}{Only applies when \code{analysis} is "reactomepa" or
-"hallmark". The set of background genes to use when testing with ReactomePA
-or Hallmark gene sets. For ReactomePA this must be a character vector of
-Entrez genes. For Hallmark, it must be Ensembl IDs.}
+\item{gpsLevel}{Only applies to \code{analysis="sigora"}. If left as \code{default},
+will be set to \code{4} for \code{gpsRepo="reaH"} or \code{2} for \code{gpeRepo="kegH"}. If
+providing your own GPS object, can be set as desired; see Sigora's
+documentation for details.}
+
+\item{geneUniverse}{Only applies when \code{analysis} is "reactome"/"reactomepa",
+"hallmark", or "kegg". The set of background genes to use when testing with
+Reactome, Hallmark, or KEGG gene sets. For Reactome this must be a
+character vector of Entrez genes. For Hallmark or KEGG, it must be Ensembl
+IDs.}
 
 \item{verbose}{Logical; If FALSE (the default), don't print info/progress
 messages.}
@@ -108,6 +117,13 @@ can be left as \code{NA}.
 In the last case (elements are "data.frame"), both \code{columnFC} and
 \code{columnP} must be supplied when \code{filterInput=TRUE},
 and \code{columnFC} must be given if \code{split=TRUE}.
+
+Setting \code{analysis} to any of "reactome", "reactomepa", "hallmark", or
+"kegg" will execute traditional over-representation analysis, the only
+difference being the database used ("reactome" and "reactomepa" are treated
+the same). Setting \code{analysis="sigora"} will use a gene pair-based approach,
+which can be performed on either Reactome data when \code{gpsRepo="reaH"} or
+KEGG data with \code{gpsRepo="kegH"}.
 }
 \examples{
 data("exampleDESeqResults")
@@ -124,7 +140,9 @@ pathwayEnrichment(
 \references{
 Sigora: \url{https://cran.r-project.org/package=sigora}
 ReactomePA: \url{https://www.bioconductor.org/packages/ReactomePA/}
+Reactome: \url{https://reactome.org/}
 MSigDB/Hallmark: \url{https://www.gsea-msigdb.org/gsea/msigdb/collections.jsp}
+KEGG: \url{https://www.kegg.jp/}
 }
 \seealso{
 \url{https://github.com/hancockinformatics/pathlinkR}

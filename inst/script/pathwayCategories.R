@@ -8,7 +8,7 @@ data("idmap", "reaH", package="sigora")
 
 # Reactome databases --------------------------------------------------------
 
-# |- Download from Reactome -------------------------------------------------
+# * Download from Reactome -------------------------------------------------
 
 # Relationship between each pathway and the one above it (hierarchy)
 reactomeDb <-
@@ -41,7 +41,7 @@ reactomeTop <- read_tsv(
     distinct()
 
 
-# |- Annotate all the pathways with top pathways, if available ------------
+# * Annotate all the pathways with top pathways, if available ------------
 
 reactomeLevels <- full_join(
     reactomeNames,
@@ -57,7 +57,7 @@ reactomeLevels <- full_join(
     )
 
 
-# |- Fill in missing annotations for top pathways -------------------------
+# * Fill in missing annotations for top pathways -------------------------
 
 # Not all appear to have been annotated, refer to the hierarchy for the
 # remainder
@@ -122,7 +122,7 @@ reactomeHierarchyDf <- left_join(
 )
 
 
-# |- Deal with missing pathways and duplicates ----------------------------
+# * Deal with missing pathways and duplicates ----------------------------
 
 # Some of these will have character(0) as top pathway because some belong to
 # multiple top pathways. Some other pathways also were originally annotated to
@@ -146,7 +146,7 @@ inSigora <-
 reactomeDupe <- plyr::rbind.fill(reactomeDupe, inSigora)
 
 
-# |- Load the manually annotated duplicated pathways ----------------------
+# * Load the manually annotated duplicated pathways ----------------------
 
 manualDupeAnnotation <- read_tsv("inst/extdata/manualDupeAnnotation.tsv")
 
@@ -167,7 +167,7 @@ reactomeAllAnnotated <- plyr::rbind.fill(
 )
 
 
-# |- Make some checks -----------------------------------------------------
+# * Make some checks -----------------------------------------------------
 
 # Are all the child pathways from Reactome in the final annotated dataframe?
 all(reactomeDb$child %in% reactomeAllAnnotated$pathwayId)
@@ -205,7 +205,7 @@ reactomeAllAnnotated <- reactomeAllAnnotated %>%
     )
 
 
-# |- Add groupedTopPathways for pathway networks ---------------------------
+# * Add groupedTopPathways for pathway networks ---------------------------
 
 reactomeAllGrouped <- reactomeAllAnnotated %>% mutate(
     groupedPathway=case_when(
@@ -249,6 +249,16 @@ reactomeAllGrouped <- reactomeAllAnnotated %>% mutate(
         topPathwayName %in% c("Disease") ~ "Disease"
     )
 )
+
+reactomeFinal <- reactomeAllGrouped %>%
+    as_tibble() %>%
+    select(
+        pathwayId,
+        pathwayName,
+        "topLevelPathway" = topPathwayName,
+        groupedPathway,
+        "topLevelOriginal" = topPathwayNameOriginal
+    )
 
 
 # mSigDB Hallmark gene sets -----------------------------------------------
@@ -337,7 +347,7 @@ hallmarkAnnotated <- hallmark2 %>% mutate(
     )
 )
 
-hallmarkDb <- hallmarkAnnotated %>%
+hallmarkFinal <- hallmarkAnnotated %>%
     select(
         "pathwayId"=gs_name,
         "pathwayName"=gs_name,
@@ -347,19 +357,35 @@ hallmarkDb <- hallmarkAnnotated %>%
     distinct()
 
 
+# KEGG data ---------------------------------------------------------------
+
+keggJSON <- jsonlite::fromJSON(paste0(
+    "https://www.genome.jp/kegg-bin/download_htext?htext=br08901.keg&format=",
+    "json&filedir="
+))
+
+keggTidy <- keggJSON$children %>%
+    as_tibble() %>%
+    unnest(children, names_repair = "universal") %>%
+    unnest(children, names_repair = "universal")
+
+keggFinal <- keggTidy %>%
+    mutate(
+        pathwayId = paste0("hsa", str_extract(name...3, pattern = "^[0-9]{5}")),
+        pathwayName = str_trim(str_remove(name...3, pattern = "^[0-9]{5}")),
+        topLevelPathway = name...1,
+        groupedPathway = name...1,
+        topLevelOriginal = NA_character_
+    ) %>%
+    select(pathwayId:topLevelOriginal)
+
+
 # Save this topPathways file ----------------------------------------------
 
-pathwayCategories <- rbind(
-    select(
-        reactomeAllGrouped,
-        pathwayId,
-        pathwayName,
-        "topLevelPathway"=topPathwayName,
-        groupedPathway,
-        "topLevelOriginal"=topPathwayNameOriginal
-    ),
-    hallmarkDb
-) %>%
-    as_tibble()
+pathwayCategories <- bind_rows(
+    reactomeFinal,
+    hallmarkFinal,
+    keggFinal
+)
 
 usethis::use_data(pathwayCategories, overwrite=TRUE)

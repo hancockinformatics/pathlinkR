@@ -25,7 +25,8 @@ pathwayPlots(
 }
 \arguments{
 \item{pathwayEnrichmentResults}{Data frame of results from the function
-\code{enrichPathway}}
+\code{enrichPathway}. Or output from fgsea, using Reactome pathways (see Details
+for more information).}
 
 \item{columns}{Number of columns to split the pathways across, particularly
 relevant if there are many significant pathways. Can specify up to 3
@@ -83,6 +84,16 @@ Creates a plot to visualize and compare pathway enrichment
 results from multiple DE comparisons. Can automatically assign each pathway
 into an informative top-level category.
 }
+\details{
+The input may also be results from the function \code{fgsea} from that
+package. These results will formatted for plotting, including being joined
+to \code{reactomeCategories} - so only Reactome results will work. No filtering
+is applied to this input, so results should be pre-filtered prior to
+plotting. Each pathway is assigned a direction based on the sign of the
+"NES" column. Users must also add a "comparison" column which will be
+plotted as the x axis. This allows for plotting results from either a
+single or multiple analysis.
+}
 \examples{
 data("sigoraExamples")
 pathwayPlots(sigoraExamples, columns=2)
@@ -90,4 +101,5 @@ pathwayPlots(sigoraExamples, columns=2)
 }
 \seealso{
 \url{https://github.com/hancockinformatics/pathlinkR}
+\url{https://bioconductor.org/packages/fgsea/}
 }
