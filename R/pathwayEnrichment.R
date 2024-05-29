@@ -24,19 +24,26 @@
 #'   the fold change column, and do enrichment independently on each. Results
 #'   are combined at the end, with an added "direction" column.
 #' @param analysis Method/database to use for enrichment analysis. The default
-#'   is "sigora", but can also be "reactomepa" or "hallmark"
-#' @param filterResults Should the output be filtered for significance?
-#'   Use `1` to return the unfiltered results, or any number less than 1
-#'   for a custom p-value cutoff. If left as `default`, the significance cutoff
-#'   for Sigora is 0.001, or 0.05 for ReactomePA and Hallmark.
-#' @param gpsRepo Only applies to `analysis="sigora"`. Gene Pair Signature
-#'   object for Sigora to use to test for enriched pathways. Leaving this set
-#'   as "default" will use the "reaH" GPS object from `Sigora`, or you can
-#'   provide your own custom GPS repository.
-#' @param geneUniverse Only applies when `analysis` is "reactomepa" or
-#'   "hallmark". The set of background genes to use when testing with ReactomePA
-#'   or Hallmark gene sets. For ReactomePA this must be a character vector of
-#'   Entrez genes. For Hallmark, it must be Ensembl IDs.
+#'   is "sigora", but can also be "reactome"/"reactomepa", "hallmark" or "kegg".
+#' @param filterResults Should the output be filtered for significance? Use `1`
+#'   to return the unfiltered results, or any number less than 1 for a custom
+#'   p-value cutoff. If left as `default`, the significance cutoff for
+#'   `analysis="sigora"` is 0.001, or 0.05 for "reactome", "hallmark", and
+#'   "kegg".
+#' @param gpsRepo Only applies to `analysis="sigora"`. Gene Pair Signature (GPS)
+#'   object for Sigora to use to test for enriched pathways. "reaH" (default)
+#'   will use the Reactome GPS object from `Sigora`; "kegH" will use the KEGG
+#'   GPS. One can also provide their own GPS object; see Sigora's documentation
+#'   for details.
+#' @param gpsLevel Only applies to `analysis="sigora"`. If left as `default`,
+#'   will be set to `4` for `gpsRepo="reaH"` or `2` for `gpeRepo="kegH"`. If
+#'   providing your own GPS object, can be set as desired; see Sigora's
+#'   documentation for details.
+#' @param geneUniverse Only applies when `analysis` is "reactome"/"reactomepa",
+#'   "hallmark", or "kegg". The set of background genes to use when testing with
+#'   Reactome, Hallmark, or KEGG gene sets. For Reactome this must be a
+#'   character vector of Entrez genes. For Hallmark or KEGG, it must be Ensembl
+#'   IDs.
 #' @param verbose Logical; If FALSE (the default), don't print info/progress
 #'   messages.
 #'
@@ -82,10 +89,19 @@
 #'   `columnP` must be supplied when `filterInput=TRUE`,
 #'   and `columnFC` must be given if `split=TRUE`.
 #'
+#'   Setting `analysis` to any of "reactome", "reactomepa", "hallmark", or
+#'   "kegg" will execute traditional over-representation analysis, the only
+#'   difference being the database used ("reactome" and "reactomepa" are treated
+#'   the same). Setting `analysis="sigora"` will use a gene pair-based approach,
+#'   which can be performed on either Reactome data when `gpsRepo="reaH"` or
+#'   KEGG data with `gpsRepo="kegH"`.
+#'
 #' @references
 #'   Sigora: <https://cran.r-project.org/package=sigora>
 #'   ReactomePA: <https://www.bioconductor.org/packages/ReactomePA/>
+#'   Reactome: <https://reactome.org/>
 #'   MSigDB/Hallmark: <https://www.gsea-msigdb.org/gsea/msigdb/collections.jsp>
+#'   KEGG: <https://www.kegg.jp/>
 #'
 #' @seealso <https://github.com/hancockinformatics/pathlinkR>
 #'
@@ -110,11 +126,14 @@ pathwayEnrichment <- function(
         split=TRUE,
         analysis="sigora",
         filterResults="default",
-        gpsRepo="default",
+        gpsRepo="reaH",
+        gpsLevel="default",
         geneUniverse=NULL,
         verbose=FALSE
 ) {
-    stopifnot(analysis %in% c("sigora", "reactomepa", "hallmark"))
+    stopifnot(
+        analysis %in% c("sigora", "reactome", "reactomepa", "hallmark", "kegg")
+    )
 
     stopifnot(
         "Provide a named list of data frames of results, with the name
@@ -175,6 +194,7 @@ pathwayEnrichment <- function(
         "pathwayCategories",
         "reactomeDatabase",
         "hallmarkDatabase",
+        "keggDatabase",
         "mappingFile",
         envir=data_env,
         package="pathlinkR"
@@ -182,6 +202,7 @@ pathwayEnrichment <- function(
     pathwayCategories <- data_env[["pathwayCategories"]]
     reactomeDatabase <- data_env[["reactomeDatabase"]]
     hallmarkDatabase <- data_env[["hallmarkDatabase"]]
+    keggDatabase <- data_env[["keggDatabase"]]
     mappingFile <- data_env[["mappingFile"]]
 
 
@@ -249,6 +270,7 @@ pathwayEnrichment <- function(
                     runSigoraSafely(
                         enrichGenes=y,
                         gpsRepo=gpsRepo,
+                        gpsLevel=gpsLevel,
                         pValFilter=ifelse(
                             filterResults == "default",
                             0.001,
@@ -268,14 +290,14 @@ pathwayEnrichment <- function(
         }
 
 
-        ## ReactomePA or Hallmark
-        if (analysis %in% c("reactomepa", "hallmark")) {
+        ## Reactome, Hallmark, or KEGG
+        if (analysis %in% c("reactome", "reactomepa", "hallmark", "kegg")) {
 
             ## ReactomePA
-            if (analysis == "reactomepa") {
-                if (verbose) message("\tRunning enrichment using ReactomePA")
+            if (analysis %in% c("reactomepa", "reactome")) {
+                if (verbose) message("\tRunning enrichment using Reactome")
 
-                rpaHallResult <- imap_dfr(
+                oraResult <- imap_dfr(
                     .x =preppedGenes,
                     .id="direction",
                     function(y, direction) {
@@ -330,7 +352,7 @@ pathwayEnrichment <- function(
             if (analysis == "hallmark") {
                 if (verbose) message("\tRunning enrichment using Hallmark...")
 
-                rpaHallResult <- imap_dfr(
+                oraResult <- imap_dfr(
                     .x =preppedGenes,
                     .id="direction",
                     function(y, direction) {
@@ -364,8 +386,59 @@ pathwayEnrichment <- function(
                     distinct()
             }
 
-            ## ReactomePA or Hallmark
-            resultFinal <- rpaHallResult %>%
+            ## KEGG
+            if (analysis == "kegg") {
+                if (verbose) message("\tRunning enrichment using KEGG")
+
+                oraResult <- imap_dfr(
+                    .x=preppedGenes,
+                    .id="direction",
+                    function(y, direction) {
+
+                        tibble::as_tibble(clusterProfiler::enricher(
+                            gene=y,
+                            TERM2GENE=select(
+                                keggDatabase,
+                                pathwayId,
+                                ensemblGeneId
+                            ),
+                            TERM2NAME=select(
+                                keggDatabase,
+                                pathwayId,
+                                pathwayName
+                            ),
+                            universe=geneUniverse,
+                            minGSSize=10,
+                            maxGSSize=500,
+                            pvalueCutoff=ifelse(
+                                filterResults == "default",
+                                0.05,
+                                filterResults
+                            )
+                        ))
+                    }
+                ) %>%
+                    mutate(geneID=as.character(geneID)) %>%
+                    separate_longer_delim(geneID, delim="/") %>%
+                    left_join(
+                        mappingFile,
+                        by=c("geneID" = "ensemblGeneId"),
+                        multiple="all",
+                        relationship="many-to-many"
+                    ) %>%
+                    select(
+                        -any_of(c("geneID", "entrezGeneId", "ensemblGeneId"))
+                    ) %>%
+                    group_by(ID) %>%
+                    mutate(genes=paste(hgncSymbol, collapse=";")) %>%
+                    ungroup() %>%
+                    select(-hgncSymbol) %>%
+                    distinct()
+            }
+
+
+            ## Reactome, Hallmark, or KEGG
+            resultFinal <- oraResult %>%
                 separate_wider_delim(
                     cols=GeneRatio,
                     delim="/",
@@ -415,6 +488,7 @@ pathwayEnrichment <- function(
 #'
 #' @param enrichGenes Vector of genes to enrich
 #' @param gpsRepo GPS object to use for testing pathways
+#' @param gpsLevel Level to use for enrichment testing
 #' @param pValFilter Desired threshold for filtering results
 #'
 #' @return A "data.frame" (tibble) of results from Sigora
@@ -435,6 +509,7 @@ pathwayEnrichment <- function(
 .runSigora <- function(
         enrichGenes,
         gpsRepo,
+        gpsLevel,
         pValFilter=NA
 ) {
 
@@ -452,17 +527,23 @@ pathwayEnrichment <- function(
     )
 
     data_env <- new.env(parent=emptyenv())
-    data("idmap", "reaH", envir=data_env, package="sigora")
+    data("idmap", "reaH", "kegH", envir=data_env, package="sigora")
     idmap <- data_env[["idmap"]]
     reaH <- data_env[["reaH"]]
+    kegH <- data_env[["kegH"]]
 
-    if (gpsRepo == "default") gpsRepo <- reaH
+    if (gpsRepo %in% c("default", "reaH")) {
+        gpsRepo <- reaH
+        gpsLevel <- 4
+    } else if (gpsRepo == "kegH") {
+        gpsRepo <- kegH
+        gpsLevel <- 2
+    }
 
-    ## Run SIGORA based on default settings (GPSrepo=reaH, level=4)
     invisible(capture.output(
         sigoraResult1 <- sigora::sigora(
             GPSrepo=gpsRepo,
-            level=4,
+            level=gpsLevel,
             markers=TRUE,
             queryList=enrichGenes
         )

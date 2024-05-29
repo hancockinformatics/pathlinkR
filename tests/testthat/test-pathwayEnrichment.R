@@ -29,6 +29,38 @@ test_that("Sigora enrichment works as expected", {
     )
 })
 
+test_that("Sigora enrichment works with KEGG", {
+    data("exampleDESeqResults")
+
+    suppressMessages(
+        testResultSigoraKEGG <- pathwayEnrichment(
+            inputList=exampleDESeqResults[1],
+            analysis="sigora",
+            gpsRepo="kegH"
+        )
+    )
+
+    expect_equal(dim(testResultSigoraKEGG), c(30, 12))
+
+    expect_setequal(
+        colnames(testResultSigoraKEGG),
+        c(
+            "comparison",
+            "direction",
+            "pathwayId",
+            "pathwayName",
+            "pValue",
+            "pValueAdjusted",
+            "genes",
+            "numCandidateGenes",
+            "numBgGenes",
+            "geneRatio",
+            "totalGenes",
+            "topLevelPathway"
+        )
+    )
+})
+
 test_that("ReactomePA enrichment works as expected", {
     data("exampleDESeqResults")
 

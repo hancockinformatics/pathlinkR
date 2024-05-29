@@ -4,12 +4,14 @@
 \alias{.runSigora}
 \title{INTERNAL Wrapper around Sigora's enrichment function}
 \usage{
-.runSigora(enrichGenes, gpsRepo, pValFilter = NA)
+.runSigora(enrichGenes, gpsRepo, gpsLevel, pValFilter = NA)
 }
 \arguments{
 \item{enrichGenes}{Vector of genes to enrich}
 
 \item{gpsRepo}{GPS object to use for testing pathways}
+
+\item{gpsLevel}{Level to use for enrichment testing}
 
 \item{pValFilter}{Desired threshold for filtering results}
 }
