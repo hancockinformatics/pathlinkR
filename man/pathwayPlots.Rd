@@ -92,7 +92,7 @@ is applied to this input, so results should be pre-filtered prior to
 plotting. Each pathway is assigned a direction based on the sign of the
 "NES" column. Users must also add a "comparison" column which will be
 plotted as the x axis. This allows for plotting results from either a
-single or multiple analysis. See the full vignette for an example.
+single or multiple analysis.
 }
 \examples{
 data("sigoraExamples")

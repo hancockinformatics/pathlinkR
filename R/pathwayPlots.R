@@ -267,7 +267,7 @@ pathwayPlots <- function(
             legend.text=element_text(size=12 * legendMultiply),
             legend.title=element_text(
                 size=13 * legendMultiply,
-                margin = margin(r=10)
+                margin=margin(r=10, b=7)
             ),
             axis.text.y=element_text(colour="black", size=12),
             axis.text.x=element_text(

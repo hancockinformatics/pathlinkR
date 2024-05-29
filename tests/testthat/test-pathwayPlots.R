@@ -9,6 +9,26 @@ test_that("pathway plots are correct", {
     )
 })
 
+test_that("pathway plots work with Sigora/KEGG", {
+    set.seed(1)
+
+    data("exampleDESeqResults")
+
+    suppressMessages(
+        testResultSigoraKEGG <- pathwayEnrichment(
+            inputList=exampleDESeqResults[1],
+            analysis="sigora",
+            gpsRepo="kegH"
+        )
+    )
+
+    vdiffr::expect_doppelganger(
+        "pathwayPlotExampleKEGG",
+        pathwayPlots(testResultSigoraKEGG, columns=2)
+    )
+})
+
+
 test_that("pathwayPlots works with fgsea results", {
     set.seed(1)
 
@@ -17,14 +37,14 @@ test_that("pathwayPlots works with fgsea results", {
     uniquePathways <- unique(as.character(sigoraExamples[["pathwayName"]]))
 
     fgseaInput <- data.frame(
-        comparison = rep(c("A", "B"), each = length(uniquePathways) / 2),
-        pathway = uniquePathways,
-        pval = abs(rnorm(n = length(uniquePathways), mean = 0.0001, sd = 0.001)),
-        log2err = NA,
-        ES = NA,
-        NES = rnorm(n = length(uniquePathways), mean = 0, sd = 1),
-        size = NA,
-        leadingEdge = NA
+        comparison=rep(c("A", "B"), each=length(uniquePathways) / 2),
+        pathway=uniquePathways,
+        pval=abs(rnorm(n=length(uniquePathways), mean=0.0001, sd=0.001)),
+        log2err=NA,
+        ES=NA,
+        NES=rnorm(n=length(uniquePathways), mean=0, sd=1),
+        size=NA,
+        leadingEdge=NA
     )
 
     fgseaInput$padj <- p.adjust(fgseaInput$pval, method = "BH")
@@ -32,6 +52,6 @@ test_that("pathwayPlots works with fgsea results", {
 
     vdiffr::expect_doppelganger(
         "pathwayPlotExampleFGSEA",
-         pathwayPlots(fgseaInput, columns=2)
+        pathwayPlots(fgseaInput, columns=2)
     )
 })
