@@ -1,3 +1,21 @@
+CHANGES IN VERSION 1.1.10
+-------------------------
+
+* Support for KEGG pathways when running pathwayEnrichment, either through Sigora or traditional over-representation
+
+
+CHANGES IN VERSION 1.1.8
+-------------------------
+
+* pathwayPlots now supports the output from fgsea on Reactome pathways (109a173)
+
+
+CHANGES IN VERSION 1.1.7
+-------------------------
+
+* Size of asterisks in pathwayPlots is set based on tringle size (1f9b751)
+
+
 CHANGES IN VERSION 1.1.6
 -------------------------
 
