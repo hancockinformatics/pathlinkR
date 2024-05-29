@@ -240,7 +240,7 @@ head(enrichedResultsSigora)
 ```
 
 For those who still prefer traditional over-representation analysis, we include
-the option of doing so by setting `analysis="reactomepa"`, which uses 
+the option of doing so by setting `analysis="reactome"`, which uses 
 `r BiocStyle::Biocpkg("ReactomePA")` (Yu et al. 2016). When using this method,
 we recommend providing a gene universe to serve as a background for the
 enrichment test; here we'll use all the genes which were tested for significance
@@ -249,7 +249,7 @@ IDs before running the test. See the full vignette at our
 [Github pages](https://hancockinformatics.github.io/pathlinkR/) for details.
 
 In addition to the Reactome database used when setting `analysis` to "sigora" or
-"reactomepa", we also provide over-representation analysis using the [Hallmark
+"reactome", we also provide over-representation analysis using the [Hallmark
 gene sets](https://www.gsea-msigdb.org/gsea/msigdb/human/collections.jsp) from
 the Molecular Signatures Database (MSigDb). These are 50 gene sets that
 represent "specific, well-defined biological states or processes with coherent
@@ -266,6 +266,11 @@ enrichedResultsHm <- pathwayEnrichment(
 
 head(enrichedResultsHm)
 ```
+
+Finally, users may also use data from [KEGG](https://www.kegg.jp/) when
+performing enrichment analyses. This database is supported with traditional
+over-representation analysis by setting `analysis="kegg"`, or with a gene
+pair-based approach by specifying `analysis="sigora"` and `gpsRepo="kegH"`.
 
 
 # Plotting pathway enrichment results
