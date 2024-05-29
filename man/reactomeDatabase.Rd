@@ -13,8 +13,7 @@ A data frame (tibble) with 123574 rows and 3 columns
 }
 }
 \source{
-See \url{https://reactome.org/} for information on each of this
-patwhay resource.
+See \url{https://reactome.org/} for more information.
 }
 \usage{
 data(reactomeDatabase)

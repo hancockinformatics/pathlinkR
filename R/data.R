@@ -18,6 +18,7 @@
 #'
 "exampleDESeqResults"
 
+
 #' Colour assignments for grouped pathways
 #'
 #' @usage data(groupedPathwayColours)
@@ -25,6 +26,7 @@
 #' @format A length 8 named vector of hex colour values
 #'
 "groupedPathwayColours"
+
 
 #' Table of Hallmark gene sets and their genes
 #'
@@ -40,6 +42,7 @@
 #' \url{https://www.gsea-msigdb.org/gsea/msigdb/collections.jsp}
 #'
 "hallmarkDatabase"
+
 
 #' InnateDB PPI data
 #'
@@ -65,6 +68,24 @@
 #'
 "innateDbPPI"
 
+
+#' Table of KEGG pathways and genes
+#'
+#' @usage data(keggDatabase)
+#' @return An object of class "tbl", "tbl.df", "data.frame"
+#' @format A data frame (tibble) with 32883 rows and 4 columns
+#' \describe{
+#'   \item{pathwayId}{KEGG pathway ID}
+#'   \item{pathwayName}{Name of the Reactome pathway}
+#'   \item{ensemblGeneId}{Ensembl gene ID}
+#'   \item{hgncSymbol}{HGNC gene symbol}
+#' }
+#'
+#' @source See \url{https://kegg.jp} for more information.
+#'
+"keggDatabase"
+
+
 #' Table of human gene ID mappings
 #'
 #' @description A data frame to aid in mapping human gene IDs between different
@@ -86,27 +107,30 @@
 #'
 "mappingFile"
 
+
 #' Top-level pathway categories
 #'
-#' @description A data frame containing all Reactome pathways and Hallmark
-#' terms, along with a manually-curated top-level category for each entry.
+#' @description A data frame containing all Reactome, Hallmark, and KEGG
+#'   pathways/terms, along with a manually-curated top-level category for each
+#'   entry.
 #'
 #' @usage data(pathwayCategories)
 #' @return An object of class "tbl", "tbl.df", "data.frame"
-#' @format A data frame (tibble) with 2685 rows and 5 columns
+#' @format A data frame (tibble) with 3326 rows and 5 columns
 #' \describe{
-#'   \item{pathwayId}{Reactome or Hallmark pathway identifier}
+#'   \item{pathwayId}{Reactome, Hallmark, or KEGG pathway identifier}
 #'   \item{pathwayName}{Pathway name}
 #'   \item{topLevelPathway}{Top hierarchy pathway term, shortened in some cases}
-#'   \item{groupedPathway}{Top grouped pathway, 8 for Reactome}
+#'   \item{groupedPathway}{Top grouped pathway}
 #'   \item{topLevelOriginal}{Original top pathway name}
 #' }
 #'
-#' @source See \url{https://reactome.org/} and
-#'   \url{https://www.gsea-msigdb.org/gsea/msigdb/collections.jsp} for
-#'   information on each of these databases.
+#' @source See \url{https://reactome.org/},
+#'   \url{https://www.gsea-msigdb.org/gsea/msigdb/collections.jsp}, and
+#'   \url{https://kegg.jp} for information on each of these databases.
 #'
 "pathwayCategories"
+
 
 #' Table of all Reactome pathways and genes
 #'
@@ -119,10 +143,10 @@
 #'   \item{pathwayName}{Name of the Reactome pathway}
 #' }
 #'
-#' @source See \url{https://reactome.org/} for information on each of this
-#'   patwhay resource.
+#' @source See \url{https://reactome.org/} for more information.
 #'
 "reactomeDatabase"
+
 
 #' Table of all Sigora pathways and their constituent genes
 #'
@@ -140,6 +164,7 @@
 #'   \url{https://cran.r-project.org/package=sigora}
 #'
 "sigoraDatabase"
+
 
 #' Sigora enrichment example
 #'

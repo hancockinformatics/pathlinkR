@@ -5,19 +5,19 @@
 \alias{pathwayCategories}
 \title{Top-level pathway categories}
 \format{
-A data frame (tibble) with 2685 rows and 5 columns
+A data frame (tibble) with 3326 rows and 5 columns
 \describe{
-\item{pathwayId}{Reactome or Hallmark pathway identifier}
+\item{pathwayId}{Reactome, Hallmark, or KEGG pathway identifier}
 \item{pathwayName}{Pathway name}
 \item{topLevelPathway}{Top hierarchy pathway term, shortened in some cases}
-\item{groupedPathway}{Top grouped pathway, 8 for Reactome}
+\item{groupedPathway}{Top grouped pathway}
 \item{topLevelOriginal}{Original top pathway name}
 }
 }
 \source{
-See \url{https://reactome.org/} and
-\url{https://www.gsea-msigdb.org/gsea/msigdb/collections.jsp} for
-information on each of these databases.
+See \url{https://reactome.org/},
+\url{https://www.gsea-msigdb.org/gsea/msigdb/collections.jsp}, and
+\url{https://kegg.jp} for information on each of these databases.
 }
 \usage{
 data(pathwayCategories)
@@ -26,7 +26,8 @@ data(pathwayCategories)
 An object of class "tbl", "tbl.df", "data.frame"
 }
 \description{
-A data frame containing all Reactome pathways and Hallmark
-terms, along with a manually-curated top-level category for each entry.
+A data frame containing all Reactome, Hallmark, and KEGG
+pathways/terms, along with a manually-curated top-level category for each
+entry.
 }
 \keyword{datasets}

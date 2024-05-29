@@ -2,6 +2,7 @@ exampleDESeqResults
 groupedPathwayColours
 hallmarkDatabase
 innateDbPPI
+keggDatabase
 mappingFile
 pathwayCategories
 reactomeDatabase
