@@ -164,22 +164,20 @@ pathnetCreate <- function(
 
     pathwaysAsNetwork4 <- pathwaysAsNetwork3 %>%
         left_join(
-            y =select(
-                pathwayCategories, pathwayId,
-                pathwayName, groupedPathway
-            ),
+            y=select(pathwayCategories, pathwayId, groupedPathway, pathwayName),
             by=c("pathway1" = "pathwayId"),
             multiple="all"
         ) %>%
         select(
             "pathwayId"=pathway1,
-            "pathwayName"=pathwayName1,
+            pathwayName1,
             everything(),
             -any_of(c(
-                "pathwayName.x", "pathwayName.y", "level_1",
+                "pathwayName", "pathwayName.x", "pathwayName.y", "level_1",
                 "level_2", "level1", "level2"
             ))
-        )
+        ) %>%
+        rename("pathwayName" = pathwayName1)
 
     return(pathwaysAsNetwork4)
 }
