@@ -39,7 +39,7 @@
 #'   labeling nodes. Recommend setting to `hgncSymbol`, which contains HGNC
 #'   symbols mapped from the input Ensembl IDs via biomaRt.
 #' @param labelFilter Degree filter used to determine which nodes should be
-#'   labeled. Defaults to 0. This value can be increased to reduce the number of
+#'   labeled. Defaults to 5. This value can be increased to reduce the number of
 #'   node labels, to prevent the network from being too crowded.
 #' @param labelSize Size of node labels, defaults to 5.
 #' @param labelColour Colour of node labels, defaults to "black"
@@ -57,7 +57,7 @@
 #' @import ggplot2
 #'
 #' @importFrom ggraph geom_edge_link geom_node_point geom_node_text ggraph
-#'   set_graph_style
+#'   set_graph_style theme_graph
 #'
 #' @description Visualize a protein-protein interaction (PPI) network using
 #'   `ggraph` functions, output from `ppiBuildNetwork`.
@@ -125,7 +125,7 @@ ppiPlotNetwork <- function(
         edgeWidth=0.5,
         label=FALSE,
         labelColumn,
-        labelFilter=8,
+        labelFilter=5,
         labelSize=4,
         labelColour="black",
         labelFace="bold",
@@ -215,20 +215,22 @@ ppiPlotNetwork <- function(
     }
 
     ## Set a plain white background
-    set_graph_style(foreground="white", family="sans")
+    # set_graph_style(foreground="white", family="sans")
 
     ## Theme tweaks for all plot types
     themeTweaks <- if (legend) {
-        theme(
-            plot.margin=unit(c(0.5, 0, 0, 0.5), "cm"),
-            legend.title=element_text(size=16),
-            legend.text=element_text(size=14)
-        )
+        theme_graph(base_family="sans") +
+            theme(
+                plot.margin=unit(c(0.5, 0, 0, 0.5), "cm"),
+                legend.title=element_text(size=16),
+                legend.text=element_text(size=14)
+            )
     } else {
-        theme(
-            plot.margin=unit(c(0.5, 0, 0, 0.5), "cm"),
-            legend.position = "none"
-        )
+        theme_graph(base_family="sans") +
+            theme(
+                plot.margin=unit(c(0.5, 0, 0, 0.5), "cm"),
+                legend.position="none"
+            )
     }
 
 

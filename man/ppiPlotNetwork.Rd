@@ -24,7 +24,7 @@ ppiPlotNetwork(
   edgeWidth = 0.5,
   label = FALSE,
   labelColumn,
-  labelFilter = 8,
+  labelFilter = 5,
   labelSize = 4,
   labelColour = "black",
   labelFace = "bold",
@@ -91,7 +91,7 @@ labeling nodes. Recommend setting to \code{hgncSymbol}, which contains HGNC
 symbols mapped from the input Ensembl IDs via biomaRt.}
 
 \item{labelFilter}{Degree filter used to determine which nodes should be
-labeled. Defaults to 0. This value can be increased to reduce the number of
+labeled. Defaults to 5. This value can be increased to reduce the number of
 node labels, to prevent the network from being too crowded.}
 
 \item{labelSize}{Size of node labels, defaults to 5.}
