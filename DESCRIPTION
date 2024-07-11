@@ -31,6 +31,7 @@ Imports:
     clusterProfiler,
     ComplexHeatmap,
     dplyr,
+    fgsea,
     ggforce,
     ggplot2,
     ggpubr,
