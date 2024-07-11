@@ -52,7 +52,8 @@ the fold change column, and do enrichment independently on each. Results
 are combined at the end, with an added "direction" column.}
 
 \item{analysis}{Method/database to use for enrichment analysis. The default
-is "sigora", but can also be "reactome"/"reactomepa", "hallmark" or "kegg".}
+is "sigora", but can also be "reactome"/"reactomepa", "hallmark", "kegg",
+"fgsea_reactome" or "fgsea_hallmark".}
 
 \item{filterResults}{Should the output be filtered for significance? Use \code{1}
 to return the unfiltered results, or any number less than 1 for a custom

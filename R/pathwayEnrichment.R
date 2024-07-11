@@ -24,7 +24,8 @@
 #'   the fold change column, and do enrichment independently on each. Results
 #'   are combined at the end, with an added "direction" column.
 #' @param analysis Method/database to use for enrichment analysis. The default
-#'   is "sigora", but can also be "reactome"/"reactomepa", "hallmark" or "kegg".
+#'   is "sigora", but can also be "reactome"/"reactomepa", "hallmark", "kegg",
+#'   "fgsea_reactome" or "fgsea_hallmark".
 #' @param filterResults Should the output be filtered for significance? Use `1`
 #'   to return the unfiltered results, or any number less than 1 for a custom
 #'   p-value cutoff. If left as `default`, the significance cutoff for
@@ -132,7 +133,15 @@ pathwayEnrichment <- function(
         verbose=FALSE
 ) {
     stopifnot(
-        analysis %in% c("sigora", "reactome", "reactomepa", "hallmark", "kegg")
+        analysis %in% c(
+            "sigora",
+            "reactome",
+            "reactomepa",
+            "hallmark",
+            "kegg",
+            "fgsea_reactome",
+            "fgsea_hallmark"
+        )
     )
 
     stopifnot(
@@ -467,9 +476,96 @@ pathwayEnrichment <- function(
             }
             return(resultFinal)
         }
+
+        if (grepl(x=analysis, pattern="fgsea")) {
+            if (analysis == "fgsea_reactome") {
+                reactomeGeneSets <- reactomeDatabase %>%
+                    mutate(
+                        geneSetName = paste0(pathwayId, ";", pathwayName)
+                    ) %>%
+                    distinct(geneSetName, entrezGeneId) %>%
+                    split(x=.$entrezGeneId, f=.$geneSetName)
+
+                imap_dfr(
+                    .x=preppedGenesTable,
+                    .id="direction",
+                    function(y, direction) {
+                        gseaInput <- y %>%
+                            tibble::as_tibble(rownames="ensemblGeneId") %>%
+                            left_join(mappingFile, by="ensemblGeneId") %>%
+                            mutate(
+                                geneRank=-log10(PAdjusted) * LogFoldChange
+                            ) %>%
+                            group_by(entrezGeneId) %>%
+                            summarise(geneRank = mean(geneRank)) %>%
+                            ungroup() %>%
+                            distinct(entrezGeneId, geneRank) %>%
+                            tibble::deframe()
+
+                        fgsea::fgsea(
+                            pathways = reactomeGeneSets,
+                            stats = gseaInput,
+                            scoreType="pos",
+                            minSize = 10,
+                            maxSize = 200
+                        ) %>%
+                            tidyr::separate_wider_delim(
+                                pathway,
+                                delim=";",
+                                names=c("pathwayId", "pathwayName")
+                            ) %>%
+                            rename(
+                                "pValue"=pval,
+                                "pValueAdjusted"=padj,
+                            ) %>%
+                            mutate(totalGenes=nrow(rnaseqResults))
+                    }
+                )
+            } else if (analysis == "fgsea_hallmark") {
+                hallmarkGeneSets <- hallmarkDatabase %>%
+                    distinct() %>%
+                    split(x = .$ensemblGeneId, f = .$pathwayId)
+
+                imap_dfr(
+                    .x=preppedGenesTable,
+                    .id="direction",
+                    function(y, direction) {
+                        gseaInput <- y %>%
+                            tibble::as_tibble(rownames="ensemblGeneId") %>%
+                            mutate(
+                                geneRank=-log10(PAdjusted) * LogFoldChange
+                            ) %>%
+                            group_by(ensemblGeneId) %>%
+                            summarise(geneRank = mean(geneRank)) %>%
+                            ungroup() %>%
+                            distinct(ensemblGeneId, geneRank) %>%
+                            tibble::deframe()
+
+                        fgsea::fgsea(
+                            pathways = hallmarkGeneSets,
+                            stats = gseaInput,
+                            scoreType="pos",
+                            minSize = 10,
+                            maxSize = 200
+                        ) %>%
+                            rename(
+                                "pathwayId"=pathway,
+                                "pValue"=pval,
+                                "pValueAdjusted"=padj,
+                            ) %>%
+                            mutate(
+                                pathwayName = pathwayId, .after="pathwayId"
+                            ) %>%
+                            mutate(totalGenes=nrow(rnaseqResults))
+                    }
+                )
+            } else {
+                return(NULL)
+            }
+        }
     })
 
-    results_all_comparisons <- resultList %>%
+    resultsAllComparisons <- resultList %>%
         bind_rows(.id="comparison") %>%
         left_join(
             select(pathwayCategories, pathwayId, topLevelPathway),
@@ -477,8 +573,7 @@ pathwayEnrichment <- function(
             multiple="all"
         ) %>%
         tibble::as_tibble()
-
-    return(results_all_comparisons)
+    return(resultsAllComparisons)
 }
 
 
