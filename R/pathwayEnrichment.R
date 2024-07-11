@@ -132,6 +132,11 @@ pathwayEnrichment <- function(
         geneUniverse=NULL,
         verbose=FALSE
 ) {
+
+    .vm <- function(v, m) {
+        if (v) message(m)
+    }
+
     stopifnot(
         analysis %in% c(
             "sigora",
@@ -150,6 +155,14 @@ pathwayEnrichment <- function(
             is.list(inputList)
             !is.null(names(inputList))
         }
+    )
+
+    .vm(
+        verbose,
+        paste0(
+            "Beginning enrichment analysis with ", analysis, " for ",
+            length(inputList), " comparisons"
+        )
     )
 
     ## Coerce the input
@@ -228,48 +241,36 @@ pathwayEnrichment <- function(
             )
         }
 
-        if (verbose) message("Comparison being analyzed: ", comparison)
+        .vm(verbose, paste0("  Running analysis for comparison ", comparison))
 
         ## Filter the input genes if specified
         rnaseqResults <-
             if (filterInput) {
-                if (verbose) {
-                    message("\tFiltering the results before testing...")
-                }
+                .vm(verbose, paste0("    Filtering input using ", pCutoff, " and ", fcCutoff))
                 filter(
                     x,
                     PAdjusted < pCutoff,
                     abs(LogFoldChange) > log2(fcCutoff)
                 )
             } else {
+                .vm(verbose, paste0("    Input is being used without filtering"))
                 x
             }
 
         ## Turn the input into a list of gene IDs, split by direction or not
         if (split) {
+            .vm(verbose, paste0("    Input is being split by direction"))
             preppedGenesTable <- list(
                 "Up"=filter(rnaseqResults, LogFoldChange > 0),
                 "Down"=filter(rnaseqResults, LogFoldChange < 0)
             )
-
-            if (verbose) {
-                message(
-                    "\tDEGs used: ",
-                    nrow(preppedGenesTable$Up), " Up, ",
-                    nrow(preppedGenesTable$Down), " Down..."
-                )
-            }
         } else {
+            .vm(verbose, paste0("    Input is not being split by direction"))
             preppedGenesTable <- list("All"=rnaseqResults)
-            if (verbose) {
-                message("\tDEGs used: ", nrow(preppedGenesTable$All), "...")
-            }
         }
 
         ## Sigora
         if (analysis == "sigora") {
-            if (verbose) message("\tRunning enrichment using Sigora...")
-
             runSigoraSafely <- possibly(.runSigora)
 
             resultFinal <- imap_dfr(
@@ -289,12 +290,7 @@ pathwayEnrichment <- function(
                 }
             )
             resultFinal$totalGenes <- nrow(rnaseqResults)
-
-            if (verbose) {
-                message(
-                    "\tDone, found ", nrow(resultFinal), " enriched pathways.\n"
-                )
-            }
+            .vm(verbose, paste0("    Found ", nrow(resultFinal), " enriched terms"))
             return(resultFinal)
         }
 
@@ -304,7 +300,6 @@ pathwayEnrichment <- function(
 
             ## ReactomePA
             if (analysis %in% c("reactomepa", "reactome")) {
-                if (verbose) message("\tRunning enrichment using Reactome")
 
                 oraResult <- imap_dfr(
                     .x=preppedGenesTable,
@@ -359,7 +354,6 @@ pathwayEnrichment <- function(
 
             ## Hallmark
             if (analysis == "hallmark") {
-                if (verbose) message("\tRunning enrichment using Hallmark...")
 
                 oraResult <- imap_dfr(
                     .x=preppedGenesTable,
@@ -396,7 +390,6 @@ pathwayEnrichment <- function(
 
             ## KEGG
             if (analysis == "kegg") {
-                if (verbose) message("\tRunning enrichment using KEGG")
 
                 oraResult <- imap_dfr(
                     .x=preppedGenesTable,
@@ -468,12 +461,7 @@ pathwayEnrichment <- function(
                     geneRatio,
                     totalGenes
                 )
-
-            if (verbose) {
-                message(
-                    "\tDone, found ", nrow(resultFinal), " enriched pathways.\n"
-                )
-            }
+            .vm(verbose, paste0("    Found ", nrow(resultFinal), " enriched terms"))
             return(resultFinal)
         }
 
@@ -486,7 +474,7 @@ pathwayEnrichment <- function(
                     distinct(geneSetName, entrezGeneId) %>%
                     split(x=.$entrezGeneId, f=.$geneSetName)
 
-                imap_dfr(
+                resultFinal <- imap_dfr(
                     .x=preppedGenesTable,
                     .id="direction",
                     function(y, direction) {
@@ -526,7 +514,7 @@ pathwayEnrichment <- function(
                     distinct() %>%
                     split(x = .$ensemblGeneId, f = .$pathwayId)
 
-                imap_dfr(
+                resultFinal <- imap_dfr(
                     .x=preppedGenesTable,
                     .id="direction",
                     function(y, direction) {
@@ -559,9 +547,9 @@ pathwayEnrichment <- function(
                             mutate(totalGenes=nrow(rnaseqResults))
                     }
                 )
-            } else {
-                return(NULL)
             }
+            .vm(verbose, paste0("    Found ", nrow(resultFinal), " enriched terms"))
+            return(resultFinal)
         }
     })
 
@@ -573,6 +561,7 @@ pathwayEnrichment <- function(
             multiple="all"
         ) %>%
         tibble::as_tibble()
+    .vm(verbose, "Analysis complete\n")
     return(resultsAllComparisons)
 }
 
