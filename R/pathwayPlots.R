@@ -1,8 +1,7 @@
 #' Plot pathway enrichment results
 #'
 #' @param pathwayEnrichmentResults Data frame of results from the function
-#'   `enrichPathway`. Or output from fgsea, using Reactome pathways (see Details
-#'   for more information).
+#'   `enrichPathway`
 #' @param columns Number of columns to split the pathways across, particularly
 #'   relevant if there are many significant pathways. Can specify up to 3
 #'   columns, with a default of 1.
@@ -49,15 +48,6 @@
 #'   results from multiple DE comparisons. Can automatically assign each pathway
 #'   into an informative top-level category.
 #'
-#' @details The input may also be results from the function `fgsea` from that
-#'   package. These results will formatted for plotting, including being joined
-#'   to `reactomeCategories` - so only Reactome results will work. No filtering
-#'   is applied to this input, so results should be pre-filtered prior to
-#'   plotting. Each pathway is assigned a direction based on the sign of the
-#'   "NES" column. Users must also add a "comparison" column which will be
-#'   plotted as the x axis. This allows for plotting results from either a
-#'   single or multiple analysis.
-#'
 #' @seealso <https://github.com/hancockinformatics/pathlinkR>
 #'          <https://bioconductor.org/packages/fgsea/>
 #'
@@ -88,52 +78,12 @@ pathwayPlots <- function(
 
     plotData <- pathwayEnrichmentResults
 
-    fgseaColumns <- c(
-        "pathway",
-        "pval",
-        "padj",
-        "log2err",
-        "ES",
-        "NES",
-        "size",
-        "leadingEdge"
-    )
+    fgseaColumns <- c("log2err", "ES", "NES", "size", "leadingEdge")
 
     if (all(fgseaColumns %in% colnames(plotData))) {
-
-        stopifnot(
-            "You must add a 'comparison' column for fgsea results."=
-                "comparison" %in% colnames(plotData)
-        )
-
         stopifnot(
             "Option 'includeGeneRatio' is not supported for fgsea results."=
                 !includeGeneRatio
-        )
-
-        stopifnot(
-            "Option 'showNumGenes' is not supported for fgsea results."=
-                !showNumGenes
-        )
-
-        data_env <- new.env(parent=emptyenv())
-        data("pathwayCategories", envir=data_env, package="pathlinkR")
-        pathwayCategories <- data_env[["pathwayCategories"]]
-
-        plotData <- plotData %>%
-            rename("pathwayName"=pathway, "pValueAdjusted"=padj) %>%
-            mutate(
-                direction=ifelse(NES > 0, "Up", "Down"),
-                joinCol=trimws(pathwayName)
-            )
-
-        pathwayCategoriesJoin <-
-            mutate(pathwayCategories, joinCol=trimws(pathwayName)) %>%
-            select(!pathwayName)
-
-        plotData <- select(
-            left_join(plotData, pathwayCategoriesJoin, by="joinCol"),
-            !joinCol
         )
     }
 
