@@ -238,22 +238,22 @@ pathwayEnrichment <- function(
 
         ## Turn the input into a list of gene IDs, split by direction or not
         if (split) {
-            preppedGenes <- list(
-                "Up"=rownames(filter(rnaseqResults, LogFoldChange > 0)),
-                "Down"=rownames(filter(rnaseqResults, LogFoldChange < 0))
+            preppedGenesTable <- list(
+                "Up"=filter(rnaseqResults, LogFoldChange > 0),
+                "Down"=filter(rnaseqResults, LogFoldChange < 0)
             )
 
             if (verbose) {
                 message(
                     "\tDEGs used: ",
-                    length(preppedGenes$Up), " Up, ",
-                    length(preppedGenes$Down), " Down..."
+                    nrow(preppedGenesTable$Up), " Up, ",
+                    nrow(preppedGenesTable$Down), " Down..."
                 )
             }
         } else {
-            preppedGenes <- list("All"=rownames(rnaseqResults))
+            preppedGenesTable <- list("All"=rnaseqResults)
             if (verbose) {
-                message("\tDEGs used: ", length(preppedGenes$All), "...")
+                message("\tDEGs used: ", nrow(preppedGenesTable$All), "...")
             }
         }
 
@@ -264,11 +264,11 @@ pathwayEnrichment <- function(
             runSigoraSafely <- possibly(.runSigora)
 
             resultFinal <- imap_dfr(
-                .x =preppedGenes,
+                .x=preppedGenesTable,
                 .id="direction",
                 function(y, direction) {
                     runSigoraSafely(
-                        enrichGenes=y,
+                        enrichGenes=rownames(y),
                         gpsRepo=gpsRepo,
                         gpsLevel=gpsLevel,
                         pValFilter=ifelse(
@@ -298,12 +298,12 @@ pathwayEnrichment <- function(
                 if (verbose) message("\tRunning enrichment using Reactome")
 
                 oraResult <- imap_dfr(
-                    .x =preppedGenes,
+                    .x=preppedGenesTable,
                     .id="direction",
                     function(y, direction) {
 
                         genesEntrez <- idmap %>%
-                            filter(Ensembl.Gene.ID %in% y) %>%
+                            filter(Ensembl.Gene.ID %in% rownames(y)) %>%
                             pull(EntrezGene.ID) %>%
                             unique()
 
@@ -353,12 +353,11 @@ pathwayEnrichment <- function(
                 if (verbose) message("\tRunning enrichment using Hallmark...")
 
                 oraResult <- imap_dfr(
-                    .x =preppedGenes,
+                    .x=preppedGenesTable,
                     .id="direction",
                     function(y, direction) {
-
                         tibble::as_tibble(clusterProfiler::enricher(
-                            y,
+                            rownames(y),
                             TERM2GENE=hallmarkDatabase,
                             universe=geneUniverse,
                             pvalueCutoff=ifelse(
@@ -391,12 +390,11 @@ pathwayEnrichment <- function(
                 if (verbose) message("\tRunning enrichment using KEGG")
 
                 oraResult <- imap_dfr(
-                    .x=preppedGenes,
+                    .x=preppedGenesTable,
                     .id="direction",
                     function(y, direction) {
-
                         tibble::as_tibble(clusterProfiler::enricher(
-                            gene=y,
+                            rownames(y),
                             TERM2GENE=select(
                                 keggDatabase,
                                 pathwayId,
