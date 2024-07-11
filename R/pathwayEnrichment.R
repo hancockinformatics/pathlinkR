@@ -160,7 +160,7 @@ pathwayEnrichment <- function(
     .vm(
         verbose,
         paste0(
-            "Beginning enrichment analysis with ", analysis, " for ",
+            "Beginning enrichment analysis with '", analysis, "' for ",
             length(inputList), " comparisons"
         )
     )
@@ -241,12 +241,22 @@ pathwayEnrichment <- function(
             )
         }
 
-        .vm(verbose, paste0("  Running analysis for comparison ", comparison))
+        .vm(
+            verbose,
+            paste0("  Testing genes from comparison '", comparison, "'")
+        )
 
         ## Filter the input genes if specified
         rnaseqResults <-
             if (filterInput) {
-                .vm(verbose, paste0("    Filtering input using ", pCutoff, " and ", fcCutoff))
+                .vm(
+                    verbose,
+                    paste0(
+                        "    Filtering using 'pCutoff=", pCutoff,
+                        "' and 'fcCutoff=", fcCutoff, "'"
+                    )
+                )
+
                 filter(
                     x,
                     PAdjusted < pCutoff,
@@ -561,7 +571,7 @@ pathwayEnrichment <- function(
             multiple="all"
         ) %>%
         tibble::as_tibble()
-    .vm(verbose, "Analysis complete\n")
+    .vm(verbose, "All analyses complete\n")
     return(resultsAllComparisons)
 }
 
