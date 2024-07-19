@@ -263,7 +263,10 @@ pathwayEnrichment <- function(
                     abs(LogFoldChange) > log2(fcCutoff)
                 )
             } else {
-                .vm(verbose, paste0("    Input is being used without filtering"))
+                .vm(
+                    verbose,
+                    paste0("    Input is being used without filtering")
+                )
                 x
             }
 
@@ -300,7 +303,10 @@ pathwayEnrichment <- function(
                 }
             )
             resultFinal$totalGenes <- nrow(rnaseqResults)
-            .vm(verbose, paste0("    Found ", nrow(resultFinal), " enriched terms"))
+            .vm(
+                verbose,
+                paste0("    Found ", nrow(resultFinal), " enriched terms")
+            )
             return(resultFinal)
         }
 
@@ -471,7 +477,10 @@ pathwayEnrichment <- function(
                     geneRatio,
                     totalGenes
                 )
-            .vm(verbose, paste0("    Found ", nrow(resultFinal), " enriched terms"))
+            .vm(
+                verbose,
+                paste0("    Found ", nrow(resultFinal), " enriched terms")
+            )
             return(resultFinal)
         }
 
@@ -558,7 +567,10 @@ pathwayEnrichment <- function(
                     }
                 )
             }
-            .vm(verbose, paste0("    Found ", nrow(resultFinal), " enriched terms"))
+            .vm(
+                verbose,
+                paste0("    Found ", nrow(resultFinal), " enriched terms")
+            )
             return(resultFinal)
         }
     })
