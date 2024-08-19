@@ -14,8 +14,8 @@
 #'   scale. Defaults to `c("blue", "red")`.
 #' @param nameWidth How many characters to show for pathway name before
 #'   truncating? Defaults to 35.
-#' @param nameRows How much to rows to wrap across for the pathway name?
-#'   Defaults to 1.
+#' @param nameRows For pathway names (y axis), how many rows (lines) should
+#'   names wrap across when they're too long? Defaults to 1.
 #' @param xAngle Angle of x axis labels, set to "angled" (45 degrees),
 #'   "horizontal" (0 degrees), or "vertical" (90 degrees).
 #' @param maxPVal P values below `10 ^ -maxPVal` will be set to that value.
@@ -25,7 +25,7 @@
 #' @param includeGeneRatio Boolean (FALSE). Should the gene ratio be included as
 #'   an aesthetic mapping?If so, then it is attributed to the size of the
 #'   triangles.
-#' @param size Size of points if not scaling to gene ratio. Defaults to 5.
+#' @param size Size of points if not scaling to gene ratio. Defaults to 4.
 #' @param legendMultiply Size of the legend, e.g. increase if there are a lot of
 #'   pathways which makes the legend small and unreadable by comparison.
 #'   Defaults to 1, i.e. no increase in legend size.
@@ -35,6 +35,8 @@
 #'   the left or right side. Default is "right".
 #' @param newGroupNames If you want to change the names of the comparisons to
 #'   different names. Input a vector in the order as they appear.
+#' @param fontSize Base font size for all text elements of the plot. Defaults to
+#'   12.
 #'
 #' @return A plot of enriched pathways; a "ggplot" object
 #' @export
@@ -67,14 +69,19 @@ pathwayPlots <- function(
         maxPVal=50,
         intercepts=NA,
         includeGeneRatio=FALSE,
-        size=5,
+        size=4,
         legendMultiply=1,
         showNumGenes=FALSE,
         pathwayPosition="right",
-        newGroupNames=NA
+        newGroupNames=NA,
+        fontSize=12
 ) {
 
     stopifnot("A maximum of three columns can be specified."=columns <= 3)
+    stopifnot(
+        "'xAngle' should be a string; see `?pathwayPlots` for options"=
+            is.character(xAngle)
+    )
 
     plotData <- pathwayEnrichmentResults
 
@@ -211,18 +218,17 @@ pathwayPlots <- function(
         vjust <- 0.5
     }
 
-    themePathway <- theme_bw() +
+    themePathway <- theme_bw(base_size = fontSize) +
         theme(
-            strip.text.x=element_text(size=12, face="bold", colour="black"),
-            legend.text=element_text(size=12 * legendMultiply),
+            strip.text.x=element_text(face="bold", colour="black"),
+            legend.text=element_text(size=(fontSize - 2) * legendMultiply),
             legend.title=element_text(
-                size=13 * legendMultiply,
+                size=fontSize * legendMultiply,
                 margin=margin(r=10, b=7)
             ),
-            axis.text.y=element_text(colour="black", size=12),
+            axis.text.y=element_text(colour="black"),
             axis.text.x=element_text(
                 colour="black",
-                size=12,
                 angle=angle,
                 hjust=hjust,
                 vjust=vjust
@@ -276,7 +282,7 @@ pathwayPlots <- function(
             ## Wrap and truncate pathway names if necessary
             scale_y_discrete(
                 labels=~str_wrap(
-                    .truncNeatly(.x, nameWidth * nameRows - 5),
+                    .truncNeatly(.x, (nameWidth * nameRows) - 5),
                     width=nameWidth
                 ),
                 position=pathwayPosition
@@ -312,7 +318,7 @@ pathwayPlots <- function(
             labs(x=NULL, y=NULL) +
             themePathway +
             guides(
-                shape=guide_legend(override.aes=list(size=5 * legendMultiply)),
+                shape=guide_legend(override.aes=list(size=4 * legendMultiply)),
                 size =guide_legend(override.aes=list(shape=24, fill="black"))
             )
     })
