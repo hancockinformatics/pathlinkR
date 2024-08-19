@@ -150,6 +150,11 @@ pathwayEnrichment <- function(
     )
 
     stopifnot(
+        "'filterResults' should be 'default' or the desired maximum adjusted p value"=
+        any(filterResults == "default" | is(filterResults, "numeric"))
+    )
+
+    stopifnot(
         "Provide a named list of data frames of results, with the name
         of each item in the list as the comparison name." ={
             is.list(inputList)
