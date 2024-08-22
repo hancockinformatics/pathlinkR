@@ -16,11 +16,12 @@ pathwayPlots(
   maxPVal = 50,
   intercepts = NA,
   includeGeneRatio = FALSE,
-  size = 5,
+  size = 4,
   legendMultiply = 1,
   showNumGenes = FALSE,
   pathwayPosition = "right",
-  newGroupNames = NA
+  newGroupNames = NA,
+  fontSize = 12
 )
 }
 \arguments{
@@ -44,8 +45,8 @@ scale. Defaults to \code{c("blue", "red")}.}
 \item{nameWidth}{How many characters to show for pathway name before
 truncating? Defaults to 35.}
 
-\item{nameRows}{How much to rows to wrap across for the pathway name?
-Defaults to 1.}
+\item{nameRows}{For pathway names (y axis), how many rows (lines) should
+names wrap across when they're too long? Defaults to 1.}
 
 \item{xAngle}{Angle of x axis labels, set to "angled" (45 degrees),
 "horizontal" (0 degrees), or "vertical" (90 degrees).}
@@ -60,7 +61,7 @@ Defaults to \code{NA}.}
 an aesthetic mapping?If so, then it is attributed to the size of the
 triangles.}
 
-\item{size}{Size of points if not scaling to gene ratio. Defaults to 5.}
+\item{size}{Size of points if not scaling to gene ratio. Defaults to 4.}
 
 \item{legendMultiply}{Size of the legend, e.g. increase if there are a lot of
 pathways which makes the legend small and unreadable by comparison.
@@ -74,6 +75,9 @@ the left or right side. Default is "right".}
 
 \item{newGroupNames}{If you want to change the names of the comparisons to
 different names. Input a vector in the order as they appear.}
+
+\item{fontSize}{Base font size for all text elements of the plot. Defaults to
+12.}
 }
 \value{
 A plot of enriched pathways; a "ggplot" object
