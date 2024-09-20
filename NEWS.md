@@ -1,3 +1,11 @@
+CHANGES IN VERSION 1.1.17
+-------------------------
+
+* Fix for default parameters and theme settings in ppiPlotNetwork
+* Support for GSEA (via package fgsea), both as an option in pathwayPlots and pathwayEnrichment
+* Global fontSize argument added to pathwayPlots
+
+
 CHANGES IN VERSION 1.1.10
 -------------------------
 

@@ -1,9 +1,9 @@
 # pathlinkR <img src="man/figures/pathlinkR_logo_32.svg" align="right" height="138" />
 
 <!-- badges: start -->
-![GitHub R package version (branch)](https://img.shields.io/github/r-package/v/hancockinformatics/pathlinkR/main?label=pathlinkR%40main)
+![GitHub R package version (branch)](https://img.shields.io/github/r-package/v/hancockinformatics/pathlinkR/devel?label=pathlinkR%40devel)
 [![R-CMD-check](https://github.com/hancockinformatics/pathlinkR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/hancockinformatics/pathlinkR/actions/workflows/R-CMD-check.yaml)
-[![Codecov test coverage](https://codecov.io/gh/hancockinformatics/pathlinkR/branch/main/graph/badge.svg)](https://app.codecov.io/gh/hancockinformatics/pathlinkR?branch=main)
+[![Codecov test coverage](https://codecov.io/gh/hancockinformatics/pathlinkR/branch/devel/graph/badge.svg)](https://app.codecov.io/gh/hancockinformatics/pathlinkR?branch=devel)
 <!-- badges: end -->
 
 ## Overview
@@ -14,25 +14,26 @@ of functions/tools which can be applied to list(s) of DE genes, to help the user
 obtain biological insights into their results, and produce publication-ready
 figures to summarize these findings.
 
+Check out our article in PLOS Computational Biology: <https://doi.org/10.1371/journal.pcbi.1012422>
 
 ## Installation
 **pathlinkR** can be installed from this Github repository via devtools, or 
 from Bioconductor as follows:
 ```r
-# devtools
+# Github development
 devtools::install_github("https://github.com/hancockinformatics/pathlinkR")
 
 # Bioconductor release
 BiocManager::install("pathlinkR")
 
-# Bioconductor devel
+# Bioconductor develelopment
 BiocManager::install("pathlinkR", version="devel")
 ```
 
 ## Workflow & functions
 
-The functions provided in **pathlinkR** can be grouped into a number of different
-general approaches: 
+The functions provided in **pathlinkR** can be grouped into a number of
+different general approaches:
 
 - Direct visualization of differential expression results:
     - Volcano plots to show the transcriptomic changes in a single condition
@@ -49,19 +50,21 @@ general approaches:
   - Pathway enrichment results can also be visualized as a network of connected
     pathways, with the option for static or interactive output
 
-See the vignette for an example workflow including each of the included
-functions, and more details on the included methods and how they may be used.
+See the [vignette](https://hancockinformatics.github.io/pathlinkR/) for an
+example workflow including each of the included functions, and more details on
+the included methods and how they may be used.
 
 ## Contributors
 **pathlinkR** was created and developed by Andy An & Travis Blimkie at the CMDR
 REW Hancock Lab.
 
 ## Versioning
-This package makes use of [SemVer](https://semver.org/).
+This package follows Bioconductor's guidelines on version numbering; more
+information can be found [here](https://contributions.bioconductor.org/versionnum.html).
 
 ## License
 This project uses the GNU General Public License v3.0, available
-[here](https://github.com/hancockinformatics/pathlinkR/blob/main/LICENSE).
+[here](https://github.com/hancockinformatics/pathlinkR?tab=GPL-3.0-1-ov-file#readme).
 
 <br>
 
