@@ -1,3 +1,9 @@
+CHANGES IN VERSION 1.1.18
+-------------------------
+
+* Fixed bug for pathwayEnrichment when running fgsea (NA gene names)
+
+
 CHANGES IN VERSION 1.1.17
 -------------------------
 

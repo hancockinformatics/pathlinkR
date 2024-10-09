@@ -508,6 +508,7 @@ pathwayEnrichment <- function(
                             mutate(
                                 geneRank=-log10(PAdjusted) * LogFoldChange
                             ) %>%
+                            filter(!is.na(entrezGeneId)) %>%
                             group_by(entrezGeneId) %>%
                             summarise(geneRank = mean(geneRank)) %>%
                             ungroup() %>%
@@ -547,6 +548,7 @@ pathwayEnrichment <- function(
                             mutate(
                                 geneRank=-log10(PAdjusted) * LogFoldChange
                             ) %>%
+                            filter(!is.na(ensemblGeneId)) %>%
                             group_by(ensemblGeneId) %>%
                             summarise(geneRank = mean(geneRank)) %>%
                             ungroup() %>%
