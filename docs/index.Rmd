@@ -46,7 +46,7 @@ indexed over time (i.e., T2 vs T1) (An et al. 2023).
 To install and load the package:
 ```{r load_library, message=FALSE}
 # We'll also be using some functions from dplyr
-# BiocManager::install("pathlinkR", version="devel")
+# BiocManager::install("pathlinkR")
 library(dplyr)
 library(pathlinkR)
 ```
@@ -207,7 +207,6 @@ exNetworkInterferon <- mutate(
 
 ppiPlotNetwork(
     network=exNetworkInterferon,
-    networkLayout="lgl",
     title=names(exampleDESeqResults)[1],
     fillColumn=isInterferon,
     fillType="categorical",
@@ -288,6 +287,11 @@ package [Sigora](https://cran.r-project.org/package=sigora) (Foroushani et al.
 from promiscuous genes, focusing more on the pathways that are likely related to
 the underlying biology. This approach is the default used in the **pathlinkR**
 function  `pathwayEnrichment()`.
+
+As an alternative, **pathlinkR** also support gene set enrichment analysis,
+using the implementation from `r BiocStyle::Biocpkg("fgsea")` (Korotkevich et
+al. 2019). For this method, both Reactome and Hallmark data can used to
+construct the gene sets, and the same input types are supported.
 
 The `pathwayEnrichment()` function takes as input a list of data frames (each
 from `DESeq2::results()`), and by default will split the genes into up- and
@@ -563,6 +567,10 @@ high-performance in-memory approach. BMC Bioinform. 2017;18:142.
 Foroushani ABK, Brinkman FSL, Lynn DJ. Pathway-GPS and sigora: identifying
 relevant pathways based on the over-representation of their gene-pair
 signatures. PeerJ. 2013;1:e229.
+
+Korotkevich G, Sukhov V, Sergushichev A (2019). "Fast gene set enrichment
+analysis." bioRxiv. doi:10.1101/060012, 
+http://biorxiv.org/content/early/2016/06/20/060012
 
 Liberzon A, Birger C, Thorvaldsdóttir H, Ghandi M, Mesirov JP, Tamayo P. The
 Molecular Signatures Database (MSigDB) hallmark gene set collection. Cell Syst.
