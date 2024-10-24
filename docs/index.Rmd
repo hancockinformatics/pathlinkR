@@ -293,7 +293,7 @@ using the implementation from `r BiocStyle::Biocpkg("fgsea")` (Korotkevich et
 al. 2019). For this method, both Reactome and Hallmark data can used to
 construct the gene sets, and the same input types are supported.
 
-The `pathwayEnrichment()` function takes as input a list of data frames (each
+The `pathwayEnrichment()` function takes as input a **list of data frames** (each
 from `DESeq2::results()`), and by default will split the genes into up- and
 down-regulated before performing pathway enrichment one each set. The name of
 the data frames in the list should indicate the comparison that was made in the
@@ -305,6 +305,10 @@ this argument to "default" will use the `reaH` GPS repository from
 their own GPS repository; see `?sigora::makeGPS()` for details on how to
 make one.
 ```{r sigora_enrichment}
+## Note the structure of `exampleDESeqResults`: a named list of "DESeqResults"
+## objects, with genes identified by Ensembl IDs
+exampleDESeqResults
+
 enrichedResultsSigora <- pathwayEnrichment(
     inputList=exampleDESeqResults,
     analysis="sigora",
