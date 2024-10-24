@@ -1,3 +1,10 @@
+CHANGES IN VERSION 1.1.22
+-------------------------
+
+* Expanded and clarified error messages for pathwayEnrichment input
+* Updated vignette
+
+
 CHANGES IN VERSION 1.1.18
 -------------------------
 

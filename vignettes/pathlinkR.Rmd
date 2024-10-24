@@ -217,18 +217,22 @@ from promiscuous genes, focusing more on the pathways that are likely related to
 the underlying biology. This approach is the default used in the **pathlinkR**
 function  `pathwayEnrichment()`.
 
-The `pathwayEnrichment()` function takes as input a list of data frames (each
-from `DESeq2::results()`), and by default will split the genes into up- and
-down-regulated before performing pathway enrichment one each set. The name of
-the data frames in the list should indicate the comparison that was made in the
-DESeq2 results, as it will be used to identify the results. For
+The `pathwayEnrichment()` function takes as input a **list of data frames**
+(each from `DESeq2::results()`), and by default will split the genes into up-
+and down-regulated before performing pathway enrichment one each set. The name
+of the data frames in the list should indicate the comparison that was made in
+the DESeq2 results, as it will be used to identify the results. For
 `analysis="sigora"` we also need to provide a Gene Pair Signature Repository
 (`gpsRepo`) which contains the pathways and gene pairs to be tested. Leaving
 this argument to "default" will use the `reaH` GPS repository from
 **sigora**, containing human Reactome pathways. Alternatively one can supply
-their own GPS repository; see `??sigora::makeGPS()` for details on how to
-make one.
+their own GPS repository; see `??sigora::makeGPS()` for details on how to make
+one.
 ```{r sigora_enrichment}
+## Note the structure of `exampleDESeqResults`: a named list of results from
+## DESeq2
+exampleDESeqResults
+
 enrichedResultsSigora <- pathwayEnrichment(
     inputList=exampleDESeqResults,
     analysis="sigora",
