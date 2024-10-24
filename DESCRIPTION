@@ -1,7 +1,7 @@
 Package: pathlinkR
 Type: Package
 Title: Analyze and interpret RNA-Seq results
-Version: 1.1.20
+Version: 1.1.21
 Authors@R: c(
     person("Travis", "Blimkie", email = "travis.m.blimkie@gmail.com", role = "cre", comment = c(ORCID = "0000-0001-8778-8627")),
     person("Andy", "An", email = "andy@hancocklab.com", role = "aut")

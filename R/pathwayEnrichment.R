@@ -138,6 +138,19 @@ pathwayEnrichment <- function(
     }
 
     stopifnot(
+        "'inputList' must be a list"={
+            !"data.frame" %in% class(inputList) & is.list(inputList)
+        }
+    )
+
+    stopifnot(
+        "'inputList' must be a NAMED list"={
+            !"data.frame" %in% class(inputList)
+            !is.null(names(inputList))
+        }
+    )
+
+    stopifnot(
         analysis %in% c(
             "sigora",
             "reactome",
@@ -152,14 +165,6 @@ pathwayEnrichment <- function(
     stopifnot(
         "'filterResults' should be 'default' or the desired maximum adjusted p value"=
         any(filterResults == "default" | is(filterResults, "numeric"))
-    )
-
-    stopifnot(
-        "Provide a named list of data frames of results, with the name
-        of each item in the list as the comparison name." ={
-            is.list(inputList)
-            !is.null(names(inputList))
-        }
     )
 
     .vm(
