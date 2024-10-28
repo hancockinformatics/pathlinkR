@@ -334,16 +334,13 @@ plotFoldChange <- function(
     ## If columns aren't being split
     if (is.na(colSplit[1])) {
         colSplit <- rep(NA, length(inputListCleaned))
-        columnTitle <- NULL
     } else {
         ## This orders the splitting into the order the data frames are in the
         ## list instead of alphabetically
         colSplit <- factor(colSplit, levels=unique(colSplit))
-        columnTitle <- "%s"
     }
 
     rowSplit <- rep(NA, nrow(matFC))
-    rowTitle <- NULL
 
     ## If plotting so that row names are conditions and column names are genes
     if (invert) {
@@ -358,7 +355,6 @@ plotFoldChange <- function(
         var <- colSplit
         colSplit <- rowSplit
         rowSplit <- var
-        columnTitle <- NULL
     }
 
     draw(
@@ -400,8 +396,7 @@ plotFoldChange <- function(
                     }
                 }
             },
-            column_title=columnTitle,
-            row_title=rowTitle,
+            column_title=plotTitle,
             heatmap_legend_param=heatmapLegendInfo[[1]],
             column_title_gp=gpar(fontsize=titleSize),
             row_split=rowSplit,
@@ -412,8 +407,7 @@ plotFoldChange <- function(
             column_names_centered=colCenter,
             row_names_rot=rowAngle,
             row_names_centered=rowCenter
-        ),
-        column_title=plotTitle
+        )
     )
 }
 
