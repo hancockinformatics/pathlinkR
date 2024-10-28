@@ -20,7 +20,7 @@
 #'   `pathName`/`pathID` are mutually exclusive.
 #' @param manualTitle Provide your own title, and override the use of a pathway
 #'   name the title.
-#' @param titleSize Font size for the title.
+#' @param titleSize Font size for the title (14).
 #' @param geneFormat Type of genes given in `genesToPlot`. Default is Ensembl
 #'   gene IDs ("ensembl"), but can also input a vector of HGNC symbols ("hgnc").
 #' @param pCutoff P value cutoff, default is <0.05
