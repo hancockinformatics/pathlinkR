@@ -397,6 +397,7 @@ plotFoldChange <- function(
                 }
             },
             column_title=plotTitle,
+            row_title=NULL,
             heatmap_legend_param=heatmapLegendInfo[[1]],
             column_title_gp=gpar(fontsize=titleSize),
             row_split=rowSplit,
