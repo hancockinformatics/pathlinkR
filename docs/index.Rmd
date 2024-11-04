@@ -74,7 +74,7 @@ eruption(
 There are multiple options available for customizing this volcano plot,
 including:
 
-- Adjust the cutoffs
+- Adjust the cutoffs for adjusted p-value and fold change
 - Switch the colours of significant and non-significant genes
 - Change the number of labelled genes
 - Adjust the x- and y-axis limits
