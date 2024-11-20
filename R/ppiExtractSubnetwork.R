@@ -1,9 +1,9 @@
 #' Extract a subnetwork based on pathway genes
 #'
 #' @param network Input network object; output from `ppiBuildNetwork()`
-#' @param genes List of Ensembl gene IDs to use as the starting point to extract
-#'   a subnetwork from the initial network. You must provide either the
-#'   `genes` or `pathwayEnrichmentResult` argument.
+#' @param genes Character vector of Ensembl gene IDs to use as the starting
+#'   point to extract a subnetwork from the initial network. You must provide
+#'   either the `genes` or `pathwayEnrichmentResult` argument.
 #' @param pathwayEnrichmentResult Pathway enrichment result, output from
 #'   `ppiEnrichNetwork`. You must provide either `genes` or
 #'   `pathwayEnrichmentResult` argument.
@@ -85,8 +85,14 @@ ppiExtractSubnetwork <- function(
 
     if (!is.null(genes)) {
         stopifnot(
-            "Argument 'genes' must be a list of Ensembl gene IDs"={
-                grepl(x=genes[[1]], pattern="^ENSG[0-9]+$")
+            "Argument 'genes' must be a character vector of Ensembl gene IDs"={
+                class(genes) == "character"
+            }
+        )
+
+        stopifnot(
+            "Argument 'genes' must be a character vector of Ensembl gene IDs"={
+                grepl(x=genes[1], pattern="^ENSG[0-9]+$")
             }
         )
     }

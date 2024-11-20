@@ -21,7 +21,7 @@ test_that("subnetwork extraction works with a pathway name", {
     expect_equal(nrow(as_tibble(exSubnetwork)), 74)
 })
 
-test_that("subnetwork extraction works with a list of genes", {
+test_that("subnetwork extraction works with a character vector of genes", {
     data("exampleDESeqResults", "mappingFile")
 
     exNetwork2 <- ppiBuildNetwork(
@@ -45,4 +45,11 @@ test_that("subnetwork extraction works with a list of genes", {
     )
 
     expect_equal(nrow(as_tibble(exSubnetwork2)), 74)
+
+    expect_error(
+        ppiExtractSubnetwork(
+            network=exNetwork2,
+            genes=list(myGenes)
+        )
+    )
 })

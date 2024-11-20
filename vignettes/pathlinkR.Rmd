@@ -188,8 +188,8 @@ ppiPlotNetwork(
 ```
 
 Alternatively you can use the "genesToExtract" argument in
-`ppiExtractSubnetwork()` to supply your own set of genes (as Ensembl IDs) to
-extract as a subnetwork.
+`ppiExtractSubnetwork()` to supply your own set of genes (a character vector of
+Ensembl IDs) to extract as a subnetwork.
 
 
 # Performing pathway enrichment

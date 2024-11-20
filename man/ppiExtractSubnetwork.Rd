@@ -14,9 +14,9 @@ ppiExtractSubnetwork(
 \arguments{
 \item{network}{Input network object; output from \code{ppiBuildNetwork()}}
 
-\item{genes}{List of Ensembl gene IDs to use as the starting point to extract
-a subnetwork from the initial network. You must provide either the
-\code{genes} or \code{pathwayEnrichmentResult} argument.}
+\item{genes}{Character vector of Ensembl gene IDs to use as the starting
+point to extract a subnetwork from the initial network. You must provide
+either the \code{genes} or \code{pathwayEnrichmentResult} argument.}
 
 \item{pathwayEnrichmentResult}{Pathway enrichment result, output from
 \code{ppiEnrichNetwork}. You must provide either \code{genes} or
