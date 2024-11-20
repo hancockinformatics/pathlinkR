@@ -62,7 +62,7 @@ pulling the genes from a pathway, i.e. this option and
 \item{manualTitle}{Provide your own title, and override the use of a pathway
 name the title.}
 
-\item{titleSize}{Font size for the title.}
+\item{titleSize}{Font size for the title (14).}
 
 \item{geneFormat}{Type of genes given in \code{genesToPlot}. Default is Ensembl
 gene IDs ("ensembl"), but can also input a vector of HGNC symbols ("hgnc").}
