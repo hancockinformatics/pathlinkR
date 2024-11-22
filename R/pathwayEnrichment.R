@@ -385,6 +385,13 @@ pathwayEnrichment <- function(
                     .x=preppedGenesTable,
                     .id="direction",
                     function(y, direction) {
+
+                        stopifnot(
+                            "No input genes are present in the Hallmark database"={
+                                any(rownames(y) %in% hallmarkDatabase$ensemblGeneId)
+                            }
+                        )
+
                         tibble::as_tibble(clusterProfiler::enricher(
                             rownames(y),
                             TERM2GENE=hallmarkDatabase,
