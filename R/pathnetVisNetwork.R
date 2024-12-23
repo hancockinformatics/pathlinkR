@@ -12,6 +12,8 @@
 #'   will only ever label enriched nodes/pathways.
 #' @param nodeLabelSize Size of the node labels in pixels; defaults to 60.
 #' @param nodeLabelColour Colour of the node labels; defaults to "black".
+#' @param nodeLabelLength Length of the pathway name displayed before
+#'   truncation. Defaults to `40`.
 #' @param edgeColour Colour of network edges; defaults to "#848484".
 #' @param edgeWidthRange Edge width is mapped to the similarity measure (one
 #'   over distance). This length-two numeric vector controls the minimum and
@@ -81,6 +83,7 @@ pathnetVisNetwork <- function(
         labelNodes=TRUE,
         nodeLabelSize=60,
         nodeLabelColour="black",
+        nodeLabelLength=40,
         edgeColour="#848484",
         edgeWidthRange=c(5, 20),
         highlighting=TRUE
@@ -127,7 +130,7 @@ pathnetVisNetwork <- function(
             label=map_chr(
                 if_else(!is.na(pValueAdjusted), title, ""),
                 .truncNeatly,
-                30
+                nodeLabelLength
             )
         )
     }

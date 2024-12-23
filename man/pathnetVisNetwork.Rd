@@ -12,6 +12,7 @@ pathnetVisNetwork(
   labelNodes = TRUE,
   nodeLabelSize = 60,
   nodeLabelColour = "black",
+  nodeLabelLength = 40,
   edgeColour = "#848484",
   edgeWidthRange = c(5, 20),
   highlighting = TRUE
@@ -36,6 +37,9 @@ will only ever label enriched nodes/pathways.}
 \item{nodeLabelSize}{Size of the node labels in pixels; defaults to 60.}
 
 \item{nodeLabelColour}{Colour of the node labels; defaults to "black".}
+
+\item{nodeLabelLength}{Length of the pathway name displayed before
+truncation. Defaults to \code{40}.}
 
 \item{edgeColour}{Colour of network edges; defaults to "#848484".}
 
