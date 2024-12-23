@@ -11,6 +11,10 @@
 #' @param nodeLabelAlpha Transparency of node labels. Defaults to `0.67`.
 #' @param nodeLabelOverlaps Max overlaps for node labels, from `ggrepel`.
 #'   Defaults to `6`.
+#' @param nodeLabelLength Length of the pathway name displayed before
+#'   truncation. Defaults to `40`.
+#' @param nodeLabelWrap Line length before pathway name is wrapped onto a new
+#'   line. Defaults to `20`.
 #' @param labelProp Proportion of "interactor" (i.e. non-enriched) pathways that
 #'   the function will attempt to label. E.g. setting this to 0.5 (the default)
 #'   means half of the non-enriched pathways will *potentially* be labeled - it
@@ -94,6 +98,8 @@ pathnetGGraph <- function(
         nodeLabelColour="black",
         nodeLabelAlpha=0.67,
         nodeLabelOverlaps=6,
+        nodeLabelLength=40,
+        nodeLabelWrap=20,
         labelProp=0.25,
         segColour="black",
         edgeColour="grey30",
@@ -150,7 +156,8 @@ pathnetGGraph <- function(
             ),
             nodeLabel=map_chr(
                 nodeLabel,
-                ~.truncNeatly(.x, l=40) %>% str_wrap(width=20)
+                ~.truncNeatly(.x, l=nodeLabelLength) %>%
+                    str_wrap(width=nodeLabelWrap)
             ),
             pValueAdjusted=if_else(
                 !is.na(pValueAdjusted),

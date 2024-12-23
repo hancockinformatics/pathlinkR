@@ -13,6 +13,8 @@ pathnetGGraph(
   nodeLabelColour = "black",
   nodeLabelAlpha = 0.67,
   nodeLabelOverlaps = 6,
+  nodeLabelLength = 40,
+  nodeLabelWrap = 20,
   labelProp = 0.25,
   segColour = "black",
   edgeColour = "grey30",
@@ -40,6 +42,12 @@ p-value). Defaults to \code{c(4, 8)}.}
 
 \item{nodeLabelOverlaps}{Max overlaps for node labels, from \code{ggrepel}.
 Defaults to \code{6}.}
+
+\item{nodeLabelLength}{Length of the pathway name displayed before
+truncation. Defaults to \code{40}.}
+
+\item{nodeLabelWrap}{Line length before pathway name is wrapped onto a new
+line. Defaults to \code{20}.}
 
 \item{labelProp}{Proportion of "interactor" (i.e. non-enriched) pathways that
 the function will attempt to label. E.g. setting this to 0.5 (the default)
