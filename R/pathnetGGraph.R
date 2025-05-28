@@ -5,6 +5,8 @@
 #'   to "nicely", but supports any method found in `?layout_tbl_graph_igraph`
 #' @param nodeSizeRange Size range for nodes, mapped to significance (Bonferroni
 #'   p-value). Defaults to `c(4, 8)`.
+#' @param nodeSizeLegend Shape size in the legend for Pathway Type. Defaults to
+#'   `5`.
 #' @param nodeBorderWidth Width of borders on nodes, defaults to 1.5
 #' @param nodeLabelSize Size of node labels; defaults to 5.
 #' @param nodeLabelColour Colour of the node labels; defaults to "black".
@@ -93,6 +95,7 @@ pathnetGGraph <- function(
         network,
         networkLayout="nicely",
         nodeSizeRange=c(4, 8),
+        nodeSizeLegend=5,
         nodeBorderWidth=1.5,
         nodeLabelSize=5,
         nodeLabelColour="black",
@@ -222,7 +225,7 @@ pathnetGGraph <- function(
             plot.margin=unit(rep(5, 4), "mm")
         ) +
         guides(
-            colour=guide_legend(override.aes=list(size=5, pch=19)),
+            colour=guide_legend(override.aes=list(size=nodeSizeLegend, pch=19)),
             size=guide_legend(override.aes=list(
                 colour="black",
                 fill="white",
