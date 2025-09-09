@@ -65,6 +65,8 @@
 #' @param rowAngle Angle of row text, defaults to 0.
 #' @param rowCenter Whether to center column text. The default is FALSE, but it
 #'   should be set to TRUE if vertical column name (e.g. `rowAngle=90`).
+#' @param returnData Boolean (FALSE). Whether to draw the heatmap (default) or
+#'   return the underlying matrix.
 #'
 #' @return A heatmap of fold changes for genes of interest; an "ggplot" class
 #'   object
@@ -145,7 +147,8 @@ plotFoldChange <- function(
         colAngle=90,
         colCenter=TRUE,
         rowAngle=0,
-        rowCenter=FALSE
+        rowCenter=FALSE,
+        returnData=FALSE
 ) {
 
     stopifnot(
@@ -355,6 +358,10 @@ plotFoldChange <- function(
         var <- colSplit
         colSplit <- rowSplit
         rowSplit <- var
+    }
+
+    if (returnData) {
+        return(list("matFC" = matFC, "matP" = matP))
     }
 
     draw(

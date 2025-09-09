@@ -31,7 +31,8 @@ plotFoldChange(
   colAngle = 90,
   colCenter = TRUE,
   rowAngle = 0,
-  rowCenter = FALSE
+  rowCenter = FALSE,
+  returnData = FALSE
 )
 }
 \arguments{
@@ -126,6 +127,9 @@ should be set to FALSE if the column name is angled (e.g. \code{colAngle=45}).}
 
 \item{rowCenter}{Whether to center column text. The default is FALSE, but it
 should be set to TRUE if vertical column name (e.g. \code{rowAngle=90}).}
+
+\item{returnData}{Boolean (FALSE). Whether to draw the heatmap (default) or
+return the underlying matrix.}
 }
 \value{
 A heatmap of fold changes for genes of interest; an "ggplot" class
