@@ -601,7 +601,8 @@ pathwayEnrichment <- function(
             by="pathwayId",
             multiple="all"
         ) %>%
-        tibble::as_tibble()
+        tibble::as_tibble() %>%
+        mutate(pathwayName=as.character(pathwayName))
     .vm(verbose, "All analyses complete\n")
     return(resultsAllComparisons)
 }
