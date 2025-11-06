@@ -301,14 +301,16 @@ pathwayPlots <- function(
                     labels=scales::label_math(10^-.x),
                     low=colourValues[1],
                     high=colourValues[2],
-                    na.value=NA
+                    na.value=NA,
+                    guide=guide_colourbar(order=1)
                 )
             } else {
                 scale_fill_continuous(
                     name=expression(-log10(P[adjusted])),
                     low=colourValues[1],
                     high=colourValues[2],
-                    na.value=NA
+                    na.value=NA,
+                    guide=guide_colourbar(order=1)
                 )
             }} +
 
@@ -318,8 +320,8 @@ pathwayPlots <- function(
             labs(x=NULL, y=NULL) +
             themePathway +
             guides(
-                shape=guide_legend(override.aes=list(size=4 * legendMultiply)),
-                size =guide_legend(override.aes=list(shape=24, fill="black"))
+                shape=guide_legend(order=2, override.aes=list(size=4 * legendMultiply)),
+                size=guide_legend(order=3, override.aes=list(shape=24, fill="black"))
             )
     })
 
