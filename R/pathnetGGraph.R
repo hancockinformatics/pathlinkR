@@ -225,11 +225,17 @@ pathnetGGraph <- function(
             plot.margin=unit(rep(5, 4), "mm")
         ) +
         guides(
-            colour=guide_legend(override.aes=list(size=nodeSizeLegend, pch=19)),
-            size=guide_legend(override.aes=list(
-                colour="black",
-                fill="white",
-                stroke=0.5
-            ))
+            colour=guide_legend(
+                order=1,
+                override.aes=list(size=nodeSizeLegend, pch=19)
+            ),
+            size=guide_legend(
+                order=2,
+                override.aes=list(
+                    colour="black",
+                    fill="white",
+                    stroke=0.5
+                )
+            )
         )
 }
