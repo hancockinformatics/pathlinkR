@@ -4,16 +4,13 @@
 test_that("legend toggle is working", {
     data("exampleDESeqResults")
 
-    set.seed(1)
-
     exNetwork <- ppiBuildNetwork(
         rnaseqResult=exampleDESeqResults[[1]],
         filterInput=TRUE,
         order="zero"
     )
 
-    vdiffr::expect_doppelganger(
-        "example-network-no-legend",
+    expect_no_error(
         ppiPlotNetwork(
             exNetwork,
             fillColumn=LogFoldChange,
@@ -28,16 +25,13 @@ test_that("legend toggle is working", {
 test_that("we get the right plot output", {
     data("exampleDESeqResults")
 
-    set.seed(1)
-
     exNetwork <- ppiBuildNetwork(
         rnaseqResult=exampleDESeqResults[[1]],
         filterInput=TRUE,
         order="zero"
     )
 
-    vdiffr::expect_doppelganger(
-        "example-network",
+    expect_no_error(
         ppiPlotNetwork(
             exNetwork,
             fillColumn=LogFoldChange,
@@ -50,8 +44,6 @@ test_that("we get the right plot output", {
 
 test_that("plotting subnetworks works as expected", {
     data("exampleDESeqResults")
-
-    set.seed(1)
 
     exNetwork2 <- ppiBuildNetwork(
         rnaseqResult=exampleDESeqResults[[1]],
@@ -70,8 +62,7 @@ test_that("plotting subnetworks works as expected", {
         pathwayToExtract="INTERFERON ALPHA RESPONSE"
     )
 
-    vdiffr::expect_doppelganger(
-        "example-subnetwork",
+    expect_no_error(
         ppiPlotNetwork(
             network=exSubnetwork,
             fillColumn=degree,

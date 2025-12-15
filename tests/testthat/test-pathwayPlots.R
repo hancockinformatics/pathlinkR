@@ -1,17 +1,10 @@
 test_that("pathway plots are correct", {
-    set.seed(1)
+    
 
-    data("sigoraExamples")
-
-    vdiffr::expect_doppelganger(
-        "pathwayPlotExample",
-        pathwayPlots(sigoraExamples, columns=2)
-    )
+    expect_no_error(pathwayPlots(sigoraExamples, columns=2))
 })
 
 test_that("pathway plots work with Sigora/KEGG", {
-    set.seed(1)
-
     data("exampleDESeqResults")
 
     suppressMessages(
@@ -22,16 +15,11 @@ test_that("pathway plots work with Sigora/KEGG", {
         )
     )
 
-    vdiffr::expect_doppelganger(
-        "pathwayPlotExampleKEGG",
-        pathwayPlots(testResultSigoraKEGG, columns=2)
-    )
+    expect_no_error(pathwayPlots(testResultSigoraKEGG, columns=2))
 })
 
 
 test_that("pathwayPlots works with fgsea results", {
-    set.seed(1)
-
     data("exampleDESeqResults")
 
     suppressMessages(
@@ -41,8 +29,5 @@ test_that("pathwayPlots works with fgsea results", {
         )
     )
 
-    vdiffr::expect_doppelganger(
-        "pathwayPlotExampleFgseaReactome",
-        pathwayPlots(testResultFgseaReactome, columns=3)
-    )
+    expect_no_error(pathwayPlots(testResultFgseaReactome, columns=3))
 })

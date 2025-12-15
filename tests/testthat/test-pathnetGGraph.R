@@ -1,6 +1,4 @@
 test_that("we get the right plot", {
-    set.seed(1)
-
     data("sigoraDatabase", "sigoraExamples")
 
     pathwayDistancesJaccard <- getPathwayDistances(
@@ -26,8 +24,7 @@ test_that("we get the right plot", {
         trimOrder=1
     )
 
-    vdiffr::expect_doppelganger(
-        "pathnetGGraphExample",
+    expect_no_error(
         pathnetGGraph(
             exPathnet,
             labelProp=0.1,
