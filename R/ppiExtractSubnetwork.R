@@ -86,7 +86,7 @@ ppiExtractSubnetwork <- function(
     if (!is.null(genes)) {
         stopifnot(
             "Argument 'genes' must be a character vector of Ensembl gene IDs"={
-                class(genes) == "character"
+                is(genes, "character")
             }
         )
 

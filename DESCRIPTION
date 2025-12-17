@@ -1,7 +1,7 @@
 Package: pathlinkR
 Type: Package
 Title: Analyze and interpret RNA-Seq results
-Version: 1.7.6
+Version: 1.7.7
 Authors@R: c(
     person("Travis", "Blimkie", email = "travis.m.blimkie@gmail.com", role = "cre", comment = c(ORCID = "0000-0001-8778-8627")),
     person("Andy", "An", email = "andy@hancocklab.com", role = "aut")
@@ -25,7 +25,7 @@ RoxygenNote: 7.3.3
 VignetteBuilder: knitr
 Config/testthat/edition: 3
 Depends: 
-    R (>= 4.4.0)
+    R (>= 4.5.0)
 Imports:
     circlize,
     clusterProfiler,

@@ -320,8 +320,14 @@ pathwayPlots <- function(
             labs(x=NULL, y=NULL) +
             themePathway +
             guides(
-                shape=guide_legend(order=2, override.aes=list(size=4 * legendMultiply)),
-                size=guide_legend(order=3, override.aes=list(shape=24, fill="black"))
+                shape=guide_legend(
+                    order=2,
+                    override.aes=list(size=4 * legendMultiply)
+                ),
+                size=guide_legend(
+                    order=3,
+                    override.aes=list(shape=24, fill="black")
+                )
             )
     })
 

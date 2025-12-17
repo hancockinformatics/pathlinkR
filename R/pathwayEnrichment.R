@@ -139,13 +139,13 @@ pathwayEnrichment <- function(
 
     stopifnot(
         "'inputList' must be a list"={
-            !"data.frame" %in% class(inputList) & is.list(inputList)
+            !is(inputList, "data.frame") & is(inputList, "list")
         }
     )
 
     stopifnot(
         "'inputList' must be a NAMED list"={
-            !"data.frame" %in% class(inputList)
+            !is(inputList, "data.frame")
             !is.null(names(inputList))
         }
     )
@@ -163,7 +163,7 @@ pathwayEnrichment <- function(
     )
 
     stopifnot(
-        "'filterResults' should be 'default' or the desired maximum adjusted p value"=
+        "'filterResults' should be 'default' or the maximum adjusted p value"=
         any(filterResults == "default" | is(filterResults, "numeric"))
     )
 
@@ -387,7 +387,7 @@ pathwayEnrichment <- function(
                     function(y, direction) {
 
                         stopifnot(
-                            "No input genes are present in the Hallmark database"={
+                            "No input genes are in the Hallmark database"={
                                 any(rownames(y) %in% hallmarkDatabase$ensemblGeneId)
                             }
                         )
