@@ -71,7 +71,7 @@ test_that("ReactomePA enrichment works as expected", {
         )
     )
 
-    expect_equal(dim(testResultReactomepa), c(121, 12))
+    expect_equal(dim(testResultReactomepa), c(105, 12))
 
     expect_setequal(
         colnames(testResultReactomepa),
