@@ -55,7 +55,7 @@
 #'
 #' @usage data(innateDbPPI)
 #' @return An object of class "tbl", "tbl.df", "data.frame"
-#' @format A data frame (tibble) with 152,256 rows and 2 columns:
+#' @format A data frame (tibble) with 152256 rows and 2 columns:
 #' \describe{
 #'   \item{ensemblGeneA}{Ensembl gene ID for the first gene/protein in the
 #'     interaction}

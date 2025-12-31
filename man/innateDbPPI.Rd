@@ -5,7 +5,7 @@
 \alias{innateDbPPI}
 \title{InnateDB PPI data}
 \format{
-A data frame (tibble) with 152,256 rows and 2 columns:
+A data frame (tibble) with 152256 rows and 2 columns:
 \describe{
 \item{ensemblGeneA}{Ensembl gene ID for the first gene/protein in the
 interaction}
