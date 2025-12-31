@@ -136,7 +136,7 @@
 #'
 #' @usage data(reactomeDatabase)
 #' @return An object of class "tbl", "tbl.df", "data.frame"
-#' @format A data frame (tibble) with 123574 rows and 3 columns
+#' @format A data frame (tibble) with 129002 rows and 3 columns
 #' \describe{
 #'   \item{pathwayId}{Reactome pathway ID}
 #'   \item{entrezGeneId}{Entrez gene ID}
