@@ -72,7 +72,7 @@ topTerms <- list(
 
 # Get Hallmark info -------------------------------------------------------
 
-hallmark <- msigdbr(category="H") %>%
+hallmark <- msigdbr(collection="H") %>%
     select(gs_name, "ensemblGeneId"=ensembl_gene) %>%
     mutate(
         pathwayId=str_replace_all(gs_name, c("HALLMARK_" = "", "_" = " ")),

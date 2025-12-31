@@ -32,7 +32,7 @@
 #'
 #' @usage data(hallmarkDatabase)
 #' @return An object of class "tbl", "tbl.df", "data.frame"
-#' @format A data frame (tibble) with 8,209 rows and 2 columns
+#' @format A data frame (tibble) with 7333 rows and 2 columns
 #' \describe{
 #'   \item{pathwayId}{Name of the Hallmark Gene Set}
 #'   \item{ensemblGeneId}{Ensembl gene IDs}
