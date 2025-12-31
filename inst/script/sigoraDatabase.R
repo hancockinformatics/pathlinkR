@@ -38,7 +38,8 @@ sigoraDatabaseFull <- left_join(
     mappingTable,
     idmap,
     by=c("entrezGeneId" = "EntrezGene.ID"),
-    multiple="all"
+    multiple="all",
+    relationship = "many-to-many"
 ) %>%
     rename("ensemblGeneId"=Ensembl.Gene.ID, "hgncSymbol"=Symbol)
 
