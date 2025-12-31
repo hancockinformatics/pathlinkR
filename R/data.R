@@ -94,7 +94,7 @@
 #'
 #' @usage data(mappingFile)
 #' @return An object of class "tbl", "tbl.df", "data.frame"
-#' @format A data frame (tibble) with 43,993 rows and 3 columns
+#' @format A data frame (tibble) with 45776 rows and 3 columns
 #' \describe{
 #'   \item{ensemblGeneId}{Ensembl IDs}
 #'   \item{hgncSymbol}{HGNC symbols}
