@@ -63,9 +63,8 @@ reactomeLevels <- full_join(
 # remainder
 reactomeMissing <- reactomeLevels %>% filter(is.na(topPathway))
 
-# create a loop that keeps looping until it finds the top pathway for each
+# Create a loop that keeps looping until it finds the top pathway for each
 reactomeHierarchy <- list()
-
 for (originalId in reactomeMissing$pathwayId) {
 
     # Look in the hierarchy table first. Make sure the pathway in question is not
@@ -110,16 +109,12 @@ reactomeHierarchyDf <- reactomeHierarchy %>%
         "pathwayName"=V2,
         "topPathwayName"=V3,
         "hierarchy"=V4
-    )
-
-reactomeHierarchyDf <- left_join(
-    reactomeHierarchyDf,
-    select(
+    ) %>%
+    left_join(select(
         reactomeNames,
         "topPathway"=pathwayId,
         "topPathwayName"=pathwayName
-    )
-)
+    ))
 
 
 # * Deal with missing pathways and duplicates ----------------------------
@@ -133,17 +128,18 @@ reactomeDupe <- plyr::rbind.fill(
         reactomeLevels,
         pathwayName %in% reactomeLevels$pathwayName[duplicated(reactomeLevels$pathwayId)]
     )
-)
+) %>%
+    as_tibble()
 
 # Six pathways from Sigora are outdated, but need to manually add them in for
-# sigora to map properly
+# Sigora to map properly
 sigoraPathways <- as_tibble(reaH$pathwaydescriptions) %>%
     rename("pathwayId"=1, "pathwayName"=2)
 
 inSigora <-
     sigoraPathways[!sigoraPathways$pathwayId %in% reactomeNames$pathwayId, ]
 
-reactomeDupe <- plyr::rbind.fill(reactomeDupe, inSigora)
+reactomeDupe <- as_tibble(plyr::rbind.fill(reactomeDupe, inSigora))
 
 
 # * Load the manually annotated duplicated pathways ----------------------
@@ -164,7 +160,7 @@ reactomeAllAnnotated <- plyr::rbind.fill(
         -hierarchy
     ),
     manualDupeAnnotation
-)
+) %>% as_tibble()
 
 
 # * Make some checks -----------------------------------------------------
@@ -183,7 +179,7 @@ notInDf$topPathway <- notInDf$pathwayId
 notInDf$topPathwayName <- notInDf$pathwayName
 reactomeAllAnnotated <- rbind(reactomeAllAnnotated, notInDf)
 
-# Check that there are no more duplicate pathway ids that belong to multiple top
+# Check that there are no more duplicate pathway IDs that belong to multiple top
 # pathways?
 any(!duplicated(reactomeAllAnnotated$pathwayId))
 
@@ -263,7 +259,7 @@ reactomeFinal <- reactomeAllGrouped %>%
 
 # mSigDB Hallmark gene sets -----------------------------------------------
 
-hallmark1 <- msigdbr(category="H")
+hallmark1 <- msigdbr(collection="H")
 
 hallmark2 <- hallmark1 %>%
     select(gs_name, ensembl_gene) %>%

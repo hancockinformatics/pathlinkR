@@ -5,7 +5,7 @@
 \alias{pathwayCategories}
 \title{Top-level pathway categories}
 \format{
-A data frame (tibble) with 3326 rows and 5 columns
+A data frame (tibble) with 3499 rows and 5 columns
 \describe{
 \item{pathwayId}{Reactome, Hallmark, or KEGG pathway identifier}
 \item{pathwayName}{Pathway name}
