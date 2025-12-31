@@ -1,7 +1,7 @@
 Package: pathlinkR
 Type: Package
 Title: Analyze and interpret RNA-Seq results
-Version: 1.7.10
+Version: 1.7.11
 Authors@R: c(
     person("Travis", "Blimkie", email = "travis.m.blimkie@gmail.com", role = "cre", comment = c(ORCID = "0000-0001-8778-8627")),
     person("Andy", "An", email = "andy@hancocklab.com", role = "aut")
@@ -32,13 +32,12 @@ Imports:
     ComplexHeatmap,
     dplyr,
     fgsea,
-    ggforce,
     ggplot2,
-    ggpubr,
     ggraph,
     ggrepel,
     grid,
     igraph,
+    patchwork,
     purrr,
     sigora,
     stringr,
@@ -59,3 +58,4 @@ Suggests:
     rmarkdown,
     scales,
     testthat (>= 3.0.0)
+LazyData: true

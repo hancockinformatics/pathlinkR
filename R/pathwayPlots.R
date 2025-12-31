@@ -249,13 +249,12 @@ pathwayPlots <- function(
                 shape=direction
             )
         ) +
-
-            ggforce::facet_col(
-                facets=~topLevelPathway,
-                scales="free_y",
-                space="free"
+            facet_wrap(
+                vars(topLevelPathway),
+                ncol = 1,
+                scales = "free_y",
+                space = "free_y"
             ) +
-
             {
                 if (includeGeneRatio) {
                     geom_point(aes(size=geneRatio))
@@ -263,7 +262,6 @@ pathwayPlots <- function(
                     geom_point(size=size)
                 }
             } +
-
             geom_point(
                 data=filter(
                     plotDataDups,
@@ -287,18 +285,20 @@ pathwayPlots <- function(
                 ),
                 position=pathwayPosition
             ) +
-
             scale_shape_manual(
                 values=c("Down"=25, "Up"=24, "All"=21),
                 name="Regulation",
                 na.value=NA,
                 drop=FALSE # Keep both up/down if only one direction enriched
             ) +
-
             { if (requireNamespace("scales", quietly=TRUE)) {
                 scale_fill_continuous(
                     name=expression(P[adjusted]),
                     labels=scales::label_math(10^-.x),
+                    limits=c(
+                        min(plotDataDups[["logMax"]])-2,
+                        max(plotDataDups[["logMax"]])
+                    ),
                     low=colourValues[1],
                     high=colourValues[2],
                     na.value=NA,
@@ -307,6 +307,10 @@ pathwayPlots <- function(
             } else {
                 scale_fill_continuous(
                     name=expression(-log10(P[adjusted])),
+                    limits=c(
+                        min(plotDataDups[["logMax"]])-2,
+                        max(plotDataDups[["logMax"]])
+                    ),
                     low=colourValues[1],
                     high=colourValues[2],
                     na.value=NA,
@@ -316,7 +320,6 @@ pathwayPlots <- function(
 
             ## Add optional lines to separate different groups
             {if (!is.na(intercepts[1])) geom_vline(xintercept=intercepts)} +
-
             labs(x=NULL, y=NULL) +
             themePathway +
             guides(
@@ -332,12 +335,10 @@ pathwayPlots <- function(
     })
 
     if (columns > 1) {
-        ggpubr::ggarrange(
-            plotlist=plotList,
+        patchwork::wrap_plots(
+            plotList,
             ncol=columns,
-            common.legend=TRUE,
-            legend="right",
-            align="v"
+            guides = "collect"
         )
     } else {
         plotList[[1]]

@@ -1,6 +1,5 @@
 test_that("pathway plots are correct", {
-    
-
+    data("sigoraExamples")
     expect_no_error(pathwayPlots(sigoraExamples, columns=2))
 })
 
