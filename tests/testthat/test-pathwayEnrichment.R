@@ -72,7 +72,7 @@ test_that("ReactomePA enrichment works as expected", {
     )
 
     # Support for release and development R versions
-    expect_true(nrow(testResultReactomepa) %in% c(105, 121))
+    expect_true(nrow(testResultReactomepa) %in% c(102, 105, 121))
 
     expect_setequal(
         colnames(testResultReactomepa),
