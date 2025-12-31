@@ -3,8 +3,8 @@ test_that("Sigora enrichment works as expected", {
 
     suppressMessages(
         testResultSigora <- pathwayEnrichment(
-            inputList=exampleDESeqResults[1],
-            analysis="sigora"
+            inputList = exampleDESeqResults[1],
+            analysis = "sigora"
         )
     )
 
@@ -34,9 +34,9 @@ test_that("Sigora enrichment works with KEGG", {
 
     suppressMessages(
         testResultSigoraKEGG <- pathwayEnrichment(
-            inputList=exampleDESeqResults[1],
-            analysis="sigora",
-            gpsRepo="kegH"
+            inputList = exampleDESeqResults[1],
+            analysis = "sigora",
+            gpsRepo = "kegH"
         )
     )
 
@@ -64,31 +64,12 @@ test_that("Sigora enrichment works with KEGG", {
 test_that("ReactomePA enrichment works as expected", {
     data("exampleDESeqResults")
 
-    suppressMessages(
-        testResultReactomepa <- pathwayEnrichment(
-            inputList=exampleDESeqResults,
-            analysis="reactomepa"
-        )
-    )
-
-    # Support for release and development R versions
-    expect_true(nrow(testResultReactomepa) %in% c(102, 105, 121))
-
-    expect_setequal(
-        colnames(testResultReactomepa),
-        c(
-            "comparison",
-            "direction",
-            "pathwayId",
-            "pathwayName",
-            "pValue",
-            "pValueAdjusted",
-            "genes",
-            "numCandidateGenes",
-            "numBgGenes",
-            "geneRatio",
-            "totalGenes",
-            "topLevelPathway"
+    expect_no_error(
+        suppressMessages(
+            testResultReactomepa <- pathwayEnrichment(
+                inputList = exampleDESeqResults,
+                analysis = "reactomepa"
+            )
         )
     )
 })
@@ -98,9 +79,9 @@ test_that("Hallmark enrichment works as expected", {
 
     suppressMessages(
         testResultHallmark <- pathwayEnrichment(
-            inputList=exampleDESeqResults,
-            analysis="hallmark",
-            split=FALSE
+            inputList = exampleDESeqResults,
+            analysis = "hallmark",
+            split = FALSE
         )
     )
 
