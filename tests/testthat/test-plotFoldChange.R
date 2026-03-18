@@ -27,3 +27,16 @@ test_that("argument 'returnData' is working.", {
         "list"
     )
 })
+
+test_that("fold change heatmaps are working with custom font sizes", {
+    data("exampleDESeqResults")
+
+    expect_no_error(
+        plotFoldChange(
+            inputList=exampleDESeqResults,
+            pathName="PD-1 signaling",
+            hideNonsigFC=FALSE,
+            clusterColumns=TRUE
+        )
+    )
+})

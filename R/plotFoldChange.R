@@ -20,7 +20,9 @@
 #'   `pathName`/`pathID` are mutually exclusive.
 #' @param manualTitle Provide your own title, and override the use of a pathway
 #'   name the title.
-#' @param titleSize Font size for the title (14).
+#' @param fontSizes Font sizes for the elements: column title, row title,
+#'   column names, row names, legend title, legend labels. Defaults to
+#'   `c(13.2, 13.2, 12, 12, 10, 10)`.
 #' @param geneFormat Type of genes given in `genesToPlot`. Default is Ensembl
 #'   gene IDs ("ensembl"), but can also input a vector of HGNC symbols ("hgnc").
 #' @param pCutoff P value cutoff, default is <0.05
@@ -128,7 +130,7 @@ plotFoldChange <- function(
         pathId=NA,
         genesToPlot=NA,
         manualTitle=NA,
-        titleSize=14,
+        fontSizes=c(13.2, 13.2, 12, 12, 10, 10),
         geneFormat="ensembl",
         pCutoff=0.05,
         fcCutoff=1.5,
@@ -166,6 +168,17 @@ plotFoldChange <- function(
     stopifnot("'geneFormat' must be either 'ensembl' or 'hgnc'"={
         geneFormat %in% c("ensembl", "hgnc")}
     )
+
+    stopifnot("Incorrect format for 'fontSizes'" ={
+      is(fontSizes, "numeric") & length(fontSizes) == 6
+    })
+
+    sizeColTitle <- fontSizes[1]
+    sizeRowTitle <- fontSizes[2]
+    sizeColNames <- fontSizes[3]
+    sizeRowNames <- fontSizes[4]
+    sizeLegendTitle <- fontSizes[5]
+    sizeLegendLabels <- fontSizes[6]
 
     ## Coerce the input
     if (is(inputList[[1]], "DESeqResults")) {
@@ -330,9 +343,10 @@ plotFoldChange <- function(
     heatmapLegendInfo <- .plotFoldChangeLegend(
         .matFC=matFC,
         .log2FoldChange=log2FoldChange,
-        .cellColours=cellColours
+        .cellColours=cellColours,
+        .titlegp=sizeLegendTitle,
+        .labelsgp=sizeLegendLabels
     )
-
 
     ## If columns aren't being split
     if (is.na(colSplit[1])) {
@@ -406,7 +420,10 @@ plotFoldChange <- function(
             column_title=plotTitle,
             row_title=NULL,
             heatmap_legend_param=heatmapLegendInfo[[1]],
-            column_title_gp=gpar(fontsize=titleSize),
+            column_title_gp=gpar(fontsize=sizeColTitle),
+            row_title_gp=gpar(fontsize=sizeRowTitle),
+            column_names_gp=gpar(fontsize=sizeColNames),
+            row_names_gp=gpar(fontsize=sizeRowNames),
             row_split=rowSplit,
             column_split=colSplit,
             cluster_columns=clusterColumns,
@@ -425,6 +442,8 @@ plotFoldChange <- function(
 #' @param .matFC Matrix of fold change values
 #' @param .log2FoldChange Boolean denoting if values will be in log2
 #' @param .cellColours Colours for fold change values
+#' @param .titlegp Font size for the title of the legend
+#' @param .labelsgp Font size for the labels of the legend
 #'
 #' @return A list containing heatmap legend parameters and colour function
 #'
@@ -435,10 +454,12 @@ plotFoldChange <- function(
 #'
 #' @seealso <https://github.com/hancockinformatics/pathlinkR>
 #'
-.plotFoldChangeLegend <- function(.matFC, .log2FoldChange, .cellColours) {
+.plotFoldChangeLegend <- function(.matFC, .log2FoldChange, .cellColours, .titlegp, .labelsgp) {
 
     parameters <- list(
-        title=ifelse(.log2FoldChange, "Log2 fold\nchange", "Fold change")
+        title=ifelse(.log2FoldChange, "Log2 fold\nchange", "Fold change"),
+        title_gp=gpar(fontsize=.titlegp),
+        labels_gp=gpar(fontsize=.labelsgp)
     )
 
     limit <- ceiling(max(abs(.matFC)))

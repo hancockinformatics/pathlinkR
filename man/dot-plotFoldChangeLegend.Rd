@@ -4,7 +4,13 @@
 \alias{.plotFoldChangeLegend}
 \title{INTERNAL Construct heatmap legend}
 \usage{
-.plotFoldChangeLegend(.matFC, .log2FoldChange, .cellColours)
+.plotFoldChangeLegend(
+  .matFC,
+  .log2FoldChange,
+  .cellColours,
+  .titlegp,
+  .labelsgp
+)
 }
 \arguments{
 \item{.matFC}{Matrix of fold change values}
@@ -12,6 +18,10 @@
 \item{.log2FoldChange}{Boolean denoting if values will be in log2}
 
 \item{.cellColours}{Colours for fold change values}
+
+\item{.titlegp}{Font size for the title of the legend}
+
+\item{.labelsgp}{Font size for the labels of the legend}
 }
 \value{
 A list containing heatmap legend parameters and colour function

@@ -12,7 +12,7 @@ plotFoldChange(
   pathId = NA,
   genesToPlot = NA,
   manualTitle = NA,
-  titleSize = 14,
+  fontSizes = c(13.2, 13.2, 12, 12, 10, 10),
   geneFormat = "ensembl",
   pCutoff = 0.05,
   fcCutoff = 1.5,
@@ -63,7 +63,9 @@ pulling the genes from a pathway, i.e. this option and
 \item{manualTitle}{Provide your own title, and override the use of a pathway
 name the title.}
 
-\item{titleSize}{Font size for the title (14).}
+\item{fontSizes}{Font sizes for the elements: column title, row title,
+column names, row names, legend title, legend labels. Defaults to
+\code{c(13.2, 13.2, 12, 12, 10, 10)}.}
 
 \item{geneFormat}{Type of genes given in \code{genesToPlot}. Default is Ensembl
 gene IDs ("ensembl"), but can also input a vector of HGNC symbols ("hgnc").}
