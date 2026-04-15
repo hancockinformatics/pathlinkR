@@ -1,3 +1,9 @@
+CHANGES IN VERSION 1.7.23
+-------------------------
+
+* Added check for no genes passing filter in pathwayEnrichment
+
+
 CHANGES IN VERSION 1.1.22
 -------------------------
 
@@ -79,7 +85,7 @@ CHANGES IN VERSION 0.99.332
 CHANGES IN VERSION 0.99.317
 ----------------------------
 
-* Renamed a number of functions to improve consistency, and make it clear which 
+* Renamed a number of functions to improve consistency, and make it clear which
   ones are related and part of the same "workflow"
 
 
