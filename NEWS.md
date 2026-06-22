@@ -1,4 +1,4 @@
-CHANGES IN VERSION 1.7.23
+CHANGES IN VERSION 1.9.2
 -------------------------
 
 * Added check for no genes passing filter in pathwayEnrichment
