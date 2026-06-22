@@ -39,7 +39,7 @@ To install and load the package:
 ```{r}
 #| label: load_library
 # We'll also be using some functions from dplyr
-# renv::install("hancockinformatics/pathlinkR")
+# devtools::install_github("https://github.com/hancockinformatics/pathlinkR")
 library(dplyr)
 library(pathlinkR)
 ```
