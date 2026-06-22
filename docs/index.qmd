@@ -13,6 +13,7 @@ format:
     df-print: kable
 execute:
   warning: false
+lightbox: true
 ---
 
 # Introduction
@@ -38,7 +39,7 @@ To install and load the package:
 ```{r}
 #| label: load_library
 # We'll also be using some functions from dplyr
-# BiocManager::install("pathlinkR")
+# renv::install("hancockinformatics/pathlinkR")
 library(dplyr)
 library(pathlinkR)
 ```
@@ -93,8 +94,8 @@ Let's make the following adjustment to the standard volcano plot:
 #| label: customized_volcano_plot
 data("sigoraDatabase")
 
-interferonGenes <- sigoraDatabase %>%
-    filter(pathwayName == "Interferon Signaling") %>%
+interferonGenes <- sigoraDatabase |>
+    filter(pathwayName == "Interferon Signaling") |>
     pull(ensemblGeneId)
 
 eruption(
@@ -336,8 +337,8 @@ enrichedResultsSigora <- pathwayEnrichment(
     gpsRepo="default"
 )
 
-enrichedResultsSigora %>%
-    select(!genes) %>%
+enrichedResultsSigora |>
+    select(!genes) |>
     head()
 ```
 
@@ -355,8 +356,8 @@ enrichedResultsSigoraNoSplit <- pathwayEnrichment(
     split=FALSE
 )
 
-enrichedResultsSigoraNoSplit %>%
-    select(!genes) %>%
+enrichedResultsSigoraNoSplit |>
+    select(!genes) |>
     head()
 ```
 
@@ -372,8 +373,9 @@ converting them to Entrez gene IDs before running the test.
 #| column: screen-inset-right
 #| cache: true
 data("mappingFile")
-exGeneUniverse <- mappingFile %>%
-    filter(ensemblGeneId %in% rownames(exampleDESeqResults[[1]])) %>%
+
+exGeneUniverse <- mappingFile |>
+    filter(ensemblGeneId %in% rownames(exampleDESeqResults[[1]])) |>
     pull(entrezGeneId)
 
 enrichedResultsRpa <- pathwayEnrichment(
@@ -384,8 +386,8 @@ enrichedResultsRpa <- pathwayEnrichment(
     geneUniverse=exGeneUniverse
 )
 
-enrichedResultsRpa %>%
-    select(!genes) %>%
+enrichedResultsRpa |>
+    select(!genes) |>
     head()
 ```
 
@@ -407,8 +409,8 @@ enrichedResultsHm <- pathwayEnrichment(
     split=TRUE
 )
 
-enrichedResultsHm %>%
-    select(!genes) %>%
+enrichedResultsHm |>
+    select(!genes) |>
     head()
 ```
 
@@ -498,7 +500,7 @@ startingPathways <- pathnetFoundation(
 )
 
 # Get the enriched pathways from the "COVID Pos Over Time" comparison
-exPathwayNetworkInput <- sigoraExamples %>%
+exPathwayNetworkInput <- sigoraExamples |>
     filter(comparison == "COVID Pos Over Time")
 
 myPathwayNetwork <- pathnetCreate(
@@ -544,16 +546,16 @@ Another option is to use only DEGs when generating the pathway network
 information, as outlined below:
 ```{r}
 #| label: pathway_network_III
-candidateData <- sigoraExamples %>%
-    filter(comparison == "COVID Pos Over Time") %>%
-    select(pathwayId, genes) %>%
-    tidyr::separate_rows(genes, sep=";") %>%
+candidateData <- sigoraExamples |>
+    filter(comparison == "COVID Pos Over Time") |>
+    select(pathwayId, genes) |>
+    tidyr::separate_rows(genes, sep=";") |>
     left_join(
         sigoraDatabase,
         by=c("pathwayId", "genes" = "hgncSymbol"),
         multiple="all"
-    ) %>%
-    relocate(pathwayId, ensemblGeneId, "hgncSymbol"=genes, pathwayName) %>%
+    ) |>
+    relocate(pathwayId, ensemblGeneId, "hgncSymbol"=genes, pathwayName) |>
     distinct()
 
 ## Now that we have a smaller table in the same format as sigoraDatabase, we
