@@ -280,6 +280,18 @@ pathwayEnrichment <- function(
                 x
             }
 
+        if (nrow(rnaseqResults) == 0) {
+            message(
+                ifelse(
+                    verbose,
+                    "    WARNING: Input had no significant genes; ",
+                    "WARNING: Input had no significant genes; "
+                ),
+                "check your data and the 'filterInput` argument."
+            )
+            return(NULL)
+        }
+
         ## Turn the input into a list of gene IDs, split by direction or not
         if (split) {
             .vm(verbose, paste0("    Input is being split by direction"))

@@ -105,3 +105,17 @@ test_that("Hallmark enrichment works as expected", {
         )
     )
 })
+
+test_that("a no-gene scenario works properly", {
+    data("exampleDESeqResults")
+
+    exampleDESeqResults[[1]]$padj <- exampleDESeqResults[[1]]$padj + 1
+
+    testResultNoGenes <- pathwayEnrichment(
+        inputList=exampleDESeqResults,
+        analysis="reactomepa",
+        verbose=TRUE
+    )
+
+    expect_length(unique(testResultNoGenes$comparison), 1)
+})
