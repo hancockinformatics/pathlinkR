@@ -296,8 +296,8 @@ pathwayPlots <- function(
                     name=expression(P[adjusted]),
                     labels=scales::label_math(10^-.x),
                     limits=c(
-                        min(plotDataDups[["logMax"]])-2,
-                        max(plotDataDups[["logMax"]])
+                        min(plotDataGraph[["logMax"]])-2,
+                        max(plotDataGraph[["logMax"]])
                     ),
                     low=colourValues[1],
                     high=colourValues[2],
@@ -308,8 +308,8 @@ pathwayPlots <- function(
                 scale_fill_continuous(
                     name=expression(-log10(P[adjusted])),
                     limits=c(
-                        min(plotDataDups[["logMax"]])-2,
-                        max(plotDataDups[["logMax"]])
+                        min(plotDataGraph[["logMax"]])-2,
+                        max(plotDataGraph[["logMax"]])
                     ),
                     low=colourValues[1],
                     high=colourValues[2],
