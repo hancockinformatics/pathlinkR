@@ -39,11 +39,11 @@
 #' @seealso <https://github.com/hancockinformatics/pathlinkR>
 #'
 #' @examples
-#' data("sigoraDatabase")
+#' data("sigoraDatabaseHS")
 #'
 #' pathwayDistancesJaccard <- getPathwayDistances(
 #'     pathwayData=dplyr::slice_head(
-#'         dplyr::arrange(sigoraDatabase, pathwayId),
+#'         dplyr::arrange(sigoraDatabaseHS, pathwayId),
 #'         prop=0.05
 #'     ),
 #'     distMethod="jaccard"
@@ -77,12 +77,12 @@ pathnetFoundation <- function(mat, maxDistance=NA, propToKeep=NA) {
 
     annoEdgeTable <- edgeTable %>%
         left_join(
-            distinct(sigoraDatabase, pathwayId, pathwayName),
+            distinct(sigoraDatabaseHS, pathwayId, pathwayName),
             by=c("pathway1" = "pathwayId"),
             multiple="all"
         ) %>%
         left_join(
-            distinct(sigoraDatabase, pathwayId, pathwayName),
+            distinct(sigoraDatabaseHS, pathwayId, pathwayName),
             by=c("pathway2" = "pathwayId"),
             suffix=c("1", "2"),
             multiple="all"

@@ -39,11 +39,11 @@ The desired cutoff will also vary based on the distance measure used, so
 some trial-and-error may be needed to find an appropriate value.
 }
 \examples{
-data("sigoraDatabase")
+data("sigoraDatabaseHS")
 
 pathwayDistancesJaccard <- getPathwayDistances(
     pathwayData=dplyr::slice_head(
-        dplyr::arrange(sigoraDatabase, pathwayId),
+        dplyr::arrange(sigoraDatabaseHS, pathwayId),
         prop=0.05
     ),
     distMethod="jaccard"

@@ -59,11 +59,11 @@
 #' @seealso <https://github.com/hancockinformatics/pathlinkR>
 #'
 #' @examples
-#' data("sigoraDatabase", "sigoraExamples")
+#' data("sigoraDatabaseHS", "sigoraExamples")
 #'
 #' pathwayDistancesJaccard <- getPathwayDistances(
 #'     pathwayData=dplyr::slice_head(
-#'         dplyr::arrange(sigoraDatabase, pathwayId),
+#'         dplyr::arrange(sigoraDatabaseHS, pathwayId),
 #'         prop=0.05
 #'     ),
 #'     distMethod="jaccard"
@@ -106,8 +106,8 @@ pathnetCreate <- function(
     ))
 
     data_env <- new.env(parent=emptyenv())
-    data("pathwayCategories", envir=data_env, package="pathlinkR")
-    pathwayCategories <- data_env[["pathwayCategories"]]
+    data("pathwayCategoriesHS", envir=data_env, package="pathlinkR")
+    pathwayCategoriesHS <- data_env[["pathwayCategoriesHS"]]
 
     if (columnId != "pathwayId") {
         pathwayEnrichmentResult <- pathwayEnrichmentResult %>%
@@ -164,7 +164,7 @@ pathnetCreate <- function(
 
     pathwaysAsNetwork4 <- pathwaysAsNetwork3 %>%
         left_join(
-            y=select(pathwayCategories, pathwayId, groupedPathway, pathwayName),
+            y=select(pathwayCategoriesHS, pathwayId, groupedPathway, pathwayName),
             by=c("pathway1" = "pathwayId"),
             multiple="all"
         ) %>%

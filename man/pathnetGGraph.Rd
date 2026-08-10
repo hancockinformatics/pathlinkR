@@ -87,11 +87,11 @@ labels. You'll likely need to tweak this value, and try different seeds, to
 get the desired effect.
 }
 \examples{
-data("sigoraDatabase", "sigoraExamples")
+data("sigoraDatabaseHS", "sigoraExamples")
 
 pathwayDistancesJaccard <- getPathwayDistances(
     pathwayData=dplyr::slice_head(
-        dplyr::arrange(sigoraDatabase, pathwayId),
+        dplyr::arrange(sigoraDatabaseHS, pathwayId),
         prop=0.05
     ),
     distMethod="jaccard"

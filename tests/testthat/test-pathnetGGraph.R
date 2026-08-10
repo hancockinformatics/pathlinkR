@@ -1,9 +1,9 @@
 test_that("we get the right plot", {
-    data("sigoraDatabase", "sigoraExamples")
+    data("sigoraDatabaseHS", "sigoraExamples")
 
     pathwayDistancesJaccard <- getPathwayDistances(
         pathwayData=dplyr::slice_head(
-            dplyr::arrange(sigoraDatabase, pathwayId),
+            dplyr::arrange(sigoraDatabaseHS, pathwayId),
             prop=0.05
         ),
         distMethod="jaccard"

@@ -1,9 +1,9 @@
 test_that("the foundation has the right dimensions and columns", {
-    data("sigoraDatabase")
+    data("sigoraDatabaseHS")
 
     pathwayDistancesJaccard <- getPathwayDistances(
         pathwayData=dplyr::slice_head(
-            dplyr::arrange(sigoraDatabase, pathwayId),
+            dplyr::arrange(sigoraDatabaseHS, pathwayId),
             prop=0.05
         ),
         distMethod="jaccard"

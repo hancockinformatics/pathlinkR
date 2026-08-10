@@ -1,10 +1,10 @@
 exampleDESeqResults
 groupedPathwayColours
-hallmarkDatabase
-innateDbPPI
-keggDatabase
-mappingFile
-pathwayCategories
-reactomeDatabase
-sigoraDatabase
+hallmarkDatabaseHS
+innateDbPPIHS
+keggDatabaseHS
+mappingFileHS
+pathwayCategoriesHS
+reactomeDatabaseHS
+sigoraDatabaseHS
 sigoraExamples

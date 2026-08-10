@@ -232,7 +232,7 @@ one.
 
 Note the structure of `exampleDESeqResults`, a named list of results from
 DESeq2:
-```{r}
+```{r show_example}
 #| echo: false
 exampleDESeqResults
 ```
@@ -345,9 +345,9 @@ Jaccard distance, but there is support for multiple distance measures to be
 used. Once this "foundation" of pathway interactions is created, a pathway
 network can be built using the `createPathnet()` function:
 ```{r pathway_network_I, fig.width=12, fig.height=10, warning=FALSE, message=FALSE}
-data("sigoraDatabase")
+data("sigoraDatabaseHS")
 
-pathwayDistancesJaccard <- getPathwayDistances(pathwayData = sigoraDatabase)
+pathwayDistancesJaccard <- getPathwayDistances(pathwayData = sigoraDatabaseHS)
 
 startingPathways <- pathnetFoundation(
     mat=pathwayDistancesJaccard,

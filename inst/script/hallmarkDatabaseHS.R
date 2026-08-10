@@ -82,7 +82,7 @@ hallmark <- msigdbr(collection="H") %>%
     )
 
 
-hallmarkDatabase <- hallmark %>%
+hallmarkDatabaseHS <- hallmark %>%
     left_join(topTerms, multiple="all") %>%
     relocate(
         pathwayId,
@@ -97,4 +97,4 @@ hallmarkDatabase <- hallmark %>%
 
 # Save the data -----------------------------------------------------------
 
-usethis::use_data(hallmarkDatabase, overwrite=TRUE)
+usethis::use_data(hallmarkDatabaseHS, overwrite=TRUE)

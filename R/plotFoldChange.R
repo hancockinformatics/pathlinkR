@@ -170,7 +170,7 @@ plotFoldChange <- function(
     )
 
     stopifnot("Incorrect format for 'fontSizes'" ={
-      is(fontSizes, "numeric") & length(fontSizes) == 6
+        is(fontSizes, "numeric") & length(fontSizes) == 6
     })
 
     sizeColTitle <- fontSizes[1]
@@ -211,16 +211,16 @@ plotFoldChange <- function(
     ## Load data, after passing the basic checks
     data_env <- new.env(parent=emptyenv())
     data(
-        "sigoraDatabase",
-        "mappingFile",
+        "sigoraDatabaseHS",
+        "mappingFileHS",
         envir=data_env,
         package="pathlinkR"
     )
-    sigoraDatabase <- data_env[["sigoraDatabase"]]
-    mappingFile <- data_env[["mappingFile"]]
+    sigoraDatabaseHS <- data_env[["sigoraDatabaseHS"]]
+    mappingFileHS <- data_env[["mappingFileHS"]]
 
     if (!is.na(pathName)) {
-        pathId <- sigoraDatabase %>%
+        pathId <- sigoraDatabaseHS %>%
             filter(pathwayName == pathName) %>%
             pull(pathwayId) %>%
             unique()
@@ -236,10 +236,10 @@ plotFoldChange <- function(
 
         stopifnot(
             "Specified 'pathId' was not found, please try a different pathway
-            ID"=pathId %in% unique(sigoraDatabase$pathwayId)
+            ID"=pathId %in% unique(sigoraDatabaseHS$pathwayId)
         )
 
-        plotTitle <- sigoraDatabase %>%
+        plotTitle <- sigoraDatabaseHS %>%
             filter(pathwayId == pathId) %>%
             pull(pathwayName) %>%
             unique()
@@ -257,7 +257,7 @@ plotFoldChange <- function(
     ## them Ensembl IDs
     if (is.na(genesToPlot[1])) {
 
-        genes <- sigoraDatabase %>%
+        genes <- sigoraDatabaseHS %>%
             filter(pathwayId == pathId) %>%
             .$ensemblGeneId
 
@@ -265,7 +265,7 @@ plotFoldChange <- function(
         genes <- genesToPlot
 
         if (geneFormat == "hgnc") {
-            genes <- mappingFile %>%
+            genes <- mappingFileHS %>%
                 filter(hgncSymbol %in% genesToPlot) %>%
                 pull(ensemblGeneId)
         }
@@ -317,7 +317,7 @@ plotFoldChange <- function(
 
     ## Prepare the Heatmap matrices, and map the Ensembl IDs to HGNC symbols
     matFC <- dfFC %>%
-        left_join(mappingFile, by="ensemblGeneId", multiple="all") %>%
+        left_join(mappingFileHS, by="ensemblGeneId", multiple="all") %>%
         select(-c(ensemblGeneId, entrezGeneId)) %>%
         column_to_rownames(var="hgncSymbol") %>%
         as.matrix()
@@ -325,7 +325,7 @@ plotFoldChange <- function(
 
 
     matP <- dfP %>%
-        left_join(mappingFile, by="ensemblGeneId", multiple="all") %>%
+        left_join(mappingFileHS, by="ensemblGeneId", multiple="all") %>%
         select(-c(ensemblGeneId, entrezGeneId)) %>%
         column_to_rownames(var="hgncSymbol") %>%
         as.matrix()

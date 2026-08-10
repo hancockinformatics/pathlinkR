@@ -47,7 +47,7 @@ keggDatabaseFull <- left_join(
 # Remove duplicate Ensembl IDs --------------------------------------------
 
 # Decreased from 33658 to 32883 gene-pathway relations
-keggDatabase <- keggDatabaseFull %>%
+keggDatabaseHS <- keggDatabaseFull %>%
     select(-entrezGeneId) %>%
     mutate(across(everything(), as.character)) %>%
     distinct()
@@ -55,4 +55,4 @@ keggDatabase <- keggDatabaseFull %>%
 
 # Save the data -----------------------------------------------------------
 
-usethis::use_data(keggDatabase, overwrite=TRUE)
+usethis::use_data(keggDatabaseHS, overwrite=TRUE)

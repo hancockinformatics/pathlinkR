@@ -13,7 +13,7 @@ ppiBuildNetwork(
   fcCutoff = 1.5,
   order = "zero",
   hubMeasure = "betweenness",
-  ppiData = innateDbPPI
+  ppiData = innateDbPPIHS
 )
 }
 \arguments{

@@ -4,11 +4,11 @@
 \alias{getPathwayDistances}
 \title{Calculate pairwise distances from a table of pathways and genes}
 \usage{
-getPathwayDistances(pathwayData = sigoraDatabase, distMethod = "jaccard")
+getPathwayDistances(pathwayData = sigoraDatabaseHS, distMethod = "jaccard")
 }
 \arguments{
 \item{pathwayData}{Three column data frame of pathways and their constituent
-genes. Defaults to the provided \code{sigoraDatabase} object, but can be any set
+genes. Defaults to the provided \code{sigoraDatabaseHS} object, but can be any set
 of Reactome pathways. Must contain Ensembl gene IDs in the first column,
 human Reactome pathway IDs in the second, and pathway descriptions in the
 third.}
@@ -28,11 +28,11 @@ common.
 }
 \examples{
 # Here we'll use a subset of all the pathways, to save time
-data("sigoraDatabase")
+data("sigoraDatabaseHS")
 
 getPathwayDistances(
     pathwayData=dplyr::slice_head(
-        dplyr::arrange(sigoraDatabase, pathwayId),
+        dplyr::arrange(sigoraDatabaseHS, pathwayId),
         prop=0.05
     ),
     distMethod="jaccard"

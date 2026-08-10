@@ -55,7 +55,7 @@ sigoraDatabaseLevel4 <- sigoraDatabaseFull %>%
 # Remove duplicate Ensembl IDs --------------------------------------------
 
 # Decreased from 61045 to 60775 gene-pathway relations
-sigoraDatabase <- sigoraDatabaseLevel4 %>%
+sigoraDatabaseHS <- sigoraDatabaseLevel4 %>%
     select(-entrezGeneId) %>%
     distinct() %>%
     mutate(across(everything(), as.character))
@@ -63,4 +63,4 @@ sigoraDatabase <- sigoraDatabaseLevel4 %>%
 
 # Save the data -----------------------------------------------------------
 
-usethis::use_data(sigoraDatabase, overwrite=TRUE)
+usethis::use_data(sigoraDatabaseHS, overwrite=TRUE)

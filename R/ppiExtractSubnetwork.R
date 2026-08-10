@@ -73,8 +73,8 @@ ppiExtractSubnetwork <- function(
 ) {
 
     data_env <- new.env(parent=emptyenv())
-    data("mappingFile", envir=data_env, package="pathlinkR")
-    mappingFile <- data_env[["mappingFile"]]
+    data("mappingFileHS", envir=data_env, package="pathlinkR")
+    mappingFileHS <- data_env[["mappingFileHS"]]
 
     stopifnot(
         "You must specify either 'genes' or 'pathwayEnrichmentResult' to
@@ -135,7 +135,7 @@ ppiExtractSubnetwork <- function(
             strsplit(., split=";") %>%
             unlist()
 
-        genesToExtract <- mappingFile %>%
+        genesToExtract <- mappingFileHS %>%
             filter(hgncSymbol %in% pathwayGenesHGNC) %>%
             pull(ensemblGeneId) %>%
             unique()

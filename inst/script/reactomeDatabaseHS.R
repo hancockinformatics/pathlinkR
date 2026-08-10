@@ -33,10 +33,10 @@ reactomeDb <- left_join(
 # Filter non-human genes --------------------------------------------------
 
 # Some are genes from other organisms (e.g. microbes for Immune System)
-reactomeDatabase <- reactomeDb %>%
+reactomeDatabaseHS <- reactomeDb %>%
     filter(entrezGeneId %in% keys(org.Hs.eg.db, keytype="ENTREZID"))
 
 
 # Save the data -----------------------------------------------------------
 
-usethis::use_data(reactomeDatabase, overwrite=TRUE)
+usethis::use_data(reactomeDatabaseHS, overwrite=TRUE)

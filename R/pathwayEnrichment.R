@@ -223,19 +223,19 @@ pathwayEnrichment <- function(
     idmap <- data_env[["idmap"]]
 
     data(
-        "pathwayCategories",
-        "reactomeDatabase",
-        "hallmarkDatabase",
-        "keggDatabase",
-        "mappingFile",
+        "pathwayCategoriesHS",
+        "reactomeDatabaseHS",
+        "hallmarkDatabaseHS",
+        "keggDatabaseHS",
+        "mappingFileHS",
         envir=data_env,
         package="pathlinkR"
     )
-    pathwayCategories <- data_env[["pathwayCategories"]]
-    reactomeDatabase <- data_env[["reactomeDatabase"]]
-    hallmarkDatabase <- data_env[["hallmarkDatabase"]]
-    keggDatabase <- data_env[["keggDatabase"]]
-    mappingFile <- data_env[["mappingFile"]]
+    pathwayCategoriesHS <- data_env[["pathwayCategoriesHS"]]
+    reactomeDatabaseHS <- data_env[["reactomeDatabaseHS"]]
+    hallmarkDatabaseHS <- data_env[["hallmarkDatabaseHS"]]
+    keggDatabaseHS <- data_env[["keggDatabaseHS"]]
+    mappingFileHS <- data_env[["mappingFileHS"]]
 
 
     ## Iterate through each element of "inputListCleaned"
@@ -282,11 +282,8 @@ pathwayEnrichment <- function(
 
         if (nrow(rnaseqResults) == 0) {
             message(
-                ifelse(
-                    verbose,
-                    "    WARNING: Input had no significant genes; ",
-                    "WARNING: Input had no significant genes; "
-                ),
+                ifelse(verbose, "\t", ""),
+                "Input had no significant genes; ",
                 "check your data and the 'filterInput` argument."
             )
             return(NULL)
@@ -352,12 +349,12 @@ pathwayEnrichment <- function(
                         tibble::as_tibble(clusterProfiler::enricher(
                             genesEntrez,
                             TERM2GENE=select(
-                                reactomeDatabase,
+                                reactomeDatabaseHS,
                                 pathwayId,
                                 entrezGeneId
                             ),
                             TERM2NAME=select(
-                                reactomeDatabase,
+                                reactomeDatabaseHS,
                                 pathwayId,
                                 pathwayName
                             ),
@@ -375,7 +372,7 @@ pathwayEnrichment <- function(
                     mutate(geneID=as.character(geneID)) %>%
                     separate_longer_delim(geneID, delim="/") %>%
                     left_join(
-                        mappingFile,
+                        mappingFileHS,
                         by=c("geneID" = "entrezGeneId"),
                         multiple="all",
                         relationship="many-to-many"
@@ -400,13 +397,13 @@ pathwayEnrichment <- function(
 
                         stopifnot(
                             "No input genes are in the Hallmark database"={
-                                any(rownames(y) %in% hallmarkDatabase$ensemblGeneId)
+                                any(rownames(y) %in% hallmarkDatabaseHS$ensemblGeneId)
                             }
                         )
 
                         tibble::as_tibble(clusterProfiler::enricher(
                             rownames(y),
-                            TERM2GENE=hallmarkDatabase,
+                            TERM2GENE=hallmarkDatabaseHS,
                             universe=geneUniverse,
                             pvalueCutoff=ifelse(
                                 filterResults == "default",
@@ -418,7 +415,7 @@ pathwayEnrichment <- function(
                 ) %>%
                     separate_longer_delim(geneID, delim="/") %>%
                     left_join(
-                        mappingFile,
+                        mappingFileHS,
                         by=c("geneID" = "ensemblGeneId"),
                         multiple="all",
                         relationship="many-to-many"
@@ -443,12 +440,12 @@ pathwayEnrichment <- function(
                         tibble::as_tibble(clusterProfiler::enricher(
                             rownames(y),
                             TERM2GENE=select(
-                                keggDatabase,
+                                keggDatabaseHS,
                                 pathwayId,
                                 ensemblGeneId
                             ),
                             TERM2NAME=select(
-                                keggDatabase,
+                                keggDatabaseHS,
                                 pathwayId,
                                 pathwayName
                             ),
@@ -466,7 +463,7 @@ pathwayEnrichment <- function(
                     mutate(geneID=as.character(geneID)) %>%
                     separate_longer_delim(geneID, delim="/") %>%
                     left_join(
-                        mappingFile,
+                        mappingFileHS,
                         by=c("geneID" = "ensemblGeneId"),
                         multiple="all",
                         relationship="many-to-many"
@@ -515,7 +512,7 @@ pathwayEnrichment <- function(
 
         if (grepl(x=analysis, pattern="fgsea")) {
             if (analysis == "fgsea_reactome") {
-                reactomeGeneSets <- reactomeDatabase %>%
+                reactomeGeneSets <- reactomeDatabaseHS %>%
                     mutate(
                         geneSetName = paste0(pathwayId, ";", pathwayName)
                     ) %>%
@@ -528,7 +525,7 @@ pathwayEnrichment <- function(
                     function(y, direction) {
                         gseaInput <- y %>%
                             tibble::as_tibble(rownames="ensemblGeneId") %>%
-                            left_join(mappingFile, by="ensemblGeneId") %>%
+                            left_join(mappingFileHS, by="ensemblGeneId") %>%
                             mutate(
                                 geneRank=-log10(PAdjusted) * LogFoldChange
                             ) %>%
@@ -559,7 +556,7 @@ pathwayEnrichment <- function(
                     }
                 )
             } else if (analysis == "fgsea_hallmark") {
-                hallmarkGeneSets <- hallmarkDatabase %>%
+                hallmarkGeneSets <- hallmarkDatabaseHS %>%
                     distinct() %>%
                     split(x = .$ensemblGeneId, f = .$pathwayId)
 
@@ -609,7 +606,7 @@ pathwayEnrichment <- function(
     resultsAllComparisons <- resultList %>%
         bind_rows(.id="comparison") %>%
         left_join(
-            select(pathwayCategories, pathwayId, topLevelPathway),
+            select(pathwayCategoriesHS, pathwayId, topLevelPathway),
             by="pathwayId",
             multiple="all"
         ) %>%

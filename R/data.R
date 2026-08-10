@@ -30,7 +30,7 @@
 
 #' Table of Hallmark gene sets and their genes
 #'
-#' @usage data(hallmarkDatabase)
+#' @usage data(hallmarkDatabaseHS)
 #' @return An object of class "tbl", "tbl.df", "data.frame"
 #' @format A data frame (tibble) with 7333 rows and 2 columns
 #' \describe{
@@ -41,7 +41,7 @@
 #' @source For more information on the MSigDB Hallmark gene sets, please see
 #' \url{https://www.gsea-msigdb.org/gsea/msigdb/collections.jsp}
 #'
-"hallmarkDatabase"
+"hallmarkDatabaseHS"
 
 
 #' InnateDB PPI data
@@ -53,7 +53,7 @@
 #'   interactions, and removing interactions that have the same components but
 #'   are swapped between A and B.
 #'
-#' @usage data(innateDbPPI)
+#' @usage data(innateDbPPIHS)
 #' @return An object of class "tbl", "tbl.df", "data.frame"
 #' @format A data frame (tibble) with 152256 rows and 2 columns:
 #' \describe{
@@ -66,12 +66,12 @@
 #' @source For more details on the data sourced from InnateDB, please see
 #' their website: \url{https://www.innatedb.com}
 #'
-"innateDbPPI"
+"innateDbPPIHS"
 
 
 #' Table of KEGG pathways and genes
 #'
-#' @usage data(keggDatabase)
+#' @usage data(keggDatabaseHS)
 #' @return An object of class "tbl", "tbl.df", "data.frame"
 #' @format A data frame (tibble) with 32883 rows and 4 columns
 #' \describe{
@@ -83,7 +83,7 @@
 #'
 #' @source See \url{https://kegg.jp} for more information.
 #'
-"keggDatabase"
+"keggDatabaseHS"
 
 
 #' Table of human gene ID mappings
@@ -92,7 +92,7 @@
 #' formats, inclusing Ensembl IDs, HGNC symbols, and Entrez IDs. Mapping
 #' information was sourced using \code{biomaRt} and \code{AnnotationDbi}.
 #'
-#' @usage data(mappingFile)
+#' @usage data(mappingFileHS)
 #' @return An object of class "tbl", "tbl.df", "data.frame"
 #' @format A data frame (tibble) with 45776 rows and 3 columns
 #' \describe{
@@ -105,7 +105,7 @@
 #'   \url{https://bioconductor.org/packages/AnnotationDbi/} for information on
 #'   each of the utilized packages and functions.
 #'
-"mappingFile"
+"mappingFileHS"
 
 
 #' Top-level pathway categories
@@ -114,7 +114,7 @@
 #'   pathways/terms, along with a manually-curated top-level category for each
 #'   entry.
 #'
-#' @usage data(pathwayCategories)
+#' @usage data(pathwayCategoriesHS)
 #' @return An object of class "tbl", "tbl.df", "data.frame"
 #' @format A data frame (tibble) with 3499 rows and 5 columns
 #' \describe{
@@ -129,12 +129,12 @@
 #'   \url{https://www.gsea-msigdb.org/gsea/msigdb/collections.jsp}, and
 #'   \url{https://kegg.jp} for information on each of these databases.
 #'
-"pathwayCategories"
+"pathwayCategoriesHS"
 
 
 #' Table of all Reactome pathways and genes
 #'
-#' @usage data(reactomeDatabase)
+#' @usage data(reactomeDatabaseHS)
 #' @return An object of class "tbl", "tbl.df", "data.frame"
 #' @format A data frame (tibble) with 129002 rows and 3 columns
 #' \describe{
@@ -145,12 +145,12 @@
 #'
 #' @source See \url{https://reactome.org/} for more information.
 #'
-"reactomeDatabase"
+"reactomeDatabaseHS"
 
 
 #' Table of all Sigora pathways and their constituent genes
 #'
-#' @usage data(sigoraDatabase)
+#' @usage data(sigoraDatabaseHS)
 #' @return An object of class "tbl", "tbl.df", "data.frame"
 #' @format A data frame (tibble) with 60775 rows and 4 columns
 #' \describe{
@@ -163,7 +163,7 @@
 #' @source Please refer to the Sigora package for more details:
 #'   \url{https://cran.r-project.org/package=sigora}
 #'
-"sigoraDatabase"
+"sigoraDatabaseHS"
 
 
 #' Sigora enrichment example

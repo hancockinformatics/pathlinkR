@@ -186,11 +186,32 @@ any(!duplicated(reactomeAllAnnotated$pathwayId))
 # Check that all the pathways used in Sigora are in this dataframe
 all(sigoraPathways$pathwayId %in% reactomeAllAnnotated$pathwayId)
 
+missedPathways <- filter(sigoraPathways, !(pathwayId %in% reactomeAllAnnotated$pathwayId)) |> 
+  mutate(
+    species = "Homo sapiens",
+    topPathway = c(
+        "R-HSA-74160",
+        "R-HSA-109582",
+        "R-HSA-109582",
+        "R-HSA-109582"
+    ),
+    topPathwayName = c(
+        "Gene expression (Transcription)",
+        "Hemostasis",
+        "Hemostasis",
+        "Hemostasis"
+    )
+  )
+
+reactomeAllAnnotated <- bind_rows(reactomeAllAnnotated, missedPathways)
+all(sigoraPathways$pathwayId %in% reactomeAllAnnotated$pathwayId)
+
 # Lastly, shrink top pathway names that are too long
 reactomeAllAnnotated <- reactomeAllAnnotated %>%
     mutate(
         topPathwayNameOriginal=topPathwayName,
         topPathwayName=case_when(
+            topPathwayName == "Circadian Clock" ~ "Circadian clock",
             topPathwayName == "Gene expression (Transcription)" ~ "Gene expression",
             topPathwayName == "Transport of small molecules" ~ "Transport small molecules",
             topPathwayName == "Extracellular matrix organization" ~ "ECM organization",
@@ -378,10 +399,10 @@ keggFinal <- keggTidy %>%
 
 # Save this topPathways file ----------------------------------------------
 
-pathwayCategories <- bind_rows(
+pathwayCategoriesHS <- bind_rows(
     reactomeFinal,
     hallmarkFinal,
     keggFinal
 )
 
-usethis::use_data(pathwayCategories, overwrite=TRUE)
+usethis::use_data(pathwayCategoriesHS, overwrite=TRUE)

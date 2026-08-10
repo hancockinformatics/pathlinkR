@@ -225,7 +225,7 @@ stillDuplicateEnsembl <- duplicateEnsembl %>% filter(
 
 cleanEnsembl3 <- bind_rows(cleanEnsembl2, stillDuplicateEnsembl)
 
-mappingFile <- mappingFile5 %>%
+mappingFileHS <- mappingFile5 %>%
   filter(!ensembl_gene_id %in% duplicateEnsembl$ensembl_gene_id) %>%
   bind_rows(cleanEnsembl3) %>%
   distinct() %>%
@@ -239,4 +239,4 @@ mappingFile <- mappingFile5 %>%
 
 # Save the data -----------------------------------------------------------
 
-usethis::use_data(mappingFile, overwrite=TRUE)
+usethis::use_data(mappingFileHS, overwrite=TRUE)

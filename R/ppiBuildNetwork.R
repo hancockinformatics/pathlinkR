@@ -88,13 +88,13 @@ ppiBuildNetwork <- function(
         fcCutoff=1.5,
         order="zero",
         hubMeasure="betweenness",
-        ppiData=innateDbPPI
+        ppiData=innateDbPPIHS
 ) {
 
     data_env <- new.env(parent=emptyenv())
-    data("innateDbPPI", "mappingFile", envir=data_env, package="pathlinkR")
-    innateDbPPI <- data_env[["innateDbPPI"]]
-    mappingFile <- data_env[["mappingFile"]]
+    data("innateDbPPIHS", "mappingFileHS", envir=data_env, package="pathlinkR")
+    innateDbPPIHS <- data_env[["innateDbPPIHS"]]
+    mappingFileHS <- data_env[["mappingFileHS"]]
 
     stopifnot(
         "Rownames of 'rnaseqResult` must contain Ensembl gene IDs"={
@@ -232,7 +232,7 @@ ppiBuildNetwork <- function(
 
     networkFinal <- networkOut2 %>%
         left_join(
-            select(mappingFile, "name"=ensemblGeneId, hgncSymbol),
+            select(mappingFileHS, "name"=ensemblGeneId, hgncSymbol),
             by="name",
             multiple="all"
         ) %>%

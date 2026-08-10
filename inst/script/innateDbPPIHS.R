@@ -34,7 +34,7 @@ innatedbNoDups <- innatedbTrimmed[
 
 # Remove promiscuous interactors ------------------------------------------
 
-innateDbPPI <- innatedbNoDups %>%
+innateDbPPIHS <- innatedbNoDups %>%
   group_by(ensemblGeneA) %>%
   filter(n() < 1000) %>%
   ungroup() %>%
@@ -45,4 +45,4 @@ innateDbPPI <- innatedbNoDups %>%
 
 # Save the data -----------------------------------------------------------
 
-usethis::use_data(innateDbPPI, overwrite=TRUE)
+usethis::use_data(innateDbPPIHS, overwrite=TRUE)

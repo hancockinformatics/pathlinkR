@@ -1,7 +1,7 @@
 test_that("a volcano plot works with some of customizations", {
-    data("exampleDESeqResults", "sigoraDatabase")
+    data("exampleDESeqResults", "sigoraDatabaseHS")
 
-    interferonGenes <- sigoraDatabase %>%
+    interferonGenes <- sigoraDatabaseHS %>%
         filter(pathwayName == "Interferon Signaling") %>%
         pull(ensemblGeneId)
 

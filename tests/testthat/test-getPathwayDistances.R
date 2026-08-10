@@ -1,9 +1,9 @@
 test_that("we have basic functionality", {
-    data("sigoraDatabase")
+    data("sigoraDatabaseHS")
 
     exGetPathwayDistances <- getPathwayDistances(
         pathwayData = dplyr::slice_head(
-            dplyr::arrange(sigoraDatabase, pathwayId),
+            dplyr::arrange(sigoraDatabaseHS, pathwayId),
             prop = 0.05
         ),
         distMethod = "jaccard"

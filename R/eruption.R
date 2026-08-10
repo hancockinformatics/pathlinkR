@@ -148,8 +148,8 @@ eruption <- function(
 
     ## Load the data we need for gene mapping
     data_env <- new.env(parent=emptyenv())
-    data("mappingFile", envir=data_env, package="pathlinkR")
-    mappingFile <- data_env[["mappingFile"]]
+    data("mappingFileHS", envir=data_env, package="pathlinkR")
+    mappingFileHS <- data_env[["mappingFileHS"]]
 
 
     ## If Ensembl IDs are detected, annotate them with gene names from the
@@ -158,7 +158,7 @@ eruption <- function(
         res <- rnaseqResult %>%
             rownames_to_column("ensemblGeneId") %>%
             filter(!is.na(PAdjusted)) %>%
-            left_join(mappingFile, by="ensemblGeneId", multiple="all") %>%
+            left_join(mappingFileHS, by="ensemblGeneId", multiple="all") %>%
             mutate(geneName=ifelse(
                 !is.na(hgncSymbol),
                 hgncSymbol,
