@@ -2,9 +2,14 @@ exampleDESeqResults
 groupedPathwayColours
 hallmarkDatabaseHS
 innateDbPPIHS
+innateDbPPIMM
 keggDatabaseHS
+keggDatabaseMM
 mappingFileHS
+mappingFileMM
 pathwayCategoriesHS
 reactomeDatabaseHS
+reactomeDatabaseMM
 sigoraDatabaseHS
+sigoraDatabaseMM
 sigoraExamples

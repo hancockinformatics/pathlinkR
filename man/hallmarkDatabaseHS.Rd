@@ -5,7 +5,7 @@
 \alias{hallmarkDatabaseHS}
 \title{Table of Hallmark gene sets and their genes}
 \format{
-A data frame (tibble) with 7333 rows and 2 columns
+A data frame (tibble) with 7331 rows and 2 columns
 \describe{
 \item{pathwayId}{Name of the Hallmark Gene Set}
 \item{ensemblGeneId}{Ensembl gene IDs}

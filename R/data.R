@@ -32,7 +32,7 @@
 #'
 #' @usage data(hallmarkDatabaseHS)
 #' @return An object of class "tbl", "tbl.df", "data.frame"
-#' @format A data frame (tibble) with 7333 rows and 2 columns
+#' @format A data frame (tibble) with 7331 rows and 2 columns
 #' \describe{
 #'   \item{pathwayId}{Name of the Hallmark Gene Set}
 #'   \item{ensemblGeneId}{Ensembl gene IDs}
@@ -44,7 +44,7 @@
 "hallmarkDatabaseHS"
 
 
-#' InnateDB PPI data
+#' InnateDB PPI data for humans
 #'
 #' @description A data frame containing human PPI data from InnateDB, from the
 #'   entry "All Experimentally Validated Interactions (updated weekly)" at
@@ -69,7 +69,32 @@
 "innateDbPPIHS"
 
 
-#' Table of KEGG pathways and genes
+#' InnateDB PPI data for mice
+#'
+#' @description A data frame containing mouse PPI data from InnateDB, from the
+#'   entry "All Experimentally Validated Interactions (updated weekly)" at
+#'   <https://innatedb.com/redirect.do?go=downloadImported>. A few important
+#'   steps have been taken to filter the data, namely the removal of duplicate
+#'   interactions, and removing interactions that have the same components but
+#'   are swapped between A and B.
+#'
+#' @usage data(innateDbPPIMM)
+#' @return An object of class "tbl", "tbl.df", "data.frame"
+#' @format A data frame (tibble) with 22896 rows and 2 columns:
+#' \describe{
+#'   \item{ensemblGeneA}{Ensembl gene ID for the first gene/protein in the
+#'     interaction}
+#'   \item{ensemblGeneB}{Ensembl gene ID for the second gene/protein in the
+#'     interaction}
+#' }
+#'
+#' @source For more details on the data sourced from InnateDB, please see
+#' their website: \url{https://www.innatedb.com}
+#'
+"innateDbPPIMM"
+
+
+#' Table of KEGG pathways and genes in humans
 #'
 #' @usage data(keggDatabaseHS)
 #' @return An object of class "tbl", "tbl.df", "data.frame"
@@ -86,6 +111,23 @@
 "keggDatabaseHS"
 
 
+#' Table of KEGG pathways and genes in mice
+#'
+#' @usage data(keggDatabaseMM)
+#' @return An object of class "tbl", "tbl.df", "data.frame"
+#' @format A data frame (tibble) with 27055 rows and 4 columns
+#' \describe{
+#'   \item{pathwayId}{KEGG pathway ID}
+#'   \item{pathwayName}{Name of the Reactome pathway}
+#'   \item{ensemblGeneId}{Ensembl gene ID}
+#'   \item{mgiSymbol}{MGI gene symbol}
+#' }
+#'
+#' @source See \url{https://kegg.jp} for more information.
+#'
+"keggDatabaseMM"
+
+
 #' Table of human gene ID mappings
 #'
 #' @description A data frame to aid in mapping human gene IDs between different
@@ -94,7 +136,7 @@
 #'
 #' @usage data(mappingFileHS)
 #' @return An object of class "tbl", "tbl.df", "data.frame"
-#' @format A data frame (tibble) with 45776 rows and 3 columns
+#' @format A data frame (tibble) with 46101 rows and 3 columns
 #' \describe{
 #'   \item{ensemblGeneId}{Ensembl IDs}
 #'   \item{hgncSymbol}{HGNC symbols}
@@ -106,6 +148,28 @@
 #'   each of the utilized packages and functions.
 #'
 "mappingFileHS"
+
+
+#' Table of mouse gene ID mappings
+#'
+#' @description A data frame to aid in mapping mouse gene IDs between different
+#' formats, inclusing Ensembl IDs, MGI symbols, and Entrez IDs. Mapping
+#' information was sourced using \code{biomaRt} and \code{AnnotationDbi}.
+#'
+#' @usage data(mappingFileMM)
+#' @return An object of class "tbl", "tbl.df", "data.frame"
+#' @format A data frame (tibble) with 77878 rows and 3 columns
+#' \describe{
+#'   \item{ensemblGeneId}{Ensembl IDs}
+#'   \item{mgiSymbol}{MGI symbols}
+#'   \item{entrezGeneId}{NCBI Entrez IDs}
+#' }
+#'
+#' @source See \url{https://bioconductor.org/packages/biomaRt/} and
+#'   \url{https://bioconductor.org/packages/AnnotationDbi/} for information on
+#'   each of the utilized packages and functions.
+#'
+"mappingFileMM"
 
 
 #' Top-level pathway categories
@@ -132,7 +196,7 @@
 "pathwayCategoriesHS"
 
 
-#' Table of all Reactome pathways and genes
+#' Table of all Reactome pathways and genes for humans
 #'
 #' @usage data(reactomeDatabaseHS)
 #' @return An object of class "tbl", "tbl.df", "data.frame"
@@ -148,7 +212,23 @@
 "reactomeDatabaseHS"
 
 
-#' Table of all Sigora pathways and their constituent genes
+#' Table of all Reactome pathways and genes for mice
+#'
+#' @usage data(reactomeDatabaseMM)
+#' @return An object of class "tbl", "tbl.df", "data.frame"
+#' @format A data frame (tibble) with 85145 rows and 3 columns
+#' \describe{
+#'   \item{pathwayId}{Reactome pathway ID}
+#'   \item{entrezGeneId}{Entrez gene ID}
+#'   \item{pathwayName}{Name of the Reactome pathway}
+#' }
+#'
+#' @source See \url{https://reactome.org/} for more information.
+#'
+"reactomeDatabaseMM"
+
+
+#' Table of all Sigora pathways and their constituent genes for humans
 #'
 #' @usage data(sigoraDatabaseHS)
 #' @return An object of class "tbl", "tbl.df", "data.frame"
@@ -164,6 +244,24 @@
 #'   \url{https://cran.r-project.org/package=sigora}
 #'
 "sigoraDatabaseHS"
+
+
+#' Table of all Sigora pathways and their constituent genes for mice
+#'
+#' @usage data(sigoraDatabaseMM)
+#' @return An object of class "tbl", "tbl.df", "data.frame"
+#' @format A data frame (tibble) with 45394 rows and 4 columns
+#' \describe{
+#'   \item{pathwayId}{Reactome pathway identifier}
+#'   \item{pathwayName}{Reactome pathway description}
+#'   \item{ensemblGeneId}{Ensembl gene identifier}
+#'   \item{mgiSymbol}{MGI gene symbol}
+#' }
+#'
+#' @source Please refer to the Sigora package for more details:
+#'   \url{https://cran.r-project.org/package=sigora}
+#'
+"sigoraDatabaseMM"
 
 
 #' Sigora enrichment example
