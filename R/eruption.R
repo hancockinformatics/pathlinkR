@@ -81,7 +81,7 @@
 #'
 #' @examples
 #' data("exampleDESeqResults")
-#' eruption(rnaseqResult=exampleDESeqResults[[1]])
+#' eruption(rnaseqResult=exampleDESeqResults[[1]], species="human")
 #'
 eruption <- function(
         rnaseqResult,
