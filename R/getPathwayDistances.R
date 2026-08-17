@@ -1,10 +1,10 @@
 #' Calculate pairwise distances from a table of pathways and genes
 #'
 #' @param pathwayData Three column data frame of pathways and their constituent
-#'   genes. Defaults to the provided `sigoraDatabaseHS` object, but can be any set
-#'   of Reactome pathways. Must contain Ensembl gene IDs in the first column,
-#'   human Reactome pathway IDs in the second, and pathway descriptions in the
-#'   third.
+#'   genes. Defaults to the provided `sigoraDatabaseHS` object, but can be
+#'   `sigoraDatabaseMM`, or any set of Reactome pathways. Must contain Ensembl
+#'   gene IDs in the first column, Reactome pathway IDs in the second, and 
+#'   pathway descriptions in the third.
 #' @param distMethod Character; method used to determine pairwise pathway
 #'   distances. Can be any option supported by `vegan::vegdist()`.
 #'
@@ -48,7 +48,7 @@ getPathwayDistances <- function(
 
     ## Identify which columns have Ensembl and pathway IDs
     geneIdCol <- colnames(pathwayData)[
-        unlist(map(pathwayData[1, ], ~grepl(x=.x, pattern="ENSG")))
+        unlist(map(pathwayData[1, ], ~grepl(x=.x, pattern="ENS")))
     ]
 
     pathwayIdCol <- colnames(pathwayData)[
