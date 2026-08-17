@@ -70,7 +70,8 @@
 #'
 #' startingPathways <- pathnetFoundation(
 #'     mat=pathwayDistancesJaccard,
-#'     maxDistance=0.8
+#'     maxDistance=0.8,
+#'     species="human"
 #' )
 #'
 #' exPathnet <- pathnetCreate(
@@ -78,6 +79,7 @@
 #'         "Pos",
 #'         sigoraExamples$comparison
 #'     ), ],
+#'     species="human",
 #'     foundation=startingPathways,
 #'     trim=TRUE,
 #'     trimOrder=1
