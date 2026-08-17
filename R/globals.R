@@ -97,6 +97,7 @@ utils::globalVariables(c(
         "sigoraDatabaseMM",
         "similarity" ,
         "Symbol",
+        "symbol",
         "tail",
         "title",
         "topLevelPathway",
