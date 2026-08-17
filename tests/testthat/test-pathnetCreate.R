@@ -19,6 +19,7 @@ test_that("the pathway network is the right size", {
 
     testMyPathwayNetwork <- pathnetCreate(
         pathwayEnrichmentResult=testExPathwayNetworkInput,
+        species="human",
         foundation=testStartingPathways,
         trim=TRUE,
         trimOrder=1

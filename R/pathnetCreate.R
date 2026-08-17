@@ -8,6 +8,7 @@
 #'   Defaults to "pathwayID".
 #' @param columnP Character; column containing the adjusted p values. Defaults
 #'   to "pValueAdjusted".
+#' @param species Target species for analysis. Currently only supports 'human'.
 #' @param foundation List of pathway pairs to use in constructing a network.
 #'   Typically this will be the output from `createFoundation`.
 #' @param trim Remove independent subgraphs which don't contain any enriched
@@ -79,6 +80,7 @@
 #'         "Pos",
 #'         sigoraExamples$comparison
 #'     ), ],
+#'     species="human",
 #'     foundation=startingPathways,
 #'     trim=TRUE,
 #'     trimOrder=1
@@ -88,6 +90,7 @@ pathnetCreate <- function(
         pathwayEnrichmentResult,
         columnId="pathwayId",
         columnP="pValueAdjusted",
+        species,
         foundation,
         trim=TRUE,
         trimOrder=1
@@ -108,6 +111,12 @@ pathnetCreate <- function(
     data_env <- new.env(parent=emptyenv())
     data("pathwayCategoriesHS", envir=data_env, package="pathlinkR")
     pathwayCategoriesHS <- data_env[["pathwayCategoriesHS"]]
+
+    pathwayCategories <- switch(
+        species,
+        human=pathwayCategoriesHS,
+        stop("Argument 'species' currently only supports 'human'.")
+    )
 
     if (columnId != "pathwayId") {
         pathwayEnrichmentResult <- pathwayEnrichmentResult %>%
@@ -164,7 +173,7 @@ pathnetCreate <- function(
 
     pathwaysAsNetwork4 <- pathwaysAsNetwork3 %>%
         left_join(
-            y=select(pathwayCategoriesHS, pathwayId, groupedPathway, pathwayName),
+            y=select(pathwayCategories, pathwayId, groupedPathway, pathwayName),
             by=c("pathway1" = "pathwayId"),
             multiple="all"
         ) %>%
