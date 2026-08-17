@@ -4,7 +4,7 @@
 \alias{pathnetFoundation}
 \title{Create the foundation for pathway networks using pathway distances}
 \usage{
-pathnetFoundation(mat, maxDistance = NA, propToKeep = NA)
+pathnetFoundation(mat, maxDistance = NA, propToKeep = NA, species)
 }
 \arguments{
 \item{mat}{Matrix of distances between pathways, i.e. 0 means two pathways
@@ -18,6 +18,8 @@ distance of 0 are always removed. One of \code{maxDistance} or
 \item{propToKeep}{Top proportion of pathway pairs to keep as edges, ranked
 based distance. One of \code{maxDistance} or \code{propToKeep} must be
 provided.}
+
+\item{species}{Target species, either 'human' or 'mouse'.}
 }
 \value{
 A "data.frame" (tibble) of interacting pathway pairs with the

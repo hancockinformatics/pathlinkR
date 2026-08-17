@@ -6,6 +6,7 @@
 \usage{
 eruption(
   rnaseqResult,
+  species,
   columnFC = NA,
   columnP = NA,
   pCutoff = 0.05,
@@ -34,6 +35,8 @@ eruption(
 \item{rnaseqResult}{Data frame of RNASeq results, with Ensembl gene IDs as
 rownames. Can be a "DESeqResults" or "TopTags" object, or a simple data
 frame. See "Details" for more information.}
+
+\item{species}{Target species, either 'human' or 'mouse'.}
 
 \item{columnFC}{Character; Column to plot along the x-axis, typically log2
 fold change values. Only required when \code{rnaseqResult} is a simple data
@@ -89,10 +92,10 @@ label a custom selection of genes provided in \code{manualGenes}.}
 \code{label} is set to "auto" or "highlight".}
 
 \item{manualGenes}{If \code{label="manual"}, these are the genes to be
-specifically label. Can be HGNC symbols or Ensembl gene IDs.}
+specifically labeled. Can be HGNC/MGI symbols, or Ensembl gene IDs.}
 
 \item{removeUnannotated}{Boolean (TRUE): Remove genes without annotations
-(no HGNC symbol).}
+(no HGNC/MGI symbol).}
 
 \item{labelSize}{Size of font for labels (3.5)}
 
@@ -127,7 +130,7 @@ etc.).
 }
 \examples{
 data("exampleDESeqResults")
-eruption(rnaseqResult=exampleDESeqResults[[1]])
+eruption(rnaseqResult=exampleDESeqResults[[1]], species="human")
 
 }
 \seealso{
