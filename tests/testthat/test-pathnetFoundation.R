@@ -11,7 +11,8 @@ test_that("the foundation has the right dimensions and columns", {
 
     testStartingPathways <- pathnetFoundation(
         mat=pathwayDistancesJaccard,
-        maxDistance=0.8
+        maxDistance=0.8,
+        species="human"
     )
 
     expect_equal(dim(testStartingPathways), c(80, 5))

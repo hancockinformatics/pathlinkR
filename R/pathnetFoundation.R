@@ -9,6 +9,7 @@
 #' @param propToKeep Top proportion of pathway pairs to keep as edges, ranked
 #'   based distance. One of `maxDistance` or `propToKeep` must be
 #'   provided.
+#' @param species Target species, either 'human' or 'mouse'.
 #'
 #' @return A "data.frame" (tibble) of interacting pathway pairs with the
 #'   following columns:
@@ -54,8 +55,20 @@
 #'     maxDistance=0.8
 #' )
 #'
-pathnetFoundation <- function(mat, maxDistance=NA, propToKeep=NA) {
+pathnetFoundation <- function(mat, maxDistance=NA, propToKeep=NA, species) {
     stopifnot(all(rownames(mat) == colnames(mat)))
+
+    data_env <- new.env(parent=emptyenv())
+    data("sigoraDatabaseHS", "sigoraDatabaseMM", envir=data_env, package="pathlinkR")
+    sigoraDatabaseHS <- data_env[["sigoraDatabaseHS"]]
+    sigoraDatabaseMM <- data_env[["sigoraDatabaseMM"]]
+
+    sigoraDatabase <- switch(
+        species,
+        human=sigoraDatabaseHS,
+        mouse=sigoraDatabaseMM,
+        stop("Argument 'species' must be 'human' or 'mouse'.")
+    )
 
     matTibble <- as.data.frame(mat) %>%
         rownames_to_column("pathway1") %>%
@@ -77,12 +90,12 @@ pathnetFoundation <- function(mat, maxDistance=NA, propToKeep=NA) {
 
     annoEdgeTable <- edgeTable %>%
         left_join(
-            distinct(sigoraDatabaseHS, pathwayId, pathwayName),
+            distinct(sigoraDatabase, pathwayId, pathwayName),
             by=c("pathway1" = "pathwayId"),
             multiple="all"
         ) %>%
         left_join(
-            distinct(sigoraDatabaseHS, pathwayId, pathwayName),
+            distinct(sigoraDatabase, pathwayId, pathwayName),
             by=c("pathway2" = "pathwayId"),
             suffix=c("1", "2"),
             multiple="all"
