@@ -8,6 +8,7 @@ test_that("a volcano plot works with some of customizations", {
     expect_no_error(
         eruption(
             rnaseqResult=exampleDESeqResults[[1]],
+            species="human",
             xaxis=c(-4, 4),
             yaxis=c(0, 8),
             highlightGenes=interferonGenes
@@ -21,6 +22,7 @@ test_that("eruption returns a ggplot object", {
 
   p <- eruption(
     exampleDESeqResults[[1]],
+    species="human",
     columnFC = "logFC",
     columnP = "padj"
   )
@@ -35,6 +37,7 @@ test_that("xaxis and yaxis must have length two", {
   expect_error(
     eruption(
       exampleDESeqResults[[1]],
+      species="human",
       columnFC = "logFC",
       columnP = "padj",
       xaxis = c(-2, 2, 3)
@@ -45,6 +48,7 @@ test_that("xaxis and yaxis must have length two", {
   expect_error(
     eruption(
       exampleDESeqResults[[1]],
+      species="human",
       columnFC = "logFC",
       columnP = "padj",
       yaxis = 1
@@ -59,6 +63,7 @@ test_that("plot title is applied", {
 
   p <- eruption(
     exampleDESeqResults[[1]],
+    species="human",
     columnFC = "logFC",
     columnP = "padj",
     title = "My Volcano"
@@ -76,6 +81,7 @@ test_that("cutoff lines are placed correctly", {
 
   p <- eruption(
     exampleDESeqResults[[1]],
+    species="human",
     columnFC = "logFC",
     columnP = "padj",
     fcCutoff = 2,
@@ -104,6 +110,7 @@ test_that("manual axis limits are respected", {
 
   p <- eruption(
     exampleDESeqResults[[1]],
+    species="human",
     columnFC = "logFC",
     columnP = "padj",
     xaxis = c(-1, 1),
