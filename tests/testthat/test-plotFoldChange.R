@@ -4,6 +4,7 @@ test_that("fold change heatmaps are working with some customization", {
     expect_no_error(
         plotFoldChange(
             inputList=exampleDESeqResults,
+            species="human",
             pathName="Interferon alpha/beta signaling",
             hideNonsigFC=FALSE,
             invert=TRUE,
@@ -18,6 +19,7 @@ test_that("argument 'returnData' is working.", {
     expect_type(
         plotFoldChange(
             inputList = exampleDESeqResults,
+            species="human",
             pathName = "Interferon alpha/beta signaling",
             hideNonsigFC = FALSE,
             invert = TRUE,
@@ -34,6 +36,7 @@ test_that("fold change heatmaps are working with custom font sizes", {
     expect_no_error(
         plotFoldChange(
             inputList=exampleDESeqResults,
+            species="human",
             pathName="PD-1 signaling",
             hideNonsigFC=FALSE,
             clusterColumns=TRUE
