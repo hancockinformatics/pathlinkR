@@ -53,7 +53,8 @@ pathwayDistancesJaccard <- getPathwayDistances(
 
 startingPathways <- pathnetFoundation(
     mat=pathwayDistancesJaccard,
-    maxDistance=0.8
+    maxDistance=0.8,
+    species="human"
 )
 
 }
