@@ -6,9 +6,10 @@
 \usage{
 ppiEnrichNetwork(
   network,
+  species = "human",
   analysis = "sigora",
   filterResults = "default",
-  gpsRepo = "default",
+  gpsRepo = "reaH",
   geneUniverse = NULL
 )
 }
@@ -16,8 +17,10 @@ ppiEnrichNetwork(
 \item{network}{A "tidygraph" network object, with Ensembl IDs in the first
 column of the node table}
 
+\item{species}{Target species, must be "human" or "mouse".}
+
 \item{analysis}{Default is "sigora", but can also be "reactomepa" or
-"hallmark"}
+"hallmark".}
 
 \item{filterResults}{Should the output be filtered for significance? Use
 \code{1} to return the unfiltered results, or any number less than 1 for a
@@ -59,12 +62,14 @@ data("exampleDESeqResults")
 
 exNetwork <- ppiBuildNetwork(
     rnaseqResult=exampleDESeqResults[[1]],
+    species="human",
     filterInput=TRUE,
     order="zero"
 )
 
 ppiEnrichNetwork(
     network=exNetwork,
+    species="human",
     analysis="hallmark"
 )
 

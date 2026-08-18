@@ -3,14 +3,16 @@ test_that("network enrichment works properly", {
 
     exNetwork <- ppiBuildNetwork(
         rnaseqResult=exampleDESeqResults[[1]],
+        species="human",
         filterInput=TRUE,
         order="zero"
     )
 
     exOutput <- ppiEnrichNetwork(
         network=exNetwork,
+        species="human",
         analysis="sigora",
-        gpsRepo="default"
+        gpsRepo="reaH"
     )
 
     expect_equal(dim(exOutput), c(20, 10))

@@ -2,8 +2,9 @@
 #'
 #' @param network A "tidygraph" network object, with Ensembl IDs in the first
 #'   column of the node table
+#' @param species Target species, must be "human" or "mouse".
 #' @param analysis Default is "sigora", but can also be "reactomepa" or
-#'   "hallmark"
+#'   "hallmark".
 #' @param filterResults Should the output be filtered for significance? Use
 #'   `1` to return the unfiltered results, or any number less than 1 for a
 #'   custom p-value cutoff. If left as `default`, the significance cutoff
@@ -51,20 +52,23 @@
 #'
 #' exNetwork <- ppiBuildNetwork(
 #'     rnaseqResult=exampleDESeqResults[[1]],
+#'     species="human",
 #'     filterInput=TRUE,
 #'     order="zero"
 #' )
 #'
 #' ppiEnrichNetwork(
 #'     network=exNetwork,
+#'     species="human",
 #'     analysis="hallmark"
 #' )
 #'
 ppiEnrichNetwork <- function(
         network,
+        species="human",
         analysis="sigora",
         filterResults="default",
-        gpsRepo="default",
+        gpsRepo="reaH",
         geneUniverse=NULL
 ) {
 
@@ -76,6 +80,7 @@ ppiEnrichNetwork <- function(
 
     pathwayEnrichment(
         inputList=newList,
+        species=species,
         analysis=analysis,
         filterInput=FALSE,
         split=FALSE,
