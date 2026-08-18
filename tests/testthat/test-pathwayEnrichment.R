@@ -3,7 +3,7 @@ test_that("Sigora enrichment works as expected", {
 
     suppressMessages(
         testResultSigora <- pathwayEnrichment(
-            inputList = exampleDESeqResults[1],
+            inputList=exampleDESeqResults[1],
             species="human",
             analysis="sigora",
             gpsRepo="reaH"
@@ -36,7 +36,7 @@ test_that("Sigora enrichment works with KEGG", {
 
     suppressMessages(
         testResultSigoraKEGG <- pathwayEnrichment(
-            inputList = exampleDESeqResults[1],
+            inputList=exampleDESeqResults[1],
             species="human",
             analysis="sigora",
             gpsRepo="kegH",

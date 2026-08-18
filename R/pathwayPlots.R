@@ -218,7 +218,7 @@ pathwayPlots <- function(
         vjust <- 0.5
     }
 
-    themePathway <- theme_bw(base_size = fontSize) +
+    themePathway <- theme_bw(base_size=fontSize) +
         theme(
             strip.text.x=element_text(face="bold", colour="black"),
             legend.text=element_text(size=(fontSize - 2) * legendMultiply),
@@ -251,9 +251,9 @@ pathwayPlots <- function(
         ) +
             facet_wrap(
                 vars(topLevelPathway),
-                ncol = 1,
-                scales = "free_y",
-                space = "free_y"
+                ncol=1,
+                scales="free_y",
+                space="free_y"
             ) +
             {
                 if (includeGeneRatio) {
@@ -338,7 +338,7 @@ pathwayPlots <- function(
         patchwork::wrap_plots(
             plotList,
             ncol=columns,
-            guides = "collect"
+            guides="collect"
         )
     } else {
         plotList[[1]]

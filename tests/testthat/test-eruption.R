@@ -23,8 +23,8 @@ test_that("eruption returns a ggplot object", {
   p <- eruption(
     exampleDESeqResults[[1]],
     species="human",
-    columnFC = "logFC",
-    columnP = "padj"
+    columnFC="logFC",
+    columnP="padj"
   )
 
   expect_s3_class(p, "ggplot")
@@ -38,9 +38,9 @@ test_that("xaxis and yaxis must have length two", {
     eruption(
       exampleDESeqResults[[1]],
       species="human",
-      columnFC = "logFC",
-      columnP = "padj",
-      xaxis = c(-2, 2, 3)
+      columnFC="logFC",
+      columnP="padj",
+      xaxis=c(-2, 2, 3)
     ),
     "length-two"
   )
@@ -49,9 +49,9 @@ test_that("xaxis and yaxis must have length two", {
     eruption(
       exampleDESeqResults[[1]],
       species="human",
-      columnFC = "logFC",
-      columnP = "padj",
-      yaxis = 1
+      columnFC="logFC",
+      columnP="padj",
+      yaxis=1
     ),
     "length-two"
   )
@@ -64,9 +64,9 @@ test_that("plot title is applied", {
   p <- eruption(
     exampleDESeqResults[[1]],
     species="human",
-    columnFC = "logFC",
-    columnP = "padj",
-    title = "My Volcano"
+    columnFC="logFC",
+    columnP="padj",
+    title="My Volcano"
   )
 
   expect_equal(
@@ -82,10 +82,10 @@ test_that("cutoff lines are placed correctly", {
   p <- eruption(
     exampleDESeqResults[[1]],
     species="human",
-    columnFC = "logFC",
-    columnP = "padj",
-    fcCutoff = 2,
-    pCutoff = 0.05
+    columnFC="logFC",
+    columnP="padj",
+    fcCutoff=2,
+    pCutoff=0.05
   )
 
   built <- ggplot_build(p)
@@ -111,10 +111,10 @@ test_that("manual axis limits are respected", {
   p <- eruption(
     exampleDESeqResults[[1]],
     species="human",
-    columnFC = "logFC",
-    columnP = "padj",
-    xaxis = c(-1, 1),
-    yaxis = c(0, 3)
+    columnFC="logFC",
+    columnP="padj",
+    xaxis=c(-1, 1),
+    yaxis=c(0, 3)
   )
 
   built <- ggplot_build(p)

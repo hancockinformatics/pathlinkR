@@ -161,7 +161,7 @@ exNetworkPathways <- ppiEnrichNetwork(
     network=exNetwork,
     analysis="hallmark",
     filterResults="default",
-    geneUniverse = rownames(exampleDESeqResults[[1]])
+    geneUniverse=rownames(exampleDESeqResults[[1]])
 )
 ```
 
@@ -347,7 +347,7 @@ network can be built using the `createPathnet()` function:
 ```{r pathway_network_I, fig.width=12, fig.height=10, warning=FALSE, message=FALSE}
 data("sigoraDatabaseHS")
 
-pathwayDistancesJaccard <- getPathwayDistances(pathwayData = sigoraDatabaseHS)
+pathwayDistancesJaccard <- getPathwayDistances(pathwayData=sigoraDatabaseHS)
 
 startingPathways <- pathnetFoundation(
     mat=pathwayDistancesJaccard,
@@ -372,7 +372,7 @@ pathnetGGraph(
     nodeLabelSize=3,
     nodeLabelOverlaps=8,
     segColour="red",
-    themeBaseSize = 12
+    themeBaseSize=12
 )
 ```
 
@@ -393,7 +393,7 @@ details.
 ## Gene-pair signatures
 **sigora** uses a Gene-Pair Signature (GPS) Repository that stores information
 on which gene pairs are unique for which pathways. We recommend using the one
-provided by sigora, which can be loaded via `data("reaH", package = "sigora")`
+provided by sigora, which can be loaded via `data("reaH", package="sigora")`
 (Reactome Human). You can also generate your own GPS repo using sigora's own
 function and a custom set of pathways (e.g. from another pathway database like
 GO or KEGG). Please consult the sigora documentation on how to generate your

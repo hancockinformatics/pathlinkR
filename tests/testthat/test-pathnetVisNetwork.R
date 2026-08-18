@@ -11,6 +11,7 @@ test_that("pathVisNetwork returns the right plot", {
 
     startingPathways <- pathnetFoundation(
         mat=pathwayDistancesJaccard,
+        species="human",
         maxDistance=0.8
     )
 
@@ -19,6 +20,7 @@ test_that("pathVisNetwork returns the right plot", {
             sigoraExamples,
             comparison == "COVID Pos Over Time"
         ),
+        species="human",
         foundation=startingPathways,
         trim=TRUE,
         trimOrder=1

@@ -557,17 +557,17 @@ pathwayEnrichment <- function(
                             ) %>%
                             filter(!is.na(entrezGeneId)) %>%
                             group_by(entrezGeneId) %>%
-                            summarise(geneRank = mean(geneRank)) %>%
+                            summarise(geneRank=mean(geneRank)) %>%
                             ungroup() %>%
                             distinct(entrezGeneId, geneRank) %>%
                             tibble::deframe()
 
                         fgsea::fgsea(
-                            pathways = reactomeGeneSets,
-                            stats = gseaInput,
+                            pathways=reactomeGeneSets,
+                            stats=gseaInput,
                             scoreType="pos",
-                            minSize = 10,
-                            maxSize = 200
+                            minSize=10,
+                            maxSize=200
                         ) %>%
                             tidyr::separate_wider_delim(
                                 pathway,
@@ -584,7 +584,7 @@ pathwayEnrichment <- function(
             } else if (analysis == "fgsea_hallmark") {
                 hallmarkGeneSets <- hallmarkDatabaseHS %>%
                     distinct() %>%
-                    split(x = .$ensemblGeneId, f = .$pathwayId)
+                    split(x=.$ensemblGeneId, f=.$pathwayId)
 
                 resultFinal <- imap_dfr(
                     .x=preppedGenesTable,
@@ -603,11 +603,11 @@ pathwayEnrichment <- function(
                             tibble::deframe()
 
                         fgsea::fgsea(
-                            pathways = hallmarkGeneSets,
-                            stats = gseaInput,
+                            pathways=hallmarkGeneSets,
+                            stats=gseaInput,
                             scoreType="pos",
-                            minSize = 10,
-                            maxSize = 200
+                            minSize=10,
+                            maxSize=200
                         ) %>%
                             rename(
                                 "pathwayId"=pathway,

@@ -73,7 +73,7 @@ x1_biomartAddedEntrez <- biomartDataNoNA %>%
 x1_fixedEntrez <- inner_join(
   x1_biomartMissingEntrez,
   x1_biomartAddedEntrez,
-  by = "hgnc_symbol"
+  by="hgnc_symbol"
 ) %>%
   relocate(all_of(biomartColumns))
 
@@ -95,7 +95,7 @@ x2_annotationDbiEntrez <- annotationDbiEntrez %>%
 x2_fixedEntrez <- inner_join(
   x2_biomartNoEntrez,
   x2_annotationDbiEntrez,
-  by = "ensembl_gene_id"
+  by="ensembl_gene_id"
 ) %>%
   relocate(all_of(biomartColumns))
 
@@ -117,7 +117,7 @@ x3_annotationDbiEntrez <- annotationDbiResults %>%
 x3_fixedEntrez <- inner_join(
   x3_annotationDbiEntrez,
   x3_biomartNoEntrez,
-  by = "hgnc_symbol"
+  by="hgnc_symbol"
 ) %>%
   relocate(all_of(biomartColumns))
 
@@ -137,16 +137,16 @@ x4_annotationDbiSymbols <- annotationDbiResults %>% filter(
     ENSEMBL %in% x4_biomartNoSymbol$ensembl_gene_id
 ) %>%
   rename(
-    "ensembl_gene_id" = ENSEMBL,
-    "entrezgene_id" = ENTREZID,
-    "hgnc_symbol" = SYMBOL
+    "ensembl_gene_id"=ENSEMBL,
+    "entrezgene_id"=ENTREZID,
+    "hgnc_symbol"=SYMBOL
   )
 
 x4_fixedSymbols <-
   inner_join(
     x4_biomartNoSymbol,
     x4_annotationDbiSymbols,
-    by = c("ensembl_gene_id", "entrezgene_id")
+    by=c("ensembl_gene_id", "entrezgene_id")
   ) %>%
   relocate(all_of(biomartColumns))
 

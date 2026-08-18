@@ -59,10 +59,10 @@ getPathwayDistances <- function(
     ]
 
     stopifnot(
-        "Couldn't find a column of Ensembl gene IDs" = length(geneIdCol) > 0
+        "Couldn't find a column of Ensembl gene IDs"=length(geneIdCol) > 0
     )
     stopifnot(
-        "Couldn't find a column of pathway IDs" = length(pathwayIdCol) > 0
+        "Couldn't find a column of pathway IDs"=length(pathwayIdCol) > 0
     )
 
     identityTable <- pathwayData %>%

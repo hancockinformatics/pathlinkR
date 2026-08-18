@@ -383,13 +383,13 @@ keggJSON <- jsonlite::fromJSON(paste0(
 
 keggTidy <- keggJSON$children %>%
     as_tibble() %>%
-    unnest(children, names_repair = "universal") %>%
-    unnest(children, names_repair = "universal")
+    unnest(children, names_repair="universal") %>%
+    unnest(children, names_repair="universal")
 
 keggFinal <- keggTidy %>%
     mutate(
-        pathwayId = paste0("hsa", str_extract(name...3, pattern = "^[0-9]{5}")),
-        pathwayName = str_trim(str_remove(name...3, pattern = "^[0-9]{5}")),
+        pathwayId = paste0("hsa", str_extract(name...3, pattern="^[0-9]{5}")),
+        pathwayName = str_trim(str_remove(name...3, pattern="^[0-9]{5}")),
         topLevelPathway = name...1,
         groupedPathway = name...1,
         topLevelOriginal = NA_character_

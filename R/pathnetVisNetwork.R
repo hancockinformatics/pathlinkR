@@ -69,7 +69,7 @@
 #'         "Pos",
 #'         sigoraExamples$comparison
 #'     ), ],
-#'     species="human"
+#'     species="human",
 #'     foundation=startingPathways,
 #'     trim=TRUE,
 #'     trimOrder=1

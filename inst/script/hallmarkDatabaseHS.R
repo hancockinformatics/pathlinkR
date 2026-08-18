@@ -75,7 +75,7 @@ topTerms <- list(
 hallmark <- msigdbr(collection="H") %>%
     select(gs_name, "ensemblGeneId"=ensembl_gene) %>%
     mutate(
-        pathwayId=str_replace_all(gs_name, c("HALLMARK_" = "", "_" = " ")),
+        pathwayId=str_replace_all(gs_name, c("HALLMARK_"="", "_"=" ")),
         pathwayName=pathwayId,
         groupedPathway=NA_character_,
         topPathwaysOriginal=NA_character_
