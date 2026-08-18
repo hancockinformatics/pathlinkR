@@ -9,8 +9,10 @@ test_that("pathway plots work with Sigora/KEGG", {
     suppressMessages(
         testResultSigoraKEGG <- pathwayEnrichment(
             inputList=exampleDESeqResults[1],
+            species="human",
             analysis="sigora",
-            gpsRepo="kegH"
+            gpsRepo="kegH",
+            gpsLevel=2
         )
     )
 
@@ -24,6 +26,7 @@ test_that("pathwayPlots works with fgsea results", {
     suppressMessages(
         testResultFgseaReactome <- pathwayEnrichment(
             inputList=exampleDESeqResults[1],
+            species="human",
             analysis="fgsea_reactome"
         )
     )
