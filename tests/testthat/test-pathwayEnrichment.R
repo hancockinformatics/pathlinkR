@@ -4,7 +4,9 @@ test_that("Sigora enrichment works as expected", {
     suppressMessages(
         testResultSigora <- pathwayEnrichment(
             inputList = exampleDESeqResults[1],
-            analysis = "sigora"
+            species="human",
+            analysis="sigora",
+            gpsRepo="reaH"
         )
     )
 
@@ -35,8 +37,10 @@ test_that("Sigora enrichment works with KEGG", {
     suppressMessages(
         testResultSigoraKEGG <- pathwayEnrichment(
             inputList = exampleDESeqResults[1],
-            analysis = "sigora",
-            gpsRepo = "kegH"
+            species="human",
+            analysis="sigora",
+            gpsRepo="kegH",
+            gpsLevel=2
         )
     )
 
@@ -67,8 +71,9 @@ test_that("ReactomePA enrichment works as expected", {
     expect_no_error(
         suppressMessages(
             testResultReactomepa <- pathwayEnrichment(
-                inputList = exampleDESeqResults,
-                analysis = "reactomepa"
+                inputList=exampleDESeqResults,
+                species="human",
+                analysis="reactomepa"
             )
         )
     )
@@ -79,9 +84,10 @@ test_that("Hallmark enrichment works as expected", {
 
     suppressMessages(
         testResultHallmark <- pathwayEnrichment(
-            inputList = exampleDESeqResults,
-            analysis = "hallmark",
-            split = FALSE
+            inputList=exampleDESeqResults,
+            species="human",
+            analysis="hallmark",
+            split=FALSE
         )
     )
 
@@ -113,6 +119,7 @@ test_that("a no-gene scenario works properly", {
 
     testResultNoGenes <- pathwayEnrichment(
         inputList=exampleDESeqResults,
+        species="human",
         analysis="reactomepa",
         verbose=TRUE
     )

@@ -6,6 +6,7 @@
 \usage{
 pathwayEnrichment(
   inputList,
+  species,
   columnFC = NA,
   columnP = NA,
   filterInput = TRUE,
@@ -15,7 +16,7 @@ pathwayEnrichment(
   analysis = "sigora",
   filterResults = "default",
   gpsRepo = "reaH",
-  gpsLevel = "default",
+  gpsLevel = 4,
   geneUniverse = NULL,
   verbose = FALSE
 )
@@ -26,6 +27,8 @@ pathwayEnrichment(
 must contain Ensembl Gene IDs. The list names are used as the comparison
 name for each element (e.g. "COVID vs Healthy"). See Details for more
 information on supported input types.}
+
+\item{species}{Target species, must be "human" or "mouse".}
 
 \item{columnFC}{Character; Column to plot along the x-axis, typically log2
 fold change values. Only required when \code{rnaseqResult} is a simple data
@@ -61,16 +64,14 @@ p-value cutoff. If left as \code{default}, the significance cutoff for
 \code{analysis="sigora"} is 0.001, or 0.05 for "reactome", "hallmark", and
 "kegg".}
 
-\item{gpsRepo}{Only applies to \code{analysis="sigora"}. Gene Pair Signature (GPS)
-object for Sigora to use to test for enriched pathways. "reaH" (default)
-will use the Reactome GPS object from \code{Sigora}; "kegH" will use the KEGG
-GPS. One can also provide their own GPS object; see Sigora's documentation
-for details.}
+\item{gpsRepo}{Character. Name of a Gene Pair Signature (GPS) object for
+Sigora to use to test for enriched pathways. "reaH" (default) will use
+the Reactome GPS object from \code{Sigora}; "kegH" will use the KEGG GPS. One
+can also provide their own GPS object; see Sigora's documentation for
+details.}
 
-\item{gpsLevel}{Only applies to \code{analysis="sigora"}. If left as \code{default},
-will be set to \code{4} for \code{gpsRepo="reaH"} or \code{2} for \code{gpeRepo="kegH"}. If
-providing your own GPS object, can be set as desired; see Sigora's
-documentation for details.}
+\item{gpsLevel}{Only applies to \code{analysis="sigora"}. Should be left at the
+default (4) for \code{reaH} or \code{reaM}, or set to "2" for \code{kegH} or \code{kegM}.}
 
 \item{geneUniverse}{Only applies when \code{analysis} is "reactome"/"reactomepa",
 "hallmark", or "kegg". The set of background genes to use when testing with
@@ -131,6 +132,7 @@ data("exampleDESeqResults")
 
 pathwayEnrichment(
     inputList=exampleDESeqResults[1],
+    species="human",
     filterInput=TRUE,
     split=TRUE,
     analysis="hallmark",
