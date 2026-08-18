@@ -3,6 +3,7 @@ test_that("zero order network behave as expected", {
 
     exNetworkZero <- ppiBuildNetwork(
         rnaseqResult=exampleDESeqResults[[1]],
+        species="human",
         filterInput=TRUE,
         order="zero"
     )
@@ -33,6 +34,7 @@ test_that("simple minimum order networks behave as expected", {
     suppressMessages(
         exNetworkSimple <- ppiBuildNetwork(
             rnaseqResult=exampleDESeqResults[[1]],
+            species="human",
             filterInput=TRUE,
             order="minSimple"
         )

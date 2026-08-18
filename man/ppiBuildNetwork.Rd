@@ -6,6 +6,7 @@
 \usage{
 ppiBuildNetwork(
   rnaseqResult,
+  species = "human",
   filterInput = TRUE,
   columnFC = NA,
   columnP = NA,
@@ -19,6 +20,8 @@ ppiBuildNetwork(
 \arguments{
 \item{rnaseqResult}{An object of class "DESeqResults", "TopTags", or a simple
 data frame. See Details for more information on input types.}
+
+\item{species}{Target species, must be "human" or "mouse".}
 
 \item{filterInput}{If providing list of data frames containing the
 unfiltered output from \code{DESeq2::results()}, set this to TRUE to filter for

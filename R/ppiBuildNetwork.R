@@ -2,6 +2,7 @@
 #'
 #' @param rnaseqResult An object of class "DESeqResults", "TopTags", or a simple
 #' data frame. See Details for more information on input types.
+#' @param species Target species, must be "human" or "mouse".
 #' @param filterInput If providing list of data frames containing the
 #'   unfiltered output from `DESeq2::results()`, set this to TRUE to filter for
 #'   DE genes using the thresholds set by the `pCutoff` and `fcCutoff`
@@ -81,6 +82,7 @@
 #'
 ppiBuildNetwork <- function(
         rnaseqResult,
+        species="human",
         filterInput=TRUE,
         columnFC=NA,
         columnP=NA,
@@ -92,13 +94,21 @@ ppiBuildNetwork <- function(
 ) {
 
     data_env <- new.env(parent=emptyenv())
-    data("innateDbPPIHS", "mappingFileHS", envir=data_env, package="pathlinkR")
-    innateDbPPIHS <- data_env[["innateDbPPIHS"]]
-    mappingFileHS <- data_env[["mappingFileHS"]]
+    data(
+        "mappingFileHS",
+        "mappingFileMM",
+        envir=data_env,
+        package="pathlinkR"
+    )
+    mappingFile <- switch(
+        species,
+        human=data_env[["mappingFileHS"]],
+        mouse=data_env[["mappingFileMM"]]
+    )
 
     stopifnot(
         "Rownames of 'rnaseqResult` must contain Ensembl gene IDs"={
-            grepl(pattern="ENSG", x=rownames(rnaseqResult)[1])
+            grepl(pattern="^ENS", x=rownames(rnaseqResult)[1])
         }
     )
     stopifnot(order %in% c("zero", "first", "minSimple"))
