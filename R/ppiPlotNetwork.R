@@ -92,6 +92,7 @@
 #'
 #' exNetwork <- ppiBuildNetwork(
 #'     rnaseqResult=exampleDESeqResults[[1]],
+#'     species="human",
 #'     filterInput=TRUE,
 #'     order="zero"
 #' )
@@ -220,9 +221,6 @@ ppiPlotNetwork <- function(
     } else {
         layoutObject <- networkLayout
     }
-
-    ## Set a plain white background
-    # set_graph_style(foreground="white", family="sans")
 
     ## Theme tweaks for all plot types
     themeTweaks <- if (legend) {

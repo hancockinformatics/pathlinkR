@@ -142,6 +142,7 @@ data("exampleDESeqResults")
 
 exNetwork <- ppiBuildNetwork(
     rnaseqResult=exampleDESeqResults[[1]],
+    species="human",
     filterInput=TRUE,
     order="zero"
 )
