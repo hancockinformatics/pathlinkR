@@ -195,6 +195,28 @@
 #'
 "pathwayCategoriesHS"
 
+#' Top-level pathway categories for mouse
+#'
+#' @description A data frame containing all Reactome and KEGG
+#'   pathways/terms, along with a manually-curated top-level category for each
+#'   entry.
+#'
+#' @usage data(pathwayCategoriesMM)
+#' @return An object of class "tbl", "tbl.df", "data.frame"
+#' @format A data frame (tibble) with 2475 rows and 5 columns
+#' \describe{
+#'   \item{pathwayId}{Reactome or KEGG pathway identifier}
+#'   \item{pathwayName}{Pathway name}
+#'   \item{topLevelPathway}{Top hierarchy pathway term, shortened in some cases}
+#'   \item{groupedPathway}{Top grouped pathway}
+#'   \item{topLevelOriginal}{Original top pathway name}
+#' }
+#'
+#' @source See \url{https://reactome.org/} and
+#'   \url{https://kegg.jp} for information on each of these databases.
+#'
+"pathwayCategoriesMM"
+
 
 #' Table of all Reactome pathways and genes for humans
 #'
