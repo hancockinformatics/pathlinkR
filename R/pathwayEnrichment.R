@@ -352,7 +352,6 @@ pathwayEnrichment <- function(
             if (verbose) {
                 message("    Found ", nrow(resultFinal), " enriched terms")
             }
-            print(colnames(resultFinal))
             return(resultFinal)
         }
 

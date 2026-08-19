@@ -6,7 +6,8 @@ test_that("Sigora enrichment works as expected", {
             inputList=exampleDESeqResults[1],
             species="human",
             analysis="sigora",
-            gpsRepo="reaH"
+            gpsRepo="reaH",
+            verbose=FALSE
         )
     )
 
@@ -40,7 +41,8 @@ test_that("Sigora enrichment works with KEGG", {
             species="human",
             analysis="sigora",
             gpsRepo="kegH",
-            gpsLevel=2
+            gpsLevel=2,
+            verbose=FALSE
         )
     )
 
@@ -73,7 +75,8 @@ test_that("ReactomePA enrichment works as expected", {
             testResultReactomepa <- pathwayEnrichment(
                 inputList=exampleDESeqResults,
                 species="human",
-                analysis="reactomepa"
+                analysis="reactomepa",
+                verbose=FALSE
             )
         )
     )
@@ -87,7 +90,8 @@ test_that("Hallmark enrichment works as expected", {
             inputList=exampleDESeqResults,
             species="human",
             analysis="hallmark",
-            split=FALSE
+            split=FALSE,
+            verbose=FALSE
         )
     )
 
@@ -121,7 +125,7 @@ test_that("a no-gene scenario works properly", {
         inputList=exampleDESeqResults,
         species="human",
         analysis="reactomepa",
-        verbose=TRUE
+        verbose=FALSE
     )
 
     expect_length(unique(testResultNoGenes$comparison), 1)
