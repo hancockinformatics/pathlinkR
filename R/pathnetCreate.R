@@ -110,12 +110,16 @@ pathnetCreate <- function(
     ))
 
     data_env <- new.env(parent=emptyenv())
-    data("pathwayCategoriesHS", envir=data_env, package="pathlinkR")
-    pathwayCategoriesHS <- data_env[["pathwayCategoriesHS"]]
-
+    data(
+        "pathwayCategoriesHS",
+        "pathwayCategoriesMM",
+        envir=data_env,
+        package="pathlinkR"
+    )
     pathwayCategories <- switch(
         species,
-        human=pathwayCategoriesHS,
+        human=data_env[["pathwayCategoriesHS"]],
+        mouse=data_env[["pathwayCategoriesMM"]],
         stop("Argument 'species' currently only supports 'human'.")
     )
 

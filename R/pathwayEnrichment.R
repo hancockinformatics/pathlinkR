@@ -223,6 +223,7 @@ pathwayEnrichment <- function(
 
     data(
         "pathwayCategoriesHS",
+        "pathwayCategoriesMM",
         "reactomeDatabaseHS",
         "reactomeDatabaseMM",
         "hallmarkDatabaseHS",
@@ -233,31 +234,30 @@ pathwayEnrichment <- function(
         envir=data_env,
         package="pathlinkR"
     )
-    pathwayCategoriesHS <- data_env[["pathwayCategoriesHS"]]
-    reactomeDatabaseHS <- data_env[["reactomeDatabaseHS"]]
-    reactomeDatabaseMM <- data_env[["reactomeDatabaseMM"]]
-    hallmarkDatabaseHS <- data_env[["hallmarkDatabaseHS"]]
-    keggDatabaseHS <- data_env[["keggDatabaseHS"]]
-    keggDatabaseMM <- data_env[["keggDatabaseMM"]]
-    mappingFileHS <- data_env[["mappingFileHS"]]
-    mappingFileMM <- data_env[["mappingFileMM"]]
 
-    reactomeDatabase <- switch(
+    pathwayCategories <- switch(
         species,
-        human=reactomeDatabaseHS,
-        mouse=reactomeDatabaseMM,
+        human=data_env[["pathwayCategoriesHS"]],
+        mouse=data_env[["pathwayCategoriesMM"]],
         stop("Argument 'species' must be 'human' or 'mouse'.")
     )
+    reactomeDatabase <- switch(
+        species,
+        human=data_env[["reactomeDatabaseHS"]],
+        mouse=data_env[["reactomeDatabaseMM"]],
+        stop("Argument 'species' must be 'human' or 'mouse'.")
+    )    
+    hallmarkDatabaseHS <- data_env[["hallmarkDatabaseHS"]]
     keggDatabase <- switch(
         species,
-        human=keggDatabaseHS,
-        mouse=keggDatabaseMM,
+        human=data_env[["keggDatabaseHS"]],
+        mouse=data_env[["keggDatabaseMM"]],
         stop("Argument 'species' must be 'human' or 'mouse'.")
     )
     mappingFile <- switch(
         species,
-        human=mappingFileHS,
-        mouse=mappingFileMM,
+        human=data_env[["mappingFileHS"]],
+        mouse=data_env[["mappingFileMM"]],
         stop("Argument 'species' must be 'human' or 'mouse'.")
     )
 
@@ -630,7 +630,7 @@ pathwayEnrichment <- function(
     resultsAllComparisons <- resultList %>%
         bind_rows(.id="comparison") %>%
         left_join(
-            select(pathwayCategoriesHS, pathwayId, topLevelPathway),
+            select(pathwayCategories, pathwayId, topLevelPathway),
             by="pathwayId",
             multiple="all"
         ) %>%
