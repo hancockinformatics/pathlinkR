@@ -19,6 +19,27 @@
 "exampleDESeqResults"
 
 
+#' List of example results from DESeq2 in mice
+#'
+#' @usage data(exampleDESeqResults)
+#' @return An object of class "list"
+#' @format A list of two "DESeqResults" objects, each with 5000 rows and 6
+#'   columns:
+#' \describe{
+#'   \item{baseMean}{A combined score for the gene}
+#'   \item{log2FoldChange}{Fold change value for the gene}
+#'   \item{lfcSE}{Standard error for the fold change value}
+#'   \item{stat}{The statistic value}
+#'   \item{pvalue}{The nominal p value for the gene}
+#'   \item{padj}{The adjusted p value for the gene}
+#' }
+#'
+#' @source For details on DESeq2 and its data structures/methods, please see
+#' \url{https://bioconductor.org/packages/DESeq2/}
+#'
+"exampleDESeqResultsMM"
+
+
 #' Colour assignments for grouped pathways
 #'
 #' @usage data(groupedPathwayColours)
