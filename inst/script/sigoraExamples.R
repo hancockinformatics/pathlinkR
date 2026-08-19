@@ -7,9 +7,12 @@ devtools::load_all()
 
 sigoraExamples <- pathwayEnrichment(
     inputList=exampleDESeqResults,
+    species="human",
     filterInput=TRUE,
     split=TRUE
 )
+
+glimpse(sigoraExamples)
 
 
 # Save the data -----------------------------------------------------------

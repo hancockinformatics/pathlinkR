@@ -172,7 +172,7 @@
 "mappingFileMM"
 
 
-#' Top-level pathway categories
+#' Top-level pathway categories for human
 #'
 #' @description A data frame containing all Reactome, Hallmark, and KEGG
 #'   pathways/terms, along with a manually-curated top-level category for each
@@ -180,7 +180,7 @@
 #'
 #' @usage data(pathwayCategoriesHS)
 #' @return An object of class "tbl", "tbl.df", "data.frame"
-#' @format A data frame (tibble) with 3499 rows and 5 columns
+#' @format A data frame (tibble) with 3541 rows and 5 columns
 #' \describe{
 #'   \item{pathwayId}{Reactome, Hallmark, or KEGG pathway identifier}
 #'   \item{pathwayName}{Pathway name}
