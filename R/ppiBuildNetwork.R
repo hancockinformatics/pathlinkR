@@ -103,7 +103,8 @@ ppiBuildNetwork <- function(
     mappingFile <- switch(
         species,
         human=data_env[["mappingFileHS"]],
-        mouse=data_env[["mappingFileMM"]]
+        mouse=data_env[["mappingFileMM"]],
+        stop("Argument 'species' must be 'human' or 'mouse'")
     )
 
     stopifnot(

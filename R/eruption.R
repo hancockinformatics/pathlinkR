@@ -151,13 +151,10 @@ eruption <- function(
     ## Load the data we need for gene mapping
     data_env <- new.env(parent=emptyenv())
     data("mappingFileHS", "mappingFileMM", envir=data_env, package="pathlinkR")
-    mappingFileHS <- data_env[["mappingFileHS"]]
-    mappingFileMM <- data_env[["mappingFileMM"]]
-
     mappingFile <- switch(
         tolower(species),
-        human=mappingFileHS,
-        mouse=mappingFileMM,
+        human=data_env[["mappingFileHS"]],
+        mouse=data_env[["mappingFileMM"]],
         stop("Argument 'species' must be 'human' or 'mouse'")
     ) |> 
         rename("symbol"=2)

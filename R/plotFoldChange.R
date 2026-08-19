@@ -470,8 +470,13 @@ plotFoldChange <- function(
 #'
 #' @seealso <https://github.com/hancockinformatics/pathlinkR>
 #'
-.plotFoldChangeLegend <- function(.matFC, .log2FoldChange, .cellColours, .titlegp, .labelsgp) {
-
+.plotFoldChangeLegend <- function(
+    .matFC,
+    .log2FoldChange,
+    .cellColours,
+    .titlegp,
+    .labelsgp
+) {
     parameters <- list(
         title=ifelse(.log2FoldChange, "Log2 fold\nchange", "Fold change"),
         title_gp=gpar(fontsize=.titlegp),

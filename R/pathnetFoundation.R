@@ -60,14 +60,16 @@ pathnetFoundation <- function(mat, maxDistance=NA, propToKeep=NA, species) {
     stopifnot(all(rownames(mat) == colnames(mat)))
 
     data_env <- new.env(parent=emptyenv())
-    data("sigoraDatabaseHS", "sigoraDatabaseMM", envir=data_env, package="pathlinkR")
-    sigoraDatabaseHS <- data_env[["sigoraDatabaseHS"]]
-    sigoraDatabaseMM <- data_env[["sigoraDatabaseMM"]]
-
+    data(
+        "sigoraDatabaseHS",
+        "sigoraDatabaseMM",
+        envir=data_env,
+        package="pathlinkR"
+    )
     sigoraDatabase <- switch(
         species,
-        human=sigoraDatabaseHS,
-        mouse=sigoraDatabaseMM,
+        human=data_env[["sigoraDatabaseHS"]],
+        mouse=data_env[["sigoraDatabaseMM"]],
         stop("Argument 'species' must be 'human' or 'mouse'.")
     )
 
