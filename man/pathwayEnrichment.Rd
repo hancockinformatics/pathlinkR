@@ -128,10 +128,10 @@ which can be performed on either Reactome data when \code{gpsRepo="reaH"} or
 KEGG data with \code{gpsRepo="kegH"}.
 }
 \examples{
-data("exampleDESeqResults")
+data("exampleDESeqResultsHS")
 
 pathwayEnrichment(
-    inputList=exampleDESeqResults[1],
+    inputList=exampleDESeqResultsHS[1],
     species="human",
     filterInput=TRUE,
     split=TRUE,

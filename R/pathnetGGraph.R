@@ -58,7 +58,7 @@
 #' @seealso <https://github.com/hancockinformatics/pathlinkR>
 #'
 #' @examples
-#' data("sigoraDatabaseHS", "sigoraExamples")
+#' data("sigoraDatabaseHS", "sigoraExamplesHS")
 #'
 #' pathwayDistancesJaccard <- getPathwayDistances(
 #'     pathwayData=dplyr::slice_head(
@@ -75,9 +75,9 @@
 #' )
 #'
 #' exPathnet <- pathnetCreate(
-#'     pathwayEnrichmentResult=sigoraExamples[grepl(
+#'     pathwayEnrichmentResult=sigoraExamplesHS[grepl(
 #'         "Pos",
-#'         sigoraExamples$comparison
+#'         sigoraExamplesHS$comparison
 #'     ), ],
 #'     species="human",
 #'     foundation=startingPathways,

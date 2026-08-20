@@ -54,8 +54,8 @@
 #'          <https://bioconductor.org/packages/fgsea/>
 #'
 #' @examples
-#' data("sigoraExamples")
-#' pathwayPlots(sigoraExamples, columns=2)
+#' data("sigoraExamplesHS")
+#' pathwayPlots(sigoraExamplesHS, columns=2)
 #'
 pathwayPlots <- function(
         pathwayEnrichmentResults,

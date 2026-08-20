@@ -72,10 +72,10 @@
 #' @seealso <https://github.com/hancockinformatics/pathlinkR/>
 #'
 #' @examples
-#' data("exampleDESeqResults")
+#' data("exampleDESeqResultsHS")
 #'
 #' ppiBuildNetwork(
-#'     rnaseqResult=exampleDESeqResults[[1]],
+#'     rnaseqResult=exampleDESeqResultsHS[[1]],
 #'     filterInput=TRUE,
 #'     order="zero"
 #' )

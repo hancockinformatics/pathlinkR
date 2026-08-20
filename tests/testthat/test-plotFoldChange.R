@@ -1,9 +1,9 @@
 test_that("fold change heatmaps are working with some customization", {
-    data("exampleDESeqResults")
+    data("exampleDESeqResultsHS")
 
     expect_no_error(
         plotFoldChange(
-            inputList=exampleDESeqResults,
+            inputList=exampleDESeqResultsHS,
             species="human",
             pathName="Interferon alpha/beta signaling",
             hideNonsigFC=FALSE,
@@ -15,11 +15,11 @@ test_that("fold change heatmaps are working with some customization", {
 })
 
 test_that("argument 'returnData' is working.", {
-    data("exampleDESeqResults")
+    data("exampleDESeqResultsHS")
 
     expect_type(
         plotFoldChange(
-            inputList=exampleDESeqResults,
+            inputList=exampleDESeqResultsHS,
             species="human",
             pathName="Interferon alpha/beta signaling",
             hideNonsigFC=FALSE,
@@ -32,11 +32,11 @@ test_that("argument 'returnData' is working.", {
 })
 
 test_that("fold change heatmaps are working with custom font sizes", {
-    data("exampleDESeqResults")
+    data("exampleDESeqResultsHS")
 
     expect_no_error(
         plotFoldChange(
-            inputList=exampleDESeqResults,
+            inputList=exampleDESeqResultsHS,
             species="human",
             pathName="PD-1 signaling",
             hideNonsigFC=FALSE,

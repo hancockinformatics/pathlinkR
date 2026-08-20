@@ -173,10 +173,10 @@ One could then specify \code{colSplit} as
 and mutant results more visually distinct.
 }
 \examples{
-data("exampleDESeqResults")
+data("exampleDESeqResultsHS")
 
 plotFoldChange(
-    exampleDESeqResults,
+    exampleDESeqResultsHS,
     pathName="Generation of second messenger molecules"
 )
 

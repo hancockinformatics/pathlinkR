@@ -1,5 +1,5 @@
 test_that("the pathway network is the right size", {
-    data("sigoraDatabaseHS", "sigoraExamples")
+    data("sigoraDatabaseHS", "sigoraExamplesHS")
 
     pathwayDistancesJaccard <- getPathwayDistances(
         pathwayData=dplyr::slice_head(
@@ -15,7 +15,7 @@ test_that("the pathway network is the right size", {
         maxDistance=0.8
     )
 
-    testExPathwayNetworkInput <- sigoraExamples %>%
+    testExPathwayNetworkInput <- sigoraExamplesHS %>%
         filter(comparison == "COVID Pos Over Time")
 
     testMyPathwayNetwork <- pathnetCreate(

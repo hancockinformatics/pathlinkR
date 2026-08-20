@@ -67,7 +67,7 @@ highlighting nodes belonging to a larger group (e.g. top-level Reactome
 category).
 }
 \examples{
-data("sigoraDatabaseHS", "sigoraExamples")
+data("sigoraDatabaseHS", "sigoraExamplesHS")
 
 pathwayDistancesJaccard <- getPathwayDistances(
     pathwayData=dplyr::slice_head(
@@ -84,9 +84,9 @@ startingPathways <- pathnetFoundation(
 )
 
 exPathnet <- pathnetCreate(
-    pathwayEnrichmentResult=sigoraExamples[grepl(
+    pathwayEnrichmentResult=sigoraExamplesHS[grepl(
         "Pos",
-        sigoraExamples$comparison
+        sigoraExamplesHS$comparison
     ), ],
     species="human",
     foundation=startingPathways,

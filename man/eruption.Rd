@@ -129,8 +129,8 @@ be applied using the standard ggplot2 functions (\code{labs()}, \code{theme()},
 etc.).
 }
 \examples{
-data("exampleDESeqResults")
-eruption(rnaseqResult=exampleDESeqResults[[1]], species="human")
+data("exampleDESeqResultsHS")
+eruption(rnaseqResult=exampleDESeqResultsHS[[1]], species="human")
 
 }
 \seealso{

@@ -106,10 +106,10 @@
 #' @seealso <https://github.com/hancockinformatics/pathlinkR>
 #'
 #' @examples
-#' data("exampleDESeqResults")
+#' data("exampleDESeqResultsHS")
 #'
 #' pathwayEnrichment(
-#'     inputList=exampleDESeqResults[1],
+#'     inputList=exampleDESeqResultsHS[1],
 #'     species="human",
 #'     filterInput=TRUE,
 #'     split=TRUE,

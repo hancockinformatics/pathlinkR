@@ -1,14 +1,14 @@
 test_that("pathway plots are correct", {
-    data("sigoraExamples")
-    expect_no_error(pathwayPlots(sigoraExamples, columns=2))
+    data("sigoraExamplesHS")
+    expect_no_error(pathwayPlots(sigoraExamplesHS, columns=2))
 })
 
 test_that("pathway plots work with Sigora/KEGG", {
-    data("exampleDESeqResults")
+    data("exampleDESeqResultsHS")
 
     suppressMessages(
         testResultSigoraKEGG <- pathwayEnrichment(
-            inputList=exampleDESeqResults[1],
+            inputList=exampleDESeqResultsHS[1],
             species="human",
             analysis="sigora",
             gpsRepo="kegH",
@@ -21,11 +21,11 @@ test_that("pathway plots work with Sigora/KEGG", {
 
 
 test_that("pathwayPlots works with fgsea results", {
-    data("exampleDESeqResults")
+    data("exampleDESeqResultsHS")
 
     suppressMessages(
         testResultFgseaReactome <- pathwayEnrichment(
-            inputList=exampleDESeqResults[1],
+            inputList=exampleDESeqResultsHS[1],
             species="human",
             analysis="fgsea_reactome"
         )

@@ -88,10 +88,10 @@
 #' @seealso <https://github.com/hancockinformatics/pathlinkR/>
 #'
 #' @examples
-#' data("exampleDESeqResults")
+#' data("exampleDESeqResultsHS")
 #'
 #' exNetwork <- ppiBuildNetwork(
-#'     rnaseqResult=exampleDESeqResults[[1]],
+#'     rnaseqResult=exampleDESeqResultsHS[[1]],
 #'     species="human",
 #'     filterInput=TRUE,
 #'     order="zero"

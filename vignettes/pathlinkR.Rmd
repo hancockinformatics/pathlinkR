@@ -40,7 +40,7 @@ interaction networks, to aid researchers in uncovering underlying biology and
 pathophysiology from their gene expression studies.
 
 We have included an example data set of gene expression results in this package
-as the object `exampleDESeqResults`. This is a list of 2 data frames, generated
+as the object `exampleDESeqResultsHS`. This is a list of 2 data frames, generated
 using the `results()` functions from the package
 `r BiocStyle::Biocpkg("DESeq2")` (Love et al. 2014). The data is from an RNA-Seq
 study investigating COVID-19 and non-COVID-19 sepsis patients at admission (T1)
@@ -71,14 +71,14 @@ though any value can be specified. **pathlinkR** includes the function
 
 ```{r datasets_and_preliminary_volcano_plot, message=FALSE}
 ## A quick look at the DESeq2 results table
-data("exampleDESeqResults")
-kable(head(exampleDESeqResults[[1]]))
+data("exampleDESeqResultsHS")
+kable(head(exampleDESeqResultsHS[[1]]))
 
 ## Generate a volcano plot from the first data frame, with default thresholds
 eruption(
-    rnaseqResult=exampleDESeqResults[[1]],
+    rnaseqResult=exampleDESeqResultsHS[[1]],
     species="human",
-    title=names(exampleDESeqResults[1])
+    title=names(exampleDESeqResultsHS[1])
 )
 ```
 
@@ -104,7 +104,7 @@ constituent genes.
 
 ```{r plot_fold_changes_I, fig.height=8}
 plotFoldChange(
-    inputList=exampleDESeqResults,
+    inputList=exampleDESeqResultsHS,
     species="human",
     pathName="Interferon alpha/beta signaling"
 )
@@ -141,7 +141,7 @@ of their dysregulation (i.e. up- or down-regulated) by specifying
 
 ```{r ppi_networks, fig.width=10, fig.height=8, warning=FALSE}
 exNetwork <- ppiBuildNetwork(
-    rnaseqResult=exampleDESeqResults[[1]],
+    rnaseqResult=exampleDESeqResultsHS[[1]],
     species="human",
     filterInput=TRUE,
     order="zero"
@@ -149,7 +149,7 @@ exNetwork <- ppiBuildNetwork(
 
 ppiPlotNetwork(
     network=exNetwork,
-    title=names(exampleDESeqResults)[1],
+    title=names(exampleDESeqResultsHS)[1],
     fillColumn=LogFoldChange,
     fillType="foldChange",
     label=TRUE,
@@ -175,7 +175,7 @@ exNetworkPathways <- ppiEnrichNetwork(
     species="human",
     analysis="hallmark",
     filterResults="default",
-    geneUniverse=rownames(exampleDESeqResults[[1]])
+    geneUniverse=rownames(exampleDESeqResultsHS[[1]])
 )
 ```
 
@@ -245,17 +245,17 @@ this argument to "default" will use the `reaH` GPS repository from
 their own GPS repository; see `??sigora::makeGPS()` for details on how to make
 one.
 
-Note the structure of `exampleDESeqResults`, a named list of results from
+Note the structure of `exampleDESeqResultsHS`, a named list of results from
 DESeq2:
 
 ```{r show_example}
 #| echo: false
-exampleDESeqResults
+exampleDESeqResultsHS
 ```
 
 ```{r sigora_enrichment}
 enrichedResultsSigora <- pathwayEnrichment(
-    inputList=exampleDESeqResults,
+    inputList=exampleDESeqResultsHS,
     species="human",
     analysis="sigora",
     filterInput=TRUE,
@@ -290,7 +290,7 @@ pathways.
 
 ```{r hallmark_enrichment}
 enrichedResultsHm <- pathwayEnrichment(
-    inputList=exampleDESeqResults,
+    inputList=exampleDESeqResultsHS,
     species="human",
     analysis="hallmark",
     filterInput=TRUE,

@@ -1,5 +1,5 @@
 test_that("we get the right plot", {
-    data("sigoraDatabaseHS", "sigoraExamples")
+    data("sigoraDatabaseHS", "sigoraExamplesHS")
 
     pathwayDistancesJaccard <- getPathwayDistances(
         pathwayData=dplyr::slice_head(
@@ -17,7 +17,7 @@ test_that("we get the right plot", {
 
     exPathnet <- pathnetCreate(
         pathwayEnrichmentResult=dplyr::filter(
-            sigoraExamples,
+            sigoraExamplesHS,
             comparison == "COVID Pos Over Time"
         ),
         species="human",

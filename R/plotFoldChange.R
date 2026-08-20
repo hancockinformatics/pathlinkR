@@ -117,10 +117,10 @@
 #' @seealso <https://github.com/hancockinformatics/pathlinkR>
 #'
 #' @examples
-#' data("exampleDESeqResults")
+#' data("exampleDESeqResultsHS")
 #'
 #' plotFoldChange(
-#'     exampleDESeqResults,
+#'     exampleDESeqResultsHS,
 #'     pathName="Generation of second messenger molecules"
 #' )
 #'

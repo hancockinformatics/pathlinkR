@@ -1,6 +1,6 @@
-#' List of example results from DESeq2
+#' List of example results from DESeq2 for human
 #'
-#' @usage data(exampleDESeqResults)
+#' @usage data(exampleDESeqResultsHS)
 #' @return An object of class "list"
 #' @format A list of two "DESeqResults" objects, each with 5000 rows and 6
 #'   columns:
@@ -16,12 +16,12 @@
 #' @source For details on DESeq2 and its data structures/methods, please see
 #' \url{https://bioconductor.org/packages/DESeq2/}
 #'
-"exampleDESeqResults"
+"exampleDESeqResultsHS"
 
 
 #' List of example results from DESeq2 in mice
 #'
-#' @usage data(exampleDESeqResults)
+#' @usage data(exampleDESeqResultsHS)
 #' @return An object of class "list"
 #' @format A list of two "DESeqResults" objects, each with 5000 rows and 6
 #'   columns:
@@ -310,9 +310,9 @@
 #' Sigora enrichment example
 #'
 #' @description Example Sigora output from running `pathwayEnrichment()` on
-#'   "exampleDESeqResults"
+#'   "exampleDESeqResultsHS"
 #'
-#' @usage data(sigoraExamples)
+#' @usage data(sigoraExamplesHS)
 #' @return An object of class "tbl", "tbl.df", "data.frame"
 #' @format A data frame (tibble) with 66 rows and 12 columns
 #' \describe{
@@ -334,4 +334,4 @@
 #' @source Please refer to the Sigora package for more details on that method:
 #'   \url{https://cran.r-project.org/package=sigora}
 #'
-"sigoraExamples"
+"sigoraExamplesHS"

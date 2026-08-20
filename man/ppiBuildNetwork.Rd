@@ -89,10 +89,10 @@ implementation of the Kleinburg hub centrality score - details on this
 method can be found at \code{?igraph::hub_score}.
 }
 \examples{
-data("exampleDESeqResults")
+data("exampleDESeqResultsHS")
 
 ppiBuildNetwork(
-    rnaseqResult=exampleDESeqResults[[1]],
+    rnaseqResult=exampleDESeqResultsHS[[1]],
     filterInput=TRUE,
     order="zero"
 )

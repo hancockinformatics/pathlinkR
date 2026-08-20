@@ -1,9 +1,9 @@
 test_that("Sigora enrichment works as expected", {
-    data("exampleDESeqResults")
+    data("exampleDESeqResultsHS")
 
     suppressMessages(
         testResultSigora <- pathwayEnrichment(
-            inputList=exampleDESeqResults[1],
+            inputList=exampleDESeqResultsHS[1],
             species="human",
             analysis="sigora",
             gpsRepo="reaH",
@@ -33,11 +33,11 @@ test_that("Sigora enrichment works as expected", {
 })
 
 test_that("Sigora enrichment works with KEGG", {
-    data("exampleDESeqResults")
+    data("exampleDESeqResultsHS")
 
     suppressMessages(
         testResultSigoraKEGG <- pathwayEnrichment(
-            inputList=exampleDESeqResults[1],
+            inputList=exampleDESeqResultsHS[1],
             species="human",
             analysis="sigora",
             gpsRepo="kegH",
@@ -68,12 +68,12 @@ test_that("Sigora enrichment works with KEGG", {
 })
 
 test_that("ReactomePA enrichment works as expected", {
-    data("exampleDESeqResults")
+    data("exampleDESeqResultsHS")
 
     expect_no_error(
         suppressMessages(
             testResultReactomepa <- pathwayEnrichment(
-                inputList=exampleDESeqResults,
+                inputList=exampleDESeqResultsHS,
                 species="human",
                 analysis="reactomepa",
                 verbose=FALSE
@@ -83,11 +83,11 @@ test_that("ReactomePA enrichment works as expected", {
 })
 
 test_that("Hallmark enrichment works as expected", {
-    data("exampleDESeqResults")
+    data("exampleDESeqResultsHS")
 
     suppressMessages(
         testResultHallmark <- pathwayEnrichment(
-            inputList=exampleDESeqResults,
+            inputList=exampleDESeqResultsHS,
             species="human",
             analysis="hallmark",
             split=FALSE,
@@ -117,12 +117,12 @@ test_that("Hallmark enrichment works as expected", {
 })
 
 test_that("a no-gene scenario works properly", {
-    data("exampleDESeqResults")
+    data("exampleDESeqResultsHS")
 
-    exampleDESeqResults[[1]]$padj <- exampleDESeqResults[[1]]$padj + 1
+    exampleDESeqResultsHS[[1]]$padj <- exampleDESeqResultsHS[[1]]$padj + 1
 
     testResultNoGenes <- pathwayEnrichment(
-        inputList=exampleDESeqResults,
+        inputList=exampleDESeqResultsHS,
         species="human",
         analysis="reactomepa",
         verbose=FALSE

@@ -1,8 +1,8 @@
 test_that("subnetwork extraction works with a pathway name", {
-    data("exampleDESeqResults", "mappingFileHS")
+    data("exampleDESeqResultsHS", "mappingFileHS")
 
     exNetwork <- ppiBuildNetwork(
-        rnaseqResult=exampleDESeqResults[[1]],
+        rnaseqResult=exampleDESeqResultsHS[[1]],
         species="human",
         filterInput=TRUE,
         order="zero"
@@ -25,10 +25,10 @@ test_that("subnetwork extraction works with a pathway name", {
 })
 
 test_that("subnetwork extraction works with a character vector of genes", {
-    data("exampleDESeqResults", "mappingFileHS")
+    data("exampleDESeqResultsHS", "mappingFileHS")
 
     exNetwork2 <- ppiBuildNetwork(
-        rnaseqResult=exampleDESeqResults[[1]],
+        rnaseqResult=exampleDESeqResultsHS[[1]],
         species="human",
         filterInput=TRUE,
         order="zero"

@@ -56,10 +56,10 @@ genes were pulled out for the pathway, see the "starters" attribute of the
 output network.
 }
 \examples{
-data("exampleDESeqResults")
+data("exampleDESeqResultsHS")
 
 exNetwork <- ppiBuildNetwork(
-    rnaseqResult=exampleDESeqResults[[1]],
+    rnaseqResult=exampleDESeqResultsHS[[1]],
     species="human",
     filterInput=TRUE,
     order="zero"

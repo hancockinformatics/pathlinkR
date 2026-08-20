@@ -80,8 +80,8 @@
 #' @seealso <https://github.com/hancockinformatics/pathlinkR>
 #'
 #' @examples
-#' data("exampleDESeqResults")
-#' eruption(rnaseqResult=exampleDESeqResults[[1]], species="human")
+#' data("exampleDESeqResultsHS")
+#' eruption(rnaseqResult=exampleDESeqResultsHS[[1]], species="human")
 #'
 eruption <- function(
         rnaseqResult,
