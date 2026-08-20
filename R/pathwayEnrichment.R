@@ -259,7 +259,7 @@ pathwayEnrichment <- function(
         human=data_env[["mappingFileHS"]],
         mouse=data_env[["mappingFileMM"]],
         stop("Argument 'species' must be 'human' or 'mouse'.")
-    )
+    ) |> rename("symbol"=2)
 
     ## Iterate through each element of "inputListCleaned"
     resultList <- imap(inputListCleaned, function(x, comparison) {
@@ -410,9 +410,9 @@ pathwayEnrichment <- function(
                         -any_of(c("geneID", "entrezGeneId", "ensemblGeneId"))
                     ) %>%
                     group_by(ID) %>%
-                    mutate(genes=paste(hgncSymbol, collapse=";")) %>%
+                    mutate(genes=paste(symbol, collapse=";")) %>%
                     ungroup() %>%
-                    select(-hgncSymbol) %>%
+                    select(-symbol) %>%
                     distinct()
             }
 
@@ -453,9 +453,9 @@ pathwayEnrichment <- function(
                         -any_of(c("geneID", "entrezGeneId", "ensemblGeneId"))
                     ) %>%
                     group_by(ID) %>%
-                    mutate(genes=paste(hgncSymbol, collapse=";")) %>%
+                    mutate(genes=paste(symbol, collapse=";")) %>%
                     ungroup() %>%
-                    select(-hgncSymbol) %>%
+                    select(-symbol) %>%
                     distinct()
             }
 
@@ -501,9 +501,9 @@ pathwayEnrichment <- function(
                         -any_of(c("geneID", "entrezGeneId", "ensemblGeneId"))
                     ) %>%
                     group_by(ID) %>%
-                    mutate(genes=paste(hgncSymbol, collapse=";")) %>%
+                    mutate(genes=paste(symbol, collapse=";")) %>%
                     ungroup() %>%
-                    select(-hgncSymbol) %>%
+                    select(-symbol) %>%
                     distinct()
             }
 

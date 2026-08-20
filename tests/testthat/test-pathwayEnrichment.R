@@ -130,3 +130,102 @@ test_that("a no-gene scenario works properly", {
 
     expect_length(unique(testResultNoGenes$comparison), 1)
 })
+
+test_that("Sigora enrichment works as expected", {
+    data("exampleDESeqResultsMM")
+
+    suppressMessages(
+        testResultSigora <- pathwayEnrichment(
+            inputList=exampleDESeqResultsMM[1],
+            species="mouse",
+            analysis="sigora",
+            gpsRepo="reaM",
+            verbose=FALSE
+        )
+    )
+
+    expect_equal(dim(testResultSigora), c(12, 12))
+
+    expect_setequal(
+        colnames(testResultSigora),
+        c(
+            "comparison",
+            "direction",
+            "pathwayId",
+            "pathwayName",
+            "pValue",
+            "pValueAdjusted",
+            "genes",
+            "numCandidateGenes",
+            "numBgGenes",
+            "geneRatio",
+            "totalGenes",
+            "topLevelPathway"
+        )
+    )
+})
+
+test_that("Sigora enrichment works with KEGG", {
+    data("exampleDESeqResultsMM")
+
+    suppressMessages(
+        testResultSigoraKEGG <- pathwayEnrichment(
+            inputList=exampleDESeqResultsMM[1],
+            species="mouse",
+            analysis="sigora",
+            gpsRepo="kegM",
+            gpsLevel=2,
+            verbose=FALSE
+        )
+    )
+
+    expect_equal(dim(testResultSigoraKEGG), c(10, 12))
+
+    expect_setequal(
+        colnames(testResultSigoraKEGG),
+        c(
+            "comparison",
+            "direction",
+            "pathwayId",
+            "pathwayName",
+            "pValue",
+            "pValueAdjusted",
+            "genes",
+            "numCandidateGenes",
+            "numBgGenes",
+            "geneRatio",
+            "totalGenes",
+            "topLevelPathway"
+        )
+    )
+})
+
+test_that("ReactomePA enrichment works as expected", {
+    data("exampleDESeqResultsMM")
+
+    expect_no_error(
+        suppressMessages(
+            testResultReactomepa <- pathwayEnrichment(
+                inputList=exampleDESeqResultsMM,
+                species="mouse",
+                analysis="reactomepa",
+                verbose=FALSE
+            )
+        )
+    )
+})
+
+test_that("a no-gene scenario works properly", {
+    data("exampleDESeqResultsMM")
+
+    exampleDESeqResultsMM[[1]]$padj <- exampleDESeqResultsMM[[1]]$padj + 1
+
+    testResultNoGenes <- pathwayEnrichment(
+        inputList=exampleDESeqResultsMM,
+        species="mouse",
+        analysis="reactomepa",
+        verbose=FALSE
+    )
+
+    expect_length(unique(testResultNoGenes$comparison), 1)
+})
