@@ -293,7 +293,7 @@ plotFoldChange <- function(
     dfFC <- imap(inputListCleaned, function(listItem, itemName) {
         stopifnot(
             "Rownames of data frames in 'inputList' must be Ensembl gene IDs" =
-                grepl(pattern="^ENSG", x=rownames(listItem)[1])
+                grepl(pattern="^ENS", x=rownames(listItem)[1])
         )
 
         listItem %>%
