@@ -34,7 +34,6 @@ test_that("we can make a plot with mouse genes", {
     )
 })
 
-
 test_that("eruption returns a ggplot object", {
 
   data("exampleDESeqResultsHS")

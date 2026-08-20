@@ -335,3 +335,33 @@
 #'   \url{https://cran.r-project.org/package=sigora}
 #'
 "sigoraExamplesHS"
+
+
+#' Sigora enrichment example in mice
+#'
+#' @description Example Sigora output from running `pathwayEnrichment()` on
+#'   "exampleDESeqResultsMM"
+#'
+#' @usage data(sigoraExamplesMM)
+#' @return An object of class "tbl", "tbl.df", "data.frame"
+#' @format A data frame (tibble) with 17 rows and 12 columns
+#' \describe{
+#'   \item{comparison}{Comparison from which results are derived; names of the
+#'     input list}
+#'   \item{direction}{Was the pathway enriched in up or down regulated genes}
+#'   \item{pathwayId}{Reactome pathway identifier}
+#'   \item{pathwayName}{Description of the pathway}
+#'   \item{pValue}{Nominal p value for the enrichment}
+#'   \item{pValueAdjusted}{p value adjusted for multiple testing}
+#'   \item{genes}{Genes in the pathway/input}
+#'   \item{numCandidateGenes}{Analyzed genes found in the pathway of interest}
+#'   \item{numBgGenes}{All genes from the pathway database}
+#'   \item{geneRatio}{Quotient of the number of candidate and background genes}
+#'   \item{totalGenes}{Total number of input genes}
+#'   \item{topLevelPathway}{Pathway category}
+#' }
+#'
+#' @source Please refer to the Sigora package for more details on that method:
+#'   \url{https://cran.r-project.org/package=sigora}
+#'
+"sigoraExamplesMM"
