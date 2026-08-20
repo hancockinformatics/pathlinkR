@@ -216,7 +216,7 @@ pathwayEnrichment <- function(
         }
         inputListCleaned <- inputList
     }
-
+  
     data_env <- new.env(parent=emptyenv())
     data("idmap", envir=data_env, package="sigora")
     idmap <- data_env[["idmap"]]
@@ -327,11 +327,14 @@ pathwayEnrichment <- function(
             }
             preppedGenesTable <- list("All"=rnaseqResults)
         }
-
+      
         ## Sigora
         if (analysis == "sigora") {
+            stopifnot(
+                "Argument 'gpsRepo' must be a string/character."=is.character(gpsRepo)
+            )
             runSigoraSafely <- possibly(.runSigora)
-
+          
             resultFinal <- imap_dfr(
                 .x=preppedGenesTable,
                 .id="direction",
