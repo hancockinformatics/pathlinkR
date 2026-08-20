@@ -10,6 +10,7 @@ ppiEnrichNetwork(
   analysis = "sigora",
   filterResults = "default",
   gpsRepo = "reaH",
+  gpsLevel = 4,
   geneUniverse = NULL
 )
 }
@@ -31,6 +32,9 @@ for Sigora is 0.001, or 0.05 for ReactomePA and Hallmark.}
 object for Sigora to use to test for enriched pathways. Leaving this set
 as "default" will use the "reaH" GPS object from \code{Sigora}, or you can
 provide your own custom GPS repository.}
+
+\item{gpsLevel}{Only applies to \code{analysis="sigora"}. Should be left at the
+default (4) for \code{reaH} or \code{reaM}, or set to "2" for \code{kegH} or \code{kegM}.}
 
 \item{geneUniverse}{Only applies when \code{analysis} is "reactomepa" or
 "hallmark". The set of background genes to use when testing with ReactomePA

@@ -13,6 +13,8 @@
 #'   object for Sigora to use to test for enriched pathways. Leaving this set
 #'   as "default" will use the "reaH" GPS object from `Sigora`, or you can
 #'   provide your own custom GPS repository.
+#' @param gpsLevel Only applies to `analysis="sigora"`. Should be left at the
+#'   default (4) for `reaH` or `reaM`, or set to "2" for `kegH` or `kegM`.
 #' @param geneUniverse Only applies when `analysis` is "reactomepa" or
 #'   "hallmark". The set of background genes to use when testing with ReactomePA
 #'   or Hallmark gene sets. For ReactomePA this must be a character vector of
@@ -69,6 +71,7 @@ ppiEnrichNetwork <- function(
         analysis="sigora",
         filterResults="default",
         gpsRepo="reaH",
+        gpsLevel=4,
         geneUniverse=NULL
 ) {
 
@@ -86,6 +89,7 @@ ppiEnrichNetwork <- function(
         split=FALSE,
         filterResults=filterResults,
         gpsRepo=gpsRepo,
+        gpsLevel=gpsLevel,
         geneUniverse=geneUniverse
     ) %>% select(-c(comparison, direction))
 }
