@@ -33,3 +33,39 @@ test_that("pathwayPlots works with fgsea results", {
 
     expect_no_error(pathwayPlots(testResultFgseaReactome, columns=3))
 })
+
+test_that("pathway plots are correct", {
+    data("sigoraExamplesMM")
+    expect_no_error(pathwayPlots(sigoraExamplesMM, columns=2))
+})
+
+test_that("pathway plots work with Sigora/KEGG", {
+    data("exampleDESeqResultsMM")
+
+    suppressMessages(
+        testResultSigoraKEGG <- pathwayEnrichment(
+            inputList=exampleDESeqResultsMM[1],
+            species="mouse",
+            analysis="sigora",
+            gpsRepo="kegM",
+            gpsLevel=2
+        )
+    )
+
+    expect_no_error(pathwayPlots(testResultSigoraKEGG, columns=2))
+})
+
+
+test_that("pathwayPlots works with fgsea results", {
+    data("exampleDESeqResultsMM")
+
+    suppressMessages(
+        testResultFgseaReactome <- pathwayEnrichment(
+            inputList=exampleDESeqResultsMM[1],
+            species="mouse",
+            analysis="fgsea_reactome"
+        )
+    )
+
+    expect_no_error(pathwayPlots(testResultFgseaReactome, columns=3))
+})
