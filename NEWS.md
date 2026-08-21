@@ -1,3 +1,24 @@
+CHANGES IN VERSION 1.99
+-------------------------
+
+* Added support for mouse data for all functions through argument `species`. Impacted functions include:
+    * eruption()
+    * pathnetFoundation() and pathnetCreate()
+    * pathwayEnrichment()
+    * plotFoldChange()
+    * ppiBuildNetwork() and ppiEnrichNetwork()
+* Data objects for mouse including:
+    * exampleDESeqResultsMM
+    * innateDbPPIMM
+    * keggDatabaseMM
+    * mappingFileMM
+    * pathwayCategoriesMM
+    * reactomeDatabaseMM
+    * sigoraDatabaseMM
+    * sigoraExamplesMM
+* Human data objects are still available with the "HS" suffix, e.g. `exampleDESeqResultsHS` is the same as previous `exampleDESeqResults`
+
+
 CHANGES IN VERSION 1.9.2
 -------------------------
 
