@@ -1,7 +1,7 @@
 Package: pathlinkR
 Type: Package
 Title: Analyze and interpret RNA-Seq results
-Version: 1.99.38
+Version: 1.99.39
 Authors@R: c(
     person("Travis", "Blimkie", email = "travis.m.blimkie@gmail.com", role = "cre", comment = c(ORCID = "0000-0001-8778-8627")),
     person("Andy", "An", email = "andy@hancocklab.com", role = "aut")
@@ -24,6 +24,8 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
 VignetteBuilder: knitr
 Config/testthat/edition: 3
+Config/testthat/parallel: true
+Config/testthat/start-first: pathwayEnrichment, runSigora, eruption
 Depends:
     R (>= 4.5.0)
 Imports:
