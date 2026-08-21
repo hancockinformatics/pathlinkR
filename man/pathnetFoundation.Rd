@@ -19,7 +19,7 @@ distance of 0 are always removed. One of \code{maxDistance} or
 based distance. One of \code{maxDistance} or \code{propToKeep} must be
 provided.}
 
-\item{species}{Target species, either 'human' or 'mouse'.}
+\item{species}{Target species, either "human" (default) or "mouse".}
 }
 \value{
 A "data.frame" (tibble) of interacting pathway pairs with the

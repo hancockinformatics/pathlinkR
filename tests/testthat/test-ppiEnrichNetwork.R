@@ -1,5 +1,6 @@
 test_that("network enrichment works properly", {
     data("exampleDESeqResultsHS")
+    data("reaH", package="sigora")
 
     exNetwork <- ppiBuildNetwork(
         rnaseqResult=exampleDESeqResultsHS[[1]],
@@ -12,7 +13,7 @@ test_that("network enrichment works properly", {
         network=exNetwork,
         species="human",
         analysis="sigora",
-        gpsRepo="reaH",
+        gpsRepo=reaH,
         gpsLevel=4
     )
 
@@ -21,6 +22,7 @@ test_that("network enrichment works properly", {
 
 test_that("network enrichment works properly", {
     data("exampleDESeqResultsMM", "innateDbPPIMM")
+    data("reaM", package="sigora")
 
     exNetwork <- ppiBuildNetwork(
         rnaseqResult=exampleDESeqResultsMM[[1]],
@@ -34,9 +36,9 @@ test_that("network enrichment works properly", {
         network=exNetwork,
         species="mouse",
         analysis="sigora",
-        gpsRepo="reaM",
-        gpsLevel=2
+        gpsRepo=reaM,
+        gpsLevel=4
     )
 
-    expect_equal(dim(exOutput), c(3, 10))
+    expect_equal(dim(exOutput), c(4, 10))
 })

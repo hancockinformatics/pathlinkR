@@ -1,7 +1,7 @@
 #' Extract a subnetwork based on pathway genes
 #'
 #' @param network Input network object; output from `ppiBuildNetwork()`
-#' @param species Target species, must be "human" or "mouse"
+#' @param species Target species, either "human" (default) or "mouse".
 #' @param genes Character vector of Ensembl gene IDs to use as the starting
 #'   point to extract a subnetwork from the initial network. You must provide
 #'   either the `genes` or `pathwayEnrichmentResult` argument.

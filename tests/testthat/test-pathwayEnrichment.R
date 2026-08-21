@@ -1,12 +1,13 @@
 test_that("Sigora enrichment works as expected", {
     data("exampleDESeqResultsHS")
+    data("reaH", package="sigora")
 
     suppressMessages(
         testResultSigora <- pathwayEnrichment(
             inputList=exampleDESeqResultsHS[1],
             species="human",
             analysis="sigora",
-            gpsRepo="reaH",
+            gpsRepo=reaH,
             verbose=FALSE
         )
     )
@@ -34,13 +35,14 @@ test_that("Sigora enrichment works as expected", {
 
 test_that("Sigora enrichment works with KEGG", {
     data("exampleDESeqResultsHS")
+    data("kegH", package="sigora")
 
     suppressMessages(
         testResultSigoraKEGG <- pathwayEnrichment(
             inputList=exampleDESeqResultsHS[1],
             species="human",
             analysis="sigora",
-            gpsRepo="kegH",
+            gpsRepo=kegH,
             gpsLevel=2,
             verbose=FALSE
         )
@@ -133,13 +135,14 @@ test_that("a no-gene scenario works properly", {
 
 test_that("Sigora enrichment works as expected", {
     data("exampleDESeqResultsMM")
+    data("reaM", package="sigora")
 
     suppressMessages(
         testResultSigora <- pathwayEnrichment(
             inputList=exampleDESeqResultsMM[1],
             species="mouse",
             analysis="sigora",
-            gpsRepo="reaM",
+            gpsRepo=reaM,
             verbose=FALSE
         )
     )
@@ -167,13 +170,14 @@ test_that("Sigora enrichment works as expected", {
 
 test_that("Sigora enrichment works with KEGG", {
     data("exampleDESeqResultsMM")
+    data("kegM", package="sigora")
 
     suppressMessages(
         testResultSigoraKEGG <- pathwayEnrichment(
             inputList=exampleDESeqResultsMM[1],
             species="mouse",
             analysis="sigora",
-            gpsRepo="kegM",
+            gpsRepo=kegM,
             gpsLevel=2,
             verbose=FALSE
         )

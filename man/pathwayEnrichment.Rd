@@ -15,7 +15,7 @@ pathwayEnrichment(
   split = TRUE,
   analysis = "sigora",
   filterResults = "default",
-  gpsRepo = "reaH",
+  gpsRepo = reaH,
   gpsLevel = 4,
   geneUniverse = NULL,
   verbose = FALSE
@@ -28,7 +28,7 @@ must contain Ensembl Gene IDs. The list names are used as the comparison
 name for each element (e.g. "COVID vs Healthy"). See Details for more
 information on supported input types.}
 
-\item{species}{Target species, must be "human" or "mouse".}
+\item{species}{Target species, either "human" (default) or "mouse".}
 
 \item{columnFC}{Character; Column to plot along the x-axis, typically log2
 fold change values. Only required when \code{rnaseqResult} is a simple data
@@ -64,11 +64,11 @@ p-value cutoff. If left as \code{default}, the significance cutoff for
 \code{analysis="sigora"} is 0.001, or 0.05 for "reactome", "hallmark", and
 "kegg".}
 
-\item{gpsRepo}{Character. Name of a Gene Pair Signature (GPS) object for
-Sigora to use to test for enriched pathways. "reaH" (default) will use
-the Reactome GPS object from \code{Sigora}; "kegH" will use the KEGG GPS. One
-can also provide their own GPS object; see Sigora's documentation for
-details.}
+\item{gpsRepo}{Gene Pair Signature (GPS) object for Sigora to use to test
+for enriched pathways. \code{reaH} (default) will use the Reactome GPS object
+from \code{Sigora}; \code{kegH} will use the KEGG GPS. Also supports mouse data
+from \code{Sigora} (reaM and kegM). One can also provide their own GPS object;
+see Sigora's documentation for details.}
 
 \item{gpsLevel}{Only applies to \code{analysis="sigora"}. Should be left at the
 default (4) for \code{reaH} or \code{reaM}, or set to "2" for \code{kegH} or \code{kegM}.}

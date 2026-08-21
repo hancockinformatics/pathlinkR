@@ -5,13 +5,14 @@ test_that("pathway plots are correct", {
 
 test_that("pathway plots work with Sigora/KEGG", {
     data("exampleDESeqResultsHS")
+    data("kegH", package="sigora")
 
     suppressMessages(
         testResultSigoraKEGG <- pathwayEnrichment(
             inputList=exampleDESeqResultsHS[1],
             species="human",
             analysis="sigora",
-            gpsRepo="kegH",
+            gpsRepo=kegH,
             gpsLevel=2
         )
     )
@@ -41,13 +42,14 @@ test_that("pathway plots are correct", {
 
 test_that("pathway plots work with Sigora/KEGG", {
     data("exampleDESeqResultsMM")
+    data("kegM", package="sigora")
 
     suppressMessages(
         testResultSigoraKEGG <- pathwayEnrichment(
             inputList=exampleDESeqResultsMM[1],
             species="mouse",
             analysis="sigora",
-            gpsRepo="kegM",
+            gpsRepo=kegM,
             gpsLevel=2
         )
     )

@@ -5,7 +5,7 @@
 #'   must contain Ensembl Gene IDs. The list names are used as the comparison
 #'   name for each element (e.g. "COVID vs Healthy"). See Details for more
 #'   information on supported input types.
-#' @param species Target species, must be "human" or "mouse".
+#' @param species Target species, either "human" (default) or "mouse".
 #' @param columnFC Character; Column to plot along the x-axis, typically log2
 #'   fold change values. Only required when `rnaseqResult` is a simple data
 #'   frame. Defaults to NA.
@@ -32,11 +32,11 @@
 #'   p-value cutoff. If left as `default`, the significance cutoff for
 #'   `analysis="sigora"` is 0.001, or 0.05 for "reactome", "hallmark", and
 #'   "kegg".
-#' @param gpsRepo Character. Name of a Gene Pair Signature (GPS) object for
-#'   Sigora to use to test for enriched pathways. "reaH" (default) will use
-#'   the Reactome GPS object from `Sigora`; "kegH" will use the KEGG GPS. One
-#'   can also provide their own GPS object; see Sigora's documentation for 
-#'   details.
+#' @param gpsRepo Gene Pair Signature (GPS) object for Sigora to use to test
+#'   for enriched pathways. `reaH` (default) will use the Reactome GPS object
+#'   from `Sigora`; `kegH` will use the KEGG GPS. Also supports mouse data
+#'   from `Sigora` (reaM and kegM). One can also provide their own GPS object;
+#'   see Sigora's documentation for details.
 #' @param gpsLevel Only applies to `analysis="sigora"`. Should be left at the
 #'   default (4) for `reaH` or `reaM`, or set to "2" for `kegH` or `kegM`.
 #' @param geneUniverse Only applies when `analysis` is "reactome"/"reactomepa",
@@ -128,7 +128,7 @@ pathwayEnrichment <- function(
         split=TRUE,
         analysis="sigora",
         filterResults="default",
-        gpsRepo="reaH",
+        gpsRepo=reaH,
         gpsLevel=4,
         geneUniverse=NULL,
         verbose=FALSE
@@ -216,7 +216,7 @@ pathwayEnrichment <- function(
         }
         inputListCleaned <- inputList
     }
-  
+
     data_env <- new.env(parent=emptyenv())
     data("idmap", envir=data_env, package="sigora")
     idmap <- data_env[["idmap"]]
@@ -327,14 +327,11 @@ pathwayEnrichment <- function(
             }
             preppedGenesTable <- list("All"=rnaseqResults)
         }
-      
+
         ## Sigora
         if (analysis == "sigora") {
-            stopifnot(
-                "Argument 'gpsRepo' must be a string/character."=is.character(gpsRepo)
-            )
             runSigoraSafely <- possibly(.runSigora)
-          
+
             resultFinal <- imap_dfr(
                 .x=preppedGenesTable,
                 .id="direction",
@@ -689,13 +686,12 @@ pathwayEnrichment <- function(
     )
 
     data_env <- new.env(parent=emptyenv())
-    data(list=c("idmap", gpsRepo), envir=data_env, package="sigora")
+    data("idmap", envir=data_env, package="sigora")
     idmap <- data_env[["idmap"]]
-    finalGPS <- data_env[[gpsRepo]]
 
     invisible(capture.output(
         sigoraResult1 <- sigora::sigora(
-            GPSrepo=finalGPS,
+            GPSrepo=gpsRepo,
             level=gpsLevel,
             markers=TRUE,
             queryList=enrichGenes

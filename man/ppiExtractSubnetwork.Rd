@@ -15,7 +15,7 @@ ppiExtractSubnetwork(
 \arguments{
 \item{network}{Input network object; output from \code{ppiBuildNetwork()}}
 
-\item{species}{Target species, must be "human" or "mouse"}
+\item{species}{Target species, either "human" (default) or "mouse".}
 
 \item{genes}{Character vector of Ensembl gene IDs to use as the starting
 point to extract a subnetwork from the initial network. You must provide

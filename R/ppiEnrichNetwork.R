@@ -2,7 +2,7 @@
 #'
 #' @param network A "tidygraph" network object, with Ensembl IDs in the first
 #'   column of the node table
-#' @param species Target species, must be "human" or "mouse".
+#' @param species Target species, either "human" (default) or "mouse".
 #' @param analysis Default is "sigora", but can also be "reactomepa" or
 #'   "hallmark".
 #' @param filterResults Should the output be filtered for significance? Use

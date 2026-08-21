@@ -3,7 +3,7 @@
 #' @param rnaseqResult Data frame of RNASeq results, with Ensembl gene IDs as
 #'   rownames. Can be a "DESeqResults" or "TopTags" object, or a simple data
 #'   frame. See "Details" for more information.
-#' @param species Target species, either 'human' or 'mouse'.
+#' @param species Target species, either "human" (default) or "mouse".
 #' @param columnFC Character; Column to plot along the x-axis, typically log2
 #'   fold change values. Only required when `rnaseqResult` is a simple data
 #'   frame. Defaults to NA.

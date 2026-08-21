@@ -5,7 +5,7 @@
 #'   the rownames. The list names are used as the comparison name for each
 #'   dataframe (e.g. "COVID vs Healthy").  See Details for more information on
 #'   supported input types.
-#' @param species Target species, must be "human" or "mouse".
+#' @param species Target species, either "human" (default) or "mouse".
 #' @param columnFC Character; Column to plot along the x-axis, typically log2
 #'   fold change values. Only required when `rnaseqResult` is a simple data
 #'   frame. Defaults to NA.

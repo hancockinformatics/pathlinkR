@@ -2,7 +2,7 @@
 #'
 #' @param rnaseqResult An object of class "DESeqResults", "TopTags", or a simple
 #' data frame. See Details for more information on input types.
-#' @param species Target species, must be "human" or "mouse".
+#' @param species Target species, either "human" (default) or "mouse".
 #' @param filterInput If providing list of data frames containing the
 #'   unfiltered output from `DESeq2::results()`, set this to TRUE to filter for
 #'   DE genes using the thresholds set by the `pCutoff` and `fcCutoff`

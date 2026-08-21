@@ -43,7 +43,7 @@ the rownames. The list names are used as the comparison name for each
 dataframe (e.g. "COVID vs Healthy").  See Details for more information on
 supported input types.}
 
-\item{species}{Target species, must be "human" or "mouse".}
+\item{species}{Target species, either "human" (default) or "mouse".}
 
 \item{columnFC}{Character; Column to plot along the x-axis, typically log2
 fold change values. Only required when \code{rnaseqResult} is a simple data

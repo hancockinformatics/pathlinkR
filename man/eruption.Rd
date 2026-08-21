@@ -36,7 +36,7 @@ eruption(
 rownames. Can be a "DESeqResults" or "TopTags" object, or a simple data
 frame. See "Details" for more information.}
 
-\item{species}{Target species, either 'human' or 'mouse'.}
+\item{species}{Target species, either "human" (default) or "mouse".}
 
 \item{columnFC}{Character; Column to plot along the x-axis, typically log2
 fold change values. Only required when \code{rnaseqResult} is a simple data

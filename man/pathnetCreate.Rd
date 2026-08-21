@@ -26,7 +26,7 @@ Defaults to "pathwayID".}
 \item{columnP}{Character; column containing the adjusted p values. Defaults
 to "pValueAdjusted".}
 
-\item{species}{Target species for analysis. Currently only supports 'human'.}
+\item{species}{Target species, either "human" (default) or "mouse".}
 
 \item{foundation}{List of pathway pairs to use in constructing a network.
 Typically this will be the output from \code{createFoundation}.}

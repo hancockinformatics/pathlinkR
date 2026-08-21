@@ -9,7 +9,7 @@
 #' @param propToKeep Top proportion of pathway pairs to keep as edges, ranked
 #'   based distance. One of `maxDistance` or `propToKeep` must be
 #'   provided.
-#' @param species Target species, either 'human' or 'mouse'.
+#' @param species Target species, either "human" (default) or "mouse".
 #'
 #' @return A "data.frame" (tibble) of interacting pathway pairs with the
 #'   following columns:

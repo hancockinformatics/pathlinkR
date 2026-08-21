@@ -8,7 +8,7 @@
 #'   Defaults to "pathwayID".
 #' @param columnP Character; column containing the adjusted p values. Defaults
 #'   to "pValueAdjusted".
-#' @param species Target species for analysis. Currently only supports 'human'.
+#' @param species Target species, either "human" (default) or "mouse".
 #' @param foundation List of pathway pairs to use in constructing a network.
 #'   Typically this will be the output from `createFoundation`.
 #' @param trim Remove independent subgraphs which don't contain any enriched

@@ -254,12 +254,14 @@ exampleDESeqResultsHS
 ```
 
 ```{r sigora_enrichment}
+data("reaH", package="sigora")
+
 enrichedResultsSigora <- pathwayEnrichment(
     inputList=exampleDESeqResultsHS,
     species="human",
     analysis="sigora",
     filterInput=TRUE,
-    gpsRepo="reaH",
+    gpsRepo=reaH,
     gpsLevel=4
 )
 

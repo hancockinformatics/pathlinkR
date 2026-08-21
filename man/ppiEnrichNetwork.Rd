@@ -18,7 +18,7 @@ ppiEnrichNetwork(
 \item{network}{A "tidygraph" network object, with Ensembl IDs in the first
 column of the node table}
 
-\item{species}{Target species, must be "human" or "mouse".}
+\item{species}{Target species, either "human" (default) or "mouse".}
 
 \item{analysis}{Default is "sigora", but can also be "reactomepa" or
 "hallmark".}

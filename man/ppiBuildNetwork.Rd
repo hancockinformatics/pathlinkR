@@ -21,7 +21,7 @@ ppiBuildNetwork(
 \item{rnaseqResult}{An object of class "DESeqResults", "TopTags", or a simple
 data frame. See Details for more information on input types.}
 
-\item{species}{Target species, must be "human" or "mouse".}
+\item{species}{Target species, either "human" (default) or "mouse".}
 
 \item{filterInput}{If providing list of data frames containing the
 unfiltered output from \code{DESeq2::results()}, set this to TRUE to filter for
