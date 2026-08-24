@@ -1,4 +1,4 @@
-test_that("a volcano plot works with some of customizations", {
+test_that("a volcano plot works with some of customizations in humans", {
     data("exampleDESeqResultsHS", "sigoraDatabaseHS")
 
     interferonGenes <- sigoraDatabaseHS %>%

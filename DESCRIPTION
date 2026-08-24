@@ -1,11 +1,22 @@
 Package: pathlinkR
 Type: Package
 Title: Analyze and interpret RNA-Seq results
-Version: 1.99.39
+Version: 1.99.40
 Authors@R: c(
-    person("Travis", "Blimkie", email = "travis.m.blimkie@gmail.com", role = "cre", comment = c(ORCID = "0000-0001-8778-8627")),
-    person("Andy", "An", email = "andy@hancocklab.com", role = "aut")
+    person(
+        "Travis",
+        "Blimkie",
+        email = "travis.m.blimkie@gmail.com",
+        role = "cre",
+        comment = c(ORCID = "0000-0001-8778-8627")
+    ),
+    person(
+        "Andy",
+        "An",
+        email = "andy@hancocklab.com",
+        role = "aut"
     )
+)
 Description: pathlinkR is an R package designed to facilitate analysis of
     RNA-Seq results. Specifically, our aim with pathlinkR was to provide a
     number of tools which take a list of DE genes and perform different analyses

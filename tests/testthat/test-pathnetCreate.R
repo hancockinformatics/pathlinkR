@@ -27,4 +27,34 @@ test_that("the pathway network is the right size", {
     )
 
     expect_length(testMyPathwayNetwork, 2)
+    expect_equal(nrow(as_tibble(testMyPathwayNetwork)), 2)
+})
+
+test_that("the pathway network is the right size in mice", {
+    data("sigoraDatabaseMM", "sigoraExamplesMM")
+
+    pathwayDistancesJaccard <- getPathwayDistances(
+        pathwayData=dplyr::slice_head(
+            dplyr::arrange(sigoraDatabaseMM, pathwayId),
+            prop=0.1
+        ),
+        distMethod="jaccard"
+    )
+
+    testStartingPathways <- pathnetFoundation(
+        mat=pathwayDistancesJaccard,
+        species="mouse",
+        maxDistance=0.9
+    )
+
+    testMyPathwayNetwork <- pathnetCreate(
+        pathwayEnrichmentResult=sigoraExamplesMM,
+        species="mouse",
+        foundation=testStartingPathways,
+        trim=TRUE,
+        trimOrder=1
+    )
+
+    expect_length(testMyPathwayNetwork, 4)
+    expect_equal(nrow(as_tibble(testMyPathwayNetwork)), 4)
 })
