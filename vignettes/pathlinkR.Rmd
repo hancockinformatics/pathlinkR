@@ -27,10 +27,9 @@ This vignette contains some minimal examples for the main **pathlinkR**
 functions; for more complete documentation, please see our
 [Github pages](https://hancockinformatics.github.io/pathlinkR/).
 
-
 # Introduction
 
-Often times, gene expression studies such as microarrays and RNA-Seq result in
+Gene expression studies such as microarrays and RNA-Seq often result in
 hundreds to thousands of differentially expressed genes (DEGs). It becomes very
 difficult to understand the biological significance of such massive data sets,
 especially when there are multiple conditions and comparisons being analyzed.
@@ -58,7 +57,6 @@ To install and load the package:
 library(dplyr)
 library(pathlinkR)
 ```
-
 
 # Visualizing RNA-Seq data with volcano plots
 
@@ -92,7 +90,6 @@ including:
 - Plot either log2 or non-log2 fold change (for a better sense of magnitude)
 - Highlight specific gene sets of interest
 
-
 # Visualizing fold changes across comparisons
 
 In addition to creating volcano plots, we can also visualize our DEGs using
@@ -117,7 +114,6 @@ A number of options are provided for customization, including:
 - Use log2 fold changes in the heatmap cells
 - Swap the rows and columns from the default, and add a split between the rows
     (comparisons)
-
 
 # Building and visualizing PPI networks
 
@@ -209,6 +205,7 @@ Alternatively you can use the "genesToExtract" argument in
 Ensembl IDs) to extract as a subnetwork.
 
 # Performing pathway enrichment
+
 The essence of pathway enrichment is the concept of over-representation: that
 is, are there more genes belonging to a specific pathway present in our DEG list
 than we would expect to find by chance? To calculate this, the simplest method
@@ -310,7 +307,6 @@ performing enrichment analyses. This database is supported with traditional
 over-representation analysis by setting `analysis="kegg"`, or with a gene
 pair-based approach by specifying `analysis="sigora"` and `gpsRepo="kegH"`.
 
-
 # Plotting pathway enrichment results
 
 Now that we have (a lot of) pathway enrichment results from multiple
@@ -353,7 +349,6 @@ patients, a few unique ones stand out, mostly related to interferon signaling
 signaling", "ISG15 antiviral mechanism"). This likely reflects an elevated early
 antiviral response in COVID-19 patients that decreased over time, compared to no
 change in non-COVID-19 sepsis patients.
-
 
 # Generating networks from enriched pathways
 
@@ -441,7 +436,6 @@ can adjust these cut-offs by setting `filterResults` to different values between
 0 and 1, or 1 if you want all the pathways (this may be useful for comparing
 which enriched genes appear in which comparisons, even if the enrichment is not
 significant).
-
 
 # Citations
 
