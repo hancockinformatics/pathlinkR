@@ -2,6 +2,7 @@
 #'
 #' @param rnaseqResult An object of class "DESeqResults", "TopTags", or a simple
 #' data frame. See Details for more information on input types.
+#' @param species Target species, either "human" (default) or "mouse".
 #' @param filterInput If providing list of data frames containing the
 #'   unfiltered output from `DESeq2::results()`, set this to TRUE to filter for
 #'   DE genes using the thresholds set by the `pCutoff` and `fcCutoff`
@@ -71,16 +72,17 @@
 #' @seealso <https://github.com/hancockinformatics/pathlinkR/>
 #'
 #' @examples
-#' data("exampleDESeqResults")
+#' data("exampleDESeqResultsHS")
 #'
 #' ppiBuildNetwork(
-#'     rnaseqResult=exampleDESeqResults[[1]],
+#'     rnaseqResult=exampleDESeqResultsHS[[1]],
 #'     filterInput=TRUE,
 #'     order="zero"
 #' )
 #'
 ppiBuildNetwork <- function(
         rnaseqResult,
+        species="human",
         filterInput=TRUE,
         columnFC=NA,
         columnP=NA,
@@ -88,17 +90,26 @@ ppiBuildNetwork <- function(
         fcCutoff=1.5,
         order="zero",
         hubMeasure="betweenness",
-        ppiData=innateDbPPI
+        ppiData=innateDbPPIHS
 ) {
 
     data_env <- new.env(parent=emptyenv())
-    data("innateDbPPI", "mappingFile", envir=data_env, package="pathlinkR")
-    innateDbPPI <- data_env[["innateDbPPI"]]
-    mappingFile <- data_env[["mappingFile"]]
+    data(
+        "mappingFileHS",
+        "mappingFileMM",
+        envir=data_env,
+        package="pathlinkR"
+    )
+    mappingFile <- switch(
+        species,
+        human=data_env[["mappingFileHS"]],
+        mouse=data_env[["mappingFileMM"]],
+        stop("Argument 'species' must be 'human' or 'mouse'")
+    )
 
     stopifnot(
         "Rownames of 'rnaseqResult` must contain Ensembl gene IDs"={
-            grepl(pattern="ENSG", x=rownames(rnaseqResult)[1])
+            grepl(pattern="^ENS", x=rownames(rnaseqResult)[1])
         }
     )
     stopifnot(order %in% c("zero", "first", "minSimple"))
@@ -232,7 +243,7 @@ ppiBuildNetwork <- function(
 
     networkFinal <- networkOut2 %>%
         left_join(
-            select(mappingFile, "name"=ensemblGeneId, hgncSymbol),
+            select(mappingFileHS, "name"=ensemblGeneId, hgncSymbol),
             by="name",
             multiple="all"
         ) %>%

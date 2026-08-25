@@ -8,6 +8,7 @@
 #'   Defaults to "pathwayID".
 #' @param columnP Character; column containing the adjusted p values. Defaults
 #'   to "pValueAdjusted".
+#' @param species Target species, either "human" (default) or "mouse".
 #' @param foundation List of pathway pairs to use in constructing a network.
 #'   Typically this will be the output from `createFoundation`.
 #' @param trim Remove independent subgraphs which don't contain any enriched
@@ -59,11 +60,11 @@
 #' @seealso <https://github.com/hancockinformatics/pathlinkR>
 #'
 #' @examples
-#' data("sigoraDatabase", "sigoraExamples")
+#' data("sigoraDatabaseHS", "sigoraExamplesHS")
 #'
 #' pathwayDistancesJaccard <- getPathwayDistances(
 #'     pathwayData=dplyr::slice_head(
-#'         dplyr::arrange(sigoraDatabase, pathwayId),
+#'         dplyr::arrange(sigoraDatabaseHS, pathwayId),
 #'         prop=0.05
 #'     ),
 #'     distMethod="jaccard"
@@ -71,14 +72,16 @@
 #'
 #' startingPathways <- pathnetFoundation(
 #'     mat=pathwayDistancesJaccard,
-#'     maxDistance=0.8
+#'     maxDistance=0.8,
+#'     species="human"
 #' )
 #'
 #' pathnetCreate(
-#'     pathwayEnrichmentResult=sigoraExamples[grepl(
+#'     pathwayEnrichmentResult=sigoraExamplesHS[grepl(
 #'         "Pos",
-#'         sigoraExamples$comparison
+#'         sigoraExamplesHS$comparison
 #'     ), ],
+#'     species="human",
 #'     foundation=startingPathways,
 #'     trim=TRUE,
 #'     trimOrder=1
@@ -88,6 +91,7 @@ pathnetCreate <- function(
         pathwayEnrichmentResult,
         columnId="pathwayId",
         columnP="pValueAdjusted",
+        species,
         foundation,
         trim=TRUE,
         trimOrder=1
@@ -106,8 +110,18 @@ pathnetCreate <- function(
     ))
 
     data_env <- new.env(parent=emptyenv())
-    data("pathwayCategories", envir=data_env, package="pathlinkR")
-    pathwayCategories <- data_env[["pathwayCategories"]]
+    data(
+        "pathwayCategoriesHS",
+        "pathwayCategoriesMM",
+        envir=data_env,
+        package="pathlinkR"
+    )
+    pathwayCategories <- switch(
+        species,
+        human=data_env[["pathwayCategoriesHS"]],
+        mouse=data_env[["pathwayCategoriesMM"]],
+        stop("Argument 'species' currently only supports 'human'.")
+    )
 
     if (columnId != "pathwayId") {
         pathwayEnrichmentResult <- pathwayEnrichmentResult %>%

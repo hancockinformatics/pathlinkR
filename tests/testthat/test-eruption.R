@@ -1,13 +1,32 @@
-test_that("a volcano plot works with some of customizations", {
-    data("exampleDESeqResults", "sigoraDatabase")
+test_that("a volcano plot works with some of customizations in humans", {
+    data("exampleDESeqResultsHS", "sigoraDatabaseHS")
 
-    interferonGenes <- sigoraDatabase %>%
+    interferonGenes <- sigoraDatabaseHS %>%
         filter(pathwayName == "Interferon Signaling") %>%
         pull(ensemblGeneId)
 
     expect_no_error(
         eruption(
-            rnaseqResult=exampleDESeqResults[[1]],
+            rnaseqResult=exampleDESeqResultsHS[[1]],
+            species="human",
+            xaxis=c(-4, 4),
+            yaxis=c(0, 8),
+            highlightGenes=interferonGenes
+        )
+    )
+})
+
+test_that("we can make a plot with mouse genes", {
+    data("exampleDESeqResultsMM", "sigoraDatabaseMM")
+
+    interferonGenes <- sigoraDatabaseMM %>%
+        filter(pathwayName == "Interferon Signaling") %>%
+        pull(ensemblGeneId)
+
+    expect_no_error(
+        eruption(
+            rnaseqResult=exampleDESeqResultsMM[[1]],
+            species="mouse",
             xaxis=c(-4, 4),
             yaxis=c(0, 8),
             highlightGenes=interferonGenes
@@ -17,12 +36,13 @@ test_that("a volcano plot works with some of customizations", {
 
 test_that("eruption returns a ggplot object", {
 
-  data("exampleDESeqResults")
+  data("exampleDESeqResultsHS")
 
   p <- eruption(
-    exampleDESeqResults[[1]],
-    columnFC = "logFC",
-    columnP = "padj"
+    exampleDESeqResultsHS[[1]],
+    species="human",
+    columnFC="logFC",
+    columnP="padj"
   )
 
   expect_s3_class(p, "ggplot")
@@ -30,24 +50,26 @@ test_that("eruption returns a ggplot object", {
 
 test_that("xaxis and yaxis must have length two", {
 
-  data("exampleDESeqResults")
+  data("exampleDESeqResultsHS")
 
   expect_error(
     eruption(
-      exampleDESeqResults[[1]],
-      columnFC = "logFC",
-      columnP = "padj",
-      xaxis = c(-2, 2, 3)
+      exampleDESeqResultsHS[[1]],
+      species="human",
+      columnFC="logFC",
+      columnP="padj",
+      xaxis=c(-2, 2, 3)
     ),
     "length-two"
   )
 
   expect_error(
     eruption(
-      exampleDESeqResults[[1]],
-      columnFC = "logFC",
-      columnP = "padj",
-      yaxis = 1
+      exampleDESeqResultsHS[[1]],
+      species="human",
+      columnFC="logFC",
+      columnP="padj",
+      yaxis=1
     ),
     "length-two"
   )
@@ -55,13 +77,14 @@ test_that("xaxis and yaxis must have length two", {
 
 test_that("plot title is applied", {
 
-  data("exampleDESeqResults")
+  data("exampleDESeqResultsHS")
 
   p <- eruption(
-    exampleDESeqResults[[1]],
-    columnFC = "logFC",
-    columnP = "padj",
-    title = "My Volcano"
+    exampleDESeqResultsHS[[1]],
+    species="human",
+    columnFC="logFC",
+    columnP="padj",
+    title="My Volcano"
   )
 
   expect_equal(
@@ -72,14 +95,15 @@ test_that("plot title is applied", {
 
 test_that("cutoff lines are placed correctly", {
 
-  data("exampleDESeqResults")
+  data("exampleDESeqResultsHS")
 
   p <- eruption(
-    exampleDESeqResults[[1]],
-    columnFC = "logFC",
-    columnP = "padj",
-    fcCutoff = 2,
-    pCutoff = 0.05
+    exampleDESeqResultsHS[[1]],
+    species="human",
+    columnFC="logFC",
+    columnP="padj",
+    fcCutoff=2,
+    pCutoff=0.05
   )
 
   built <- ggplot_build(p)
@@ -100,14 +124,15 @@ test_that("cutoff lines are placed correctly", {
 
 test_that("manual axis limits are respected", {
 
-  data("exampleDESeqResults")
+  data("exampleDESeqResultsHS")
 
   p <- eruption(
-    exampleDESeqResults[[1]],
-    columnFC = "logFC",
-    columnP = "padj",
-    xaxis = c(-1, 1),
-    yaxis = c(0, 3)
+    exampleDESeqResultsHS[[1]],
+    species="human",
+    columnFC="logFC",
+    columnP="padj",
+    xaxis=c(-1, 1),
+    yaxis=c(0, 3)
   )
 
   built <- ggplot_build(p)

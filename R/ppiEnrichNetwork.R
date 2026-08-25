@@ -2,8 +2,9 @@
 #'
 #' @param network A "tidygraph" network object, with Ensembl IDs in the first
 #'   column of the node table
+#' @param species Target species, either "human" (default) or "mouse".
 #' @param analysis Default is "sigora", but can also be "reactomepa" or
-#'   "hallmark"
+#'   "hallmark".
 #' @param filterResults Should the output be filtered for significance? Use
 #'   `1` to return the unfiltered results, or any number less than 1 for a
 #'   custom p-value cutoff. If left as `default`, the significance cutoff
@@ -12,6 +13,8 @@
 #'   object for Sigora to use to test for enriched pathways. Leaving this set
 #'   as "default" will use the "reaH" GPS object from `Sigora`, or you can
 #'   provide your own custom GPS repository.
+#' @param gpsLevel Only applies to `analysis="sigora"`. Should be left at the
+#'   default (4) for `reaH` or `reaM`, or set to "2" for `kegH` or `kegM`.
 #' @param geneUniverse Only applies when `analysis` is "reactomepa" or
 #'   "hallmark". The set of background genes to use when testing with ReactomePA
 #'   or Hallmark gene sets. For ReactomePA this must be a character vector of
@@ -47,24 +50,28 @@
 #' @seealso <https://github.com/hancockinformatics/pathlinkR>
 #'
 #' @examples
-#' data("exampleDESeqResults")
+#' data("exampleDESeqResultsHS")
 #'
 #' exNetwork <- ppiBuildNetwork(
-#'     rnaseqResult=exampleDESeqResults[[1]],
+#'     rnaseqResult=exampleDESeqResultsHS[[1]],
+#'     species="human",
 #'     filterInput=TRUE,
 #'     order="zero"
 #' )
 #'
 #' ppiEnrichNetwork(
 #'     network=exNetwork,
+#'     species="human",
 #'     analysis="hallmark"
 #' )
 #'
 ppiEnrichNetwork <- function(
         network,
+        species="human",
         analysis="sigora",
         filterResults="default",
-        gpsRepo="default",
+        gpsRepo="reaH",
+        gpsLevel=4,
         geneUniverse=NULL
 ) {
 
@@ -76,11 +83,13 @@ ppiEnrichNetwork <- function(
 
     pathwayEnrichment(
         inputList=newList,
+        species=species,
         analysis=analysis,
         filterInput=FALSE,
         split=FALSE,
         filterResults=filterResults,
         gpsRepo=gpsRepo,
+        gpsLevel=gpsLevel,
         geneUniverse=geneUniverse
     ) %>% select(-c(comparison, direction))
 }

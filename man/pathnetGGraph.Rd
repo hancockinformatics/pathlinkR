@@ -87,11 +87,11 @@ labels. You'll likely need to tweak this value, and try different seeds, to
 get the desired effect.
 }
 \examples{
-data("sigoraDatabase", "sigoraExamples")
+data("sigoraDatabaseHS", "sigoraExamplesHS")
 
 pathwayDistancesJaccard <- getPathwayDistances(
     pathwayData=dplyr::slice_head(
-        dplyr::arrange(sigoraDatabase, pathwayId),
+        dplyr::arrange(sigoraDatabaseHS, pathwayId),
         prop=0.05
     ),
     distMethod="jaccard"
@@ -99,14 +99,16 @@ pathwayDistancesJaccard <- getPathwayDistances(
 
 startingPathways <- pathnetFoundation(
     mat=pathwayDistancesJaccard,
-    maxDistance=0.8
+    maxDistance=0.8,
+    species="human"
 )
 
 exPathnet <- pathnetCreate(
-    pathwayEnrichmentResult=sigoraExamples[grepl(
+    pathwayEnrichmentResult=sigoraExamplesHS[grepl(
         "Pos",
-        sigoraExamples$comparison
+        sigoraExamplesHS$comparison
     ), ],
+    species="human",
     foundation=startingPathways,
     trim=TRUE,
     trimOrder=1

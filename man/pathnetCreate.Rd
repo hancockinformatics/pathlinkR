@@ -9,6 +9,7 @@ pathnetCreate(
   pathwayEnrichmentResult,
   columnId = "pathwayId",
   columnP = "pValueAdjusted",
+  species,
   foundation,
   trim = TRUE,
   trimOrder = 1
@@ -24,6 +25,8 @@ Defaults to "pathwayID".}
 
 \item{columnP}{Character; column containing the adjusted p values. Defaults
 to "pValueAdjusted".}
+
+\item{species}{Target species, either "human" (default) or "mouse".}
 
 \item{foundation}{List of pathway pairs to use in constructing a network.
 Typically this will be the output from \code{createFoundation}.}
@@ -71,11 +74,11 @@ and the optimal value will depend on the number of enriched pathways and
 the number of interacting pathways (i.e. number of rows in "foundation").
 }
 \examples{
-data("sigoraDatabase", "sigoraExamples")
+data("sigoraDatabaseHS", "sigoraExamplesHS")
 
 pathwayDistancesJaccard <- getPathwayDistances(
     pathwayData=dplyr::slice_head(
-        dplyr::arrange(sigoraDatabase, pathwayId),
+        dplyr::arrange(sigoraDatabaseHS, pathwayId),
         prop=0.05
     ),
     distMethod="jaccard"
@@ -83,14 +86,16 @@ pathwayDistancesJaccard <- getPathwayDistances(
 
 startingPathways <- pathnetFoundation(
     mat=pathwayDistancesJaccard,
-    maxDistance=0.8
+    maxDistance=0.8,
+    species="human"
 )
 
 pathnetCreate(
-    pathwayEnrichmentResult=sigoraExamples[grepl(
+    pathwayEnrichmentResult=sigoraExamplesHS[grepl(
         "Pos",
-        sigoraExamples$comparison
+        sigoraExamplesHS$comparison
     ), ],
+    species="human",
     foundation=startingPathways,
     trim=TRUE,
     trimOrder=1

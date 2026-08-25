@@ -9,6 +9,7 @@
 #' @param propToKeep Top proportion of pathway pairs to keep as edges, ranked
 #'   based distance. One of `maxDistance` or `propToKeep` must be
 #'   provided.
+#' @param species Target species, either "human" (default) or "mouse".
 #'
 #' @return A "data.frame" (tibble) of interacting pathway pairs with the
 #'   following columns:
@@ -39,11 +40,11 @@
 #' @seealso <https://github.com/hancockinformatics/pathlinkR>
 #'
 #' @examples
-#' data("sigoraDatabase")
+#' data("sigoraDatabaseHS")
 #'
 #' pathwayDistancesJaccard <- getPathwayDistances(
 #'     pathwayData=dplyr::slice_head(
-#'         dplyr::arrange(sigoraDatabase, pathwayId),
+#'         dplyr::arrange(sigoraDatabaseHS, pathwayId),
 #'         prop=0.05
 #'     ),
 #'     distMethod="jaccard"
@@ -51,11 +52,26 @@
 #'
 #' startingPathways <- pathnetFoundation(
 #'     mat=pathwayDistancesJaccard,
-#'     maxDistance=0.8
+#'     maxDistance=0.8,
+#'     species="human"
 #' )
 #'
-pathnetFoundation <- function(mat, maxDistance=NA, propToKeep=NA) {
+pathnetFoundation <- function(mat, maxDistance=NA, propToKeep=NA, species) {
     stopifnot(all(rownames(mat) == colnames(mat)))
+
+    data_env <- new.env(parent=emptyenv())
+    data(
+        "sigoraDatabaseHS",
+        "sigoraDatabaseMM",
+        envir=data_env,
+        package="pathlinkR"
+    )
+    sigoraDatabase <- switch(
+        species,
+        human=data_env[["sigoraDatabaseHS"]],
+        mouse=data_env[["sigoraDatabaseMM"]],
+        stop("Argument 'species' must be 'human' or 'mouse'.")
+    )
 
     matTibble <- as.data.frame(mat) %>%
         rownames_to_column("pathway1") %>%

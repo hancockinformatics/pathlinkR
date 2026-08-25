@@ -1,0 +1,83 @@
+pathwayId	pathwayName	topPathwayName	topPathway
+R-MMU-9613829	Chaperone Mediated Autophagy	Autophagy	R-MMU-9612973
+R-MMU-9615710	Microautophagy	Autophagy	R-MMU-9612973
+R-MMU-68962	Activation of the pre-replicative complex	Cell Cycle	R-MMU-1640170
+R-MMU-69017	CDK-mediated phosphorylation and removal of Cdc6	Cell Cycle	R-MMU-1640170
+R-MMU-68952	DNA replication initiation	Cell Cycle	R-MMU-1640170
+R-MMU-912446	Meiotic recombination	Cell Cycle	R-MMU-1640170
+R-MMU-68949	Orc1 removal from chromatin	Cell Cycle	R-MMU-1640170
+R-MMU-69091	Polymerase switching	Cell Cycle	R-MMU-1640170
+R-MMU-69183	Processive synthesis on the lagging strand	Cell Cycle	R-MMU-1640170
+R-MMU-69166	Removal of the Flap Intermediate	Cell Cycle	R-MMU-1640170
+R-MMU-69052	Switching of origins to a post-replicative state	Cell Cycle	R-MMU-1640170
+R-MMU-176974	Unwinding of DNA	Cell Cycle	R-MMU-1640170
+R-MMU-68962	Activation of the pre-replicative complex	DNA Replication	R-MMU-69306
+R-MMU-69017	CDK-mediated phosphorylation and removal of Cdc6	DNA Replication	R-MMU-69306
+R-MMU-68952	DNA replication initiation	DNA Replication	R-MMU-69306
+R-MMU-68949	Orc1 removal from chromatin	DNA Replication	R-MMU-69306
+R-MMU-69091	Polymerase switching	DNA Replication	R-MMU-69306
+R-MMU-69183	Processive synthesis on the lagging strand	DNA Replication	R-MMU-69306
+R-MMU-69166	Removal of the Flap Intermediate	DNA Replication	R-MMU-69306
+R-MMU-69052	Switching of origins to a post-replicative state	DNA Replication	R-MMU-69306
+R-MMU-176974	Unwinding of DNA	DNA Replication	R-MMU-69306
+R-MMU-69190	DNA strand elongation	DNA Replication	R-MMU-69306
+R-MMU-69186	Lagging Strand Synthesis	DNA Replication	R-MMU-69306
+R-MMU-69109	Leading Strand Synthesis	DNA Replication	R-MMU-69306
+R-MMU-69239	Synthesis of DNA	DNA Replication	R-MMU-69306
+R-MMU-171306	Packaging Of Telomere Ends	DNA Replication	R-MMU-69306
+R-MMU-68827	CDT1 association with the CDC6:ORC:origin complex	DNA Replication	R-MMU-69306
+R-MMU-5693554	Resolution of D-loop Structures through Synthesis-Dependent Strand Annealing (SDSA)	DNA Replication	R-MMU-69306
+R-MMU-2173795	Downregulation of SMAD2/3:SMAD4 transcriptional activity	Gene expression (Transcription)	R-MMU-74160
+R-MMU-2173796	SMAD2/SMAD3:SMAD4 heterotrimer regulates transcription	Gene expression (Transcription)	R-MMU-74160
+R-MMU-2173793	Transcriptional activity of SMAD2/SMAD3:SMAD4 heterotrimer	Gene expression (Transcription)	R-MMU-74160
+R-MMU-427359	SIRT1 negatively regulates rRNA expression	Gene expression (Transcription)	R-MMU-74160
+R-MMU-427413	NoRC negatively regulates rRNA expression	Gene expression (Transcription)	R-MMU-74160
+R-MMU-5250941	Negative epigenetic regulation of rRNA expression	Gene expression (Transcription)	R-MMU-74160
+R-MMU-73854	RNA Polymerase I Promoter Clearance	Gene expression (Transcription)	R-MMU-74160
+R-MMU-114508	Effects of PIP2 hydrolysis	Hemostasis	R-MMU-109582
+R-MMU-354194	GRB2:SOS provides linkage to MAPK signaling for Integrins	Hemostasis	R-MMU-109582
+R-MMU-354192	Integrin signaling	Hemostasis	R-MMU-109582
+R-MMU-372708	p130Cas linkage to MAPK signaling for integrins	Hemostasis	R-MMU-109582
+R-MMU-140837	Intrinsic Pathway of Fibrin Clot Formation	Hemostasis	R-MMU-109582
+R-MMU-140877	Formation of Fibrin Clot (Clotting Cascade)	Hemostasis	R-MMU-109582
+R-MMU-9006921	Integrin signaling	Hemostasis	R-MMU-109582
+R-MMU-140875	Common Pathway of Fibrin Clot Formation	Hemostasis	R-MMU-109582
+R-MMU-198753	ERK/MAPK targets	Immune System	R-MMU-168256
+R-MMU-202670	ERKs are inactivated	Immune System	R-MMU-168256
+R-MMU-975634	Retinoid metabolism and transport	Metabolism	R-MMU-1430728
+R-MMU-426048	Arachidonate production from DAG	Metabolism	R-MMU-1430728
+R-MMU-163200	Respiratory electron transport, ATP synthesis by chemiosmotic coupling, and heat production by uncoupling proteins.	Metabolism	R-MMU-1430728
+R-MMU-197264	Nicotinamide salvaging	Metabolism	R-MMU-1430728
+R-MMU-71406	Pyruvate metabolism and Citric Acid (TCA) cycle	Metabolism	R-MMU-1430728
+R-MMU-6807878	COPI-mediated anterograde transport	Metabolism of proteins	R-MMU-392499
+R-MMU-204005	COPII-mediated vesicle transport	Metabolism of proteins	R-MMU-392499
+R-MMU-5694530	Cargo concentration in the ER	Metabolism of proteins	R-MMU-392499
+R-MMU-170670	Adenylate cyclase inhibitory pathway	Neuronal System	R-MMU-112316
+R-MMU-912446	Meiotic recombination	Reproduction	R-MMU-1474165
+R-MMU-1500620	Meiosis	Reproduction	R-MMU-1474165
+R-MMU-975634	Retinoid metabolism and transport	Sensory Perception	R-MMU-9709957
+R-MMU-170670	Adenylate cyclase inhibitory pathway	Signal Transduction	R-MMU-162582
+R-MMU-2173795	Downregulation of SMAD2/3:SMAD4 transcriptional activity	Signal Transduction	R-MMU-162582
+R-MMU-198753	ERK/MAPK targets	Signal Transduction	R-MMU-162582
+R-MMU-202670	ERKs are inactivated	Signal Transduction	R-MMU-162582
+R-MMU-114508	Effects of PIP2 hydrolysis	Signal Transduction	R-MMU-162582
+R-MMU-354194	GRB2:SOS provides linkage to MAPK signaling for Integrins	Signal Transduction	R-MMU-162582
+R-MMU-354192	Integrin signaling	Signal Transduction	R-MMU-162582
+R-MMU-2173796	SMAD2/SMAD3:SMAD4 heterotrimer regulates transcription	Signal Transduction	R-MMU-162582
+R-MMU-372708	p130Cas linkage to MAPK signaling for integrins	Signal Transduction	R-MMU-162582
+R-MMU-199920	CREB phosphorylation	Signal Transduction	R-MMU-162582
+R-MMU-111997	CaM pathway	Signal Transduction	R-MMU-162582
+R-MMU-450294	MAP kinase activation	Signal Transduction	R-MMU-162582
+R-MMU-450282	MAPK targets/ Nuclear events mediated by MAP kinases	Signal Transduction	R-MMU-162582
+R-MMU-975155	MyD88 dependent cascade initiated on endosome	Signal Transduction	R-MMU-162582
+R-MMU-165160	PDE3B signalling	Signal Transduction	R-MMU-162582
+R-MMU-111931	PKA-mediated phosphorylation of CREB	Signal Transduction	R-MMU-162582
+R-MMU-109703	PKB-mediated events	Signal Transduction	R-MMU-162582
+R-MMU-194840	Rho GTPase cycle	Signal Transduction	R-MMU-162582
+R-MMU-425366	Transport of bile salts and organic acids, metal ions and amine compounds	Transport of small molecules	R-MMU-382551
+R-MMU-425393	Transport of inorganic cations/anions and amino acids/oligopeptides	Transport of small molecules	R-MMU-382551
+R-MMU-549132	Organic cation/anion/zwitterion transport	Transport of small molecules	R-MMU-382551
+R-MMU-6807878	COPI-mediated anterograde transport	Vesicle-mediated transport	R-MMU-5653656
+R-MMU-204005	COPII-mediated vesicle transport	Vesicle-mediated transport	R-MMU-5653656
+R-MMU-5694530	Cargo concentration in the ER	Vesicle-mediated transport	R-MMU-5653656
+R-MMU-199977	ER to Golgi Anterograde Transport	Vesicle-mediated transport	R-MMU-5653656

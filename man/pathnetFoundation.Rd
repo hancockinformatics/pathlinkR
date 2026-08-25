@@ -4,7 +4,7 @@
 \alias{pathnetFoundation}
 \title{Create the foundation for pathway networks using pathway distances}
 \usage{
-pathnetFoundation(mat, maxDistance = NA, propToKeep = NA)
+pathnetFoundation(mat, maxDistance = NA, propToKeep = NA, species)
 }
 \arguments{
 \item{mat}{Matrix of distances between pathways, i.e. 0 means two pathways
@@ -18,6 +18,8 @@ distance of 0 are always removed. One of \code{maxDistance} or
 \item{propToKeep}{Top proportion of pathway pairs to keep as edges, ranked
 based distance. One of \code{maxDistance} or \code{propToKeep} must be
 provided.}
+
+\item{species}{Target species, either "human" (default) or "mouse".}
 }
 \value{
 A "data.frame" (tibble) of interacting pathway pairs with the
@@ -39,11 +41,11 @@ The desired cutoff will also vary based on the distance measure used, so
 some trial-and-error may be needed to find an appropriate value.
 }
 \examples{
-data("sigoraDatabase")
+data("sigoraDatabaseHS")
 
 pathwayDistancesJaccard <- getPathwayDistances(
     pathwayData=dplyr::slice_head(
-        dplyr::arrange(sigoraDatabase, pathwayId),
+        dplyr::arrange(sigoraDatabaseHS, pathwayId),
         prop=0.05
     ),
     distMethod="jaccard"
@@ -51,7 +53,8 @@ pathwayDistancesJaccard <- getPathwayDistances(
 
 startingPathways <- pathnetFoundation(
     mat=pathwayDistancesJaccard,
-    maxDistance=0.8
+    maxDistance=0.8,
+    species="human"
 )
 
 }

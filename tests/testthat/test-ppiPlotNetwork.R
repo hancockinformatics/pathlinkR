@@ -2,10 +2,10 @@
 ## of the labels varies enough (though slightly) between runs to consistently
 ## fail the test
 test_that("legend toggle is working", {
-    data("exampleDESeqResults")
+    data("exampleDESeqResultsHS")
 
     exNetwork <- ppiBuildNetwork(
-        rnaseqResult=exampleDESeqResults[[1]],
+        rnaseqResult=exampleDESeqResultsHS[[1]],
         filterInput=TRUE,
         order="zero"
     )
@@ -23,10 +23,10 @@ test_that("legend toggle is working", {
 
 
 test_that("we get the right plot output", {
-    data("exampleDESeqResults")
+    data("exampleDESeqResultsHS")
 
     exNetwork <- ppiBuildNetwork(
-        rnaseqResult=exampleDESeqResults[[1]],
+        rnaseqResult=exampleDESeqResultsHS[[1]],
         filterInput=TRUE,
         order="zero"
     )
@@ -43,10 +43,10 @@ test_that("we get the right plot output", {
 })
 
 test_that("plotting subnetworks works as expected", {
-    data("exampleDESeqResults")
+    data("exampleDESeqResultsHS")
 
     exNetwork2 <- ppiBuildNetwork(
-        rnaseqResult=exampleDESeqResults[[1]],
+        rnaseqResult=exampleDESeqResultsHS[[1]],
         filterInput=TRUE,
         order="zero"
     )

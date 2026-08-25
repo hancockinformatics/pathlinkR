@@ -6,9 +6,11 @@
 \usage{
 ppiEnrichNetwork(
   network,
+  species = "human",
   analysis = "sigora",
   filterResults = "default",
-  gpsRepo = "default",
+  gpsRepo = "reaH",
+  gpsLevel = 4,
   geneUniverse = NULL
 )
 }
@@ -16,8 +18,10 @@ ppiEnrichNetwork(
 \item{network}{A "tidygraph" network object, with Ensembl IDs in the first
 column of the node table}
 
+\item{species}{Target species, either "human" (default) or "mouse".}
+
 \item{analysis}{Default is "sigora", but can also be "reactomepa" or
-"hallmark"}
+"hallmark".}
 
 \item{filterResults}{Should the output be filtered for significance? Use
 \code{1} to return the unfiltered results, or any number less than 1 for a
@@ -28,6 +32,9 @@ for Sigora is 0.001, or 0.05 for ReactomePA and Hallmark.}
 object for Sigora to use to test for enriched pathways. Leaving this set
 as "default" will use the "reaH" GPS object from \code{Sigora}, or you can
 provide your own custom GPS repository.}
+
+\item{gpsLevel}{Only applies to \code{analysis="sigora"}. Should be left at the
+default (4) for \code{reaH} or \code{reaM}, or set to "2" for \code{kegH} or \code{kegM}.}
 
 \item{geneUniverse}{Only applies when \code{analysis} is "reactomepa" or
 "hallmark". The set of background genes to use when testing with ReactomePA
@@ -55,16 +62,18 @@ similar pathways}
 Test a PPI network for enriched pathways
 }
 \examples{
-data("exampleDESeqResults")
+data("exampleDESeqResultsHS")
 
 exNetwork <- ppiBuildNetwork(
-    rnaseqResult=exampleDESeqResults[[1]],
+    rnaseqResult=exampleDESeqResultsHS[[1]],
+    species="human",
     filterInput=TRUE,
     order="zero"
 )
 
 ppiEnrichNetwork(
     network=exNetwork,
+    species="human",
     analysis="hallmark"
 )
 

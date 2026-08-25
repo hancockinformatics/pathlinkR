@@ -1,19 +1,22 @@
 test_that("subnetwork extraction works with a pathway name", {
-    data("exampleDESeqResults", "mappingFile")
+    data("exampleDESeqResultsHS", "mappingFileHS")
 
     exNetwork <- ppiBuildNetwork(
-        rnaseqResult=exampleDESeqResults[[1]],
+        rnaseqResult=exampleDESeqResultsHS[[1]],
+        species="human",
         filterInput=TRUE,
         order="zero"
     )
 
     exPathways <- ppiEnrichNetwork(
         network=exNetwork,
+        species="human",
         analysis="hallmark"
     )
 
     exSubnetwork <- ppiExtractSubnetwork(
         network=exNetwork,
+        species="human",
         pathwayEnrichmentResult=exPathways,
         pathwayToExtract="INTERFERON ALPHA RESPONSE"
     )
@@ -22,25 +25,28 @@ test_that("subnetwork extraction works with a pathway name", {
 })
 
 test_that("subnetwork extraction works with a character vector of genes", {
-    data("exampleDESeqResults", "mappingFile")
+    data("exampleDESeqResultsHS", "mappingFileHS")
 
     exNetwork2 <- ppiBuildNetwork(
-        rnaseqResult=exampleDESeqResults[[1]],
+        rnaseqResult=exampleDESeqResultsHS[[1]],
+        species="human",
         filterInput=TRUE,
         order="zero"
     )
 
     exPathways2 <- ppiEnrichNetwork(
         network=exNetwork2,
+        species="human",
         analysis="hallmark"
     )
 
-    myGenes <- mappingFile %>%
+    myGenes <- mappingFileHS %>%
         filter(hgncSymbol %in% unlist(strsplit(exPathways2[[2, 5]], ";"))) %>%
         pull(ensemblGeneId)
 
     exSubnetwork2 <- ppiExtractSubnetwork(
         network=exNetwork2,
+        species="human",
         genes=myGenes
     )
 
@@ -49,6 +55,7 @@ test_that("subnetwork extraction works with a character vector of genes", {
     expect_error(
         ppiExtractSubnetwork(
             network=exNetwork2,
+            species="human",
             genes=list(myGenes)
         )
     )

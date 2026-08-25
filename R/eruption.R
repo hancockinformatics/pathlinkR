@@ -3,6 +3,7 @@
 #' @param rnaseqResult Data frame of RNASeq results, with Ensembl gene IDs as
 #'   rownames. Can be a "DESeqResults" or "TopTags" object, or a simple data
 #'   frame. See "Details" for more information.
+#' @param species Target species, either "human" (default) or "mouse".
 #' @param columnFC Character; Column to plot along the x-axis, typically log2
 #'   fold change values. Only required when `rnaseqResult` is a simple data
 #'   frame. Defaults to NA.
@@ -39,9 +40,9 @@
 #' @param n number of top up- and down-regulated genes to label. Applies when
 #'   `label` is set to "auto" or "highlight".
 #' @param manualGenes If `label="manual"`, these are the genes to be
-#'   specifically label. Can be HGNC symbols or Ensembl gene IDs.
+#'   specifically labeled. Can be HGNC/MGI symbols, or Ensembl gene IDs.
 #' @param removeUnannotated Boolean (TRUE): Remove genes without annotations
-#'   (no HGNC symbol).
+#'   (no HGNC/MGI symbol).
 #' @param labelSize Size of font for labels (3.5)
 #' @param pad Padding of labels; adjust this if the labels overlap
 #'
@@ -79,11 +80,12 @@
 #' @seealso <https://github.com/hancockinformatics/pathlinkR>
 #'
 #' @examples
-#' data("exampleDESeqResults")
-#' eruption(rnaseqResult=exampleDESeqResults[[1]])
+#' data("exampleDESeqResultsHS")
+#' eruption(rnaseqResult=exampleDESeqResultsHS[[1]], species="human")
 #'
 eruption <- function(
         rnaseqResult,
+        species,
         columnFC=NA,
         columnP=NA,
         pCutoff=0.05,
@@ -148,22 +150,29 @@ eruption <- function(
 
     ## Load the data we need for gene mapping
     data_env <- new.env(parent=emptyenv())
-    data("mappingFile", envir=data_env, package="pathlinkR")
-    mappingFile <- data_env[["mappingFile"]]
-
+    data("mappingFileHS", "mappingFileMM", envir=data_env, package="pathlinkR")
+    mappingFile <- switch(
+        tolower(species),
+        human=data_env[["mappingFileHS"]],
+        mouse=data_env[["mappingFileMM"]],
+        stop("Argument 'species' must be 'human' or 'mouse'")
+    ) |> 
+        rename("symbol"=2)
 
     ## If Ensembl IDs are detected, annotate them with gene names from the
     ## mapping file. If rownames are not Ensembl IDs, they will be used as-is.
-    if (grepl(x=rownames(rnaseqResult)[1], pattern="^ENSG")) {
+    if (grepl(x=rownames(rnaseqResult)[1], pattern="^ENS")) {
         res <- rnaseqResult %>%
             rownames_to_column("ensemblGeneId") %>%
             filter(!is.na(PAdjusted)) %>%
             left_join(mappingFile, by="ensemblGeneId", multiple="all") %>%
-            mutate(geneName=ifelse(
-                !is.na(hgncSymbol),
-                hgncSymbol,
-                ensemblGeneId
-            ))
+            mutate(
+                geneName=ifelse(
+                    !is.na(symbol),
+                    symbol,
+                    ensemblGeneId
+                )
+            )
     } else {
         res <- rnaseqResult %>%
             rownames_to_column("ensemblGeneId") %>%
@@ -208,7 +217,7 @@ eruption <- function(
 
     if (removeUnannotated) {
         possibleLabels <- res %>%
-            filter(!grepl("ENSG", geneName)) %>%
+            filter(!grepl("ENS", geneName)) %>%
             pull(geneName)
     } else {
         possibleLabels <- res$geneName

@@ -6,6 +6,7 @@
 \usage{
 ppiBuildNetwork(
   rnaseqResult,
+  species = "human",
   filterInput = TRUE,
   columnFC = NA,
   columnP = NA,
@@ -13,12 +14,14 @@ ppiBuildNetwork(
   fcCutoff = 1.5,
   order = "zero",
   hubMeasure = "betweenness",
-  ppiData = innateDbPPI
+  ppiData = innateDbPPIHS
 )
 }
 \arguments{
 \item{rnaseqResult}{An object of class "DESeqResults", "TopTags", or a simple
 data frame. See Details for more information on input types.}
+
+\item{species}{Target species, either "human" (default) or "mouse".}
 
 \item{filterInput}{If providing list of data frames containing the
 unfiltered output from \code{DESeq2::results()}, set this to TRUE to filter for
@@ -86,10 +89,10 @@ implementation of the Kleinburg hub centrality score - details on this
 method can be found at \code{?igraph::hub_score}.
 }
 \examples{
-data("exampleDESeqResults")
+data("exampleDESeqResultsHS")
 
 ppiBuildNetwork(
-    rnaseqResult=exampleDESeqResults[[1]],
+    rnaseqResult=exampleDESeqResultsHS[[1]],
     filterInput=TRUE,
     order="zero"
 )

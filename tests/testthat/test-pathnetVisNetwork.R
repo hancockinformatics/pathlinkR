@@ -1,9 +1,9 @@
 test_that("pathVisNetwork returns the right plot", {
-    data("sigoraDatabase", "sigoraExamples")
+    data("sigoraDatabaseHS", "sigoraExamplesHS")
 
     pathwayDistancesJaccard <- getPathwayDistances(
         pathwayData=dplyr::slice_head(
-            dplyr::arrange(sigoraDatabase, pathwayId),
+            dplyr::arrange(sigoraDatabaseHS, pathwayId),
             prop=0.05
         ),
         distMethod="jaccard"
@@ -11,14 +11,16 @@ test_that("pathVisNetwork returns the right plot", {
 
     startingPathways <- pathnetFoundation(
         mat=pathwayDistancesJaccard,
+        species="human",
         maxDistance=0.8
     )
 
     exPathnet <- pathnetCreate(
         pathwayEnrichmentResult=dplyr::filter(
-            sigoraExamples,
+            sigoraExamplesHS,
             comparison == "COVID Pos Over Time"
         ),
+        species="human",
         foundation=startingPathways,
         trim=TRUE,
         trimOrder=1

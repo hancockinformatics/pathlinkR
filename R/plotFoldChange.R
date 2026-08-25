@@ -5,6 +5,7 @@
 #'   the rownames. The list names are used as the comparison name for each
 #'   dataframe (e.g. "COVID vs Healthy").  See Details for more information on
 #'   supported input types.
+#' @param species Target species, either "human" (default) or "mouse".
 #' @param columnFC Character; Column to plot along the x-axis, typically log2
 #'   fold change values. Only required when `rnaseqResult` is a simple data
 #'   frame. Defaults to NA.
@@ -24,7 +25,8 @@
 #'   column names, row names, legend title, legend labels. Defaults to
 #'   `c(13.2, 13.2, 12, 12, 10, 10)`.
 #' @param geneFormat Type of genes given in `genesToPlot`. Default is Ensembl
-#'   gene IDs ("ensembl"), but can also input a vector of HGNC symbols ("hgnc").
+#'   gene IDs ("ensembl"), but can also input a vector of gene symbols ("symbol"
+#'   will select HGNC for human or MGI for mouse).
 #' @param pCutoff P value cutoff, default is <0.05
 #' @param fcCutoff Absolute fold change cutoff, default is >1.5
 #' @param cellColours Vector specifying desired colours to use for the cells in
@@ -115,15 +117,16 @@
 #' @seealso <https://github.com/hancockinformatics/pathlinkR>
 #'
 #' @examples
-#' data("exampleDESeqResults")
+#' data("exampleDESeqResultsHS")
 #'
 #' plotFoldChange(
-#'     exampleDESeqResults,
+#'     exampleDESeqResultsHS,
 #'     pathName="Generation of second messenger molecules"
 #' )
 #'
 plotFoldChange <- function(
         inputList,
+        species="human",
         columnFC=NA,
         columnP=NA,
         pathName=NA,
@@ -165,12 +168,12 @@ plotFoldChange <- function(
         any(!is.na(c(pathName, pathId, genesToPlot)))
     })
 
-    stopifnot("'geneFormat' must be either 'ensembl' or 'hgnc'"={
-        geneFormat %in% c("ensembl", "hgnc")}
+    stopifnot("'geneFormat' must be either 'ensembl' or 'symbol'"={
+        geneFormat %in% c("ensembl", "symbol")}
     )
 
     stopifnot("Incorrect format for 'fontSizes'" ={
-      is(fontSizes, "numeric") & length(fontSizes) == 6
+        is(fontSizes, "numeric") & length(fontSizes) == 6
     })
 
     sizeColTitle <- fontSizes[1]
@@ -211,13 +214,26 @@ plotFoldChange <- function(
     ## Load data, after passing the basic checks
     data_env <- new.env(parent=emptyenv())
     data(
-        "sigoraDatabase",
-        "mappingFile",
+        "sigoraDatabaseHS",
+        "sigoraDatabaseMM",
+        "mappingFileHS",
+        "mappingFileMM",
         envir=data_env,
         package="pathlinkR"
     )
-    sigoraDatabase <- data_env[["sigoraDatabase"]]
-    mappingFile <- data_env[["mappingFile"]]
+    sigoraDatabase <- switch(
+        species,
+        human=data_env[["sigoraDatabaseHS"]],
+        mouse=data_env[["sigoraDatabaseMM"]],
+        stop("Argument 'species' must be 'human' or 'mouse'")
+    )
+    mappingFile <- switch(
+        species,
+        human=data_env[["mappingFileHS"]],
+        mouse=data_env[["mappingFileMM"]],
+        stop("Argument 'species' must be 'human' or 'mouse'")
+    ) |> 
+        rename("symbol"=2)
 
     if (!is.na(pathName)) {
         pathId <- sigoraDatabase %>%
@@ -264,9 +280,9 @@ plotFoldChange <- function(
     } else {
         genes <- genesToPlot
 
-        if (geneFormat == "hgnc") {
+        if (geneFormat == "symbol") {
             genes <- mappingFile %>%
-                filter(hgncSymbol %in% genesToPlot) %>%
+                filter(symbol %in% genesToPlot) %>%
                 pull(ensemblGeneId)
         }
         if (geneFormat == "ensembl") {
@@ -277,7 +293,7 @@ plotFoldChange <- function(
     dfFC <- imap(inputListCleaned, function(listItem, itemName) {
         stopifnot(
             "Rownames of data frames in 'inputList' must be Ensembl gene IDs" =
-                grepl(pattern="^ENSG", x=rownames(listItem)[1])
+                grepl(pattern="^ENS", x=rownames(listItem)[1])
         )
 
         listItem %>%
@@ -315,11 +331,11 @@ plotFoldChange <- function(
         dfP <- dfP %>% filter(ensemblGeneId %in% sigGenes)
     }
 
-    ## Prepare the Heatmap matrices, and map the Ensembl IDs to HGNC symbols
+    ## Prepare the Heatmap matrices, and map the Ensembl IDs to HGNC/MGI symbols
     matFC <- dfFC %>%
         left_join(mappingFile, by="ensemblGeneId", multiple="all") %>%
         select(-c(ensemblGeneId, entrezGeneId)) %>%
-        column_to_rownames(var="hgncSymbol") %>%
+        column_to_rownames(var="symbol") %>%
         as.matrix()
     matFC[is.na(matFC)] <- 0 ## Make any NAs into 0
 
@@ -327,7 +343,7 @@ plotFoldChange <- function(
     matP <- dfP %>%
         left_join(mappingFile, by="ensemblGeneId", multiple="all") %>%
         select(-c(ensemblGeneId, entrezGeneId)) %>%
-        column_to_rownames(var="hgncSymbol") %>%
+        column_to_rownames(var="symbol") %>%
         as.matrix()
     matP[is.na(matP)] <- 1 ## Make any NAs into 1s
 
@@ -454,8 +470,13 @@ plotFoldChange <- function(
 #'
 #' @seealso <https://github.com/hancockinformatics/pathlinkR>
 #'
-.plotFoldChangeLegend <- function(.matFC, .log2FoldChange, .cellColours, .titlegp, .labelsgp) {
-
+.plotFoldChangeLegend <- function(
+    .matFC,
+    .log2FoldChange,
+    .cellColours,
+    .titlegp,
+    .labelsgp
+) {
     parameters <- list(
         title=ifelse(.log2FoldChange, "Log2 fold\nchange", "Fold change"),
         title_gp=gpar(fontsize=.titlegp),

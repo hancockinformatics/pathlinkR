@@ -5,6 +5,7 @@
 #'   must contain Ensembl Gene IDs. The list names are used as the comparison
 #'   name for each element (e.g. "COVID vs Healthy"). See Details for more
 #'   information on supported input types.
+#' @param species Target species, either "human" (default) or "mouse".
 #' @param columnFC Character; Column to plot along the x-axis, typically log2
 #'   fold change values. Only required when `rnaseqResult` is a simple data
 #'   frame. Defaults to NA.
@@ -31,15 +32,13 @@
 #'   p-value cutoff. If left as `default`, the significance cutoff for
 #'   `analysis="sigora"` is 0.001, or 0.05 for "reactome", "hallmark", and
 #'   "kegg".
-#' @param gpsRepo Only applies to `analysis="sigora"`. Gene Pair Signature (GPS)
-#'   object for Sigora to use to test for enriched pathways. "reaH" (default)
-#'   will use the Reactome GPS object from `Sigora`; "kegH" will use the KEGG
-#'   GPS. One can also provide their own GPS object; see Sigora's documentation
-#'   for details.
-#' @param gpsLevel Only applies to `analysis="sigora"`. If left as `default`,
-#'   will be set to `4` for `gpsRepo="reaH"` or `2` for `gpeRepo="kegH"`. If
-#'   providing your own GPS object, can be set as desired; see Sigora's
-#'   documentation for details.
+#' @param gpsRepo Gene Pair Signature (GPS) object for Sigora to use to test
+#'   for enriched pathways. `reaH` (default) will use the Reactome GPS object
+#'   from `Sigora`; `kegH` will use the KEGG GPS. Also supports mouse data
+#'   from `Sigora` (reaM and kegM). One can also provide their own GPS object;
+#'   see Sigora's documentation for details.
+#' @param gpsLevel Only applies to `analysis="sigora"`. Should be left at the
+#'   default (4) for `reaH` or `reaM`, or set to "2" for `kegH` or `kegM`.
 #' @param geneUniverse Only applies when `analysis` is "reactome"/"reactomepa",
 #'   "hallmark", or "kegg". The set of background genes to use when testing with
 #'   Reactome, Hallmark, or KEGG gene sets. For Reactome this must be a
@@ -107,10 +106,11 @@
 #' @seealso <https://github.com/hancockinformatics/pathlinkR>
 #'
 #' @examples
-#' data("exampleDESeqResults")
+#' data("exampleDESeqResultsHS")
 #'
 #' pathwayEnrichment(
-#'     inputList=exampleDESeqResults[1],
+#'     inputList=exampleDESeqResultsHS[1],
+#'     species="human",
 #'     filterInput=TRUE,
 #'     split=TRUE,
 #'     analysis="hallmark",
@@ -119,6 +119,7 @@
 #'
 pathwayEnrichment <- function(
         inputList,
+        species,
         columnFC=NA,
         columnP=NA,
         filterInput=TRUE,
@@ -127,15 +128,11 @@ pathwayEnrichment <- function(
         split=TRUE,
         analysis="sigora",
         filterResults="default",
-        gpsRepo="reaH",
-        gpsLevel="default",
+        gpsRepo=reaH,
+        gpsLevel=4,
         geneUniverse=NULL,
         verbose=FALSE
 ) {
-
-    .vm <- function(v, m) {
-        if (v) message(m)
-    }
 
     stopifnot(
         "'inputList' must be a list"={
@@ -167,13 +164,15 @@ pathwayEnrichment <- function(
         any(filterResults == "default" | is(filterResults, "numeric"))
     )
 
-    .vm(
-        verbose,
-        paste0(
-            "Beginning enrichment analysis with '", analysis, "' for ",
-            length(inputList), " comparisons"
+    if (verbose) {
+        message(
+            "Beginning enrichment analysis with '",
+            analysis,
+            "' for ",
+            length(inputList),
+            " comparisons"
         )
-    )
+    }
 
     ## Coerce the input
     if (is(inputList[[1]], "DESeqResults")) {
@@ -223,20 +222,44 @@ pathwayEnrichment <- function(
     idmap <- data_env[["idmap"]]
 
     data(
-        "pathwayCategories",
-        "reactomeDatabase",
-        "hallmarkDatabase",
-        "keggDatabase",
-        "mappingFile",
+        "pathwayCategoriesHS",
+        "pathwayCategoriesMM",
+        "reactomeDatabaseHS",
+        "reactomeDatabaseMM",
+        "hallmarkDatabaseHS",
+        "keggDatabaseHS",
+        "keggDatabaseMM",
+        "mappingFileHS",
+        "mappingFileMM",
         envir=data_env,
         package="pathlinkR"
     )
-    pathwayCategories <- data_env[["pathwayCategories"]]
-    reactomeDatabase <- data_env[["reactomeDatabase"]]
-    hallmarkDatabase <- data_env[["hallmarkDatabase"]]
-    keggDatabase <- data_env[["keggDatabase"]]
-    mappingFile <- data_env[["mappingFile"]]
 
+    pathwayCategories <- switch(
+        species,
+        human=data_env[["pathwayCategoriesHS"]],
+        mouse=data_env[["pathwayCategoriesMM"]],
+        stop("Argument 'species' must be 'human' or 'mouse'.")
+    )
+    reactomeDatabase <- switch(
+        species,
+        human=data_env[["reactomeDatabaseHS"]],
+        mouse=data_env[["reactomeDatabaseMM"]],
+        stop("Argument 'species' must be 'human' or 'mouse'.")
+    )    
+    hallmarkDatabaseHS <- data_env[["hallmarkDatabaseHS"]]
+    keggDatabase <- switch(
+        species,
+        human=data_env[["keggDatabaseHS"]],
+        mouse=data_env[["keggDatabaseMM"]],
+        stop("Argument 'species' must be 'human' or 'mouse'.")
+    )
+    mappingFile <- switch(
+        species,
+        human=data_env[["mappingFileHS"]],
+        mouse=data_env[["mappingFileMM"]],
+        stop("Argument 'species' must be 'human' or 'mouse'.")
+    ) |> rename("symbol"=2)
 
     ## Iterate through each element of "inputListCleaned"
     resultList <- imap(inputListCleaned, function(x, comparison) {
@@ -251,21 +274,22 @@ pathwayEnrichment <- function(
             )
         }
 
-        .vm(
-            verbose,
-            paste0("  Testing genes from comparison '", comparison, "'")
-        )
+        if (verbose) {
+            message("  Testing genes from comparison '", comparison, "'")
+        }
 
         ## Filter the input genes if specified
         rnaseqResults <-
             if (filterInput) {
-                .vm(
-                    verbose,
-                    paste0(
-                        "    Filtering using 'pCutoff=", pCutoff,
-                        "' and 'fcCutoff=", fcCutoff, "'"
+                if (verbose) {
+                    message(
+                        "    Filtering using 'pCutoff=",
+                        pCutoff,
+                        "' and 'fcCutoff=",
+                        fcCutoff,
+                        "'"
                     )
-                )
+                }
 
                 filter(
                     x,
@@ -273,20 +297,16 @@ pathwayEnrichment <- function(
                     abs(LogFoldChange) > log2(fcCutoff)
                 )
             } else {
-                .vm(
-                    verbose,
-                    paste0("    Input is being used without filtering")
-                )
+                if (verbose) {
+                    message("    Input is being used without filtering")
+                }
                 x
             }
 
         if (nrow(rnaseqResults) == 0) {
             message(
-                ifelse(
-                    verbose,
-                    "    WARNING: Input had no significant genes; ",
-                    "WARNING: Input had no significant genes; "
-                ),
+                ifelse(verbose, "\t", ""),
+                "Input had no significant genes; ",
                 "check your data and the 'filterInput` argument."
             )
             return(NULL)
@@ -294,13 +314,17 @@ pathwayEnrichment <- function(
 
         ## Turn the input into a list of gene IDs, split by direction or not
         if (split) {
-            .vm(verbose, paste0("    Input is being split by direction"))
+            if (verbose) {
+                message("    Input is being split by direction")
+            }
             preppedGenesTable <- list(
                 "Up"=filter(rnaseqResults, LogFoldChange > 0),
                 "Down"=filter(rnaseqResults, LogFoldChange < 0)
             )
         } else {
-            .vm(verbose, paste0("    Input is not being split by direction"))
+            if (verbose) {
+                message("    Input is not being split by direction")
+            }
             preppedGenesTable <- list("All"=rnaseqResults)
         }
 
@@ -325,10 +349,9 @@ pathwayEnrichment <- function(
                 }
             )
             resultFinal$totalGenes <- nrow(rnaseqResults)
-            .vm(
-                verbose,
-                paste0("    Found ", nrow(resultFinal), " enriched terms")
-            )
+            if (verbose) {
+                message("    Found ", nrow(resultFinal), " enriched terms")
+            }
             return(resultFinal)
         }
 
@@ -384,9 +407,9 @@ pathwayEnrichment <- function(
                         -any_of(c("geneID", "entrezGeneId", "ensemblGeneId"))
                     ) %>%
                     group_by(ID) %>%
-                    mutate(genes=paste(hgncSymbol, collapse=";")) %>%
+                    mutate(genes=paste(symbol, collapse=";")) %>%
                     ungroup() %>%
-                    select(-hgncSymbol) %>%
+                    select(-symbol) %>%
                     distinct()
             }
 
@@ -400,13 +423,13 @@ pathwayEnrichment <- function(
 
                         stopifnot(
                             "No input genes are in the Hallmark database"={
-                                any(rownames(y) %in% hallmarkDatabase$ensemblGeneId)
+                                any(rownames(y) %in% hallmarkDatabaseHS$ensemblGeneId)
                             }
                         )
 
                         tibble::as_tibble(clusterProfiler::enricher(
                             rownames(y),
-                            TERM2GENE=hallmarkDatabase,
+                            TERM2GENE=hallmarkDatabaseHS,
                             universe=geneUniverse,
                             pvalueCutoff=ifelse(
                                 filterResults == "default",
@@ -427,9 +450,9 @@ pathwayEnrichment <- function(
                         -any_of(c("geneID", "entrezGeneId", "ensemblGeneId"))
                     ) %>%
                     group_by(ID) %>%
-                    mutate(genes=paste(hgncSymbol, collapse=";")) %>%
+                    mutate(genes=paste(symbol, collapse=";")) %>%
                     ungroup() %>%
-                    select(-hgncSymbol) %>%
+                    select(-symbol) %>%
                     distinct()
             }
 
@@ -475,9 +498,9 @@ pathwayEnrichment <- function(
                         -any_of(c("geneID", "entrezGeneId", "ensemblGeneId"))
                     ) %>%
                     group_by(ID) %>%
-                    mutate(genes=paste(hgncSymbol, collapse=";")) %>%
+                    mutate(genes=paste(symbol, collapse=";")) %>%
                     ungroup() %>%
-                    select(-hgncSymbol) %>%
+                    select(-symbol) %>%
                     distinct()
             }
 
@@ -506,10 +529,9 @@ pathwayEnrichment <- function(
                     geneRatio,
                     totalGenes
                 )
-            .vm(
-                verbose,
-                paste0("    Found ", nrow(resultFinal), " enriched terms")
-            )
+            if (verbose) {
+                message("    Found ", nrow(resultFinal), " enriched terms")
+            }
             return(resultFinal)
         }
 
@@ -534,17 +556,17 @@ pathwayEnrichment <- function(
                             ) %>%
                             filter(!is.na(entrezGeneId)) %>%
                             group_by(entrezGeneId) %>%
-                            summarise(geneRank = mean(geneRank)) %>%
+                            summarise(geneRank=mean(geneRank)) %>%
                             ungroup() %>%
                             distinct(entrezGeneId, geneRank) %>%
                             tibble::deframe()
 
                         fgsea::fgsea(
-                            pathways = reactomeGeneSets,
-                            stats = gseaInput,
+                            pathways=reactomeGeneSets,
+                            stats=gseaInput,
                             scoreType="pos",
-                            minSize = 10,
-                            maxSize = 200
+                            minSize=10,
+                            maxSize=200
                         ) %>%
                             tidyr::separate_wider_delim(
                                 pathway,
@@ -559,9 +581,9 @@ pathwayEnrichment <- function(
                     }
                 )
             } else if (analysis == "fgsea_hallmark") {
-                hallmarkGeneSets <- hallmarkDatabase %>%
+                hallmarkGeneSets <- hallmarkDatabaseHS %>%
                     distinct() %>%
-                    split(x = .$ensemblGeneId, f = .$pathwayId)
+                    split(x=.$ensemblGeneId, f=.$pathwayId)
 
                 resultFinal <- imap_dfr(
                     .x=preppedGenesTable,
@@ -580,11 +602,11 @@ pathwayEnrichment <- function(
                             tibble::deframe()
 
                         fgsea::fgsea(
-                            pathways = hallmarkGeneSets,
-                            stats = gseaInput,
+                            pathways=hallmarkGeneSets,
+                            stats=gseaInput,
                             scoreType="pos",
-                            minSize = 10,
-                            maxSize = 200
+                            minSize=10,
+                            maxSize=200
                         ) %>%
                             rename(
                                 "pathwayId"=pathway,
@@ -598,10 +620,9 @@ pathwayEnrichment <- function(
                     }
                 )
             }
-            .vm(
-                verbose,
-                paste0("    Found ", nrow(resultFinal), " enriched terms")
-            )
+            if (verbose) {
+                message("    Found ", nrow(resultFinal), " enriched terms")
+            }
             return(resultFinal)
         }
     })
@@ -615,7 +636,9 @@ pathwayEnrichment <- function(
         ) %>%
         tibble::as_tibble() %>%
         mutate(pathwayName=as.character(pathwayName))
-    .vm(verbose, "All analyses complete\n")
+    if (verbose) {
+        message("All analyses complete\n")
+    }
     return(resultsAllComparisons)
 }
 
@@ -658,23 +681,13 @@ pathwayEnrichment <- function(
 
     stopifnot(
         "Your input vector doesn't look like Ensembl genes."={
-            any(grepl(pattern="^ENSG", enrichGenes))
+            any(grepl(pattern="^ENS", enrichGenes))
         }
     )
 
     data_env <- new.env(parent=emptyenv())
-    data("idmap", "reaH", "kegH", envir=data_env, package="sigora")
+    data("idmap", envir=data_env, package="sigora")
     idmap <- data_env[["idmap"]]
-    reaH <- data_env[["reaH"]]
-    kegH <- data_env[["kegH"]]
-
-    if (gpsRepo %in% c("default", "reaH")) {
-        gpsRepo <- reaH
-        gpsLevel <- 4
-    } else if (gpsRepo == "kegH") {
-        gpsRepo <- kegH
-        gpsLevel <- 2
-    }
 
     invisible(capture.output(
         sigoraResult1 <- sigora::sigora(

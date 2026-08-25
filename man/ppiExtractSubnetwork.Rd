@@ -6,6 +6,7 @@
 \usage{
 ppiExtractSubnetwork(
   network,
+  species = "human",
   genes = NULL,
   pathwayEnrichmentResult = NULL,
   pathwayToExtract
@@ -13,6 +14,8 @@ ppiExtractSubnetwork(
 }
 \arguments{
 \item{network}{Input network object; output from \code{ppiBuildNetwork()}}
+
+\item{species}{Target species, either "human" (default) or "mouse".}
 
 \item{genes}{Character vector of Ensembl gene IDs to use as the starting
 point to extract a subnetwork from the initial network. You must provide
@@ -53,16 +56,18 @@ genes were pulled out for the pathway, see the "starters" attribute of the
 output network.
 }
 \examples{
-data("exampleDESeqResults")
+data("exampleDESeqResultsHS")
 
 exNetwork <- ppiBuildNetwork(
-    rnaseqResult=exampleDESeqResults[[1]],
+    rnaseqResult=exampleDESeqResultsHS[[1]],
+    species="human",
     filterInput=TRUE,
     order="zero"
 )
 
 exPathways <- ppiEnrichNetwork(
     network=exNetwork,
+    species="human",
     analysis="hallmark"
 )
 

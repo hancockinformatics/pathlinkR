@@ -1,6 +1,7 @@
 #' Extract a subnetwork based on pathway genes
 #'
 #' @param network Input network object; output from `ppiBuildNetwork()`
+#' @param species Target species, either "human" (default) or "mouse".
 #' @param genes Character vector of Ensembl gene IDs to use as the starting
 #'   point to extract a subnetwork from the initial network. You must provide
 #'   either the `genes` or `pathwayEnrichmentResult` argument.
@@ -46,16 +47,18 @@
 #' @seealso <https://github.com/hancockinformatics/pathlinkR>
 #'
 #' @examples
-#' data("exampleDESeqResults")
+#' data("exampleDESeqResultsHS")
 #'
 #' exNetwork <- ppiBuildNetwork(
-#'     rnaseqResult=exampleDESeqResults[[1]],
+#'     rnaseqResult=exampleDESeqResultsHS[[1]],
+#'     species="human",
 #'     filterInput=TRUE,
 #'     order="zero"
 #' )
 #'
 #' exPathways <- ppiEnrichNetwork(
 #'     network=exNetwork,
+#'     species="human",
 #'     analysis="hallmark"
 #' )
 #'
@@ -67,14 +70,19 @@
 #'
 ppiExtractSubnetwork <- function(
         network,
+        species="human",
         genes=NULL,
         pathwayEnrichmentResult=NULL,
         pathwayToExtract
 ) {
-
     data_env <- new.env(parent=emptyenv())
-    data("mappingFile", envir=data_env, package="pathlinkR")
-    mappingFile <- data_env[["mappingFile"]]
+    data("mappingFileHS", envir=data_env, package="pathlinkR")
+    mappingFile <- switch(
+        species,
+        human=data_env[["mappingFileHS"]],
+        mouse=data_env[["mappingFileMM"]]
+    ) |> 
+        rename("symbol"=2)
 
     stopifnot(
         "You must specify either 'genes' or 'pathwayEnrichmentResult' to
@@ -92,7 +100,7 @@ ppiExtractSubnetwork <- function(
 
         stopifnot(
             "Argument 'genes' must be a character vector of Ensembl gene IDs"={
-                grepl(x=genes[1], pattern="^ENSG[0-9]+$")
+                grepl(x=genes[1], pattern="^ENS[A-Z][0-9]+$")
             }
         )
     }
@@ -114,7 +122,7 @@ ppiExtractSubnetwork <- function(
         )
 
         stopifnot(
-            "The 'genes' column must contain HGNC symbols separated
+            "The 'genes' column must contain HGNC or MGI symbols separated
             with a ';'"={
                 grepl(
                     x=pathwayEnrichmentResult[["genes"]][1],
@@ -129,14 +137,14 @@ ppiExtractSubnetwork <- function(
         genesToExtract <- genes
 
     } else if (!is.null(pathwayEnrichmentResult)) {
-        pathwayGenesHGNC <- pathwayEnrichmentResult %>%
+        pathwayGenes <- pathwayEnrichmentResult %>%
             filter(pathwayName == pathwayToExtract) %>%
             pull(genes) %>%
             strsplit(., split=";") %>%
             unlist()
 
         genesToExtract <- mappingFile %>%
-            filter(hgncSymbol %in% pathwayGenesHGNC) %>%
+            filter(symbol %in% pathwayGenes) %>%
             pull(ensemblGeneId) %>%
             unique()
     }

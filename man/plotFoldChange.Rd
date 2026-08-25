@@ -6,6 +6,7 @@
 \usage{
 plotFoldChange(
   inputList,
+  species = "human",
   columnFC = NA,
   columnP = NA,
   pathName = NA,
@@ -42,6 +43,8 @@ the rownames. The list names are used as the comparison name for each
 dataframe (e.g. "COVID vs Healthy").  See Details for more information on
 supported input types.}
 
+\item{species}{Target species, either "human" (default) or "mouse".}
+
 \item{columnFC}{Character; Column to plot along the x-axis, typically log2
 fold change values. Only required when \code{rnaseqResult} is a simple data
 frame. Defaults to NA.}
@@ -68,7 +71,8 @@ column names, row names, legend title, legend labels. Defaults to
 \code{c(13.2, 13.2, 12, 12, 10, 10)}.}
 
 \item{geneFormat}{Type of genes given in \code{genesToPlot}. Default is Ensembl
-gene IDs ("ensembl"), but can also input a vector of HGNC symbols ("hgnc").}
+gene IDs ("ensembl"), but can also input a vector of gene symbols ("symbol"
+will select HGNC for human or MGI for mouse).}
 
 \item{pCutoff}{P value cutoff, default is <0.05}
 
@@ -169,10 +173,10 @@ One could then specify \code{colSplit} as
 and mutant results more visually distinct.
 }
 \examples{
-data("exampleDESeqResults")
+data("exampleDESeqResultsHS")
 
 plotFoldChange(
-    exampleDESeqResults,
+    exampleDESeqResultsHS,
     pathName="Generation of second messenger molecules"
 )
 
