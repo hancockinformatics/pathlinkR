@@ -289,7 +289,7 @@ pathwayPlots <- function(
                 values=c("Down"=25, "Up"=24, "All"=21),
                 name="Regulation",
                 na.value=NA,
-                drop=FALSE # Keep both up/down if only one direction enriched
+                drop=TRUE
             ) +
             { if (requireNamespace("scales", quietly=TRUE)) {
                 scale_fill_continuous(
